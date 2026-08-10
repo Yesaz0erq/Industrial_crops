@@ -1,0 +1,121 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'net.neoforged.moddev' version '2.0.140'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+def modVersion = project.mod_version
+def modId = project.mod_id
+def modName = project.mod_name
+def modAuthor = project.mod_author
+def modDescription = project.mod_description
+def minecraftVersion = project.minecraft_version
+def neoForgeVersion = project.neoforge_version
+
+tasks.named('processResources').configure {
+    exclude(
+            'assets/industrialcrops/textures/entity/brown_create_slime.png',
+            'assets/industrialcrops/textures/entity/gray_gear_slime.png',
+            'assets/industrialcrops/textures/entity/gray_gear_slime/create_brass.png',
+            'assets/industrialcrops/textures/entity/gray_gear_slime/dark_iron.png',
+            'assets/industrialcrops/textures/entity/gray_gear_slime/dark_mechanism.png',
+            'assets/industrialcrops/textures/entity/gray_gear_slime/gray_highlight.png',
+            'assets/industrialcrops/textures/entity/gray_gear_slime/gray_slime.png',
+            'assets/industrialcrops/textures/entity/gray_gear_slime/slime_face.png',
+            'assets/industrialcrops/textures/entity/gray_gear_slime/slime_highlight.png',
+            'assets/industrialcrops/textures/entity/gray_gear_slime/slime_shell.png',
+            'assets/industrialcrops/textures/entity/gray_gear_slime/steel_gear.png',
+            'assets/industrialcrops/textures/entity/golden_redstone_lamp_slime/golden_gel.png',
+            'assets/industrialcrops/textures/entity/golden_redstone_lamp_slime/redstone_lamp.png'
+    )
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
+}
+
+neoForge {
+    version = project.neoforge_version
+
+    runs {
+        client {
+            client()
+        }
+        server {
+            server()
+        }
+
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
+    }
+
+    mods {
+        industrialcrops {
+            sourceSet sourceSets.main
+        }
+        carrote {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+repositories {
+    maven {
+        name = 'BlameJared'
+        url = 'https://maven.blamejared.com'
+    }
+    maven {
+        name = 'GeckoLib'
+        url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+    }
+}
+
+dependencies {
+    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:4.9.2"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+
+tasks.withType(ProcessResources).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    inputs.property 'version', modVersion
+
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand([
+            version: modVersion,
+            mod_id: modId,
+            mod_name: modName,
+            mod_author: modAuthor,
+            mod_description: modDescription,
+            minecraft_version: minecraftVersion,
+            neoforge_version: neoForgeVersion
+        ])
+    }
+}
+
+tasks.withType(AbstractArchiveTask).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}

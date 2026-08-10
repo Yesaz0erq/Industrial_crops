@@ -1,0 +1,31 @@
+# Gradle
+.gradle/
+build/
+out/
+
+# Minecraft development runs
+run/
+runs/
+logs/
+crash-reports/
+
+# IDE and OS files
+.idea/
+.vscode/
+*.iml
+.classpath
+.project
+.settings/
+.DS_Store
+Thumbs.db
+
+# Local diagnostics and generated logs
+*.log
+hs_err_pid*
+
+# Local secrets and environment files
+.env
+.env.*
+!.env.example
+local.properties
+secrets.properties
