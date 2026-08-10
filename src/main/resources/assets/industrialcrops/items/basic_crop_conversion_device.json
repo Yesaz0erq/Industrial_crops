@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "industrialcrops:block/basic_crop_conversion_device"
+  }
+}

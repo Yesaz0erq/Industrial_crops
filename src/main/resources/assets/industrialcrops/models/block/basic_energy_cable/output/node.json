@@ -1,0 +1,7 @@
+{
+  "parent": "industrialcrops:block/basic_energy_cable/template/node",
+  "textures": {
+    "basic_pipe_type": "industrialcrops:block/basic_energy_cable_type",
+    "basic_pipe_structure": "industrialcrops:block/basic_energy_cable_structure"
+  }
+}

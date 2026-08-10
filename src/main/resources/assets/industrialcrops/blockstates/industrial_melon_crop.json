@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "industrialcrops:block/industrial_melon_stem_growth0"
+    },
+    "age=1": {
+      "model": "industrialcrops:block/industrial_melon_stem_growth1"
+    },
+    "age=2": {
+      "model": "industrialcrops:block/industrial_melon_stem_growth2"
+    },
+    "age=3": {
+      "model": "industrialcrops:block/industrial_melon_stem_growth3"
+    },
+    "age=4": {
+      "model": "industrialcrops:block/industrial_melon_stem_growth4"
+    },
+    "age=5": {
+      "model": "industrialcrops:block/industrial_melon_stem_growth5"
+    },
+    "age=6": {
+      "model": "industrialcrops:block/industrial_melon_stem_growth6"
+    },
+    "age=7": {
+      "model": "industrialcrops:block/industrial_melon_stem_growth7"
+    }
+  }
+}

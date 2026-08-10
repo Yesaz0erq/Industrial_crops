@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "industrialcrops:block/item_network_management_terminal"
+    },
+    "facing=east": {
+      "model": "industrialcrops:block/item_network_management_terminal",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "industrialcrops:block/item_network_management_terminal",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "industrialcrops:block/item_network_management_terminal",
+      "y": 270
+    }
+  }
+}

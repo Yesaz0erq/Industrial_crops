@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:bone_meal"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "RRR",
+    "RBR",
+    "RRR"
+  ],
+  "result": {
+    "count": 4,
+    "id": "industrialcrops:redstone_bonemeal"
+  }
+}

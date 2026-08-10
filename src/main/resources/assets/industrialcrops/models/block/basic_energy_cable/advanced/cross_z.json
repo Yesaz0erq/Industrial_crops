@@ -1,0 +1,7 @@
+{
+  "parent": "industrialcrops:block/basic_energy_cable/template/cross_z",
+  "textures": {
+    "basic_pipe_type": "industrialcrops:block/advanced_item_basic_pipe",
+    "basic_pipe_structure": "industrialcrops:block/advanced_pipe_structure"
+  }
+}

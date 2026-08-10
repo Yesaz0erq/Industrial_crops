@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": true,
+  "textures": {
+    "particle": "industrialcrops:block/fusion_melon_side",
+    "melon_side": "industrialcrops:block/industrial_melon_block_side",
+    "melon_top": "industrialcrops:block/industrial_melon_block_top",
+    "pumpkin_side": "industrialcrops:block/industrial_pumpkin_block_side",
+    "pumpkin_top": "industrialcrops:block/industrial_pumpkin_block_top",
+    "fusion_side": "industrialcrops:block/fusion_melon_side",
+    "fusion_side_mirrored": "industrialcrops:block/fusion_melon_side_mirrored"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 0],
+      "to": [8, 16, 16],
+      "faces": {
+        "down": {"uv": [0, 0, 8, 16], "texture": "#melon_top", "cullface": "down"},
+        "up": {"uv": [0, 0, 8, 16], "texture": "#melon_top", "cullface": "up"},
+        "north": {"uv": [8, 0, 16, 16], "texture": "#fusion_side_mirrored", "cullface": "north"},
+        "south": {"uv": [0, 0, 8, 16], "texture": "#fusion_side", "cullface": "south"},
+        "west": {"uv": [0, 0, 16, 16], "texture": "#melon_side", "cullface": "west"}
+      }
+    },
+    {
+      "from": [8, 0, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "down": {"uv": [8, 0, 16, 16], "texture": "#pumpkin_top", "cullface": "down"},
+        "up": {"uv": [8, 0, 16, 16], "texture": "#pumpkin_top", "cullface": "up"},
+        "north": {"uv": [0, 0, 8, 16], "texture": "#fusion_side_mirrored", "cullface": "north"},
+        "south": {"uv": [8, 0, 16, 16], "texture": "#fusion_side", "cullface": "south"},
+        "east": {"uv": [0, 0, 16, 16], "texture": "#pumpkin_side", "cullface": "east"}
+      }
+    },
+    {
+      "from": [7.5, -0.01, -0.01],
+      "to": [8.5, 16.01, 16.01],
+      "shade": false,
+      "faces": {
+        "down": {"uv": [7, 0, 9, 16], "texture": "#fusion_side", "cullface": "down"},
+        "up": {"uv": [7, 0, 9, 16], "texture": "#fusion_side", "cullface": "up"},
+        "north": {"uv": [7, 0, 9, 16], "texture": "#fusion_side_mirrored", "cullface": "north"},
+        "south": {"uv": [7, 0, 9, 16], "texture": "#fusion_side", "cullface": "south"}
+      }
+    }
+  ]
+}

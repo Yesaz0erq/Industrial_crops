@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    " S ",
+    "IOI",
+    "RCR"
+  ],
+  "key": {
+    "I": {
+      "item": "carrote:carrote_steel_ingot"
+    },
+    "C": {
+      "item": "carrote:carrote_steel_device_casing"
+    },
+    "S": {
+      "item": "industrialcrops:component_substrate"
+    },
+    "O": {
+      "item": "minecraft:observer"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "carrote:universal_replication_device"
+  }
+}

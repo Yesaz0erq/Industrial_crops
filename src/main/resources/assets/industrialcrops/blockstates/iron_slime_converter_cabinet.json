@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "industrialcrops:block/iron_slime_converter_cabinet"
+    },
+    "facing=east": {
+      "model": "industrialcrops:block/iron_slime_converter_cabinet",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "industrialcrops:block/iron_slime_converter_cabinet",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "industrialcrops:block/iron_slime_converter_cabinet",
+      "y": 270
+    }
+  }
+}

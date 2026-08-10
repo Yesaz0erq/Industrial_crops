@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "MMM",
+    "MMM",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "item": "carrote:stable_matter_ingot"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "carrote:stable_matter_block"
+  }
+}

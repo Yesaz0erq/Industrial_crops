@@ -1,0 +1,7 @@
+{
+  "parent": "industrialcrops:block/advanced_energy_cable/template/line",
+  "textures": {
+    "basic_pipe_type": "industrialcrops:block/advanced_energy_cable_type",
+    "basic_pipe_structure": "industrialcrops:block/advanced_energy_cable_structure"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "industrialcrops:block/processor_programming_device",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "industrialcrops:block/processor_programming_device"
+    },
+    "facing=south": {
+      "model": "industrialcrops:block/processor_programming_device",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "industrialcrops:block/processor_programming_device",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=east": { "model": "industrialcrops:block/reinforced_storage_component", "y": 90 },
+    "facing=north": { "model": "industrialcrops:block/reinforced_storage_component" },
+    "facing=south": { "model": "industrialcrops:block/reinforced_storage_component", "y": 180 },
+    "facing=west": { "model": "industrialcrops:block/reinforced_storage_component", "y": 270 }
+  }
+}

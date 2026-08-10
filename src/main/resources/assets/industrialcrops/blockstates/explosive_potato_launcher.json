@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "industrialcrops:block/explosive_potato_launcher"
+    },
+    "facing=east": {
+      "model": "industrialcrops:block/explosive_potato_launcher",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "industrialcrops:block/explosive_potato_launcher",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "industrialcrops:block/explosive_potato_launcher",
+      "y": 270
+    }
+  }
+}

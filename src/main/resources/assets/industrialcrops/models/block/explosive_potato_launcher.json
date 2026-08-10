@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "industrialcrops:block/explosive_potato_launcher_bottom",
+    "up": "industrialcrops:block/explosive_potato_launcher_top",
+    "north": "industrialcrops:block/explosive_potato_launcher_front",
+    "south": "industrialcrops:block/explosive_potato_launcher_side",
+    "west": "industrialcrops:block/explosive_potato_launcher_side",
+    "east": "industrialcrops:block/explosive_potato_launcher_side",
+    "particle": "industrialcrops:block/explosive_potato_launcher_side"
+  }
+}

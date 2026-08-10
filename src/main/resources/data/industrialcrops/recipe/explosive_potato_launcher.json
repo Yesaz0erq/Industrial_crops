@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "OGO",
+    "GCG",
+    "OPO"
+  ],
+  "key": {
+    "O": { "item": "minecraft:obsidian" },
+    "G": { "item": "minecraft:gold_ingot" },
+    "C": { "item": "industrialcrops:guidance_component" },
+    "P": { "item": "industrialcrops:copper_device_casing" }
+  },
+  "result": {
+    "id": "industrialcrops:explosive_potato_launcher",
+    "count": 1
+  }
+}

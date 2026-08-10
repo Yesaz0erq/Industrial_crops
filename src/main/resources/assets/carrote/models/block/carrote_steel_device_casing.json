@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "carrote:block/carrote_steel_device_casing_bottom",
+    "side": "carrote:block/carrote_steel_device_casing_side",
+    "top": "carrote:block/carrote_steel_device_casing_top"
+  }
+}

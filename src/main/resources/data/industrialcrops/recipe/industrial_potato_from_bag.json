@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialcrops:bagged_industrial_potato"
+    }
+  ],
+  "result": {
+    "id": "industrialcrops:industrial_potato",
+    "count": 1
+  }
+}

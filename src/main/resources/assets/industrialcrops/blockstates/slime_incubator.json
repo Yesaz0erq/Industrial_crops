@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=south": { "model": "industrialcrops:block/slime_incubator" },
+    "facing=west": { "model": "industrialcrops:block/slime_incubator", "y": 90 },
+    "facing=north": { "model": "industrialcrops:block/slime_incubator", "y": 180 },
+    "facing=east": { "model": "industrialcrops:block/slime_incubator", "y": 270 }
+  }
+}

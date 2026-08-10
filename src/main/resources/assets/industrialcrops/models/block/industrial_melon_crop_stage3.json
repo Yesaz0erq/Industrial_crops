@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "industrialcrops:block/industrial_melon_crop_stage3"
+  }
+}
+

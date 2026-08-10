@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "industrialcrops:block/device_bottom",
+    "up": "industrialcrops:block/device_top",
+    "north": "industrialcrops:block/drive_front",
+    "south": "industrialcrops:block/device_side",
+    "west": "industrialcrops:block/device_side",
+    "east": "industrialcrops:block/device_side",
+    "particle": "industrialcrops:block/device_side"
+  }
+}

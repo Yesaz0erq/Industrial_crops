@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "GPG",
+    "RCR",
+    "GKG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "P": {
+      "item": "industrialcrops:component_substrate"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "C": {
+      "item": "minecraft:comparator"
+    },
+    "K": {
+      "item": "minecraft:crafter"
+    }
+  },
+  "result": {
+    "id": "industrialcrops:processor_programming_device",
+    "count": 1
+  }
+}

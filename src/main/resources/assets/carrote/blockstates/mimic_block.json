@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "carrote:block/mimic_block" },
+    "facing=east": { "model": "carrote:block/mimic_block", "y": 90 },
+    "facing=south": { "model": "carrote:block/mimic_block", "y": 180 },
+    "facing=west": { "model": "carrote:block/mimic_block", "y": 270 }
+  }
+}

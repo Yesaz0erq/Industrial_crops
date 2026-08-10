@@ -1,0 +1,70 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+
+[[mods]]
+modId = "industrialcrops"
+version = "${version}"
+displayName = "Industrial Crops"
+authors = "${mod_author}"
+logoFile = "industrialcrops_logo.png"
+description = '''尖端工业化农作物：工业农业、作物遗传、加工、物流与能源设备。'''
+
+[[mods]]
+modId = "carrote"
+version = "${version}"
+displayName = "Carrote"
+authors = "${mod_author}"
+description = '''胡罗贝：悖钢、稳态物质与悖钢设备。'''
+
+[[mixins]]
+config = "industrialcrops.mixins.json"
+
+[[dependencies.industrialcrops]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${neoforge_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.industrialcrops]]
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraft_version}]"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.industrialcrops]]
+modId = "jei"
+type = "optional"
+versionRange = "[19,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.industrialcrops]]
+modId = "geckolib"
+type = "required"
+versionRange = "[4.9,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.carrote]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${neoforge_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.carrote]]
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraft_version}]"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.carrote]]
+modId = "industrialcrops"
+type = "required"
+versionRange = "[${version},)"
+ordering = "AFTER"
+side = "BOTH"

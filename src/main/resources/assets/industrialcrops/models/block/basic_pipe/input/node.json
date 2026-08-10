@@ -1,0 +1,7 @@
+{
+  "parent": "industrialcrops:block/basic_pipe/template/node",
+  "textures": {
+    "basic_pipe_type": "industrialcrops:block/item_basic_pipe",
+    "basic_pipe_structure": "industrialcrops:block/basic_pipe_structure"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "GCG",
+    "RIR",
+    "GPG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "minecraft:comparator"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "I": {
+      "item": "industrialcrops:iron_device_casing"
+    },
+    "P": {
+      "item": "industrialcrops:component_substrate"
+    }
+  },
+  "result": {
+    "id": "industrialcrops:crop_analysis_device",
+    "count": 1
+  }
+}
