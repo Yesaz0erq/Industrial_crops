@@ -1,7 +1,6 @@
 package com.industrialcrops.block;
 
 import com.industrialcrops.block.entity.CarroteSteelForgeBlockEntity;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -12,7 +11,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -38,7 +36,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 public final class CarroteSteelForgeBlock extends BaseEntityBlock {
-    public static final MapCodec<CarroteSteelForgeBlock> CODEC = simpleCodec(CarroteSteelForgeBlock::new);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty LIT = BooleanProperty.create("lit");
     private static final DustParticleOptions CARROTE_STEEL_SPARK = new DustParticleOptions(
@@ -51,10 +48,8 @@ public final class CarroteSteelForgeBlock extends BaseEntityBlock {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(LIT, false));
     }
-
-    @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
-    @Override protected RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
-    @Override protected VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level,
+@Override public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
+    @Override public VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level,
             BlockPos pos, CollisionContext context) { return SHAPE; }
     @Override public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
@@ -71,30 +66,24 @@ public final class CarroteSteelForgeBlock extends BaseEntityBlock {
         };
     }
 
-    @Override protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level,
-            BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!CarroteSteelForgeBlockEntity.isAcceptedInput(stack)) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        }
+    @Override public InteractionResult use(BlockState state, Level level, BlockPos pos,
+            Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack stack = player.getItemInHand(hand);
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof CarroteSteelForgeBlockEntity forge) {
-            int offered = stack.getCount();
-            ItemStack remainder = forge.insertInput(stack.copy(), false);
-            int inserted = offered - remainder.getCount();
-            if (inserted > 0) {
-                if (!player.getAbilities().instabuild) stack.shrink(inserted);
-                level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.35F, 0.85F);
-            }
-        }
-        return ItemInteractionResult.sidedSuccess(level.isClientSide());
-    }
-
-    @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
-            Player player, BlockHitResult hit) {
-        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof CarroteSteelForgeBlockEntity forge) {
-            ItemStack output = forge.extractOutput(64, false);
-            if (!output.isEmpty()) {
-                if (!player.getInventory().add(output)) player.drop(output, false);
-                level.playSound(null, pos, SoundEvents.SMITHING_TABLE_USE, SoundSource.BLOCKS, 0.7F, 1.2F);
+            if (CarroteSteelForgeBlockEntity.isAcceptedInput(stack)) {
+                int offered = stack.getCount();
+                ItemStack remainder = forge.insertInput(stack.copy(), false);
+                int inserted = offered - remainder.getCount();
+                if (inserted > 0) {
+                    if (!player.getAbilities().instabuild) stack.shrink(inserted);
+                    level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.35F, 0.85F);
+                }
+            } else {
+                ItemStack output = forge.extractOutput(64, false);
+                if (!output.isEmpty()) {
+                    if (!player.getInventory().add(output)) player.drop(output, false);
+                    level.playSound(null, pos, SoundEvents.SMITHING_TABLE_USE, SoundSource.BLOCKS, 0.7F, 1.2F);
+                }
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
@@ -138,7 +127,7 @@ public final class CarroteSteelForgeBlock extends BaseEntityBlock {
         }
     }
 
-    @Override protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
+    @Override public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof CarroteSteelForgeBlockEntity forge) {
             for (int slot = 0; slot < forge.getInventory().getSlots(); slot++) {
                 Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), forge.getInventory().getStackInSlot(slot));
@@ -147,10 +136,10 @@ public final class CarroteSteelForgeBlock extends BaseEntityBlock {
         super.onRemove(state, level, pos, newState, moved);
     }
 
-    @Override protected BlockState rotate(BlockState state, Rotation rotation) {
+    @Override public BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
-    @Override protected BlockState mirror(BlockState state, Mirror mirror) {
+    @Override public BlockState mirror(BlockState state, Mirror mirror) {
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

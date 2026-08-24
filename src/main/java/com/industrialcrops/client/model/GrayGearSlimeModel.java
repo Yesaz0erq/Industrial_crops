@@ -8,12 +8,12 @@ import net.minecraft.resources.ResourceLocation;
 public final class GrayGearSlimeModel extends IndustrialSlimeModel<GrayGearSlime> {
     public GrayGearSlimeModel() {
         super(
-                ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "geo/gray_gear_slime_v2.geo.json"),
-                ResourceLocation.fromNamespaceAndPath(
+                new ResourceLocation(IndustrialCrops.MOD_ID, "geo/gray_gear_slime_v2.geo.json"),
+                new ResourceLocation(
                         IndustrialCrops.MOD_ID,
                         "textures/entity/gray_gear_slime/gray_gear_slime_create_atlas.png"
                 ),
-                ResourceLocation.fromNamespaceAndPath(
+                new ResourceLocation(
                         IndustrialCrops.MOD_ID,
                         "animations/gray_gear_slime_v2.animation.json"
                 )

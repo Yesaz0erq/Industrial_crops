@@ -26,7 +26,7 @@ public final class ManipulatorRecipeCategory implements IRecipeCategory<Manipula
     private final IDrawable icon;
 
     public ManipulatorRecipeCategory(IGuiHelper guiHelper) {
-        this.icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.BASIC_MANIPULATOR.asItem()));
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.BASIC_MANIPULATOR.get().asItem()));
     }
 
     @Override

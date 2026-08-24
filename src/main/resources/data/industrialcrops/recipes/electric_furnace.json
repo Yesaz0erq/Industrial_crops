@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "GFG",
+    "FCF",
+    "GPG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "C": {
+      "item": "industrialcrops:processor_integrated_gold_device_casing"
+    },
+    "P": {
+      "item": "industrialcrops:component_substrate"
+    }
+  },
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:electric_furnace"
+  }
+}

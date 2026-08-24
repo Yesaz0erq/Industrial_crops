@@ -4,7 +4,7 @@ import com.industrialcrops.block.entity.GoldenLaunchSiloBlockEntity;
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -13,7 +13,7 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 /** Synchronizes ammunition, four upgrade slots, coordinate mode and target state. */
 public final class GoldenLaunchSiloMenu extends AbstractContainerMenu {
@@ -44,7 +44,7 @@ public final class GoldenLaunchSiloMenu extends AbstractContainerMenu {
     private int requiredPotatoes = 1;
     private boolean upgradeSlotsVisible;
 
-    public GoldenLaunchSiloMenu(int containerId, Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    public GoldenLaunchSiloMenu(int containerId, Inventory inventory, FriendlyByteBuf buffer) {
         this(containerId, inventory, readBlockEntity(inventory, buffer));
     }
 
@@ -202,7 +202,7 @@ public final class GoldenLaunchSiloMenu extends AbstractContainerMenu {
         };
     }
 
-    private static GoldenLaunchSiloBlockEntity readBlockEntity(Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    private static GoldenLaunchSiloBlockEntity readBlockEntity(Inventory inventory, FriendlyByteBuf buffer) {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity blockEntity = inventory.player.level().getBlockEntity(pos);
         if (blockEntity instanceof GoldenLaunchSiloBlockEntity silo) {

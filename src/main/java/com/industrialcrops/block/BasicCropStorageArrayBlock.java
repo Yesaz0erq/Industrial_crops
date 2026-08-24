@@ -2,7 +2,6 @@ package com.industrialcrops.block;
 
 import com.industrialcrops.block.entity.BasicCropStorageArrayBlockEntity;
 import com.industrialcrops.registry.ModBlockEntities;
-import com.mojang.serialization.MapCodec;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,26 +24,19 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import org.jetbrains.annotations.Nullable;
 
 public final class BasicCropStorageArrayBlock extends BaseEntityBlock {
-    public static final MapCodec<BasicCropStorageArrayBlock> CODEC = simpleCodec(BasicCropStorageArrayBlock::new);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
     public BasicCropStorageArrayBlock(Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
+@Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new BasicCropStorageArrayBlockEntity(pos, state);
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
@@ -54,12 +46,12 @@ public final class BasicCropStorageArrayBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected BlockState rotate(BlockState state, Rotation rotation) {
+    public BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    protected BlockState mirror(BlockState state, Mirror mirror) {
+    public BlockState mirror(BlockState state, Mirror mirror) {
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
@@ -77,15 +69,15 @@ public final class BasicCropStorageArrayBlock extends BaseEntityBlock {
     }
 
     @Override
-    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof BasicCropStorageArrayBlockEntity drive) {
             popResource(level, pos, drive.createDroppedStack(this));
         }
-        return super.playerWillDestroy(level, pos, state, player);
+        super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override
-    protected List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
         return List.of();
     }
 }

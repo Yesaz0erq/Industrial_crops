@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "RIR",
+    "ICI",
+    "RPR"
+  ],
+  "key": {
+    "R": {
+      "item": "carrote:carrote_steel_ingot"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "carrote:carrote_steel_device_casing"
+    },
+    "P": {
+      "item": "industrialcrops:component_substrate"
+    }
+  },
+  "result": {
+    "count": 1,
+    "item": "carrote:material_hardening_device"
+  }
+}

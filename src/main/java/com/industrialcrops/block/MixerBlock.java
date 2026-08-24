@@ -2,7 +2,6 @@ package com.industrialcrops.block;
 
 import com.industrialcrops.block.entity.MixerBlockEntity;
 import com.industrialcrops.registry.ModBlockEntities;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -10,7 +9,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -32,7 +30,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public final class MixerBlock extends BaseEntityBlock {
-    public static final MapCodec<MixerBlock> CODEC = simpleCodec(MixerBlock::new);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty LIT = BooleanProperty.create("lit");
 
@@ -40,13 +37,7 @@ public final class MixerBlock extends BaseEntityBlock {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(LIT, false));
     }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
+@Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new MixerBlockEntity(pos, state);
     }
@@ -62,7 +53,7 @@ public final class MixerBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
@@ -72,14 +63,13 @@ public final class MixerBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(
-            ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+    public InteractionResult use(
+            BlockState state, Level level, BlockPos pos, Player player,
             InteractionHand hand, BlockHitResult hit
     ) {
-        if (!MixerBlockEntity.isAcceptedInput(stack)) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        }
-        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof MixerBlockEntity mixer) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (MixerBlockEntity.isAcceptedInput(stack)
+                && !level.isClientSide() && level.getBlockEntity(pos) instanceof MixerBlockEntity mixer) {
             boolean inserted = MixerBlockEntity.isEmptyBag(stack)
                     ? mixer.startMixingWithBag(false)
                     : insertHeldIngredients(mixer, stack, player);
@@ -89,8 +79,11 @@ public final class MixerBlock extends BaseEntityBlock {
                 }
                 level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.35F, 0.9F);
             }
+        } else if (!level.isClientSide() && level.getBlockEntity(pos) instanceof MixerBlockEntity mixer
+                && mixer.giveAllContentsTo(player)) {
+            level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.7F, 1.15F);
         }
-        return ItemInteractionResult.sidedSuccess(level.isClientSide());
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
     private static boolean insertHeldIngredients(MixerBlockEntity mixer, ItemStack held, Player player) {
@@ -107,18 +100,7 @@ public final class MixerBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(
-            BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult
-    ) {
-        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof MixerBlockEntity mixer
-                && mixer.giveAllContentsTo(player)) {
-            level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.7F, 1.15F);
-        }
-        return InteractionResult.sidedSuccess(level.isClientSide());
-    }
-
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof MixerBlockEntity mixer) {
             for (int slot = 0; slot < mixer.getSlots(); slot++) {
                 Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), mixer.getStackInSlot(slot));
@@ -128,12 +110,12 @@ public final class MixerBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected BlockState rotate(BlockState state, Rotation rotation) {
+    public BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    protected BlockState mirror(BlockState state, Mirror mirror) {
+    public BlockState mirror(BlockState state, Mirror mirror) {
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 

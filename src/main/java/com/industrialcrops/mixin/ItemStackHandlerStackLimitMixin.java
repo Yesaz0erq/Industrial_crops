@@ -1,6 +1,6 @@
 package com.industrialcrops.mixin;
 
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

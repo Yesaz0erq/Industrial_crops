@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.industrialcrops.network.ModNetworking;
 
 /** Coordinate entry and four-slot upgrade screen for the Golden Launch Silo. */
 public final class GoldenLaunchSiloScreen extends IndustrialContainerScreen<GoldenLaunchSiloMenu> {
@@ -124,7 +124,7 @@ public final class GoldenLaunchSiloScreen extends IndustrialContainerScreen<Gold
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
+        renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTick);
         if (upgradeTab != null) {
             graphics.renderItem(new ItemStack(ModItems.SPEED_COMPONENT_1.get()), upgradeTab.getX() + 2, upgradeTab.getY() + 2);
@@ -205,7 +205,7 @@ public final class GoldenLaunchSiloScreen extends IndustrialContainerScreen<Gold
 
     private void sendCommand(boolean launch) {
         if (launch) {
-            PacketDistributor.sendToServer(new GoldenSiloCommandPayload(
+            ModNetworking.sendToServer(new GoldenSiloCommandPayload(
                     menu.getSiloPos(),
                     0,
                     0,
@@ -224,7 +224,7 @@ public final class GoldenLaunchSiloScreen extends IndustrialContainerScreen<Gold
             return;
         }
         fieldsInitializedFromMenu = true;
-        PacketDistributor.sendToServer(new GoldenSiloCommandPayload(
+        ModNetworking.sendToServer(new GoldenSiloCommandPayload(
                 menu.getSiloPos(),
                 targetX,
                 targetY,

@@ -5,7 +5,7 @@ import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -14,7 +14,7 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public final class CropCompressorMenu extends AbstractContainerMenu implements UpgradeableMenu {
     private static final int INPUT_SLOT = CropCompressorBlockEntity.INPUT_SLOT;
@@ -31,7 +31,7 @@ public final class CropCompressorMenu extends AbstractContainerMenu implements U
     private int progress;
     private boolean upgradeSlotsVisible;
 
-    public CropCompressorMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buffer) {
+    public CropCompressorMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buffer) {
         this(containerId, playerInventory, readBlockEntity(playerInventory, buffer));
     }
 
@@ -139,7 +139,7 @@ public final class CropCompressorMenu extends AbstractContainerMenu implements U
         }
     }
 
-    private static CropCompressorBlockEntity readBlockEntity(Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    private static CropCompressorBlockEntity readBlockEntity(Inventory inventory, FriendlyByteBuf buffer) {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity blockEntity = inventory.player.level().getBlockEntity(pos);
         if (blockEntity instanceof CropCompressorBlockEntity compressor) {

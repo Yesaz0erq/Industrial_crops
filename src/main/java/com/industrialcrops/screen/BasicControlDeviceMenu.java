@@ -5,7 +5,7 @@ import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.registry.ModMenus;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -36,7 +36,7 @@ public final class BasicControlDeviceMenu extends AbstractContainerMenu {
     private int potatoes;
     private int connected;
 
-    public BasicControlDeviceMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buffer) {
+    public BasicControlDeviceMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buffer) {
         this(containerId, playerInventory, buffer.readBlockPos(), buffer.readableBytes() > 0 && buffer.readBoolean());
     }
 

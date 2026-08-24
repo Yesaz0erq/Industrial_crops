@@ -5,7 +5,7 @@ import com.industrialcrops.machine.SpeedUpgradeHelper;
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -14,7 +14,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public final class ElectricFurnaceMenu extends AbstractContainerMenu {
     public static final int UPGRADE_X = -68, UPGRADE_Y = 28, UPGRADE_SPACING = 22;
@@ -24,7 +24,7 @@ public final class ElectricFurnaceMenu extends AbstractContainerMenu {
     private final ContainerData data;
     private boolean upgradeSlotsVisible;
 
-    public ElectricFurnaceMenu(int id, Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    public ElectricFurnaceMenu(int id, Inventory inventory, FriendlyByteBuf buffer) {
         this(id, inventory, read(inventory, buffer));
     }
     private ElectricFurnaceMenu(int id, Inventory inventory, ElectricFurnaceBlockEntity furnace) {
@@ -63,5 +63,5 @@ public final class ElectricFurnaceMenu extends AbstractContainerMenu {
         if(stack.isEmpty())slot.set(ItemStack.EMPTY);else slot.setChanged();return stack.getCount()==copy.getCount()?ItemStack.EMPTY:copy;
     }
     @Override public boolean stillValid(Player player){return stillValid(ContainerLevelAccess.create(player.level(),pos),player,ModBlocks.ELECTRIC_FURNACE.get());}
-    private static ElectricFurnaceBlockEntity read(Inventory inv,RegistryFriendlyByteBuf buffer){BlockEntity be=inv.player.level().getBlockEntity(buffer.readBlockPos());if(be instanceof ElectricFurnaceBlockEntity f)return f;throw new IllegalStateException("Missing electric furnace");}
+    private static ElectricFurnaceBlockEntity read(Inventory inv,FriendlyByteBuf buffer){BlockEntity be=inv.player.level().getBlockEntity(buffer.readBlockPos());if(be instanceof ElectricFurnaceBlockEntity f)return f;throw new IllegalStateException("Missing electric furnace");}
 }

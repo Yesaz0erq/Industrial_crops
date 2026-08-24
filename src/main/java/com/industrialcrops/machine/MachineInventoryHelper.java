@@ -1,7 +1,7 @@
 package com.industrialcrops.machine;
 
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 public final class MachineInventoryHelper {
     private MachineInventoryHelper() { }

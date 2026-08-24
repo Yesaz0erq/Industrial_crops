@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 public final class DigitalMiniatureForestRenderer implements BlockEntityRenderer<DigitalMiniatureForestBlockEntity> {
-    private static final ResourceLocation LEAF_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+    private static final ResourceLocation LEAF_TEXTURE = new ResourceLocation(
             IndustrialCrops.MOD_ID,
             "textures/block/digital_miniature_forest_falling_leaf.png"
     );
@@ -104,11 +104,12 @@ public final class DigitalMiniatureForestRenderer implements BlockEntityRenderer
             int packedOverlay,
             float normalZ
     ) {
-        vertices.addVertex(pose, x, y, z)
-                .setColor(255, 255, 255, 255)
-                .setUv(u, v)
-                .setOverlay(packedOverlay)
-                .setLight(packedLight)
-                .setNormal(pose, 0.0F, 0.0F, normalZ);
+        vertices.vertex(pose.pose(), x, y, z)
+                .color(255, 255, 255, 255)
+                .uv(u, v)
+                .overlayCoords(packedOverlay)
+                .uv2(packedLight)
+                .normal(pose.normal(), 0.0F, 0.0F, normalZ)
+                .endVertex();
     }
 }

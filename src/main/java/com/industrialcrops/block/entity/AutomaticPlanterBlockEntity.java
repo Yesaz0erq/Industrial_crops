@@ -3,9 +3,9 @@ package com.industrialcrops.block.entity;
 import com.industrialcrops.machine.PoweredMachineSupport;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.screen.AutomaticPlanterMenu;
+import com.industrialcrops.util.ForgeCapabilityUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -24,10 +24,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.EnergyStorage;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -112,8 +112,7 @@ public final class AutomaticPlanterBlockEntity extends BlockEntity implements Me
                 return;
             }
             for (Direction direction : Direction.values()) {
-                IItemHandler handler = level.getCapability(
-                        Capabilities.ItemHandler.BLOCK,
+                IItemHandler handler = ForgeCapabilityUtil.find(level, ForgeCapabilities.ITEM_HANDLER,
                         worldPosition.relative(direction),
                         direction.getOpposite()
                 );
@@ -137,8 +136,7 @@ public final class AutomaticPlanterBlockEntity extends BlockEntity implements Me
             return false;
         }
         for (Direction direction : Direction.values()) {
-            IItemHandler handler = level.getCapability(
-                    Capabilities.ItemHandler.BLOCK,
+            IItemHandler handler = ForgeCapabilityUtil.find(level, ForgeCapabilities.ITEM_HANDLER,
                     worldPosition.relative(direction), direction.getOpposite());
             if (handler == null) continue;
             for (int slot = 0; slot < handler.getSlots(); slot++) {
@@ -208,19 +206,19 @@ public final class AutomaticPlanterBlockEntity extends BlockEntity implements Me
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
         tag.putInt("ScanIndex", scanIndex);
         tag.putInt("PlantedCount", plantedCount);
         tag.putInt("Energy", energy.getEnergyStored());
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Inventory")) {
-            inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+            inventory.deserializeNBT(tag.getCompound("Inventory"));
         }
         scanIndex = Math.floorMod(tag.getInt("ScanIndex"), AREA_SIZE);
         plantedCount = Math.max(0, tag.getInt("PlantedCount"));

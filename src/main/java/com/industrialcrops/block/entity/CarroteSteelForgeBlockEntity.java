@@ -5,7 +5,6 @@ import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.machine.MachineInventoryHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -22,8 +21,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 public final class CarroteSteelForgeBlockEntity extends BlockEntity {
     public static final int CARROTE_SLOT = 0;
@@ -31,7 +30,7 @@ public final class CarroteSteelForgeBlockEntity extends BlockEntity {
     public static final int OUTPUT_SLOT = 2;
     public static final int PROCESS_TICKS = 100;
     public static final TagKey<Item> ALLOY_INGOTS = TagKey.create(Registries.ITEM,
-            ResourceLocation.fromNamespaceAndPath("carrote", "carrote_steel_alloy_ingots"));
+            new ResourceLocation("carrote", "carrote_steel_alloy_ingots"));
 
     private int progress;
     private final ItemStackHandler inventory = new ItemStackHandler(3) {
@@ -120,14 +119,14 @@ public final class CarroteSteelForgeBlockEntity extends BlockEntity {
         }
     }
 
-    @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    @Override protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
         tag.putInt("Progress", progress);
     }
-    @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        if (tag.contains("Inventory")) inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+    @Override public void load(CompoundTag tag) {
+        super.load(tag);
+        if (tag.contains("Inventory")) inventory.deserializeNBT(tag.getCompound("Inventory"));
         MachineInventoryHelper.ensureSize(inventory, OUTPUT_SLOT + 1);
         progress = tag.getInt("Progress");
     }

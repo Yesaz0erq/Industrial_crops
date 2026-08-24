@@ -31,8 +31,8 @@ public final class TargetMarkerEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(SILO_POS, BlockPos.ZERO);
+    protected void defineSynchedData() {
+        entityData.define(SILO_POS, BlockPos.ZERO);
     }
 
     @Override

@@ -38,7 +38,7 @@ public final class CreativeSectionClient {
         sections = CreativeSectionCatalog.combinedSections();
 
         List<ItemStack> display = new ArrayList<>();
-        Set<ItemStack> search = ItemStackLinkedSet.createTypeAndComponentsSet();
+        Set<ItemStack> search = ItemStackLinkedSet.createTypeAndTagSet();
         Map<Integer, CreativeSectionCatalog.Section> banners = new LinkedHashMap<>();
         for (CreativeSectionCatalog.Section section : sections) {
             banners.put(display.size() / 9, section);
@@ -79,7 +79,7 @@ public final class CreativeSectionClient {
             int x = left + 8;
             int y = top + 17 + visibleRow * 18;
             CreativeSectionCatalog.Section section = entry.getValue();
-            graphics.blitSprite(section.banner(), x, y, 162, 18);
+            graphics.blit(section.banner(), x, y, 0, 0, 162, 18, 162, 18);
             graphics.drawString(font, section.title(), x + 6, y + 5, 0xFFF4F7FA, true);
         }
     }

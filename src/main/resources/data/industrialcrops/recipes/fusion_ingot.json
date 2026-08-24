@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialcrops:fusion_melon"
+    },
+    {
+      "item": "carrote:stable_matter_ingot"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:fusion_ingot"
+  }
+}

@@ -16,7 +16,7 @@ import net.minecraft.client.resources.model.ModelBakery;
  * machines from drifting into unrelated UI styles.</p>
  */
 final class IndustrialGuiStyle {
-    private static final ResourceLocation COMMON_BACKGROUND = ResourceLocation.fromNamespaceAndPath(
+    private static final ResourceLocation COMMON_BACKGROUND = new ResourceLocation(
             IndustrialCrops.MOD_ID, "textures/gui/common.png");
     private static final ResourceLocation WIDGETS = containerTexture("widgets");
     private static final ResourceLocation RS2_GRID_ROW = containerTexture("rs2_grid_row");
@@ -51,7 +51,7 @@ final class IndustrialGuiStyle {
     }
 
     static ResourceLocation containerTexture(String name) {
-        return ResourceLocation.fromNamespaceAndPath(
+        return new ResourceLocation(
                 IndustrialCrops.MOD_ID,
                 "textures/gui/container/" + name + ".png"
         );

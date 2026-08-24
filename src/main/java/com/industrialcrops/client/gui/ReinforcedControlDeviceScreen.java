@@ -63,19 +63,6 @@ public final class ReinforcedControlDeviceScreen extends IndustrialContainerScre
     }
 
     @Override
-    protected void renderSlotContents(GuiGraphics graphics, ItemStack stack, Slot slot, @Nullable String countString) {
-        // Storage counts are synchronized separately because vanilla slot packets cap the visible stack count.
-        if (slot.index < 54) {
-            // Render a single item through the normal slot-decoration pass so
-            // it cannot be hidden by the item icon or tooltip depth.
-            String synchronizedCount = menu.getStoredCount(slot.index) == 1 ? "1" : "";
-            super.renderSlotContents(graphics, stack, slot, synchronizedCount);
-            return;
-        }
-        super.renderSlotContents(graphics, stack, slot, countString);
-    }
-
-    @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         String displayTitle = font.plainSubstrByWidth(title.getString(), 102);
         graphics.drawString(font, displayTitle, 8, titleLabelY, IndustrialGuiStyle.TEXT, false);
@@ -91,7 +78,7 @@ public final class ReinforcedControlDeviceScreen extends IndustrialContainerScre
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
+        renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTick);
         drawStorageCounts(graphics);
         renderTooltip(graphics, mouseX, mouseY);
@@ -142,9 +129,9 @@ public final class ReinforcedControlDeviceScreen extends IndustrialContainerScre
      * player-inventory slot to deposit it into the active storage page.
      */
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double verticalAmount) {
         if (verticalAmount == 0.0D) {
-            return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+            return super.mouseScrolled(mouseX, mouseY, verticalAmount);
         }
 
         if (isShiftPhysicallyDown()) {
@@ -165,7 +152,7 @@ public final class ReinforcedControlDeviceScreen extends IndustrialContainerScre
                 quickMoveSlot(playerSlot);
                 return true;
             }
-            return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+            return super.mouseScrolled(mouseX, mouseY, verticalAmount);
         }
 
         if (mouseX >= leftPos && mouseX < leftPos + imageWidth
@@ -173,7 +160,7 @@ public final class ReinforcedControlDeviceScreen extends IndustrialContainerScre
             changePage(verticalAmount > 0.0D);
             return true;
         }
-        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        return super.mouseScrolled(mouseX, mouseY, verticalAmount);
     }
 
     /**

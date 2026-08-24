@@ -14,7 +14,7 @@ public final class FertileFarmlandBlock extends FarmBlock {
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (state.getValue(MOISTURE) != MAX_MOISTURE) {
             level.setBlock(pos, state.setValue(MOISTURE, MAX_MOISTURE), 2);
         }

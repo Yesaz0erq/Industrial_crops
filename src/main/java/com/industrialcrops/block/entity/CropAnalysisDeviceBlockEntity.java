@@ -4,7 +4,6 @@ import com.industrialcrops.crop.CropGenetics;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.screen.CropAnalysisDeviceMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -14,7 +13,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class CropAnalysisDeviceBlockEntity extends BlockEntity implements MenuProvider {
@@ -50,16 +49,16 @@ public final class CropAnalysisDeviceBlockEntity extends BlockEntity implements 
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Inventory")) {
-            inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+            inventory.deserializeNBT(tag.getCompound("Inventory"));
         }
     }
 

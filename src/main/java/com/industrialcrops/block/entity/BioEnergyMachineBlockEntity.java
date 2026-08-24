@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
@@ -29,10 +28,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.EnergyStorage;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements MenuProvider {
@@ -168,8 +167,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     private void pushEnergyToNeighbors() {
         if (level == null || energy.getEnergyStored() <= 0) return;
         for (Direction direction : Direction.values()) {
-            IEnergyStorage target = level.getCapability(Capabilities.EnergyStorage.BLOCK,
-                    worldPosition.relative(direction), direction.getOpposite());
+            IEnergyStorage target = com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ENERGY, worldPosition.relative(direction), direction.getOpposite());
             if (target == null || !target.canReceive()) continue;
             int offered = Math.min(TRANSFER_RATE, energy.getEnergyStored());
             int accepted = target.receiveEnergy(energy.extractEnergy(offered, true), false);
@@ -256,19 +254,19 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
         return kind == Kind.INCINERATOR ? null : energy;
     }
 
-    @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    @Override protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
         tag.putInt("Energy", energy.getEnergyStored());
         tag.putInt("Progress", progress);
         tag.putInt("Residue", residue);
         tag.putInt("BurnTime", burnTime);
         tag.putInt("BurnTimeTotal", burnTimeTotal);
     }
-    @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    @Override public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Inventory")) {
-            inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+            inventory.deserializeNBT(tag.getCompound("Inventory"));
             int expected = kind == Kind.BATTERY ? 0 : kind == Kind.GENERATOR ? 1 + UPGRADE_SLOT_COUNT : 1;
             MachineInventoryHelper.ensureSize(inventory, expected);
         }

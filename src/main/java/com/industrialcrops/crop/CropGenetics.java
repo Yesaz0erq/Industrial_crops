@@ -1,12 +1,10 @@
 package com.industrialcrops.crop;
 
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 
 import java.util.Set;
 
@@ -63,39 +61,39 @@ public final class CropGenetics {
 
     public static ItemStack createCreativeTemplate(ItemStack stack, RandomSource random) {
         write(stack, new Genes(CropQuality.NORMAL.tier(), CropQuality.NORMAL.tier()));
-        CustomData.update(DataComponents.CUSTOM_DATA, stack,
+        com.industrialcrops.util.ItemStackNbt.update(stack,
                 tag -> tag.putBoolean(CREATIVE_TEMPLATE_TAG, true));
         return stack;
     }
 
     public static void initializeInventoryStack(ItemStack stack, RandomSource random) {
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+        var data = com.industrialcrops.util.ItemStackNbt.copyTag(stack);
         boolean creativeTemplate = data != null
-                && data.copyTag().getBoolean(CREATIVE_TEMPLATE_TAG);
+                && data.getBoolean(CREATIVE_TEMPLATE_TAG);
         if (!hasGenes(stack) || creativeTemplate) {
             write(stack, createInitial(random));
         }
         if (creativeTemplate) {
-            CustomData.update(DataComponents.CUSTOM_DATA, stack,
+            com.industrialcrops.util.ItemStackNbt.update(stack,
                     tag -> tag.remove(CREATIVE_TEMPLATE_TAG));
         }
     }
 
     public static boolean hasGenes(ItemStack stack) {
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+        var data = com.industrialcrops.util.ItemStackNbt.copyTag(stack);
         if (data == null) {
             return false;
         }
-        var tag = data.copyTag();
+        var tag = data;
         return tag.contains(DOMINANT_TAG) && tag.contains(RECESSIVE_TAG);
     }
 
     public static Genes read(ItemStack stack) {
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+        var data = com.industrialcrops.util.ItemStackNbt.copyTag(stack);
         if (data == null) {
             return null;
         }
-        var tag = data.copyTag();
+        var tag = data;
         if (!tag.contains(DOMINANT_TAG) || !tag.contains(RECESSIVE_TAG)) {
             return null;
         }
@@ -104,7 +102,7 @@ public final class CropGenetics {
 
     public static void write(ItemStack stack, Genes genes) {
         Genes normalized = normalize(genes.dominantTier(), genes.recessiveTier());
-        CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> {
+        com.industrialcrops.util.ItemStackNbt.update(stack, tag -> {
             tag.putInt(DOMINANT_TAG, normalized.dominantTier());
             tag.putInt(RECESSIVE_TAG, normalized.recessiveTier());
         });

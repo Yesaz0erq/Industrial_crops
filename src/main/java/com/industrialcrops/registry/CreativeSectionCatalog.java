@@ -112,7 +112,7 @@ public final class CreativeSectionCatalog {
     @SafeVarargs
     private static Section section(String title, String namespace, String banner, Supplier<ItemStack>... items) {
         return new Section(Component.translatable(title),
-                ResourceLocation.fromNamespaceAndPath(namespace, "creative_sections/" + banner),
+                new ResourceLocation(namespace, "creative_sections/" + banner),
                 List.of(items));
     }
 

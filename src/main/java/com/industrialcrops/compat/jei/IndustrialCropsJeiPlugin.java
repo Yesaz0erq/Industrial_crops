@@ -23,19 +23,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import com.industrialcrops.registry.ModMenus;
 import com.industrialcrops.screen.AdvancedIndustrialStorageMenu;
 import java.util.Optional;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.industrialcrops.network.ModNetworking;
 import com.industrialcrops.network.payload.StorageCraftingTransferPayload;
 
 @JeiPlugin
 public final class IndustrialCropsJeiPlugin implements IModPlugin {
     @Override
     public ResourceLocation getPluginUid() {
-        return ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "jei_plugin");
+        return new ResourceLocation(IndustrialCrops.MOD_ID, "jei_plugin");
     }
 
     @Override
@@ -62,18 +61,18 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ROOT_ORE_EXTRACTOR.asItem()), RootOreExtractorRecipeCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_MANIPULATOR.asItem()), ManipulatorRecipeCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ADVANCED_MANIPULATOR.asItem()), ManipulatorRecipeCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.CROP_COMPRESSOR.asItem()), CropCompressorRecipeCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GOURD_MODIFICATION_DEVICE.asItem()), GourdModificationRecipeCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.MIXER.asItem()), MixerRecipeCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.PROCESSOR_PROGRAMMER.asItem()), ProcessorProgrammingRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ROOT_ORE_EXTRACTOR.get().asItem()), RootOreExtractorRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_MANIPULATOR.get().asItem()), ManipulatorRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ADVANCED_MANIPULATOR.get().asItem()), ManipulatorRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.CROP_COMPRESSOR.get().asItem()), CropCompressorRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GOURD_MODIFICATION_DEVICE.get().asItem()), GourdModificationRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.MIXER.get().asItem()), MixerRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.PROCESSOR_PROGRAMMER.get().asItem()), ProcessorProgrammingRecipeCategory.TYPE);
     }
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        registration.addRecipeTransferHandler(new IRecipeTransferHandler<AdvancedIndustrialStorageMenu, RecipeHolder<CraftingRecipe>>() {
+        registration.addRecipeTransferHandler(new IRecipeTransferHandler<AdvancedIndustrialStorageMenu, CraftingRecipe>() {
             @Override
             public Class<? extends AdvancedIndustrialStorageMenu> getContainerClass() {
                 return AdvancedIndustrialStorageMenu.class;
@@ -85,18 +84,18 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
             }
 
             @Override
-            public RecipeType<RecipeHolder<CraftingRecipe>> getRecipeType() {
+            public RecipeType<CraftingRecipe> getRecipeType() {
                 return RecipeTypes.CRAFTING;
             }
 
             @Override
             public IRecipeTransferError transferRecipe(AdvancedIndustrialStorageMenu menu,
-                                                       RecipeHolder<CraftingRecipe> recipe,
+                                                       CraftingRecipe recipe,
                                                        IRecipeSlotsView recipeSlots,
                                                        Player player,
                                                        boolean maxTransfer,
                                                        boolean doTransfer) {
-                if (doTransfer) PacketDistributor.sendToServer(new StorageCraftingTransferPayload(recipe.id()));
+                if (doTransfer) ModNetworking.sendToServer(new StorageCraftingTransferPayload(recipe.getId()));
                 return null;
             }
         }, RecipeTypes.CRAFTING);

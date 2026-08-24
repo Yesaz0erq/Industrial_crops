@@ -8,7 +8,6 @@ import com.industrialcrops.machine.SpeedUpgradeHelper;
 import com.industrialcrops.machine.MachineInventoryHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -26,7 +25,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class IncubatorBlockEntity extends BlockEntity implements MenuProvider {
@@ -169,19 +168,19 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
         tag.putInt("SlimeType", slimeType);
         tag.putInt("SlimeSize", slimeSize);
         tag.putInt("Progress", progress);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Inventory")) {
-            inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+            inventory.deserializeNBT(tag.getCompound("Inventory"));
             MachineInventoryHelper.ensureSize(inventory, UPGRADE_SLOT_START + UPGRADE_SLOT_COUNT);
         }
         slimeType = tag.getInt("SlimeType");
@@ -190,8 +189,8 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return saveWithoutMetadata(registries);
+    public CompoundTag getUpdateTag() {
+        return saveWithoutMetadata();
     }
 
     @Override

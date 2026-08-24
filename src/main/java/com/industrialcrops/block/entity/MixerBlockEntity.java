@@ -9,7 +9,6 @@ import com.industrialcrops.registry.ModItems;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -20,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 public final class MixerBlockEntity extends BlockEntity {
     public static final int INGREDIENT_SLOT_START = 0;
@@ -254,20 +253,20 @@ public final class MixerBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
         tag.putInt("ActiveRecipe", activeRecipe);
         tag.putInt("Progress", progress);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Inventory")) {
             CompoundTag inventoryTag = tag.getCompound("Inventory");
             int savedSize = inventoryTag.getInt("Size");
-            inventory.deserializeNBT(registries, inventoryTag);
+            inventory.deserializeNBT(inventoryTag);
             if (savedSize != TOTAL_SLOTS) {
                 migrateLegacyInventory(savedSize);
             } else {
@@ -331,7 +330,7 @@ public final class MixerBlockEntity extends BlockEntity {
                 inventory.setStackInSlot(slot, remainder);
                 return;
             }
-            if (ItemStack.isSameItemSameComponents(stored, remainder)) {
+            if (ItemStack.isSameItemSameTags(stored, remainder)) {
                 int moved = Math.min(remainder.getCount(), stored.getMaxStackSize() - stored.getCount());
                 if (moved > 0) {
                     stored.grow(moved);
@@ -362,7 +361,7 @@ public final class MixerBlockEntity extends BlockEntity {
         if (outputStack.isEmpty()) {
             return true;
         }
-        if (!ItemStack.isSameItemSameComponents(outputStack, resultStack)) {
+        if (!ItemStack.isSameItemSameTags(outputStack, resultStack)) {
             return false;
         }
         return outputStack.getCount() + resultStack.getCount() <= outputStack.getMaxStackSize();

@@ -6,7 +6,6 @@ import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.screen.GourdModificationDeviceMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -17,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class GourdModificationDeviceBlockEntity extends BlockEntity implements MenuProvider {
@@ -124,17 +123,17 @@ public final class GourdModificationDeviceBlockEntity extends BlockEntity implem
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
         tag.putInt("Progress", progress);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Inventory")) {
-            inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+            inventory.deserializeNBT(tag.getCompound("Inventory"));
         }
         progress = tag.getInt("Progress");
     }

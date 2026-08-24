@@ -6,7 +6,6 @@ import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
 import com.industrialcrops.machine.MachineInventoryHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -19,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class RootOreExtractorBlockEntity extends BlockEntity implements MenuProvider {
@@ -151,19 +150,19 @@ public final class RootOreExtractorBlockEntity extends BlockEntity implements Me
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
         tag.putInt("Progress", progress);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Inventory")) {
             CompoundTag inventoryTag = tag.getCompound("Inventory");
             boolean legacyLayout = inventoryTag.getInt("Size") == 7;
-            inventory.deserializeNBT(registries, inventoryTag);
+            inventory.deserializeNBT(inventoryTag);
             if (legacyLayout) {
                 ItemStack legacyOutput = inventory.getStackInSlot(2).copy();
                 ItemStack[] legacyUpgrades = new ItemStack[UPGRADE_SLOT_COUNT];
@@ -240,7 +239,7 @@ public final class RootOreExtractorBlockEntity extends BlockEntity implements Me
         } else if (inputStack.is(Items.PUMPKIN_SEEDS)) {
             resultStack = new ItemStack(ModItems.BAGGED_INDUSTRIAL_PUMPKIN_SEEDS.get());
         } else if (inputStack.is(Blocks.HAY_BLOCK.asItem())) {
-            resultStack = new ItemStack(ModBlocks.INDUSTRIAL_WHEAT_BLOCK.asItem());
+            resultStack = new ItemStack(ModBlocks.INDUSTRIAL_WHEAT_BLOCK.get().asItem());
         } else if (inputStack.is(Blocks.MELON.asItem())) {
             resultStack = new ItemStack(ModItems.INDUSTRIAL_MELON.get());
         } else if (inputStack.is(Blocks.PUMPKIN.asItem())) {
@@ -260,7 +259,7 @@ public final class RootOreExtractorBlockEntity extends BlockEntity implements Me
         if (outputStack.isEmpty()) {
             return true;
         }
-        if (!ItemStack.isSameItemSameComponents(outputStack, resultStack)) {
+        if (!ItemStack.isSameItemSameTags(outputStack, resultStack)) {
             return false;
         }
         return outputStack.getCount() + resultStack.getCount() <= outputStack.getMaxStackSize();

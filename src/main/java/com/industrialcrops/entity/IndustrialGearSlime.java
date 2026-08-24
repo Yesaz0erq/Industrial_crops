@@ -4,6 +4,7 @@ import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
@@ -14,12 +15,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public abstract class IndustrialGearSlime extends FriendlyIndustrialSlime implements GeoEntity {
@@ -103,9 +104,10 @@ public abstract class IndustrialGearSlime extends FriendlyIndustrialSlime implem
             ServerLevelAccessor level,
             DifficultyInstance difficulty,
             MobSpawnType spawnType,
-            @Nullable SpawnGroupData spawnData
+            @Nullable SpawnGroupData spawnData,
+            @Nullable CompoundTag spawnTag
     ) {
-        SpawnGroupData result = super.finalizeSpawn(level, difficulty, spawnType, spawnData);
+        SpawnGroupData result = super.finalizeSpawn(level, difficulty, spawnType, spawnData, spawnTag);
         setSize(1, true);
         return result;
     }

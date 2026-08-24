@@ -10,14 +10,13 @@ import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.EnergyStorage;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public final class EnergyCableBlockEntity extends BlockEntity {
     private static final int MAX_NETWORK_SIZE = 1024;
@@ -70,7 +69,7 @@ public final class EnergyCableBlockEntity extends BlockEntity {
             BlockPos endpointPos = cable.worldPosition.relative(direction);
             if (level.getBlockState(endpointPos).getBlock() instanceof EnergyCableBlock) continue;
             Direction side = direction.getOpposite();
-            IEnergyStorage storage = level.getCapability(Capabilities.EnergyStorage.BLOCK, endpointPos, side);
+            IEnergyStorage storage = com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ENERGY, endpointPos, side);
             String key = endpointPos.asLong() + ":" + side.ordinal();
             if (storage != null && seen.add(key)) endpoints.add(new Endpoint(endpointPos, side, storage));
         }
@@ -110,11 +109,11 @@ public final class EnergyCableBlockEntity extends BlockEntity {
     private int transferRate() { return getBlockState().is(ModBlocks.ADVANCED_ENERGY_CABLE.get()) ? ADVANCED_RATE : BASIC_RATE; }
     public IEnergyStorage getEnergyStorage() { return energy; }
 
-    @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries); tag.putInt("Energy", energy.getEnergyStored());
+    @Override protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag); tag.putInt("Energy", energy.getEnergyStored());
     }
-    @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries); energy.setStored(tag.getInt("Energy"));
+    @Override public void load(CompoundTag tag) {
+        super.load(tag); energy.setStored(tag.getInt("Energy"));
     }
 
     private int networkEnergyStored() {

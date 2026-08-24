@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.industrialcrops.network.ModNetworking;
 import org.jetbrains.annotations.Nullable;
 
 /** RS2-style stretching storage/crafting screen used by the reinforced controller. */
@@ -54,7 +54,7 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
         int desiredRows = Math.max(AdvancedIndustrialStorageMenu.MIN_ROWS, Math.min(
                 AdvancedIndustrialStorageMenu.MAX_ROWS, available / 18 - 3));
         if (desiredRows != menu.getVisibleRows()) {
-            PacketDistributor.sendToServer(new ResizeStorageMenuPayload(menu.getBlockPos(), desiredRows, false));
+            ModNetworking.sendToServer(new ResizeStorageMenuPayload(menu.getBlockPos(), desiredRows, false));
         }
         searchBox = addRenderableWidget(new EditBox(font, leftPos + SEARCH_X, topPos + SEARCH_Y,
                 SEARCH_WIDTH, 12, Component.translatable("gui.industrialcrops.storage.search")));
@@ -62,7 +62,7 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
         searchBox.setMaxLength(64);
         searchBox.setTextColor(IndustrialGuiStyle.TEXT);
         searchBox.setTextColorUneditable(IndustrialGuiStyle.MUTED_TEXT);
-        searchBox.setResponder(value -> PacketDistributor.sendToServer(new StorageSearchPayload(value)));
+        searchBox.setResponder(value -> ModNetworking.sendToServer(new StorageSearchPayload(value)));
         cellSlotsTab = addRenderableWidget(Button.builder(Component.empty(), ignored -> {
                     cellSlotsOpen = !cellSlotsOpen;
                     menu.setCellSlotsVisible(cellSlotsOpen);
@@ -97,16 +97,8 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
     }
 
     @Override
-    protected void renderSlotContents(GuiGraphics graphics, ItemStack stack, Slot slot, @Nullable String countString) {
-        // The virtual storage can exceed the vanilla 64-item stack limit. The
-        // real count is drawn from the synchronized menu data below.
-        super.renderSlotContents(graphics, stack, slot,
-                slot.index < menu.getVisibleSlotCount() ? "" : countString);
-    }
-
-    @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
+        renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTick);
         drawStorageCounts(graphics);
         if (cellSlotsTab != null) {
@@ -149,14 +141,14 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double verticalAmount) {
         if (!insideStorageArea(mouseX, mouseY) && !insideScrollbar(mouseX, mouseY)) {
-            return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+            return super.mouseScrolled(mouseX, mouseY, verticalAmount);
         }
         int rows = hasControlDown() ? menu.getVisibleRows() : 1;
         if (verticalAmount > 0) setOffset(menu.getScrollRow() - rows);
         else if (verticalAmount < 0) setOffset(menu.getScrollRow() + rows);
-        else return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        else return super.mouseScrolled(mouseX, mouseY, verticalAmount);
         return true;
     }
 

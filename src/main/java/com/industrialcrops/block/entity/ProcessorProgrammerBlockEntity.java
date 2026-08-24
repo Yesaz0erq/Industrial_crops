@@ -8,7 +8,6 @@ import com.industrialcrops.screen.ProcessorProgrammerMenu;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
 import com.industrialcrops.machine.MachineInventoryHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -19,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class ProcessorProgrammerBlockEntity extends BlockEntity implements MenuProvider {
@@ -133,13 +132,13 @@ public final class ProcessorProgrammerBlockEntity extends BlockEntity implements
 
     private boolean canAcceptOutput(ItemStack result) {
         ItemStack output = inventory.getStackInSlot(OUTPUT_SLOT);
-        return output.isEmpty() || ItemStack.isSameItemSameComponents(output, result)
+        return output.isEmpty() || ItemStack.isSameItemSameTags(output, result)
                 && output.getCount() + result.getCount() <= output.getMaxStackSize();
     }
 
     private static boolean matches(ItemStack stack, ManipulatorIngredient ingredient) {
         return !stack.isEmpty() && ingredient.acceptedStacks().stream()
-                .anyMatch(accepted -> ItemStack.isSameItemSameComponents(stack, accepted));
+                .anyMatch(accepted -> ItemStack.isSameItemSameTags(stack, accepted));
     }
 
     private void setChangedAndSync() {
@@ -151,17 +150,17 @@ public final class ProcessorProgrammerBlockEntity extends BlockEntity implements
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
         tag.putInt("Progress", progress);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Inventory")) {
-            inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+            inventory.deserializeNBT(tag.getCompound("Inventory"));
             MachineInventoryHelper.ensureSize(inventory, SLOT_COUNT + UPGRADE_SLOT_COUNT);
         }
         progress = tag.getInt("Progress");

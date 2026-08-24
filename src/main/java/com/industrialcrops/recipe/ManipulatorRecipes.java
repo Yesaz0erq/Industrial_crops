@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class ManipulatorRecipes {
-    public static final TagKey<Item> STRIPPED_LOGS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "stripped_logs"));
+    public static final TagKey<Item> STRIPPED_LOGS = TagKey.create(Registries.ITEM, new ResourceLocation(IndustrialCrops.MOD_ID, "stripped_logs"));
     private static final List<ManipulatorRecipeDisplay> BASIC_RECIPES = List.of(
             reinforcedControlDevice(),
             reinforcedPipe(),
@@ -35,65 +35,65 @@ public final class ManipulatorRecipes {
                         ManipulatorIngredient.ofItem(Items.IRON_INGOT, 10),
                         ManipulatorIngredient.ofOptions(getStrippedLogOptions(), new ItemStack(Items.STRIPPED_BIRCH_LOG), 1)
                 ),
-                new ItemStack(ModBlocks.IRON_DEVICE_CASING.asItem())
+                new ItemStack(ModBlocks.IRON_DEVICE_CASING.get().asItem())
         );
     }
 
     public static ManipulatorRecipeDisplay reinforcedIndustrialStorageArray() {
         return new ManipulatorRecipeDisplay(
                 List.of(
-                        ManipulatorIngredient.ofItem(ModBlocks.IRON_DEVICE_CASING.asItem(), 1),
-                        ManipulatorIngredient.ofItem(ModBlocks.INDUSTRIAL_CROP_STORAGE_ARRAY.asItem(), 1),
+                        ManipulatorIngredient.ofItem(ModBlocks.IRON_DEVICE_CASING.get().asItem(), 1),
+                        ManipulatorIngredient.ofItem(ModBlocks.INDUSTRIAL_CROP_STORAGE_ARRAY.get().asItem(), 1),
                         ManipulatorIngredient.ofItem(Items.IRON_INGOT, 5),
                         ManipulatorIngredient.ofOptions(getCopperChestOptions(), getCopperChestDisplayStack(), 3)
                 ),
-                new ItemStack(ModBlocks.REINFORCED_INDUSTRIAL_STORAGE_ARRAY.asItem())
+                new ItemStack(ModBlocks.REINFORCED_INDUSTRIAL_STORAGE_ARRAY.get().asItem())
         );
     }
 
     public static ManipulatorRecipeDisplay reinforcedControlDevice() {
         return new ManipulatorRecipeDisplay(
                 List.of(
-                        ManipulatorIngredient.ofItem(ModBlocks.IRON_DEVICE_CASING.asItem(), 1),
-                        ManipulatorIngredient.ofItem(ModBlocks.CARROT_CONTROL_DEVICE.asItem(), 1),
+                        ManipulatorIngredient.ofItem(ModBlocks.IRON_DEVICE_CASING.get().asItem(), 1),
+                        ManipulatorIngredient.ofItem(ModBlocks.CARROT_CONTROL_DEVICE.get().asItem(), 1),
                         ManipulatorIngredient.ofItem(Items.IRON_INGOT, 5),
                         ManipulatorIngredient.ofOptions(getCopperChestOptions(), getCopperChestDisplayStack(), 3)
                 ),
-                new ItemStack(ModBlocks.REINFORCED_CONTROL_DEVICE.asItem())
+                new ItemStack(ModBlocks.REINFORCED_CONTROL_DEVICE.get().asItem())
         );
     }
 
     public static ManipulatorRecipeDisplay reinforcedPipe() {
         return new ManipulatorRecipeDisplay(
-                List.of(ManipulatorIngredient.ofItem(Items.IRON_INGOT, 16), ManipulatorIngredient.ofItem(ModBlocks.PIPE.asItem(), 4)),
-                new ItemStack(ModBlocks.REINFORCED_PIPE.asItem(), 4)
+                List.of(ManipulatorIngredient.ofItem(Items.IRON_INGOT, 16), ManipulatorIngredient.ofItem(ModBlocks.PIPE.get().asItem(), 4)),
+                new ItemStack(ModBlocks.REINFORCED_PIPE.get().asItem(), 4)
         );
     }
 
     public static ManipulatorRecipeDisplay reinforcedInputPipe() {
         return new ManipulatorRecipeDisplay(
-                List.of(ManipulatorIngredient.ofItem(Items.IRON_INGOT, 16), ManipulatorIngredient.ofItem(ModBlocks.INPUT_PIPE.asItem(), 4)),
-                new ItemStack(ModBlocks.REINFORCED_INPUT_PIPE.asItem(), 4)
+                List.of(ManipulatorIngredient.ofItem(Items.IRON_INGOT, 16), ManipulatorIngredient.ofItem(ModBlocks.INPUT_PIPE.get().asItem(), 4)),
+                new ItemStack(ModBlocks.REINFORCED_INPUT_PIPE.get().asItem(), 4)
         );
     }
 
     public static ManipulatorRecipeDisplay reinforcedOutputPipe() {
         return new ManipulatorRecipeDisplay(
-                List.of(ManipulatorIngredient.ofItem(Items.IRON_INGOT, 16), ManipulatorIngredient.ofItem(ModBlocks.OUTPUT_PIPE.asItem(), 4)),
-                new ItemStack(ModBlocks.REINFORCED_OUTPUT_PIPE.asItem(), 4)
+                List.of(ManipulatorIngredient.ofItem(Items.IRON_INGOT, 16), ManipulatorIngredient.ofItem(ModBlocks.OUTPUT_PIPE.get().asItem(), 4)),
+                new ItemStack(ModBlocks.REINFORCED_OUTPUT_PIPE.get().asItem(), 4)
         );
     }
 
     public static ManipulatorRecipeDisplay advancedPipe() {
-        return advancedPipeRecipe(ModBlocks.REINFORCED_PIPE.asItem(), ModBlocks.ADVANCED_PIPE.asItem());
+        return advancedPipeRecipe(ModBlocks.REINFORCED_PIPE.get().asItem(), ModBlocks.ADVANCED_PIPE.get().asItem());
     }
 
     public static ManipulatorRecipeDisplay advancedInputPipe() {
-        return advancedPipeRecipe(ModBlocks.REINFORCED_INPUT_PIPE.asItem(), ModBlocks.ADVANCED_INPUT_PIPE.asItem());
+        return advancedPipeRecipe(ModBlocks.REINFORCED_INPUT_PIPE.get().asItem(), ModBlocks.ADVANCED_INPUT_PIPE.get().asItem());
     }
 
     public static ManipulatorRecipeDisplay advancedOutputPipe() {
-        return advancedPipeRecipe(ModBlocks.REINFORCED_OUTPUT_PIPE.asItem(), ModBlocks.ADVANCED_OUTPUT_PIPE.asItem());
+        return advancedPipeRecipe(ModBlocks.REINFORCED_OUTPUT_PIPE.get().asItem(), ModBlocks.ADVANCED_OUTPUT_PIPE.get().asItem());
     }
 
     private static ManipulatorRecipeDisplay advancedPipeRecipe(Item reinforcedPipe, Item advancedPipe) {
@@ -116,38 +116,38 @@ public final class ManipulatorRecipes {
 
     public static ManipulatorRecipeDisplay matterDigitizer() {
         return new ManipulatorRecipeDisplay(List.of(
-                ManipulatorIngredient.ofItem(ModBlocks.PROCESSOR_GOLD_DEVICE_CASING.asItem(), 1),
+                ManipulatorIngredient.ofItem(ModBlocks.PROCESSOR_GOLD_DEVICE_CASING.get().asItem(), 1),
                 ManipulatorIngredient.ofItem(com.industrialcrops.registry.ModItems.COMPONENT_SUBSTRATE.get(), 2),
                 ManipulatorIngredient.ofItem(Items.REDSTONE, 8),
                 ManipulatorIngredient.ofItem(Items.GLASS, 4)),
-                new ItemStack(ModBlocks.MATTER_DIGITIZER.asItem()));
+                new ItemStack(ModBlocks.MATTER_DIGITIZER.get().asItem()));
     }
 
     public static ManipulatorRecipeDisplay digitizedItemCopier() {
         return new ManipulatorRecipeDisplay(List.of(
-                ManipulatorIngredient.ofItem(ModBlocks.PROCESSOR_GOLD_DEVICE_CASING.asItem(), 1),
+                ManipulatorIngredient.ofItem(ModBlocks.PROCESSOR_GOLD_DEVICE_CASING.get().asItem(), 1),
                 ManipulatorIngredient.ofItem(com.industrialcrops.registry.ModItems.COMPONENT_SUBSTRATE.get(), 4),
                 ManipulatorIngredient.ofItem(Items.DIAMOND, 4),
                 ManipulatorIngredient.ofItem(com.industrialcrops.registry.ModItems.INDUSTRIAL_STORAGE_COMPONENT_1.get(), 1)),
-                new ItemStack(ModBlocks.DIGITIZED_ITEM_COPIER.asItem()));
+                new ItemStack(ModBlocks.DIGITIZED_ITEM_COPIER.get().asItem()));
     }
 
     public static ManipulatorRecipeDisplay matterReconstructor() {
         return new ManipulatorRecipeDisplay(List.of(
-                ManipulatorIngredient.ofItem(ModBlocks.PROCESSOR_GOLD_DEVICE_CASING.asItem(), 1),
+                ManipulatorIngredient.ofItem(ModBlocks.PROCESSOR_GOLD_DEVICE_CASING.get().asItem(), 1),
                 ManipulatorIngredient.ofItem(com.industrialcrops.registry.ModItems.COMPONENT_SUBSTRATE.get(), 4),
                 ManipulatorIngredient.ofItem(Items.DIAMOND, 4),
                 ManipulatorIngredient.ofItem(Items.REDSTONE_BLOCK, 2)),
-                new ItemStack(ModBlocks.MATTER_RECONSTRUCTOR.asItem()));
+                new ItemStack(ModBlocks.MATTER_RECONSTRUCTOR.get().asItem()));
     }
 
     public static ManipulatorRecipeDisplay itemNetworkTerminal() {
         return new ManipulatorRecipeDisplay(List.of(
-                ManipulatorIngredient.ofItem(ModBlocks.PROCESSOR_GOLD_DEVICE_CASING.asItem(), 1),
+                ManipulatorIngredient.ofItem(ModBlocks.PROCESSOR_GOLD_DEVICE_CASING.get().asItem(), 1),
                 ManipulatorIngredient.ofItem(com.industrialcrops.registry.ModItems.COMPONENT_SUBSTRATE.get(), 4),
                 ManipulatorIngredient.ofItem(com.industrialcrops.registry.ModItems.INDUSTRIAL_STORAGE_COMPONENT_1.get(), 2),
                 ManipulatorIngredient.ofItem(Items.ENDER_PEARL, 4)),
-                new ItemStack(ModBlocks.ITEM_NETWORK_TERMINAL.asItem()));
+                new ItemStack(ModBlocks.ITEM_NETWORK_TERMINAL.get().asItem()));
     }
 
     public static List<ItemStack> getStrippedLogOptions() {
@@ -177,11 +177,11 @@ public final class ManipulatorRecipes {
 
     private static ItemStack getCopperChestDisplayStack() {
         List<ItemStack> options = getCopperChestOptions();
-        return options.isEmpty() ? new ItemStack(Items.CHEST) : options.getFirst().copy();
+        return options.isEmpty() ? new ItemStack(Items.CHEST) : options.get(0).copy();
     }
 
     private static ItemStack optionalItem(String id) {
-        ResourceLocation location = ResourceLocation.parse(id);
+        ResourceLocation location = new ResourceLocation(id);
         return BuiltInRegistries.ITEM.getOptional(location).map(ItemStack::new).orElse(ItemStack.EMPTY);
     }
 }

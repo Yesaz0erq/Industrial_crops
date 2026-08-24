@@ -7,7 +7,6 @@ import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.screen.ElectricFurnaceMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -16,15 +15,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.energy.EnergyStorage;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class ElectricFurnaceBlockEntity extends BlockEntity implements MenuProvider {
@@ -100,18 +98,17 @@ public final class ElectricFurnaceBlockEntity extends BlockEntity implements Men
         if (level == null) return null;
         ItemStack input = inventory.getStackInSlot(INPUT_START + channel);
         if (input.isEmpty()) return null;
-        SingleRecipeInput recipeInput = new SingleRecipeInput(input);
-        RecipeHolder<SmeltingRecipe> holder = level.getRecipeManager()
-                .getRecipeFor(RecipeType.SMELTING, recipeInput, level, (RecipeHolder<SmeltingRecipe>) null)
-                .orElse(null);
-        if (holder == null) return null;
-        ItemStack result = holder.value().assemble(recipeInput, level.registryAccess());
+        SimpleContainer recipeInput = new SimpleContainer(input);
+        SmeltingRecipe recipe = level.getRecipeManager()
+                .getRecipeFor(RecipeType.SMELTING, recipeInput, level).orElse(null);
+        if (recipe == null) return null;
+        ItemStack result = recipe.assemble(recipeInput, level.registryAccess());
         return result.isEmpty() ? null : new RecipeResult(result);
     }
 
     private boolean canOutput(int channel, ItemStack result) {
         ItemStack output = inventory.getStackInSlot(OUTPUT_START + channel);
-        return output.isEmpty() || ItemStack.isSameItemSameComponents(output, result)
+        return output.isEmpty() || ItemStack.isSameItemSameTags(output, result)
                 && output.getCount() + result.getCount() <= output.getMaxStackSize();
     }
     private void insertOutput(int channel, ItemStack result) {
@@ -128,12 +125,12 @@ public final class ElectricFurnaceBlockEntity extends BlockEntity implements Men
     @Override public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
         return new ElectricFurnaceMenu(id, inv, this, worldPosition);
     }
-    @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries); tag.put("Inventory", inventory.serializeNBT(registries));
+    @Override protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag); tag.put("Inventory", inventory.serializeNBT());
         tag.putInt("Energy", energy.getEnergyStored()); tag.putIntArray("Progress", progress);
     }
-    @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries); if (tag.contains("Inventory")) inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+    @Override public void load(CompoundTag tag) {
+        super.load(tag); if (tag.contains("Inventory")) inventory.deserializeNBT(tag.getCompound("Inventory"));
         MachineInventoryHelper.ensureSize(inventory, UPGRADE_START + UPGRADE_COUNT);
         energy.setStored(tag.getInt("Energy")); int[] loaded = tag.getIntArray("Progress");
         System.arraycopy(loaded, 0, progress, 0, Math.min(progress.length, loaded.length));

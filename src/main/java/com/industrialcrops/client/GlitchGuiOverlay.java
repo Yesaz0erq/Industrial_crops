@@ -1,16 +1,15 @@
 package com.industrialcrops.client;
 
 import com.industrialcrops.registry.ModEffects;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
 public final class GlitchGuiOverlay {
     private GlitchGuiOverlay() { }
 
-    public static void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public static void render(GuiGraphics graphics) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.player == null || !minecraft.player.hasEffect(ModEffects.GLITCH)) return;
+        if (minecraft.player == null || !minecraft.player.hasEffect(ModEffects.GLITCH.get())) return;
         int width = graphics.guiWidth();
         int height = graphics.guiHeight();
         int tick = minecraft.player.tickCount;

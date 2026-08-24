@@ -8,12 +8,12 @@ import net.minecraft.resources.ResourceLocation;
 public final class BrownCreateSlimeModel extends IndustrialSlimeModel<BrownCreateSlime> {
     public BrownCreateSlimeModel() {
         super(
-                ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "geo/copper_gear_slime_v2.geo.json"),
-                ResourceLocation.fromNamespaceAndPath(
+                new ResourceLocation(IndustrialCrops.MOD_ID, "geo/copper_gear_slime_v2.geo.json"),
+                new ResourceLocation(
                         IndustrialCrops.MOD_ID,
                         "textures/entity/copper_gear_slime/copper_gear_slime_create_atlas.png"
                 ),
-                ResourceLocation.fromNamespaceAndPath(
+                new ResourceLocation(
                         IndustrialCrops.MOD_ID,
                         "animations/copper_gear_slime_v2.animation.json"
                 )

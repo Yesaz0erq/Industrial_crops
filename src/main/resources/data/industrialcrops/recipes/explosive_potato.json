@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "combat",
+  "ingredients": [
+    {
+      "item": "industrialcrops:industrial_potato"
+    },
+    {
+      "item": "minecraft:gunpowder"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:explosive_potato"
+  }
+}

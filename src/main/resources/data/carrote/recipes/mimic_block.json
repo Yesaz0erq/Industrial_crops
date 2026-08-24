@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "MMM",
+    "MSM",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "item": "carrote:stable_matter_ingot"
+    },
+    "S": {
+      "item": "carrote:carrote_steel_ingot"
+    }
+  },
+  "result": {
+    "count": 1,
+    "item": "carrote:mimic_block"
+  }
+}

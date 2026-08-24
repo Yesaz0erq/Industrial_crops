@@ -8,7 +8,7 @@ import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
 import java.util.List;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -23,7 +23,7 @@ public final class BasicManipulatorMenu extends AbstractContainerMenu {
     private final @Nullable BasicCropStorageArrayBlockEntity drive;
     private final List<ManipulatorRecipeDisplay> recipes;
 
-    public BasicManipulatorMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buffer) {
+    public BasicManipulatorMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buffer) {
         this(containerId, playerInventory, buffer.readBlockPos());
     }
 
@@ -31,7 +31,7 @@ public final class BasicManipulatorMenu extends AbstractContainerMenu {
         super(ModMenus.BASIC_MANIPULATOR.get(), containerId);
         this.manipulatorPos = manipulatorPos;
         this.recipes = ManipulatorRecipes.forAdvanced(
-                playerInventory.player.level().getBlockState(manipulatorPos).is(ModBlocks.ADVANCED_MANIPULATOR));
+                playerInventory.player.level().getBlockState(manipulatorPos).is(ModBlocks.ADVANCED_MANIPULATOR.get()));
         this.drive = playerInventory.player.level().isClientSide()
                 ? null
                 : BasicCropStorageArrayBlockEntity.findAttached(playerInventory.player.level(), manipulatorPos);
@@ -95,7 +95,7 @@ public final class BasicManipulatorMenu extends AbstractContainerMenu {
         }
 
         if (ingredient.isExactItem() && drive != null) {
-            count += drive.getStoredCount(ingredient.acceptedStacks().getFirst().getItem());
+            count += drive.getStoredCount(ingredient.acceptedStacks().get(0).getItem());
         }
         return count;
     }
@@ -114,7 +114,7 @@ public final class BasicManipulatorMenu extends AbstractContainerMenu {
         }
 
         if (remaining > 0 && ingredient.isExactItem() && drive != null) {
-            drive.remove(ingredient.acceptedStacks().getFirst().getItem(), remaining);
+            drive.remove(ingredient.acceptedStacks().get(0).getItem(), remaining);
         }
     }
 
@@ -130,7 +130,7 @@ public final class BasicManipulatorMenu extends AbstractContainerMenu {
             }
         }
         for (ItemStack acceptedStack : acceptedStacks) {
-            if (ItemStack.isSameItemSameComponents(stack, acceptedStack)) {
+            if (ItemStack.isSameItemSameTags(stack, acceptedStack)) {
                 return true;
             }
         }

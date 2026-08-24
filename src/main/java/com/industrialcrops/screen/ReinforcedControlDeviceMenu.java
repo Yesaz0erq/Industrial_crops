@@ -5,7 +5,7 @@ import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
 import java.util.List;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -34,7 +34,7 @@ public final class ReinforcedControlDeviceMenu extends AbstractContainerMenu {
     private int totalPages = 1;
     private final int[] syncedCounts = new int[STORAGE_SLOT_COUNT];
 
-    public ReinforcedControlDeviceMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buffer) {
+    public ReinforcedControlDeviceMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buffer) {
         this(containerId, playerInventory, buffer.readBlockPos(), buffer.readableBytes() > 0 && buffer.readBoolean());
     }
 

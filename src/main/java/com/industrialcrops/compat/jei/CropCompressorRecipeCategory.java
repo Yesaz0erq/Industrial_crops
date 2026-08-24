@@ -26,7 +26,7 @@ public final class CropCompressorRecipeCategory implements IRecipeCategory<CropC
     private final IDrawable icon;
 
     public CropCompressorRecipeCategory(IGuiHelper guiHelper) {
-        this.icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.CROP_COMPRESSOR.asItem()));
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.CROP_COMPRESSOR.get().asItem()));
     }
 
     @Override

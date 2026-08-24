@@ -62,7 +62,7 @@ public final class ProcessorProgrammingRecipes {
     public static boolean isIngredient(ItemStack stack) {
         return RECIPES.stream().flatMap(recipe -> recipe.ingredients().stream())
                 .flatMap(ingredient -> ingredient.acceptedStacks().stream())
-                .anyMatch(accepted -> ItemStack.isSameItemSameComponents(stack, accepted));
+                .anyMatch(accepted -> ItemStack.isSameItemSameTags(stack, accepted));
     }
 
     private static ManipulatorIngredient ingredient(net.minecraft.world.level.ItemLike item, int count) {

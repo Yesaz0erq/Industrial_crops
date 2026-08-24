@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.industrialcrops.network.ModNetworking;
 
 public final class MatterMachineScreen extends IndustrialContainerScreen<MatterMachineMenu> {
     private static final ResourceLocation SIDE_CONFIG_ICON = IndustrialGuiStyle.containerTexture("side_configuration");
@@ -70,7 +70,7 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
             searchBox.setMaxLength(64);
             searchBox.setTextColor(IndustrialGuiStyle.TEXT);
             searchBox.setTextColorUneditable(IndustrialGuiStyle.MUTED_TEXT);
-            searchBox.setResponder(value -> PacketDistributor.sendToServer(new StorageSearchPayload(value)));
+            searchBox.setResponder(value -> ModNetworking.sendToServer(new StorageSearchPayload(value)));
         }
 
         configTab = addRenderableWidget(Button.builder(Component.empty(), ignored -> {
@@ -206,7 +206,7 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float tick) {
-        renderBackground(graphics, mouseX, mouseY, tick);
+        renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, tick);
         if (menu.kind() != MatterMachineBlockEntity.Kind.DIGITIZER) {
             drawItemCounts(graphics);
@@ -253,14 +253,14 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double verticalAmount) {
         if (menu.kind() == MatterMachineBlockEntity.Kind.DIGITIZER
                 || (!insideStorageArea(mouseX, mouseY) && !insideScrollbar(mouseX, mouseY))) {
-            return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+            return super.mouseScrolled(mouseX, mouseY, verticalAmount);
         }
         if (verticalAmount > 0) setOffset(menu.page() - 1);
         else if (verticalAmount < 0) setOffset(menu.page() + 1);
-        else return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        else return super.mouseScrolled(mouseX, mouseY, verticalAmount);
         return true;
     }
 
@@ -319,7 +319,7 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
     private void selectVisibleSlot(int index) {
         if (menu.count(index) <= 0) return;
         clientSelected = index;
-        PacketDistributor.sendToServer(new MatterMachineSelectionPayload(menu.containerId, index, false));
+        ModNetworking.sendToServer(new MatterMachineSelectionPayload(menu.containerId, index, false));
         refreshButtons();
     }
 
@@ -362,7 +362,7 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
         if (menu.kind() != MatterMachineBlockEntity.Kind.DIGITIZER) {
             int selected = menu.selectedVisible() >= 0 ? menu.selectedVisible() : clientSelected;
             if (selected >= 0) {
-                PacketDistributor.sendToServer(new MatterMachineSelectionPayload(menu.containerId, selected, true));
+                ModNetworking.sendToServer(new MatterMachineSelectionPayload(menu.containerId, selected, true));
             }
         } else if (minecraft != null && minecraft.gameMode != null) {
             minecraft.gameMode.handleInventoryButtonClick(menu.containerId, MatterMachineMenu.BUTTON_OPERATE);

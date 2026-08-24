@@ -5,7 +5,7 @@ import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -14,7 +14,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public final class BioEnergyMenu extends AbstractContainerMenu implements UpgradeableMenu {
     public static final int UPGRADE_X=-68,UPGRADE_Y=28,UPGRADE_SPACING=22;
@@ -25,7 +25,7 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
     private final int playerInventoryStart;
     private boolean upgradeSlotsVisible;
 
-    public BioEnergyMenu(int id, Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    public BioEnergyMenu(int id, Inventory inventory, FriendlyByteBuf buffer) {
         this(id, inventory, read(inventory, buffer));
     }
 
@@ -111,7 +111,7 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
         return stillValid(net.minecraft.world.inventory.ContainerLevelAccess.create(player.level(), pos), player, expected);
     }
 
-    private static BioEnergyMachineBlockEntity read(Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    private static BioEnergyMachineBlockEntity read(Inventory inventory, FriendlyByteBuf buffer) {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity entity = inventory.player.level().getBlockEntity(pos);
         if (entity instanceof BioEnergyMachineBlockEntity machine) return machine;

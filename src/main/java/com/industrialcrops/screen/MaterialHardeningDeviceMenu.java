@@ -4,7 +4,7 @@ import com.industrialcrops.block.entity.MaterialHardeningDeviceBlockEntity;
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -13,7 +13,7 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public final class MaterialHardeningDeviceMenu extends AbstractContainerMenu {
     private static final int MACHINE_SLOT_COUNT = 2;
@@ -26,7 +26,7 @@ public final class MaterialHardeningDeviceMenu extends AbstractContainerMenu {
     private final BlockPos pos;
     private int progress;
 
-    public MaterialHardeningDeviceMenu(int id, Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    public MaterialHardeningDeviceMenu(int id, Inventory inventory, FriendlyByteBuf buffer) {
         this(id, inventory, read(inventory, buffer));
     }
 
@@ -92,7 +92,7 @@ public final class MaterialHardeningDeviceMenu extends AbstractContainerMenu {
         for (int column = 0; column < 9; column++) addSlot(new Slot(inventory, column, x + column * 18, y));
     }
 
-    private static MaterialHardeningDeviceBlockEntity read(Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    private static MaterialHardeningDeviceBlockEntity read(Inventory inventory, FriendlyByteBuf buffer) {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity blockEntity = inventory.player.level().getBlockEntity(pos);
         if (blockEntity instanceof MaterialHardeningDeviceBlockEntity device) return device;

@@ -4,8 +4,6 @@ import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.item.IndustrialStorageComponentItem;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -13,12 +11,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements MenuProvider {
@@ -199,32 +196,32 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
 
     public ItemStack createDroppedStack(Block block) {
         ItemStack stack = new ItemStack(block.asItem());
-        CompoundTag storageData = writeInventories(level == null ? null : level.registryAccess());
+        CompoundTag storageData = writeInventories();
         if (!storageData.isEmpty()) {
-            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(storageData));
+            stack.setTag(storageData.copy());
         }
         return stack;
     }
 
     public void readStorageFromStack(ItemStack stack) {
-        CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
-        if (customData != null && level != null) {
-            readInventories(customData.copyTag(), level.registryAccess());
+        var customData = com.industrialcrops.util.ItemStackNbt.copyTag(stack);
+        if (customData != null) {
+            readInventories(customData);
         }
         setChanged();
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("StorageData", writeInventories(registries));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("StorageData", writeInventories());
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("StorageData")) {
-            readInventories(tag.getCompound("StorageData"), registries);
+            readInventories(tag.getCompound("StorageData"));
         }
     }
 
@@ -238,25 +235,25 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
         return new com.industrialcrops.screen.AdvancedIndustrialStorageMenu(containerId, inventory, this, worldPosition);
     }
 
-    private CompoundTag writeInventories(@Nullable HolderLookup.Provider registries) {
+    private CompoundTag writeInventories() {
         CompoundTag tag = new CompoundTag();
-        tag.put("Cells", cellInventory.serializeNBT(registries));
-        tag.put("Storage", storageInventory.serializeNBT(registries));
+        tag.put("Cells", cellInventory.serializeNBT());
+        tag.put("Storage", storageInventory.serializeNBT());
         return tag;
     }
 
-    private void readInventories(CompoundTag tag, HolderLookup.Provider registries) {
+    private void readInventories(CompoundTag tag) {
         if (tag.contains("Cells")) {
-            readFixedSizeInventory(cellInventory, CELL_SLOT_COUNT, tag.getCompound("Cells"), registries);
+            readFixedSizeInventory(cellInventory, CELL_SLOT_COUNT, tag.getCompound("Cells"));
         }
         if (tag.contains("Storage")) {
-            readFixedSizeInventory(storageInventory, STORAGE_SLOT_COUNT, tag.getCompound("Storage"), registries);
+            readFixedSizeInventory(storageInventory, STORAGE_SLOT_COUNT, tag.getCompound("Storage"));
         }
     }
 
-    private static void readFixedSizeInventory(ItemStackHandler target, int expectedSize, CompoundTag tag, HolderLookup.Provider registries) {
+    private static void readFixedSizeInventory(ItemStackHandler target, int expectedSize, CompoundTag tag) {
         ItemStackHandler temporary = new ItemStackHandler();
-        temporary.deserializeNBT(registries, tag);
+        temporary.deserializeNBT(tag);
         target.setSize(expectedSize);
         int slots = Math.min(expectedSize, temporary.getSlots());
         for (int slot = 0; slot < slots; slot++) {

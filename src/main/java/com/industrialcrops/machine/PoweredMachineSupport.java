@@ -3,8 +3,8 @@ package com.industrialcrops.machine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public final class PoweredMachineSupport {
     private PoweredMachineSupport() {
@@ -14,9 +14,9 @@ public final class PoweredMachineSupport {
         if (target.getEnergyStored() >= target.getMaxEnergyStored()) return;
         for (Direction direction : Direction.values()) {
             BlockPos sourcePos = pos.relative(direction);
-            IEnergyStorage source = level.getCapability(Capabilities.EnergyStorage.BLOCK, sourcePos, direction.getOpposite());
+            IEnergyStorage source = com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ENERGY, sourcePos, direction.getOpposite());
             if (source == null || source.extractEnergy(1, true) <= 0) {
-                source = level.getCapability(Capabilities.EnergyStorage.BLOCK, sourcePos, null);
+                source = com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ENERGY, sourcePos, null);
             }
             if (source == null) continue;
             int wanted = Math.min(rate, target.getMaxEnergyStored() - target.getEnergyStored());

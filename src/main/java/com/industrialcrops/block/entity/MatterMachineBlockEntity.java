@@ -4,12 +4,12 @@ import com.industrialcrops.block.TransportPipeBlock;
 import com.industrialcrops.screen.MatterMachineMenu;
 import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
+import com.industrialcrops.util.ForgeCapabilityUtil;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -29,10 +29,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.EnergyStorage;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class MatterMachineBlockEntity extends BlockEntity implements MenuProvider {
@@ -214,8 +214,8 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
         player.closeContainer();
         player.setAbsorptionAmount(0.0F);
         player.setHealth(1.0F);
-        player.addEffect(new MobEffectInstance(ModEffects.GLITCH, 100, 0, false, false, true));
-        serverLevel.playSound(null, worldPosition, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.BLOCKS, 1.0F, 0.72F);
+        player.addEffect(new MobEffectInstance(ModEffects.GLITCH.get(), 100, 0, false, false, true));
+        serverLevel.playSound(null, worldPosition, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 1.0F, 0.72F);
         serverLevel.sendParticles(ParticleTypes.EXPLOSION, worldPosition.getX() + 0.5D,
                 worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D, 12, 0.35D, 0.35D, 0.35D, 0.02D);
 
@@ -288,8 +288,8 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
     }
 
     private int pullFromCapability(BlockPos neighborPos, @Nullable Direction side, int wanted) {
-        IEnergyStorage neighbor = level == null ? null : level.getCapability(
-                Capabilities.EnergyStorage.BLOCK, neighborPos, side);
+        IEnergyStorage neighbor = level == null ? null : ForgeCapabilityUtil.find(
+                level, ForgeCapabilities.ENERGY, neighborPos, side);
         if (neighbor == null || wanted <= 0) return 0;
         int available = neighbor.extractEnergy(wanted, true);
         int accepted = energy.receiveEnergy(available, true);
@@ -337,14 +337,14 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
         if (level == null || wanted <= 0) return null;
         BlockPos neighborPos = worldPosition.relative(neighborDirection);
         Direction preferred = neighborDirection.getOpposite();
-        IEnergyStorage source = level.getCapability(Capabilities.EnergyStorage.BLOCK, neighborPos, preferred);
+        IEnergyStorage source = com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ENERGY, neighborPos, preferred);
         if (canSupply(source, wanted)) return source;
         for (Direction candidate : Direction.values()) {
             if (candidate == preferred) continue;
-            source = level.getCapability(Capabilities.EnergyStorage.BLOCK, neighborPos, candidate);
+            source = com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ENERGY, neighborPos, candidate);
             if (canSupply(source, wanted)) return source;
         }
-        source = level.getCapability(Capabilities.EnergyStorage.BLOCK, neighborPos, null);
+        source = com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ENERGY, neighborPos, null);
         return canSupply(source, wanted) ? source : null;
     }
 
@@ -434,7 +434,7 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
         if (kind != Kind.RECONSTRUCTOR || stack.isEmpty()) return false;
         if (stack.getCount() > stack.getMaxStackSize()) return false;
         ItemStack output = inventory.getStackInSlot(OUTPUT_SLOT);
-        return output.isEmpty() || ItemStack.isSameItemSameComponents(output, stack)
+        return output.isEmpty() || ItemStack.isSameItemSameTags(output, stack)
                 && output.getCount() + stack.getCount() <= output.getMaxStackSize();
     }
 
@@ -442,7 +442,7 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
         if (kind != Kind.RECONSTRUCTOR || template.isEmpty()) return 0;
         ItemStack output = inventory.getStackInSlot(OUTPUT_SLOT);
         if (output.isEmpty()) return template.getMaxStackSize();
-        if (!ItemStack.isSameItemSameComponents(output, template)) return 0;
+        if (!ItemStack.isSameItemSameTags(output, template)) return 0;
         return Math.max(0, output.getMaxStackSize() - output.getCount());
     }
 
@@ -458,9 +458,9 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
         tag.putInt("Energy", energy.getEnergyStored());
         tag.putInt("Progress", progress);
         tag.putBoolean("OperationRequested", operationRequested);
@@ -469,10 +469,10 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Inventory")) {
-            inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+            inventory.deserializeNBT(tag.getCompound("Inventory"));
             int expectedSlots = kind == Kind.DIGITIZER ? DIGITIZER_SLOT_COUNT : 2 + UPGRADE_SLOT_COUNT;
             if (inventory.getSlots() != expectedSlots) {
                 ItemStack[] oldStacks = new ItemStack[inventory.getSlots()];

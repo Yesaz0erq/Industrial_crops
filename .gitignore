@@ -1,31 +1,25 @@
-# Gradle
-.gradle/
-build/
-out/
-
-# Minecraft development runs
-run/
-runs/
-logs/
-crash-reports/
-
-# IDE and OS files
-.idea/
-.vscode/
-*.iml
+# eclipse
+bin
+*.launch
+.settings
+.metadata
 .classpath
 .project
-.settings/
-.DS_Store
-Thumbs.db
 
-# Local diagnostics and generated logs
-*.log
-hs_err_pid*
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
 
-# Local secrets and environment files
-.env
-.env.*
-!.env.example
-local.properties
-secrets.properties
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run
+
+# Files from Forge MDK
+forge*changelog.txt

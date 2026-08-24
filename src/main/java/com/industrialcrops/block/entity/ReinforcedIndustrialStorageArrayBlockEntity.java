@@ -9,16 +9,13 @@ import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class ReinforcedIndustrialStorageArrayBlockEntity extends BlockEntity {
@@ -98,39 +95,39 @@ public final class ReinforcedIndustrialStorageArrayBlockEntity extends BlockEnti
 
     public ItemStack createDroppedStack(Block block) {
         ItemStack stack = new ItemStack(block.asItem());
-        CompoundTag storageData = inventory.serializeNBT(level == null ? null : level.registryAccess());
+        CompoundTag storageData = inventory.serializeNBT();
         if (!storageData.isEmpty()) {
-            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(storageData));
+            stack.setTag(storageData.copy());
         }
         return stack;
     }
 
     public void readStorageFromStack(ItemStack stack) {
-        CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
+        var customData = com.industrialcrops.util.ItemStackNbt.copyTag(stack);
         if (customData != null && level != null) {
-            inventory.deserializeNBT(level.registryAccess(), customData.copyTag());
+            inventory.deserializeNBT(customData);
         }
         setChanged();
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Inventory")) {
-            inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+            inventory.deserializeNBT(tag.getCompound("Inventory"));
             MachineInventoryHelper.ensureSize(inventory, SLOT_COUNT);
         }
     }
 
     public static @Nullable ReinforcedIndustrialStorageArrayBlockEntity findAttached(Level level, BlockPos controllerPos) {
         List<ReinforcedIndustrialStorageArrayBlockEntity> attached = findAllAttached(level, controllerPos);
-        return attached.isEmpty() ? null : attached.getFirst();
+        return attached.isEmpty() ? null : attached.get(0);
     }
 
     public static List<ReinforcedIndustrialStorageArrayBlockEntity> findAllAttached(Level level, BlockPos controllerPos) {

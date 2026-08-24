@@ -1,33 +1,25 @@
 package com.industrialcrops.network.payload;
 
-import com.industrialcrops.IndustrialCrops;
 import com.industrialcrops.screen.MatterMachineMenu;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import java.util.function.Supplier;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
 
-/** Reliable C2S selection for the virtual terminal slots shown by matter machines. */
-public record MatterMachineSelectionPayload(int containerId, int visibleIndex, boolean operate) implements CustomPacketPayload {
-    public static final Type<MatterMachineSelectionPayload> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "matter_machine_selection"));
-    public static final StreamCodec<ByteBuf, MatterMachineSelectionPayload> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT, MatterMachineSelectionPayload::containerId,
-            ByteBufCodecs.VAR_INT, MatterMachineSelectionPayload::visibleIndex,
-            ByteBufCodecs.BOOL, MatterMachineSelectionPayload::operate,
-            MatterMachineSelectionPayload::new);
-
-    public static void handle(MatterMachineSelectionPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (context.player().containerMenu instanceof MatterMachineMenu menu
-                    && menu.containerId == payload.containerId) {
-                if (payload.operate) menu.operateVisibleSlot(payload.visibleIndex, context.player());
-                else menu.selectVisibleSlot(payload.visibleIndex);
-            }
-        });
+public record MatterMachineSelectionPayload(int containerId, int visibleIndex, boolean operate) {
+    public static void encode(MatterMachineSelectionPayload p, FriendlyByteBuf b) {
+        b.writeVarInt(p.containerId); b.writeVarInt(p.visibleIndex); b.writeBoolean(p.operate);
     }
-
-    @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
+    public static MatterMachineSelectionPayload decode(FriendlyByteBuf b) {
+        return new MatterMachineSelectionPayload(b.readVarInt(), b.readVarInt(), b.readBoolean());
+    }
+    public static void handle(MatterMachineSelectionPayload p, Supplier<NetworkEvent.Context> supplier) {
+        ServerPlayer player = supplier.get().getSender();
+        if (player != null && player.containerMenu instanceof MatterMachineMenu menu
+                && menu.containerId == p.containerId) {
+            if (p.operate) menu.operateVisibleSlot(p.visibleIndex, player);
+            else menu.selectVisibleSlot(p.visibleIndex);
+        }
+        supplier.get().setPacketHandled(true);
+    }
 }

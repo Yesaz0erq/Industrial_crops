@@ -54,7 +54,7 @@ public final class IndustrialGourdCropBlock extends IndustrialCropBlock {
     }
 
     @Override
-    protected List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         return List.of();
     }
 
@@ -79,12 +79,13 @@ public final class IndustrialGourdCropBlock extends IndustrialCropBlock {
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return true;
     }
 
     @Override
-    public boolean isValidBonemealTarget(net.minecraft.world.level.LevelReader level, BlockPos pos, BlockState state) {
+    public boolean isValidBonemealTarget(net.minecraft.world.level.LevelReader level, BlockPos pos, BlockState state,
+            boolean isClient) {
         return !isMaxAge(state) || !hasAdjacentFruit(level, pos);
     }
 

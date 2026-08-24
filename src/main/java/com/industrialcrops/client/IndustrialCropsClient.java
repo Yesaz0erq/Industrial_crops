@@ -34,15 +34,15 @@ import com.industrialcrops.registry.ModMenus;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.level.block.CropBlock;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @EventBusSubscriber(modid = IndustrialCrops.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class IndustrialCropsClient {
@@ -50,35 +50,39 @@ public final class IndustrialCropsClient {
     }
 
     @SubscribeEvent
-    public static void registerScreens(RegisterMenuScreensEvent event) {
-        event.register(ModMenus.ROOT_ORE_EXTRACTOR.get(), RootOreExtractorScreen::new);
-        event.register(ModMenus.CROP_COMPRESSOR.get(), CropCompressorScreen::new);
-        event.register(ModMenus.CROP_ANALYSIS_DEVICE.get(), CropAnalysisDeviceScreen::new);
-        event.register(ModMenus.GOURD_MODIFICATION_DEVICE.get(), GourdModificationDeviceScreen::new);
-        event.register(ModMenus.BASIC_CONTROL_DEVICE.get(), BasicControlDeviceScreen::new);
-        event.register(ModMenus.REINFORCED_CONTROL_DEVICE.get(), ReinforcedControlDeviceScreen::new);
-        event.register(ModMenus.BASIC_MANIPULATOR.get(), BasicManipulatorScreen::new);
-        event.register(ModMenus.INCUBATOR.get(), IncubatorScreen::new);
-        event.register(ModMenus.SLIME_INCUBATOR.get(), SlimeIncubatorScreen::new);
-        event.register(ModMenus.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get(), AdvancedIndustrialStorageScreen::new);
-        event.register(ModMenus.GOLDEN_LAUNCH_SILO.get(), GoldenLaunchSiloScreen::new);
-        event.register(ModMenus.PROCESSOR_PROGRAMMER.get(), ProcessorProgrammerScreen::new);
-        event.register(ModMenus.AUTOMATIC_PLANTER.get(), AutomaticPlanterScreen::new);
-        event.register(ModMenus.MATTER_MACHINE.get(), MatterMachineScreen::new);
-        event.register(ModMenus.ITEM_NETWORK_TERMINAL.get(), ItemNetworkTerminalScreen::new);
-        event.register(ModMenus.BIO_ENERGY_MACHINE.get(), BioEnergyScreen::new);
-        event.register(ModMenus.ELECTRIC_FURNACE.get(), ElectricFurnaceScreen::new);
-        event.register(ModMenus.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestScreen::new);
+    public static void registerScreens(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> {
+            MenuScreens.register(ModMenus.ROOT_ORE_EXTRACTOR.get(), RootOreExtractorScreen::new);
+            MenuScreens.register(ModMenus.CROP_COMPRESSOR.get(), CropCompressorScreen::new);
+            MenuScreens.register(ModMenus.CROP_ANALYSIS_DEVICE.get(), CropAnalysisDeviceScreen::new);
+            MenuScreens.register(ModMenus.GOURD_MODIFICATION_DEVICE.get(), GourdModificationDeviceScreen::new);
+            MenuScreens.register(ModMenus.BASIC_CONTROL_DEVICE.get(), BasicControlDeviceScreen::new);
+            MenuScreens.register(ModMenus.REINFORCED_CONTROL_DEVICE.get(), ReinforcedControlDeviceScreen::new);
+            MenuScreens.register(ModMenus.BASIC_MANIPULATOR.get(), BasicManipulatorScreen::new);
+            MenuScreens.register(ModMenus.INCUBATOR.get(), IncubatorScreen::new);
+            MenuScreens.register(ModMenus.SLIME_INCUBATOR.get(), SlimeIncubatorScreen::new);
+            MenuScreens.register(ModMenus.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get(), AdvancedIndustrialStorageScreen::new);
+            MenuScreens.register(ModMenus.GOLDEN_LAUNCH_SILO.get(), GoldenLaunchSiloScreen::new);
+            MenuScreens.register(ModMenus.PROCESSOR_PROGRAMMER.get(), ProcessorProgrammerScreen::new);
+            MenuScreens.register(ModMenus.AUTOMATIC_PLANTER.get(), AutomaticPlanterScreen::new);
+            MenuScreens.register(ModMenus.MATTER_MACHINE.get(), MatterMachineScreen::new);
+            MenuScreens.register(ModMenus.ITEM_NETWORK_TERMINAL.get(), ItemNetworkTerminalScreen::new);
+            MenuScreens.register(ModMenus.BIO_ENERGY_MACHINE.get(), BioEnergyScreen::new);
+            MenuScreens.register(ModMenus.ELECTRIC_FURNACE.get(), ElectricFurnaceScreen::new);
+            MenuScreens.register(ModMenus.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestScreen::new);
+        });
     }
 
     @SubscribeEvent
-    public static void registerRenderTypes(net.neoforged.neoforge.client.event.RegisterNamedRenderTypesEvent event) {
+    public static void registerRenderTypes(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_CARROT_CROP.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_POTATO_CROP.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_WHEAT_CROP.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_MELON_CROP.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_PUMPKIN_CROP.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.DIGITAL_MINIATURE_FOREST.get(), RenderType.cutout());
+        });
     }
 
     @SubscribeEvent
@@ -134,9 +138,9 @@ public final class IndustrialCropsClient {
     }
 
     @SubscribeEvent
-    public static void registerGuiLayers(RegisterGuiLayersEvent event) {
-        event.registerAboveAll(ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "glitch_border"),
-                GlitchGuiOverlay::render);
+    public static void registerGuiLayers(RegisterGuiOverlaysEvent event) {
+        event.registerAboveAll("glitch_border",
+                (gui, graphics, partialTick, width, height) -> GlitchGuiOverlay.render(graphics));
     }
 
 }

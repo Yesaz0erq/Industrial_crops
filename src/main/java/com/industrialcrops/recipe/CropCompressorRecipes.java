@@ -8,9 +8,9 @@ import net.minecraft.world.item.ItemStack;
 
 public final class CropCompressorRecipes {
     private static final List<CropCompressorRecipeDisplay> RECIPES = List.of(
-            recipe(new ItemStack(ModItems.INDUSTRIAL_CARROT.get()), new ItemStack(ModBlocks.INDUSTRIAL_CARROT_BLOCK.asItem())),
-            recipe(new ItemStack(ModItems.INDUSTRIAL_POTATO.get()), new ItemStack(ModBlocks.INDUSTRIAL_POTATO_BLOCK.asItem())),
-            recipe(new ItemStack(ModItems.INDUSTRIAL_WHEAT.get()), new ItemStack(ModBlocks.INDUSTRIAL_WHEAT_BLOCK.asItem()))
+            recipe(new ItemStack(ModItems.INDUSTRIAL_CARROT.get()), new ItemStack(ModBlocks.INDUSTRIAL_CARROT_BLOCK.get().asItem())),
+            recipe(new ItemStack(ModItems.INDUSTRIAL_POTATO.get()), new ItemStack(ModBlocks.INDUSTRIAL_POTATO_BLOCK.get().asItem())),
+            recipe(new ItemStack(ModItems.INDUSTRIAL_WHEAT.get()), new ItemStack(ModBlocks.INDUSTRIAL_WHEAT_BLOCK.get().asItem()))
     );
 
     private CropCompressorRecipes() {

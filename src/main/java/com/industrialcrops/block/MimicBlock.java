@@ -2,7 +2,6 @@ package com.industrialcrops.block;
 
 import com.industrialcrops.block.entity.MimicBlockEntity;
 import com.industrialcrops.registry.ModBlockEntities;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,21 +20,14 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import org.jetbrains.annotations.Nullable;
 
 public final class MimicBlock extends BaseEntityBlock {
-    public static final MapCodec<MimicBlock> CODEC = simpleCodec(MimicBlock::new);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
     public MimicBlock(Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
+@Override
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 

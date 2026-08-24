@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "P": {
+      "item": "industrialcrops:basic_pipe"
+    },
+    "D": {
+      "item": "minecraft:dropper"
+    }
+  },
+  "pattern": [
+    " P ",
+    " D ",
+    " P "
+  ],
+  "result": {
+    "count": 2,
+    "item": "industrialcrops:basic_input_pipe"
+  }
+}

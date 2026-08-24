@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "B": {
+      "item": "minecraft:chest"
+    },
+    "C": {
+      "item": "industrialcrops:copper_device_casing"
+    },
+    "H": {
+      "item": "minecraft:hopper"
+    },
+    "I": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "pattern": [
+    "IHI",
+    "ICI",
+    "IBI"
+  ],
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:basic_storage_component"
+  }
+}

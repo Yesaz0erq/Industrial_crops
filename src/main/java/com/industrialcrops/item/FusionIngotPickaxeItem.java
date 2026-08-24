@@ -3,9 +3,7 @@ package com.industrialcrops.item;
 import com.industrialcrops.IndustrialCrops;
 import com.industrialcrops.registry.ModItems;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
@@ -19,13 +17,16 @@ import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.GameMasterBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Fusion tool that can harvest natural unbreakable blocks while deliberately
@@ -34,11 +35,11 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class FusionIngotPickaxeItem extends PickaxeItem {
     public static final TagKey<Block> PROTECTED_BLOCKS = TagKey.create(
             Registries.BLOCK,
-            ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "fusion_pickaxe_unbreakable")
+            new ResourceLocation(IndustrialCrops.MOD_ID, "fusion_pickaxe_unbreakable")
     );
     public static final TagKey<Block> FORTUNE_BLOCKS = TagKey.create(
             Registries.BLOCK,
-            ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "fusion_pickaxe_fortune")
+            new ResourceLocation(IndustrialCrops.MOD_ID, "fusion_pickaxe_fortune")
     );
 
     private static final Tier FUSION_TIER = new Tier() {
@@ -58,8 +59,8 @@ public final class FusionIngotPickaxeItem extends PickaxeItem {
         }
 
         @Override
-        public TagKey<Block> getIncorrectBlocksForDrops() {
-            return BlockTags.INCORRECT_FOR_NETHERITE_TOOL;
+        public int getLevel() {
+            return 5;
         }
 
         @Override
@@ -74,8 +75,7 @@ public final class FusionIngotPickaxeItem extends PickaxeItem {
     };
 
     public FusionIngotPickaxeItem(Properties properties) {
-        super(FUSION_TIER, properties.attributes(
-                PickaxeItem.createAttributes(FUSION_TIER, 1.0F, -2.8F)));
+        super(FUSION_TIER, 1, -2.8F, properties);
     }
 
     public static boolean canBreak(BlockState state) {
@@ -135,14 +135,11 @@ public final class FusionIngotPickaxeItem extends PickaxeItem {
             return;
         }
 
-        var enchantments = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
-        Holder<Enchantment> silkTouch = enchantments.getOrThrow(Enchantments.SILK_TOUCH);
-        Holder<Enchantment> fortune = enchantments.getOrThrow(Enchantments.FORTUNE);
-        if (stack.getEnchantments().getLevel(silkTouch) < 1) {
-            stack.enchant(silkTouch, 1);
+        if (stack.getEnchantmentLevel(Enchantments.SILK_TOUCH) < 1) {
+            stack.enchant(Enchantments.SILK_TOUCH, 1);
         }
-        if (stack.getEnchantments().getLevel(fortune) < 3) {
-            stack.enchant(fortune, 3);
+        if (stack.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE) < 3) {
+            stack.enchant(Enchantments.BLOCK_FORTUNE, 3);
         }
     }
 
@@ -151,10 +148,14 @@ public final class FusionIngotPickaxeItem extends PickaxeItem {
         if (level.isClientSide || !(stack.getItem() instanceof FusionIngotPickaxeItem)) {
             return;
         }
-        var enchantments = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
-        Holder<Enchantment> selected = enchantments.getOrThrow(
-                state.is(FORTUNE_BLOCKS) ? Enchantments.FORTUNE : Enchantments.SILK_TOUCH);
-        stack.set(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
-        stack.enchant(selected, state.is(FORTUNE_BLOCKS) ? 3 : 1);
+        Map<Enchantment, Integer> selected = new HashMap<>(EnchantmentHelper.getEnchantments(stack));
+        selected.remove(Enchantments.SILK_TOUCH);
+        selected.remove(Enchantments.BLOCK_FORTUNE);
+        if (state.is(FORTUNE_BLOCKS)) {
+            selected.put(Enchantments.BLOCK_FORTUNE, 3);
+        } else {
+            selected.put(Enchantments.SILK_TOUCH, 1);
+        }
+        EnchantmentHelper.setEnchantments(selected, stack);
     }
 }
