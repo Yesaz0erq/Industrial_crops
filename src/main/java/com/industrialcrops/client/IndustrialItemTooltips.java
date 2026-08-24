@@ -34,7 +34,10 @@ public final class IndustrialItemTooltips {
             addRemoteBindingDetails(event);
             return;
         }
-        if (!(event.getItemStack().getItem() instanceof BlockItem)) return;
+        boolean functionalBlock = event.getItemStack().getItem() instanceof BlockItem;
+        boolean goldUpgradeKit = id.getPath().equals("gold_upgrade_kit");
+        boolean fusionPickaxe = id.getPath().equals("fusion_ingot_pickaxe");
+        if (!functionalBlock && !goldUpgradeKit && !fusionPickaxe) return;
 
         String key = "tooltip." + id.getNamespace() + ".function." + id.getPath();
         if (!I18n.exists(key)) return;

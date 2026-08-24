@@ -44,6 +44,19 @@ public final class MimicBlock extends BaseEntityBlock {
         return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
+    public static BlockPos targetPosition(BlockPos mimicPos, Direction front) {
+        return mimicPos.relative(front.getCounterClockWise());
+    }
+
+    public static boolean canMimic(Level level, BlockPos targetPos) {
+        if (!level.hasChunkAt(targetPos)) {
+            return false;
+        }
+        BlockState targetState = level.getBlockState(targetPos);
+        return !targetState.isAir()
+                && !targetState.is(com.industrialcrops.registry.CarroteBlocks.MIMIC_BLOCK.get());
+    }
+
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state,
             @Nullable LivingEntity placer, ItemStack stack) {

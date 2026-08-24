@@ -33,6 +33,7 @@ import com.industrialcrops.block.EnergyBatteryBlock;
 import com.industrialcrops.block.ResidueIncineratorBlock;
 import com.industrialcrops.block.ElectricFurnaceBlock;
 import com.industrialcrops.block.DigitalMiniatureForestBlock;
+import com.industrialcrops.block.AutomaticPlanterBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -92,6 +93,8 @@ public final class ModBlocks {
             () -> new AdvancedManipulatorBlock(machineProperties().mapColor(MapColor.GOLD)));
     public static final DeferredBlock<Block> PROCESSOR_PROGRAMMER = BLOCKS.register("processor_programming_device",
             () -> new ProcessorProgrammerBlock(machineProperties().mapColor(MapColor.GOLD)));
+    public static final DeferredBlock<Block> AUTOMATIC_PLANTER = BLOCKS.register("automatic_planter",
+            () -> new AutomaticPlanterBlock(machineProperties().mapColor(MapColor.GOLD)));
     public static final DeferredBlock<Block> MATTER_DIGITIZER = BLOCKS.register("matter_digitization_device",
             () -> new MatterDigitizerBlock(machineProperties().mapColor(MapColor.GOLD)));
     public static final DeferredBlock<Block> DIGITIZED_ITEM_COPIER = BLOCKS.register("digitized_item_copier",

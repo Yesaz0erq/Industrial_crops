@@ -9,7 +9,10 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 
 /** RS2 crafting-grid layout backed by the terminal's unlimited item-data repository. */
 public final class ItemNetworkTerminalScreen extends IndustrialContainerScreen<ItemNetworkTerminalMenu> {
@@ -70,6 +73,17 @@ public final class ItemNetworkTerminalScreen extends IndustrialContainerScreen<I
     }
 
     @Override
+    protected void renderSlotContents(GuiGraphics graphics, ItemStack stack, Slot slot, @Nullable String countString) {
+        if (slot.index < menu.getVisibleSlotCount()) {
+            // Explicitly retain the single-item decoration. The remaining
+            // network counts are rendered with the scaled overlay below.
+            super.renderSlotContents(graphics, stack, slot, menu.count(slot.index) == 1 ? "1" : "");
+            return;
+        }
+        super.renderSlotContents(graphics, stack, slot, countString);
+    }
+
+    @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics, mouseX, mouseY, partialTick);
         super.render(graphics, mouseX, mouseY, partialTick);
@@ -86,7 +100,7 @@ public final class ItemNetworkTerminalScreen extends IndustrialContainerScreen<I
     private void drawItemCounts(GuiGraphics graphics) {
         for (int index = 0; index < menu.getVisibleSlotCount(); index++) {
             int count = menu.count(index);
-            if (count <= 0) continue;
+            if (count <= 1) continue;
             String text = format(count);
             int x = leftPos + 8 + (index % 9) * 18;
             int y = topPos + 20 + (index / 9) * 18;

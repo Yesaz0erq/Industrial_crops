@@ -1,13 +1,16 @@
 modLoader = "javafml"
 loaderVersion = "[4,)"
 license = "MIT"
+issueTrackerURL = "https://github.com/Yesaz0erq/Industrial_crops/issues"
 
 [[mods]]
 modId = "industrialcrops"
 version = "${version}"
 displayName = "Industrial Crops"
 authors = "${mod_author}"
+displayURL = "https://github.com/Yesaz0erq/Industrial_crops"
 logoFile = "industrialcrops_logo.png"
+logoBlur = false
 description = '''尖端工业化农作物：工业农业、作物遗传、加工、物流与能源设备。'''
 
 [[mods]]

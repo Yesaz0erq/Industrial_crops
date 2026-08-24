@@ -93,6 +93,7 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.withType(ProcessResources).configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    filteringCharset = 'UTF-8'
     inputs.property 'version', modVersion
 
     filesMatching('META-INF/neoforge.mods.toml') {

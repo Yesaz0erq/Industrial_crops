@@ -1,18 +1,20 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "redstone",
-  "pattern": [
-    " P ",
-    "PCP"
-  ],
-  "key": {
-    "P": {
-      "item": "industrialcrops:component_substrate"
+  "ingredients": [
+    {
+      "item": "minecraft:comparator"
     },
-    "C": {
-      "item": "industrialcrops:processor_integrated_gold_device_casing"
+    {
+      "item": "minecraft:repeater"
+    },
+    {
+      "item": "minecraft:redstone_torch"
+    },
+    {
+      "item": "minecraft:iron_ingot"
     }
-  },
+  ],
   "result": {
     "id": "industrialcrops:upgrade_kit_substrate",
     "count": 1

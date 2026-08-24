@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
 public final class DigitalMiniatureForestMenu extends AbstractContainerMenu {
-    public static final int UPGRADE_X=-68,UPGRADE_Y=31,UPGRADE_SPACING=22;
+    public static final int UPGRADE_X=-68,UPGRADE_Y=28,UPGRADE_SPACING=22;
     private final BlockPos pos; private final ContainerData data; private boolean upgradeSlotsVisible;
     public DigitalMiniatureForestMenu(int id,Inventory inv,RegistryFriendlyByteBuf buffer){this(id,inv,read(inv,buffer));}
     private DigitalMiniatureForestMenu(int id,Inventory inv,DigitalMiniatureForestBlockEntity forest){this(id,inv,forest,forest.getBlockPos());}

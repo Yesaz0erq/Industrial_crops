@@ -73,6 +73,7 @@ public final class CreativeSectionCatalog {
                         // Processor-gold tier: casing is always first.
                         item(ModItems.PROCESSOR_GOLD_DEVICE_CASING), item(ModItems.ADVANCED_MANIPULATOR),
                         item(ModItems.PROCESSOR_PROGRAMMER), item(ModItems.MATTER_DIGITIZER),
+                        item(ModItems.AUTOMATIC_PLANTER),
                         item(ModItems.DIGITIZED_ITEM_COPIER), item(ModItems.MATTER_RECONSTRUCTOR),
                         item(ModItems.ITEM_NETWORK_TERMINAL), item(ModItems.BIO_ENERGY_GENERATOR),
                         item(ModItems.ENERGY_BATTERY), item(ModItems.RESIDUE_INCINERATOR),
@@ -97,7 +98,13 @@ public final class CreativeSectionCatalog {
     public static void acceptFlat(List<Section> sections, CreativeModeTab.Output output) {
         for (Section section : sections) {
             for (Supplier<ItemStack> item : section.items()) {
-                output.accept(item.get());
+                // A removed/optional registry entry may resolve to air while
+                // an existing world is being upgraded. Never feed an empty
+                // stack into the creative tab (JEI treats that as an error).
+                ItemStack stack = item.get();
+                if (!stack.isEmpty()) {
+                    output.accept(stack);
+                }
             }
         }
     }

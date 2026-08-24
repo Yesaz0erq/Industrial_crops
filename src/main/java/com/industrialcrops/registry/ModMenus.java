@@ -18,6 +18,7 @@ import com.industrialcrops.screen.ItemNetworkTerminalMenu;
 import com.industrialcrops.screen.BioEnergyMenu;
 import com.industrialcrops.screen.ElectricFurnaceMenu;
 import com.industrialcrops.screen.DigitalMiniatureForestMenu;
+import com.industrialcrops.screen.AutomaticPlanterMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
@@ -98,6 +99,11 @@ public final class ModMenus {
     public static final DeferredHolder<MenuType<?>, MenuType<ProcessorProgrammerMenu>> PROCESSOR_PROGRAMMER =
             MENUS.register("processor_programming_device", () -> new MenuType<>(
                     (IContainerFactory<ProcessorProgrammerMenu>) ProcessorProgrammerMenu::new,
+                    FeatureFlags.DEFAULT_FLAGS
+            ));
+    public static final DeferredHolder<MenuType<?>, MenuType<AutomaticPlanterMenu>> AUTOMATIC_PLANTER =
+            MENUS.register("automatic_planter", () -> new MenuType<>(
+                    (IContainerFactory<AutomaticPlanterMenu>) AutomaticPlanterMenu::new,
                     FeatureFlags.DEFAULT_FLAGS
             ));
     public static final DeferredHolder<MenuType<?>, MenuType<MatterMachineMenu>> MATTER_MACHINE =

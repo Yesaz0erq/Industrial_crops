@@ -298,7 +298,10 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
                 handleStorageClick(storageSlot, button);
                 return;
             }
-            if (clickType == ClickType.QUICK_MOVE && button == 0) {
+            // Both Shift+left-click and Shift+right-click should move a stack
+            // directly into the player's inventory. This also backs the
+            // client-side drag gesture used by the controller screen.
+            if (clickType == ClickType.QUICK_MOVE && (button == 0 || button == 1)) {
                 quickMoveStorageToPlayer(storageSlot);
             }
             return;

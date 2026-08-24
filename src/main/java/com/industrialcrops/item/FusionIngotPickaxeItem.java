@@ -5,6 +5,7 @@ import com.industrialcrops.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.GameMasterBlock;
@@ -33,6 +35,10 @@ public final class FusionIngotPickaxeItem extends PickaxeItem {
     public static final TagKey<Block> PROTECTED_BLOCKS = TagKey.create(
             Registries.BLOCK,
             ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "fusion_pickaxe_unbreakable")
+    );
+    public static final TagKey<Block> FORTUNE_BLOCKS = TagKey.create(
+            Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "fusion_pickaxe_fortune")
     );
 
     private static final Tier FUSION_TIER = new Tier() {
@@ -96,7 +102,7 @@ public final class FusionIngotPickaxeItem extends PickaxeItem {
         if (level instanceof ServerLevel serverLevel && canBreak(state)) {
             BlockEntity blockEntity = serverLevel.getBlockEntity(pos);
             ItemStack harvestingTool = stack.copy();
-            ensureEnchantments(harvestingTool, serverLevel);
+            prepareHarvestTool(harvestingTool, serverLevel, state);
             if (Block.getDrops(state, serverLevel, pos, blockEntity, miner, harvestingTool).isEmpty()) {
                 var blockItem = state.getBlock().asItem();
                 if (blockItem != Items.AIR) {
@@ -138,5 +144,17 @@ public final class FusionIngotPickaxeItem extends PickaxeItem {
         if (stack.getEnchantments().getLevel(fortune) < 3) {
             stack.enchant(fortune, 3);
         }
+    }
+
+    /** Selects the mutually exclusive harvest enchantment on the loot-context copy. */
+    public static void prepareHarvestTool(ItemStack stack, Level level, BlockState state) {
+        if (level.isClientSide || !(stack.getItem() instanceof FusionIngotPickaxeItem)) {
+            return;
+        }
+        var enchantments = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+        Holder<Enchantment> selected = enchantments.getOrThrow(
+                state.is(FORTUNE_BLOCKS) ? Enchantments.FORTUNE : Enchantments.SILK_TOUCH);
+        stack.set(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        stack.enchant(selected, state.is(FORTUNE_BLOCKS) ? 3 : 1);
     }
 }

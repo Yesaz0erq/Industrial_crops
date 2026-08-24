@@ -100,7 +100,9 @@ public final class ReinforcedControlDeviceMenu extends AbstractContainerMenu {
                 handleStorageClick(slotIndex, button);
                 return;
             }
-            if (clickType == ClickType.QUICK_MOVE && button == 0) {
+            // Minecraft uses the mouse button as part of a shift-click packet.
+            // Accept both buttons so Shift+right-click is a fast withdrawal too.
+            if (clickType == ClickType.QUICK_MOVE && (button == 0 || button == 1)) {
                 quickMoveStorageToPlayer(slotIndex);
             }
             return;

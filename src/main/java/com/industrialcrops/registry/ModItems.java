@@ -141,6 +141,7 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> BASIC_MANIPULATOR = registerBlockItem("basic_manipulation_device", ModBlocks.BASIC_MANIPULATOR);
     public static final DeferredItem<BlockItem> ADVANCED_MANIPULATOR = registerBlockItem("advanced_manipulation_device", ModBlocks.ADVANCED_MANIPULATOR);
     public static final DeferredItem<BlockItem> PROCESSOR_PROGRAMMER = registerBlockItem("processor_programming_device", ModBlocks.PROCESSOR_PROGRAMMER);
+    public static final DeferredItem<BlockItem> AUTOMATIC_PLANTER = registerBlockItem("automatic_planter", ModBlocks.AUTOMATIC_PLANTER);
     public static final DeferredItem<BlockItem> MATTER_DIGITIZER = registerBlockItem("matter_digitization_device", ModBlocks.MATTER_DIGITIZER);
     public static final DeferredItem<BlockItem> DIGITIZED_ITEM_COPIER = registerBlockItem("digitized_item_copier", ModBlocks.DIGITIZED_ITEM_COPIER);
     public static final DeferredItem<BlockItem> MATTER_RECONSTRUCTOR = registerBlockItem("matter_reconstruction_device", ModBlocks.MATTER_RECONSTRUCTOR);

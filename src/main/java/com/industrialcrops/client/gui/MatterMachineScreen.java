@@ -45,7 +45,7 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
         boolean digitizer = menu.kind() == MatterMachineBlockEntity.Kind.DIGITIZER;
         imageWidth = digitizer ? 176 : 193;
         imageHeight = 190;
-        inventoryLabelY = 96;
+        inventoryLabelY = 99;
     }
 
     @Override

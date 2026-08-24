@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
 public final class BioEnergyMenu extends AbstractContainerMenu implements UpgradeableMenu {
-    public static final int UPGRADE_X=-68,UPGRADE_Y=31,UPGRADE_SPACING=22;
+    public static final int UPGRADE_X=-68,UPGRADE_Y=28,UPGRADE_SPACING=22;
     private final BioEnergyMachineBlockEntity blockEntity;
     private final BlockPos pos;
     private final ContainerData data;

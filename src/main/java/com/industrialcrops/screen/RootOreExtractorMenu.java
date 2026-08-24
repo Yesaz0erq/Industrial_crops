@@ -22,7 +22,7 @@ public final class RootOreExtractorMenu extends AbstractContainerMenu implements
     private static final int CATALYST_SLOT = RootOreExtractorBlockEntity.CATALYST_SLOT;
     private static final int BAG_SLOT = RootOreExtractorBlockEntity.BAG_SLOT;
     private static final int OUTPUT_SLOT = RootOreExtractorBlockEntity.OUTPUT_SLOT;
-    public static final int UPGRADE_X=-68,UPGRADE_Y=31,UPGRADE_SPACING=22;
+    public static final int UPGRADE_X=-68,UPGRADE_Y=28,UPGRADE_SPACING=22;
     private static final int MACHINE_SLOT_COUNT = 8;
     private static final int PLAYER_INVENTORY_START = MACHINE_SLOT_COUNT;
     private static final int PLAYER_INVENTORY_END = PLAYER_INVENTORY_START + 27;

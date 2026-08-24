@@ -71,6 +71,16 @@ public final class ModCapabilities {
                 ModBlockEntities.PROCESSOR_PROGRAMMER.get(),
                 (blockEntity, side) -> blockEntity.getInventory()
         );
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                ModBlockEntities.AUTOMATIC_PLANTER.get(),
+                (blockEntity, side) -> blockEntity.getInventory()
+        );
+        event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK,
+                ModBlockEntities.AUTOMATIC_PLANTER.get(),
+                (blockEntity, side) -> blockEntity.getEnergyStorage(side)
+        );
         registerMatter(event, ModBlockEntities.MATTER_DIGITIZER.get());
         registerMatter(event, ModBlockEntities.DIGITIZED_ITEM_COPIER.get());
         registerMatter(event, ModBlockEntities.MATTER_RECONSTRUCTOR.get());

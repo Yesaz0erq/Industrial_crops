@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
 public final class ElectricFurnaceMenu extends AbstractContainerMenu {
-    public static final int UPGRADE_X = -68, UPGRADE_Y = 31, UPGRADE_SPACING = 22;
+    public static final int UPGRADE_X = -68, UPGRADE_Y = 28, UPGRADE_SPACING = 22;
     private static final int MACHINE_SLOTS = 10;
     private final ElectricFurnaceBlockEntity furnace;
     private final BlockPos pos;

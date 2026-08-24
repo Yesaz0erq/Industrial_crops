@@ -1,28 +1,16 @@
 {
-  "variants": {
-    "age=0": {
-      "model": "industrialcrops:block/industrial_melon_stem_growth0"
-    },
-    "age=1": {
-      "model": "industrialcrops:block/industrial_melon_stem_growth1"
-    },
-    "age=2": {
-      "model": "industrialcrops:block/industrial_melon_stem_growth2"
-    },
-    "age=3": {
-      "model": "industrialcrops:block/industrial_melon_stem_growth3"
-    },
-    "age=4": {
-      "model": "industrialcrops:block/industrial_melon_stem_growth4"
-    },
-    "age=5": {
-      "model": "industrialcrops:block/industrial_melon_stem_growth5"
-    },
-    "age=6": {
-      "model": "industrialcrops:block/industrial_melon_stem_growth6"
-    },
-    "age=7": {
-      "model": "industrialcrops:block/industrial_melon_stem_growth7"
-    }
-  }
+  "multipart": [
+    { "when": { "age": "0" }, "apply": { "model": "industrialcrops:block/industrial_melon_stem_growth0" } },
+    { "when": { "age": "1" }, "apply": { "model": "industrialcrops:block/industrial_melon_stem_growth1" } },
+    { "when": { "age": "2" }, "apply": { "model": "industrialcrops:block/industrial_melon_stem_growth2" } },
+    { "when": { "age": "3" }, "apply": { "model": "industrialcrops:block/industrial_melon_stem_growth3" } },
+    { "when": { "age": "4" }, "apply": { "model": "industrialcrops:block/industrial_melon_stem_growth4" } },
+    { "when": { "age": "5" }, "apply": { "model": "industrialcrops:block/industrial_melon_stem_growth5" } },
+    { "when": { "age": "6" }, "apply": { "model": "industrialcrops:block/industrial_melon_stem_growth6" } },
+    { "when": { "age": "7", "attached": "false" }, "apply": { "model": "industrialcrops:block/industrial_melon_stem_growth7" } },
+    { "when": { "age": "7", "attached": "true", "facing": "east" }, "apply": { "model": "industrialcrops:block/industrial_melon_attached_stem", "y": 180 } },
+    { "when": { "age": "7", "attached": "true", "facing": "north" }, "apply": { "model": "industrialcrops:block/industrial_melon_attached_stem", "y": 90 } },
+    { "when": { "age": "7", "attached": "true", "facing": "south" }, "apply": { "model": "industrialcrops:block/industrial_melon_attached_stem", "y": 270 } },
+    { "when": { "age": "7", "attached": "true", "facing": "west" }, "apply": { "model": "industrialcrops:block/industrial_melon_attached_stem" } }
+  ]
 }

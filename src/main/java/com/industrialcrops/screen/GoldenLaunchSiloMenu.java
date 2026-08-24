@@ -20,7 +20,7 @@ public final class GoldenLaunchSiloMenu extends AbstractContainerMenu {
     public static final int ROCKET_X = 18;
     public static final int ROCKET_Y = 36;
     public static final int UPGRADE_X = -68;
-    public static final int UPGRADE_Y = 26;
+    public static final int UPGRADE_Y = 28;
     public static final int UPGRADE_SPACING = 22;
     public static final int PLAYER_INVENTORY_Y = 120;
     public static final int PLAYER_HOTBAR_Y = 178;

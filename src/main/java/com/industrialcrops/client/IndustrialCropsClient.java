@@ -18,6 +18,7 @@ import com.industrialcrops.client.gui.ItemNetworkTerminalScreen;
 import com.industrialcrops.client.gui.BioEnergyScreen;
 import com.industrialcrops.client.gui.ElectricFurnaceScreen;
 import com.industrialcrops.client.gui.DigitalMiniatureForestScreen;
+import com.industrialcrops.client.gui.AutomaticPlanterScreen;
 import com.industrialcrops.client.renderer.BrownCreateSlimeRenderer;
 import com.industrialcrops.client.renderer.DiamondProcessorSlimeRenderer;
 import com.industrialcrops.client.renderer.DigitalMiniatureForestRenderer;
@@ -62,6 +63,7 @@ public final class IndustrialCropsClient {
         event.register(ModMenus.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get(), AdvancedIndustrialStorageScreen::new);
         event.register(ModMenus.GOLDEN_LAUNCH_SILO.get(), GoldenLaunchSiloScreen::new);
         event.register(ModMenus.PROCESSOR_PROGRAMMER.get(), ProcessorProgrammerScreen::new);
+        event.register(ModMenus.AUTOMATIC_PLANTER.get(), AutomaticPlanterScreen::new);
         event.register(ModMenus.MATTER_MACHINE.get(), MatterMachineScreen::new);
         event.register(ModMenus.ITEM_NETWORK_TERMINAL.get(), ItemNetworkTerminalScreen::new);
         event.register(ModMenus.BIO_ENERGY_MACHINE.get(), BioEnergyScreen::new);

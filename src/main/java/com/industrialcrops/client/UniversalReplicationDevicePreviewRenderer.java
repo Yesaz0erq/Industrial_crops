@@ -1,6 +1,7 @@
 package com.industrialcrops.client;
 
 import com.industrialcrops.Carrote;
+import com.industrialcrops.block.MimicBlock;
 import com.industrialcrops.block.UniversalReplicationDeviceBlock;
 import com.industrialcrops.client.renderer.WorldVolumeOutlineRenderer;
 import com.industrialcrops.registry.ModItems;
@@ -20,7 +21,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
-/** Highlights the source block one position to the right of the placed device. */
+/** Highlights the right-side target used by mimic and universal-copy placement. */
 @EventBusSubscriber(modid = Carrote.MOD_ID, value = Dist.CLIENT)
 public final class UniversalReplicationDevicePreviewRenderer {
     private UniversalReplicationDevicePreviewRenderer() {}
@@ -36,7 +37,9 @@ public final class UniversalReplicationDevicePreviewRenderer {
             return;
         }
         ItemStack held = minecraft.player.getMainHandItem();
-        if (!held.is(com.industrialcrops.registry.CarroteItems.UNIVERSAL_REPLICATION_DEVICE.get())) {
+        boolean mimicHeld = held.is(com.industrialcrops.registry.CarroteItems.MIMIC_BLOCK.get());
+        boolean universalHeld = held.is(com.industrialcrops.registry.CarroteItems.UNIVERSAL_REPLICATION_DEVICE.get());
+        if (!mimicHeld && !universalHeld) {
             return;
         }
         HitResult hit = minecraft.hitResult;
@@ -52,8 +55,12 @@ public final class UniversalReplicationDevicePreviewRenderer {
         );
         BlockPos devicePos = context.getClickedPos();
         Direction front = context.getHorizontalDirection().getOpposite();
-        BlockPos sourcePos = UniversalReplicationDeviceBlock.sourcePosition(devicePos, front);
-        boolean valid = UniversalReplicationDeviceBlock.canCopy(minecraft.level, sourcePos);
+        BlockPos sourcePos = mimicHeld
+                ? MimicBlock.targetPosition(devicePos, front)
+                : UniversalReplicationDeviceBlock.sourcePosition(devicePos, front);
+        boolean valid = mimicHeld
+                ? MimicBlock.canMimic(minecraft.level, sourcePos)
+                : UniversalReplicationDeviceBlock.canCopy(minecraft.level, sourcePos);
 
         Vec3 camera = event.getCamera().getPosition();
         PoseStack poseStack = event.getPoseStack();

@@ -30,6 +30,7 @@ import com.industrialcrops.block.entity.EnergyCableBlockEntity;
 import com.industrialcrops.block.entity.ElectricFurnaceBlockEntity;
 import com.industrialcrops.block.entity.DigitalMiniatureForestBlockEntity;
 import com.industrialcrops.block.entity.CropGeneticsBlockEntity;
+import com.industrialcrops.block.entity.AutomaticPlanterBlockEntity;
 
 public final class ModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
@@ -112,6 +113,10 @@ public final class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ProcessorProgrammerBlockEntity>> PROCESSOR_PROGRAMMER =
             BLOCK_ENTITIES.register("processor_programming_device", () -> BlockEntityType.Builder
                     .of(ProcessorProgrammerBlockEntity::new, ModBlocks.PROCESSOR_PROGRAMMER.get())
+                    .build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AutomaticPlanterBlockEntity>> AUTOMATIC_PLANTER =
+            BLOCK_ENTITIES.register("automatic_planter", () -> BlockEntityType.Builder
+                    .of(AutomaticPlanterBlockEntity::new, ModBlocks.AUTOMATIC_PLANTER.get())
                     .build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MatterDigitizerBlockEntity>> MATTER_DIGITIZER =

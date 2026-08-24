@@ -19,7 +19,7 @@ import net.neoforged.neoforge.items.SlotItemHandler;
 public final class CropCompressorMenu extends AbstractContainerMenu implements UpgradeableMenu {
     private static final int INPUT_SLOT = CropCompressorBlockEntity.INPUT_SLOT;
     private static final int OUTPUT_SLOT = CropCompressorBlockEntity.OUTPUT_SLOT;
-    public static final int UPGRADE_X=-68,UPGRADE_Y=31,UPGRADE_SPACING=22;
+    public static final int UPGRADE_X=-68,UPGRADE_Y=28,UPGRADE_SPACING=22;
     private static final int MACHINE_SLOT_COUNT = 6;
     private static final int PLAYER_INVENTORY_START = MACHINE_SLOT_COUNT;
     private static final int PLAYER_INVENTORY_END = PLAYER_INVENTORY_START + 27;

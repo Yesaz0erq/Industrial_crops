@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
 public final class IncubatorMenu extends AbstractContainerMenu implements UpgradeableMenu {
-    public static final int UPGRADE_X=-68,UPGRADE_Y=31,UPGRADE_SPACING=22;
+    public static final int UPGRADE_X=-68,UPGRADE_Y=28,UPGRADE_SPACING=22;
     private static final int MACHINE_SLOT_COUNT = 5;
     private static final int PLAYER_INVENTORY_START = 5;
     private static final int PLAYER_INVENTORY_END = 32;

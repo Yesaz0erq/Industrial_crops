@@ -38,19 +38,14 @@ public final class MimicBlockEntity extends BlockEntity {
         if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }
-        BlockPos targetPos = pos.relative(state.getValue(MimicBlock.FACING).getCounterClockWise());
-        if (!level.hasChunkAt(targetPos)) {
-            entity.resetProgress();
-            return;
-        }
-
-        BlockState targetState = level.getBlockState(targetPos);
-        if (targetState.isAir() || targetState.is(com.industrialcrops.registry.CarroteBlocks.MIMIC_BLOCK.get())) {
+        BlockPos targetPos = MimicBlock.targetPosition(pos, state.getValue(MimicBlock.FACING));
+        if (!MimicBlock.canMimic(level, targetPos)) {
             entity.resetProgress();
             entity.showStatus(serverLevel,
                     Component.translatable("message.industrialcrops.mimic_block.waiting"));
             return;
         }
+        BlockState targetState = level.getBlockState(targetPos);
         if (entity.lastTarget != null && !entity.lastTarget.equals(targetState)) {
             entity.progress = 0;
         }

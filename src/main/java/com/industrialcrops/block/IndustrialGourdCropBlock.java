@@ -17,6 +17,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootParams;
 
 public final class IndustrialGourdCropBlock extends IndustrialCropBlock {
@@ -26,6 +30,9 @@ public final class IndustrialGourdCropBlock extends IndustrialCropBlock {
             Direction.SOUTH,
             Direction.WEST
     };
+    /** The mature stem points at its currently attached fruit, like vanilla gourds. */
+    public static final DirectionProperty FRUIT_FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty ATTACHED = BooleanProperty.create("attached");
     private final Supplier<? extends Block> fruitBlock;
 
     public IndustrialGourdCropBlock(
@@ -35,6 +42,9 @@ public final class IndustrialGourdCropBlock extends IndustrialCropBlock {
     ) {
         super(properties, seed, () -> fruitBlock.get().asItem(), 1, 1);
         this.fruitBlock = fruitBlock;
+        registerDefaultState(defaultBlockState()
+                .setValue(FRUIT_FACING, Direction.NORTH)
+                .setValue(ATTACHED, false));
     }
 
     @Override
@@ -60,7 +70,10 @@ public final class IndustrialGourdCropBlock extends IndustrialCropBlock {
         }
 
         resolveMaturity(level, pos);
-        if (level.getRawBrightness(pos, 0) >= 9 && !hasAdjacentFruit(level, pos)) {
+        if (syncFruitConnection(level, pos, state)) {
+            return;
+        }
+        if (level.getRawBrightness(pos, 0) >= 9) {
             tryGrowFruit(level, pos, random);
         }
     }
@@ -83,7 +96,9 @@ public final class IndustrialGourdCropBlock extends IndustrialCropBlock {
             level.setBlock(pos, grownState, 2);
             if (age >= getMaxAge()) {
                 resolveMaturity(level, pos);
-                tryGrowFruit(level, pos, random);
+                if (!syncFruitConnection(level, pos, level.getBlockState(pos))) {
+                    tryGrowFruit(level, pos, random);
+                }
             }
             return;
         }
@@ -106,19 +121,20 @@ public final class IndustrialGourdCropBlock extends IndustrialCropBlock {
     }
 
     private void tryGrowFruit(ServerLevel level, BlockPos pos, RandomSource random) {
-        BlockPos grassTarget = findTarget(level, pos, random, true);
-        BlockPos target = grassTarget != null ? grassTarget : findTarget(level, pos, random, false);
+        FruitTarget grassTarget = findTarget(level, pos, random, true);
+        FruitTarget target = grassTarget != null ? grassTarget : findTarget(level, pos, random, false);
         if (target != null) {
-            level.setBlockAndUpdate(target, fruitBlock.get().defaultBlockState());
+            level.setBlockAndUpdate(target.pos(), fruitBlock.get().defaultBlockState());
             CropGenetics.Genes genes = getGenes(level, pos);
             if (genes != null
-                    && level.getBlockEntity(target) instanceof CropGeneticsBlockEntity fruitGenetics) {
+                    && level.getBlockEntity(target.pos()) instanceof CropGeneticsBlockEntity fruitGenetics) {
                 fruitGenetics.initialize(genes, random);
             }
+            connectStem(level, pos, target.direction());
         }
     }
 
-    private BlockPos findTarget(ServerLevel level, BlockPos pos, RandomSource random, boolean grassOnly) {
+    private FruitTarget findTarget(ServerLevel level, BlockPos pos, RandomSource random, boolean grassOnly) {
         int start = random.nextInt(HORIZONTAL_DIRECTIONS.length);
         for (int index = 0; index < HORIZONTAL_DIRECTIONS.length; index++) {
             Direction direction = HORIZONTAL_DIRECTIONS[(start + index) % HORIZONTAL_DIRECTIONS.length];
@@ -130,13 +146,27 @@ public final class IndustrialGourdCropBlock extends IndustrialCropBlock {
             BlockState support = level.getBlockState(target.below());
             if (grassOnly) {
                 if (support.is(Blocks.GRASS_BLOCK)) {
-                    return target;
+                    return new FruitTarget(target, direction);
                 }
             } else if (canSupportFruit(support)) {
-                return target;
+                return new FruitTarget(target, direction);
             }
         }
         return null;
+    }
+
+    private boolean syncFruitConnection(Level level, BlockPos pos, BlockState state) {
+        Block fruit = fruitBlock.get();
+        for (Direction direction : HORIZONTAL_DIRECTIONS) {
+            if (level.getBlockState(pos.relative(direction)).is(fruit)) {
+                connectStem(level, pos, direction);
+                return true;
+            }
+        }
+        if (state.getValue(ATTACHED)) {
+            level.setBlock(pos, state.setValue(ATTACHED, false), 2);
+        }
+        return false;
     }
 
     private boolean hasAdjacentFruit(net.minecraft.world.level.LevelReader level, BlockPos pos) {
@@ -147,6 +177,32 @@ public final class IndustrialGourdCropBlock extends IndustrialCropBlock {
             }
         }
         return false;
+    }
+
+    private static void connectStem(Level level, BlockPos pos, Direction direction) {
+        BlockState stem = level.getBlockState(pos);
+        if (stem.hasProperty(FRUIT_FACING)
+                && (!stem.getValue(ATTACHED) || stem.getValue(FRUIT_FACING) != direction)) {
+            level.setBlock(pos, stem.setValue(FRUIT_FACING, direction).setValue(ATTACHED, true), 2);
+        }
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos,
+                                boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+        if (!level.isClientSide() && isMaxAge(state)) {
+            syncFruitConnection(level, pos, state);
+        }
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(FRUIT_FACING, ATTACHED);
+    }
+
+    private record FruitTarget(BlockPos pos, Direction direction) {
     }
 
     private static boolean canSupportFruit(BlockState support) {
