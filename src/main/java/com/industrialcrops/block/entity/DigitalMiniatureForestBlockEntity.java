@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -24,8 +23,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.energy.EnergyStorage;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class DigitalMiniatureForestBlockEntity extends BlockEntity implements MenuProvider {
@@ -165,16 +164,16 @@ public final class DigitalMiniatureForestBlockEntity extends BlockEntity impleme
     @Override public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
         return new DigitalMiniatureForestMenu(id, inv, this, worldPosition);
     }
-    @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries); tag.put("Inventory", inventory.serializeNBT(registries));
+    @Override protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag); tag.put("Inventory", inventory.serializeNBT());
         tag.putInt("Energy", energy.getEnergyStored()); tag.putInt("Progress", progress);
-        if (!activeSapling.isEmpty()) tag.put("ActiveSapling", activeSapling.save(registries));
+        if (!activeSapling.isEmpty()) tag.put("ActiveSapling", activeSapling.save(new CompoundTag()));
     }
-    @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries); if (tag.contains("Inventory")) inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+    @Override public void load(CompoundTag tag) {
+        super.load(tag); if (tag.contains("Inventory")) inventory.deserializeNBT(tag.getCompound("Inventory"));
         MachineInventoryHelper.ensureSize(inventory, UPGRADE_COUNT);
         energy.setStored(tag.getInt("Energy")); progress = Math.max(0, Math.min(PROCESS_TICKS, tag.getInt("Progress")));
-        activeSapling = tag.contains("ActiveSapling") ? ItemStack.parseOptional(registries, tag.getCompound("ActiveSapling")) : ItemStack.EMPTY;
+        activeSapling = tag.contains("ActiveSapling") ? ItemStack.of(tag.getCompound("ActiveSapling")) : ItemStack.EMPTY;
     }
     private record TreeYield(net.minecraft.world.item.Item log, int count) { }
     private final class TrackedEnergyStorage extends EnergyStorage {

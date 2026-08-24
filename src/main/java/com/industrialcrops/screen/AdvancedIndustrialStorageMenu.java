@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -26,15 +26,13 @@ import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
     public static final int MIN_ROWS = 3;
@@ -80,7 +78,7 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
     private boolean cellSlotsVisible;
     private final int[] syncedCounts;
 
-    public AdvancedIndustrialStorageMenu(int containerId, Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    public AdvancedIndustrialStorageMenu(int containerId, Inventory inventory, FriendlyByteBuf buffer) {
         this(containerId, inventory, readOpenData(inventory, buffer));
     }
 
@@ -514,7 +512,7 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
     private static void addSupply(List<ItemStack> supplies, ItemStack source) {
         if (source.isEmpty()) return;
         for (ItemStack existing : supplies) {
-            if (ItemStack.isSameItemSameComponents(existing, source)) {
+            if (ItemStack.isSameItemSameTags(existing, source)) {
                 existing.setCount((int) Math.min(Integer.MAX_VALUE, (long) existing.getCount() + source.getCount()));
                 return;
             }
@@ -542,12 +540,12 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
         Inventory inventory = player.getInventory();
         for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
             ItemStack stack = inventory.getItem(slot);
-            if (stack.isEmpty() || !ItemStack.isSameItemSameComponents(stack, requested)) continue;
+            if (stack.isEmpty() || !ItemStack.isSameItemSameTags(stack, requested)) continue;
             return inventory.removeItem(slot, 1);
         }
         for (int slot = 0; slot < blockEntity.getUnlockedStorageSlots(); slot++) {
             ItemStack stack = blockEntity.getStorageStack(slot);
-            if (!stack.isEmpty() && ItemStack.isSameItemSameComponents(stack, requested)) {
+            if (!stack.isEmpty() && ItemStack.isSameItemSameTags(stack, requested)) {
                 return blockEntity.extractFromStorageSlot(slot, 1);
             }
         }
@@ -617,19 +615,16 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
             return;
         }
 
-        CraftingInput craftingInput = craftingSlots.asCraftInput();
         ItemStack result = ItemStack.EMPTY;
-        Optional<RecipeHolder<CraftingRecipe>> optional = level.getServer()
+        Optional<CraftingRecipe> optional = level.getServer()
                 .getRecipeManager()
-                .getRecipeFor(RecipeType.CRAFTING, craftingInput, level, (RecipeHolder<CraftingRecipe>) null);
+                .getRecipeFor(RecipeType.CRAFTING, craftingSlots, level);
         if (optional.isPresent()) {
-            RecipeHolder<CraftingRecipe> holder = optional.get();
-            CraftingRecipe recipe = holder.value();
-            if (resultSlots.setRecipeUsed(level, serverPlayer, holder)) {
-                ItemStack assembled = recipe.assemble(craftingInput, level.registryAccess());
-                if (assembled.isItemEnabled(level.enabledFeatures())) {
-                    result = assembled;
-                }
+            CraftingRecipe recipe = optional.get();
+            resultSlots.setRecipeUsed(recipe);
+            ItemStack assembled = recipe.assemble(craftingSlots, level.registryAccess());
+            if (assembled.isItemEnabled(level.enabledFeatures())) {
+                result = assembled;
             }
         }
 
@@ -638,7 +633,7 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
         serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), resultSlot, result));
     }
 
-    private static OpenData readOpenData(Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    private static OpenData readOpenData(Inventory inventory, FriendlyByteBuf buffer) {
         BlockPos pos = buffer.readBlockPos();
         int rows = buffer.readableBytes() > 0 ? buffer.readVarInt() : MIN_ROWS;
         boolean remoteAccess = buffer.readableBytes() > 0 && buffer.readBoolean();

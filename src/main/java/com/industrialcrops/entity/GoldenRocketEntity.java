@@ -63,8 +63,8 @@ public final class GoldenRocketEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(TARGET, BlockPos.ZERO);
+    protected void defineSynchedData() {
+        entityData.define(TARGET, BlockPos.ZERO);
     }
 
     @Override

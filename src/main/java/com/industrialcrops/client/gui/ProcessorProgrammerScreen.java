@@ -41,7 +41,7 @@ public final class ProcessorProgrammerScreen extends UpgradeableMachineScreen<Pr
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
+        renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTick);
         renderUpgradeTab(graphics, mouseX, mouseY);
         renderTooltip(graphics, mouseX, mouseY);

@@ -4,7 +4,7 @@ import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.machine.MachineInventoryHelper;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,16 +12,13 @@ import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class BasicCropStorageArrayBlockEntity extends BlockEntity {
@@ -146,18 +143,18 @@ public final class BasicCropStorageArrayBlockEntity extends BlockEntity {
 
     public ItemStack createDroppedStack(Block block) {
         ItemStack stack = new ItemStack(block.asItem());
-        CompoundTag storageData = inventory.serializeNBT(level == null ? null : level.registryAccess());
+        CompoundTag storageData = inventory.serializeNBT();
         if (!storageData.isEmpty()) {
-            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(storageData));
+            stack.setTag(storageData.copy());
         }
         return stack;
     }
 
     public void readStorageFromStack(ItemStack stack) {
-        CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
+        var customData = com.industrialcrops.util.ItemStackNbt.copyTag(stack);
         if (customData != null && level != null) {
-            CompoundTag tag = customData.copyTag();
-            if (tag.contains("Items")) inventory.deserializeNBT(level.registryAccess(), tag);
+            CompoundTag tag = customData;
+            if (tag.contains("Items")) inventory.deserializeNBT(tag);
             else {
                 migrateLegacy(tag, ModItems.INDUSTRIAL_CARROT.get(), "IndustrialCarrots");
                 migrateLegacy(tag, ModItems.INDUSTRIAL_POTATO.get(), "IndustrialPotatoes");
@@ -170,16 +167,16 @@ public final class BasicCropStorageArrayBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Inventory")) {
-            inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+            inventory.deserializeNBT(tag.getCompound("Inventory"));
             MachineInventoryHelper.ensureSize(inventory, SLOT_COUNT);
         } else {
             migrateLegacy(tag, ModItems.INDUSTRIAL_CARROT.get(), "IndustrialCarrots");
@@ -193,7 +190,7 @@ public final class BasicCropStorageArrayBlockEntity extends BlockEntity {
     private void migrateLegacy(CompoundTag tag, Item item, String key) {
         int remaining = Math.max(0, tag.getInt(key));
         while (remaining > 0) {
-            int amount = Math.min(remaining, item.getDefaultMaxStackSize());
+            int amount = Math.min(remaining, item.getMaxStackSize());
             if (insertStack(new ItemStack(item, amount)) <= 0) break;
             remaining -= amount;
         }
@@ -201,7 +198,7 @@ public final class BasicCropStorageArrayBlockEntity extends BlockEntity {
 
     public static @Nullable BasicCropStorageArrayBlockEntity findAttached(Level level, BlockPos controllerPos) {
         List<BasicCropStorageArrayBlockEntity> attached = findAllAttached(level, controllerPos);
-        return attached.isEmpty() ? null : attached.getFirst();
+        return attached.isEmpty() ? null : attached.get(0);
     }
 
     public static List<BasicCropStorageArrayBlockEntity> findAllAttached(Level level, BlockPos controllerPos) {

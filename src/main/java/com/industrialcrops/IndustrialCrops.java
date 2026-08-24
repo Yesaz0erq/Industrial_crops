@@ -9,11 +9,12 @@ import com.industrialcrops.registry.ModEffects;
 import com.industrialcrops.registry.ModMenus;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +23,8 @@ public final class IndustrialCrops {
     public static final String MOD_ID = "industrialcrops";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public IndustrialCrops(IEventBus modEventBus) {
+    public IndustrialCrops() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModBlocks.BLOCKS.register(modEventBus);
         ModEntities.ENTITY_TYPES.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
@@ -30,10 +32,11 @@ public final class IndustrialCrops {
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModMenus.MENUS.register(modEventBus);
         ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
+        com.industrialcrops.network.ModNetworking.init();
         modEventBus.addListener(EventPriority.LOWEST, this::registerCapabilities);
         modEventBus.addListener(this::registerEntityAttributes);
 
-        LOGGER.info("Loaded Industrial Crops NeoForge branch.");
+        LOGGER.info("Loaded Industrial Crops Forge 1.20.1 branch.");
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {

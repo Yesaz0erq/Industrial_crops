@@ -5,8 +5,6 @@ import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.machine.MachineInventoryHelper;
 import com.industrialcrops.screen.MaterialHardeningDeviceMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -15,13 +13,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
-import net.minecraft.world.item.component.Unbreakable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class MaterialHardeningDeviceBlockEntity extends BlockEntity implements MenuProvider {
@@ -83,8 +79,8 @@ public final class MaterialHardeningDeviceBlockEntity extends BlockEntity implem
     /** Adds the real 1.21 unbreakable component and a legacy-friendly NBT marker. */
     public static ItemStack makeUnbreakable(ItemStack input) {
         ItemStack result = input.copyWithCount(1);
-        result.set(DataComponents.UNBREAKABLE, new Unbreakable(true));
-        CustomData.update(DataComponents.CUSTOM_DATA, result,
+        result.getOrCreateTag().putBoolean("Unbreakable", true);
+        com.industrialcrops.util.ItemStackNbt.update(result,
                 tag -> tag.putBoolean("Unbreakable", true));
         return result;
     }
@@ -96,7 +92,7 @@ public final class MaterialHardeningDeviceBlockEntity extends BlockEntity implem
     private boolean canOutput(ItemStack result) {
         ItemStack output = inventory.getStackInSlot(OUTPUT_SLOT);
         return output.isEmpty()
-                || ItemStack.isSameItemSameComponents(output, result)
+                || ItemStack.isSameItemSameTags(output, result)
                 && output.getCount() + result.getCount() <= output.getMaxStackSize();
     }
 
@@ -120,15 +116,15 @@ public final class MaterialHardeningDeviceBlockEntity extends BlockEntity implem
         return new MaterialHardeningDeviceMenu(id, inventory, this, worldPosition);
     }
 
-    @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    @Override protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
         tag.putInt("Progress", progress);
     }
 
-    @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        if (tag.contains("Inventory")) inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+    @Override public void load(CompoundTag tag) {
+        super.load(tag);
+        if (tag.contains("Inventory")) inventory.deserializeNBT(tag.getCompound("Inventory"));
         MachineInventoryHelper.ensureSize(inventory, OUTPUT_SLOT + 1);
         progress = tag.getInt("Progress");
     }

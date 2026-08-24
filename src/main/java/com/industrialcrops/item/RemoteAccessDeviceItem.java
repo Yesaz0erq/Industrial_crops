@@ -6,7 +6,6 @@ import com.industrialcrops.screen.ReinforcedControlDeviceMenu;
 import com.industrialcrops.screen.AdvancedIndustrialStorageMenu;
 import java.util.List;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +20,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -54,7 +52,7 @@ public final class RemoteAccessDeviceItem extends Item {
         }
 
         ItemStack stack = context.getItemInHand();
-        CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> {
+        com.industrialcrops.util.ItemStackNbt.update(stack, tag -> {
             tag.putString(DIMENSION_TAG, level.dimension().location().toString());
             tag.putLong(POS_TAG, pos.asLong());
             tag.putString(KIND_TAG, kind);
@@ -105,7 +103,7 @@ public final class RemoteAccessDeviceItem extends Item {
     private static void openRemoteMenu(Player player, Binding binding) {
         BlockPos pos = binding.pos();
         if (BASIC_KIND.equals(binding.kind())) {
-            player.openMenu(new MenuProvider() {
+            net.minecraftforge.network.NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer) player,new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
                     return Component.translatable("block.industrialcrops.basic_control_device");
@@ -121,7 +119,7 @@ public final class RemoteAccessDeviceItem extends Item {
                 buffer.writeBoolean(true);
             });
         } else {
-            player.openMenu(new MenuProvider() {
+            net.minecraftforge.network.NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer) player,new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
                     return Component.translatable("block.industrialcrops.reinforced_control_device");
@@ -145,8 +143,8 @@ public final class RemoteAccessDeviceItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable net.minecraft.world.level.Level level, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, level, tooltip, flag);
         Binding binding = readBinding(stack);
         if (binding == null) {
             tooltip.add(Component.translatable("tooltip.industrialcrops.remote_access.unbound"));
@@ -168,8 +166,8 @@ public final class RemoteAccessDeviceItem extends Item {
     }
 
     private static @Nullable Binding readBinding(ItemStack stack) {
-        CustomData data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
-        var tag = data.copyTag();
+        var data = com.industrialcrops.util.ItemStackNbt.copyTag(stack);
+        var tag = data;
         String dimension = tag.getString(DIMENSION_TAG);
         String kind = tag.getString(KIND_TAG);
         if (dimension.isEmpty() || !tag.contains(POS_TAG, Tag.TAG_LONG) ||

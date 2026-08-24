@@ -6,7 +6,7 @@ import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -15,7 +15,7 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public final class ProcessorProgrammerMenu extends AbstractContainerMenu implements UpgradeableMenu {
     public static final int UPGRADE_X=-68,UPGRADE_Y=28,UPGRADE_SPACING=22;
@@ -25,7 +25,7 @@ public final class ProcessorProgrammerMenu extends AbstractContainerMenu impleme
     private int progress;
     private boolean upgradeSlotsVisible;
 
-    public ProcessorProgrammerMenu(int containerId, Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    public ProcessorProgrammerMenu(int containerId, Inventory inventory, FriendlyByteBuf buffer) {
         this(containerId, inventory, readBlockEntity(inventory, buffer));
     }
 
@@ -110,7 +110,7 @@ public final class ProcessorProgrammerMenu extends AbstractContainerMenu impleme
         for (int column = 0; column < 9; column++) addSlot(new Slot(inventory, column, x + column * 18, y));
     }
 
-    private static ProcessorProgrammerBlockEntity readBlockEntity(Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    private static ProcessorProgrammerBlockEntity readBlockEntity(Inventory inventory, FriendlyByteBuf buffer) {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity blockEntity = inventory.player.level().getBlockEntity(pos);
         if (blockEntity instanceof ProcessorProgrammerBlockEntity programmer) return programmer;

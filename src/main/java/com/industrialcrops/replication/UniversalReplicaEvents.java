@@ -7,11 +7,12 @@ import com.industrialcrops.block.UniversalReplicationDeviceBlock;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.level.ChunkWatchEvent;
-import net.neoforged.neoforge.event.level.ChunkEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.event.level.ChunkWatchEvent;
+import net.minecraftforge.event.level.ChunkEvent;
+import com.industrialcrops.network.ModNetworking;
+import net.minecraftforge.network.PacketDistributor;
 
 /** Sends full replica data after the normal chunk packet has reached a client. */
 @EventBusSubscriber(modid = Carrote.MOD_ID)
@@ -20,15 +21,13 @@ public final class UniversalReplicaEvents {
     }
 
     @SubscribeEvent
-    public static void onChunkSent(ChunkWatchEvent.Sent event) {
+    public static void onChunkSent(ChunkWatchEvent.Watch event) {
         for (BlockEntity entity : event.getChunk().getBlockEntities().values()) {
             if (event.getLevel().getBlockState(entity.getBlockPos())
                     .is(com.industrialcrops.registry.CarroteBlocks.UNIVERSAL_REPLICATION_DEVICE.get())
                     && UniversalReplicaData.isReplica(entity)) {
-                PacketDistributor.sendToPlayer(
-                        event.getPlayer(),
-                        UniversalReplicaSyncPayload.of(entity, event.getLevel())
-                );
+                ModNetworking.CHANNEL.send(PacketDistributor.PLAYER.with(event::getPlayer),
+                        UniversalReplicaSyncPayload.of(entity, event.getLevel()));
             }
         }
     }

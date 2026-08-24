@@ -13,8 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class PipeTransferUtil {
@@ -89,7 +89,7 @@ public final class PipeTransferUtil {
         if (!(level instanceof Level realLevel)) {
             return false;
         }
-        return realLevel.getCapability(Capabilities.ItemHandler.BLOCK, pos, side) != null;
+        return com.industrialcrops.util.ForgeCapabilityUtil.find(realLevel, ForgeCapabilities.ITEM_HANDLER, pos, side) != null;
     }
 
     private static List<HandlerEndpoint> collectInputEndpoints(Level level, BlockPos startPos) {
@@ -122,7 +122,7 @@ public final class PipeTransferUtil {
 
         List<HandlerEndpoint> handlers = new ArrayList<>(endpoints.size());
         for (Endpoint endpoint : endpoints) {
-            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, endpoint.pos(), endpoint.side());
+            IItemHandler handler = com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ITEM_HANDLER, endpoint.pos(), endpoint.side());
             if (handler != null) {
                 handlers.add(new HandlerEndpoint(endpoint.pos(), endpoint.side(), handler));
             }
@@ -138,7 +138,7 @@ public final class PipeTransferUtil {
                 continue;
             }
             Direction side = direction.getOpposite();
-            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, neighborPos, side);
+            IItemHandler handler = com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ITEM_HANDLER, neighborPos, side);
             if (handler != null) {
                 endpoints.add(new HandlerEndpoint(neighborPos.immutable(), side, handler));
             }

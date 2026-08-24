@@ -17,7 +17,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Slime;
 
 public final class IncubatorBlockEntityRenderer implements BlockEntityRenderer<IncubatorBlockEntity> {
-    private static final ResourceLocation GLASS_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+    private static final ResourceLocation GLASS_TEXTURE = new ResourceLocation(
             IndustrialCrops.MOD_ID,
             "textures/block/slime_converter_front.png"
     );
@@ -124,12 +124,13 @@ public final class IncubatorBlockEntityRenderer implements BlockEntityRenderer<I
             float normalY,
             float normalZ
     ) {
-        vertices.addVertex(pose, x, y, z)
-                .setColor(255, 255, 255, 255)
-                .setUv(u, v)
-                .setOverlay(packedOverlay)
-                .setLight(packedLight)
-                .setNormal(pose, normalX, normalY, normalZ);
+        vertices.vertex(pose.pose(), x, y, z)
+                .color(255, 255, 255, 255)
+                .uv(u, v)
+                .overlayCoords(packedOverlay)
+                .uv2(packedLight)
+                .normal(pose.normal(), normalX, normalY, normalZ)
+                .endVertex();
     }
 
     private void refreshEntity(IncubatorBlockEntity slime_converter) {

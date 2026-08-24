@@ -22,7 +22,7 @@ public final class MixerRecipeCategory implements IRecipeCategory<MixerRecipeDis
     private final IDrawable icon;
 
     public MixerRecipeCategory(IGuiHelper guiHelper) {
-        icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.MIXER.asItem()));
+        icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.MIXER.get().asItem()));
     }
 
     @Override

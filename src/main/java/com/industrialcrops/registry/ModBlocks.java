@@ -40,135 +40,136 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import com.industrialcrops.block.IndustrialFruitBlock;
 
 public final class ModBlocks {
-    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(IndustrialCrops.MOD_ID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, IndustrialCrops.MOD_ID);
 
-    public static final DeferredBlock<Block> INDUSTRIAL_CARROT_BLOCK = registerCompressBlock("industrial_carrot_block", MapColor.COLOR_ORANGE);
-    public static final DeferredBlock<Block> INDUSTRIAL_POTATO_BLOCK = registerCompressBlock("industrial_potato_block", MapColor.COLOR_YELLOW);
-    public static final DeferredBlock<Block> INDUSTRIAL_WHEAT_BLOCK = registerCompressBlock("industrial_wheat_block", MapColor.COLOR_YELLOW);
-    public static final DeferredBlock<Block> INDUSTRIAL_MELON_BLOCK = BLOCKS.register("industrial_melon_block",
+    public static final RegistryObject<Block> INDUSTRIAL_CARROT_BLOCK = registerCompressBlock("industrial_carrot_block", MapColor.COLOR_ORANGE);
+    public static final RegistryObject<Block> INDUSTRIAL_POTATO_BLOCK = registerCompressBlock("industrial_potato_block", MapColor.COLOR_YELLOW);
+    public static final RegistryObject<Block> INDUSTRIAL_WHEAT_BLOCK = registerCompressBlock("industrial_wheat_block", MapColor.COLOR_YELLOW);
+    public static final RegistryObject<Block> INDUSTRIAL_MELON_BLOCK = BLOCKS.register("industrial_melon_block",
             () -> new IndustrialFruitBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_GREEN)
                     .strength(1.0F)
                     .sound(SoundType.WOOD)));
-    public static final DeferredBlock<Block> INDUSTRIAL_PUMPKIN_BLOCK = BLOCKS.register("industrial_pumpkin_block",
+    public static final RegistryObject<Block> INDUSTRIAL_PUMPKIN_BLOCK = BLOCKS.register("industrial_pumpkin_block",
             () -> new IndustrialFruitBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_ORANGE)
                     .strength(1.0F)
                     .sound(SoundType.WOOD)));
-    public static final DeferredBlock<Block> FUSION_MELON = BLOCKS.register("fusion_melon",
+    public static final RegistryObject<Block> FUSION_MELON = BLOCKS.register("fusion_melon",
             () -> new Block(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_LIGHT_GREEN)
                     .strength(2.0F)
                     .lightLevel(state -> 7)
                     .sound(SoundType.WOOD)));
 
-    public static final DeferredBlock<Block> COPPER_DEVICE_CASING = registerMachineBlock("copper_device_casing");
-    public static final DeferredBlock<Block> IRON_DEVICE_CASING = registerMachineBlock("iron_device_casing");
-    public static final DeferredBlock<Block> PROCESSOR_GOLD_DEVICE_CASING = registerMachineBlock("processor_integrated_gold_device_casing");
-    public static final DeferredBlock<Block> ROOT_ORE_EXTRACTOR = BLOCKS.register("basic_crop_conversion_device",
+    public static final RegistryObject<Block> COPPER_DEVICE_CASING = registerMachineBlock("copper_device_casing");
+    public static final RegistryObject<Block> IRON_DEVICE_CASING = registerMachineBlock("iron_device_casing");
+    public static final RegistryObject<Block> PROCESSOR_GOLD_DEVICE_CASING = registerMachineBlock("processor_integrated_gold_device_casing");
+    public static final RegistryObject<Block> ROOT_ORE_EXTRACTOR = BLOCKS.register("basic_crop_conversion_device",
             () -> new RootOreExtractorBlock(machineProperties()));
-    public static final DeferredBlock<Block> CROP_COMPRESSOR = BLOCKS.register("crop_compressor",
+    public static final RegistryObject<Block> CROP_COMPRESSOR = BLOCKS.register("crop_compressor",
             () -> new CropCompressorBlock(machineProperties().noOcclusion().pushReaction(PushReaction.BLOCK)));
-    public static final DeferredBlock<Block> CROP_ANALYSIS_DEVICE = BLOCKS.register("crop_analysis_device",
+    public static final RegistryObject<Block> CROP_ANALYSIS_DEVICE = BLOCKS.register("crop_analysis_device",
             () -> new CropAnalysisDeviceBlock(machineProperties()));
-    public static final DeferredBlock<Block> GOURD_MODIFICATION_DEVICE = BLOCKS.register("gourd_modification_device",
+    public static final RegistryObject<Block> GOURD_MODIFICATION_DEVICE = BLOCKS.register("gourd_modification_device",
             () -> new GourdModificationDeviceBlock(machineProperties()));
-    public static final DeferredBlock<Block> MIXER = BLOCKS.register("mixer",
+    public static final RegistryObject<Block> MIXER = BLOCKS.register("mixer",
             () -> new MixerBlock(machineProperties().mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER)));
-    public static final DeferredBlock<Block> FERTILE_FARMLAND = BLOCKS.register("fertile_farmland",
-            () -> new FertileFarmlandBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.FARMLAND)
+    public static final RegistryObject<Block> FERTILE_FARMLAND = BLOCKS.register("fertile_farmland",
+            () -> new FertileFarmlandBlock(BlockBehaviour.Properties.copy(Blocks.FARMLAND)
                     .mapColor(MapColor.DIRT)));
-    public static final DeferredBlock<Block> INDUSTRIAL_CROP_STORAGE_ARRAY = BLOCKS.register("basic_storage_component",
+    public static final RegistryObject<Block> INDUSTRIAL_CROP_STORAGE_ARRAY = BLOCKS.register("basic_storage_component",
             () -> new BasicCropStorageArrayBlock(machineProperties()));
-    public static final DeferredBlock<Block> CARROT_CONTROL_DEVICE = BLOCKS.register("basic_control_device",
+    public static final RegistryObject<Block> CARROT_CONTROL_DEVICE = BLOCKS.register("basic_control_device",
             () -> new BasicControlDeviceBlock(machineProperties()));
-    public static final DeferredBlock<Block> BASIC_MANIPULATOR = BLOCKS.register("basic_manipulation_device",
+    public static final RegistryObject<Block> BASIC_MANIPULATOR = BLOCKS.register("basic_manipulation_device",
             () -> new BasicManipulatorBlock(machineProperties()));
-    public static final DeferredBlock<Block> ADVANCED_MANIPULATOR = BLOCKS.register("advanced_manipulation_device",
+    public static final RegistryObject<Block> ADVANCED_MANIPULATOR = BLOCKS.register("advanced_manipulation_device",
             () -> new AdvancedManipulatorBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> PROCESSOR_PROGRAMMER = BLOCKS.register("processor_programming_device",
+    public static final RegistryObject<Block> PROCESSOR_PROGRAMMER = BLOCKS.register("processor_programming_device",
             () -> new ProcessorProgrammerBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> AUTOMATIC_PLANTER = BLOCKS.register("automatic_planter",
+    public static final RegistryObject<Block> AUTOMATIC_PLANTER = BLOCKS.register("automatic_planter",
             () -> new AutomaticPlanterBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> MATTER_DIGITIZER = BLOCKS.register("matter_digitization_device",
+    public static final RegistryObject<Block> MATTER_DIGITIZER = BLOCKS.register("matter_digitization_device",
             () -> new MatterDigitizerBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> DIGITIZED_ITEM_COPIER = BLOCKS.register("digitized_item_copier",
+    public static final RegistryObject<Block> DIGITIZED_ITEM_COPIER = BLOCKS.register("digitized_item_copier",
             () -> new DigitizedItemCopierBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> MATTER_RECONSTRUCTOR = BLOCKS.register("matter_reconstruction_device",
+    public static final RegistryObject<Block> MATTER_RECONSTRUCTOR = BLOCKS.register("matter_reconstruction_device",
             () -> new MatterReconstructorBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> ITEM_NETWORK_TERMINAL = BLOCKS.register("item_network_management_terminal",
+    public static final RegistryObject<Block> ITEM_NETWORK_TERMINAL = BLOCKS.register("item_network_management_terminal",
             () -> new ItemNetworkTerminalBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> BIO_ENERGY_GENERATOR = BLOCKS.register("bio_energy_generator",
+    public static final RegistryObject<Block> BIO_ENERGY_GENERATOR = BLOCKS.register("bio_energy_generator",
             () -> new BioEnergyGeneratorBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> ENERGY_BATTERY = BLOCKS.register("energy_battery",
+    public static final RegistryObject<Block> ENERGY_BATTERY = BLOCKS.register("energy_battery",
             () -> new EnergyBatteryBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> RESIDUE_INCINERATOR = BLOCKS.register("residue_incinerator",
+    public static final RegistryObject<Block> RESIDUE_INCINERATOR = BLOCKS.register("residue_incinerator",
             () -> new ResidueIncineratorBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> ELECTRIC_FURNACE = BLOCKS.register("electric_furnace",
+    public static final RegistryObject<Block> ELECTRIC_FURNACE = BLOCKS.register("electric_furnace",
             () -> new ElectricFurnaceBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> DIGITAL_MINIATURE_FOREST = BLOCKS.register("digital_miniature_forest",
+    public static final RegistryObject<Block> DIGITAL_MINIATURE_FOREST = BLOCKS.register("digital_miniature_forest",
             () -> new DigitalMiniatureForestBlock(machineProperties()
                     .mapColor(MapColor.GOLD)
                     .noOcclusion()
                     .sound(SoundType.GLASS)));
-    public static final DeferredBlock<Block> BASIC_ENERGY_CABLE = registerEnergyCable("basic_energy_cable", MapColor.COLOR_ORANGE);
-    public static final DeferredBlock<Block> ADVANCED_ENERGY_CABLE = registerEnergyCable("advanced_energy_cable", MapColor.GOLD);
-    public static final DeferredBlock<Block> REINFORCED_INDUSTRIAL_STORAGE_ARRAY = BLOCKS.register("reinforced_storage_component",
+    public static final RegistryObject<Block> BASIC_ENERGY_CABLE = registerEnergyCable("basic_energy_cable", MapColor.COLOR_ORANGE);
+    public static final RegistryObject<Block> ADVANCED_ENERGY_CABLE = registerEnergyCable("advanced_energy_cable", MapColor.GOLD);
+    public static final RegistryObject<Block> REINFORCED_INDUSTRIAL_STORAGE_ARRAY = BLOCKS.register("reinforced_storage_component",
             () -> new ReinforcedIndustrialStorageArrayBlock(machineProperties()));
-    public static final DeferredBlock<Block> REINFORCED_CONTROL_DEVICE = BLOCKS.register("reinforced_control_device",
+    public static final RegistryObject<Block> REINFORCED_CONTROL_DEVICE = BLOCKS.register("reinforced_control_device",
             () -> new ReinforcedControlDeviceBlock(machineProperties()));
-    public static final DeferredBlock<Block> ADVANCED_INDUSTRIAL_STORAGE_DEVICE = BLOCKS.register("advanced_industrial_storage_device",
+    public static final RegistryObject<Block> ADVANCED_INDUSTRIAL_STORAGE_DEVICE = BLOCKS.register("advanced_industrial_storage_device",
             () -> new AdvancedIndustrialStorageBlock(machineProperties()));
-    public static final DeferredBlock<Block> INCUBATOR = BLOCKS.register("slime_converter",
+    public static final RegistryObject<Block> INCUBATOR = BLOCKS.register("slime_converter",
             () -> new IncubatorBlock(machineProperties()
                     .noOcclusion()
                     .noLootTable()
                     .pushReaction(PushReaction.BLOCK)));
-    public static final DeferredBlock<Block> SLIME_INCUBATOR = BLOCKS.register("slime_incubator",
+    public static final RegistryObject<Block> SLIME_INCUBATOR = BLOCKS.register("slime_incubator",
             () -> new SlimeIncubatorBlock(machineProperties()));
-    public static final DeferredBlock<Block> GOLDEN_LAUNCH_SILO = BLOCKS.register("explosive_potato_launcher",
+    public static final RegistryObject<Block> GOLDEN_LAUNCH_SILO = BLOCKS.register("explosive_potato_launcher",
             () -> new GoldenLaunchSiloBlock(machineProperties().mapColor(MapColor.GOLD)));
 
-    public static final DeferredBlock<Block> PIPE = registerPipeBlock("basic_pipe");
-    public static final DeferredBlock<Block> INPUT_PIPE = registerPipeBlock("basic_input_pipe");
-    public static final DeferredBlock<Block> OUTPUT_PIPE = registerPipeBlock("basic_output_pipe");
-    public static final DeferredBlock<Block> REINFORCED_PIPE = registerPipeBlock("reinforced_pipe");
-    public static final DeferredBlock<Block> REINFORCED_INPUT_PIPE = registerPipeBlock("reinforced_input_pipe");
-    public static final DeferredBlock<Block> REINFORCED_OUTPUT_PIPE = registerPipeBlock("reinforced_output_pipe");
-    public static final DeferredBlock<Block> ADVANCED_PIPE = registerPipeBlock("advanced_pipe");
-    public static final DeferredBlock<Block> ADVANCED_INPUT_PIPE = registerPipeBlock("advanced_input_pipe");
-    public static final DeferredBlock<Block> ADVANCED_OUTPUT_PIPE = registerPipeBlock("advanced_output_pipe");
+    public static final RegistryObject<Block> PIPE = registerPipeBlock("basic_pipe");
+    public static final RegistryObject<Block> INPUT_PIPE = registerPipeBlock("basic_input_pipe");
+    public static final RegistryObject<Block> OUTPUT_PIPE = registerPipeBlock("basic_output_pipe");
+    public static final RegistryObject<Block> REINFORCED_PIPE = registerPipeBlock("reinforced_pipe");
+    public static final RegistryObject<Block> REINFORCED_INPUT_PIPE = registerPipeBlock("reinforced_input_pipe");
+    public static final RegistryObject<Block> REINFORCED_OUTPUT_PIPE = registerPipeBlock("reinforced_output_pipe");
+    public static final RegistryObject<Block> ADVANCED_PIPE = registerPipeBlock("advanced_pipe");
+    public static final RegistryObject<Block> ADVANCED_INPUT_PIPE = registerPipeBlock("advanced_input_pipe");
+    public static final RegistryObject<Block> ADVANCED_OUTPUT_PIPE = registerPipeBlock("advanced_output_pipe");
 
-    public static final DeferredBlock<Block> INDUSTRIAL_CARROT_CROP = BLOCKS.register("industrial_carrot_crop",
+    public static final RegistryObject<Block> INDUSTRIAL_CARROT_CROP = BLOCKS.register("industrial_carrot_crop",
             () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_CARROT,
                     ModItems.INDUSTRIAL_CARROT, 4, 2, true));
-    public static final DeferredBlock<Block> INDUSTRIAL_POTATO_CROP = BLOCKS.register("industrial_potato_crop",
+    public static final RegistryObject<Block> INDUSTRIAL_POTATO_CROP = BLOCKS.register("industrial_potato_crop",
             () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_POTATO,
                     ModItems.INDUSTRIAL_POTATO, 4, 2, true));
-    public static final DeferredBlock<Block> INDUSTRIAL_WHEAT_CROP = BLOCKS.register("industrial_wheat_crop",
+    public static final RegistryObject<Block> INDUSTRIAL_WHEAT_CROP = BLOCKS.register("industrial_wheat_crop",
             () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_WHEAT_SEEDS,
                     ModItems.INDUSTRIAL_WHEAT, 4, 2));
-    public static final DeferredBlock<Block> INDUSTRIAL_MELON_CROP = BLOCKS.register("industrial_melon_crop",
+    public static final RegistryObject<Block> INDUSTRIAL_MELON_CROP = BLOCKS.register("industrial_melon_crop",
             () -> new IndustrialGourdCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_MELON_SEEDS, INDUSTRIAL_MELON_BLOCK));
-    public static final DeferredBlock<Block> INDUSTRIAL_PUMPKIN_CROP = BLOCKS.register("industrial_pumpkin_crop",
+    public static final RegistryObject<Block> INDUSTRIAL_PUMPKIN_CROP = BLOCKS.register("industrial_pumpkin_crop",
             () -> new IndustrialGourdCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_PUMPKIN_SEEDS, INDUSTRIAL_PUMPKIN_BLOCK));
 
     private ModBlocks() {
     }
 
-    private static DeferredBlock<Block> registerCompressBlock(String id, MapColor color) {
+    private static RegistryObject<Block> registerCompressBlock(String id, MapColor color) {
         return BLOCKS.register(id, () -> new Block(BlockBehaviour.Properties.of()
                 .mapColor(color)
                 .strength(0.8F)
                 .sound(SoundType.WART_BLOCK)));
     }
 
-    private static DeferredBlock<Block> registerMachineBlock(String id) {
+    private static RegistryObject<Block> registerMachineBlock(String id) {
         return BLOCKS.register(id, () -> new Block(machineProperties()));
     }
 
@@ -180,14 +181,14 @@ public final class ModBlocks {
                 .sound(SoundType.METAL);
     }
 
-    private static DeferredBlock<Block> registerPipeBlock(String id) {
+    private static RegistryObject<Block> registerPipeBlock(String id) {
         return BLOCKS.register(id, () -> new TransportPipeBlock(BlockBehaviour.Properties.of()
                 .mapColor(MapColor.METAL)
                 .strength(1.0F)
                 .sound(SoundType.COPPER)));
     }
 
-    private static DeferredBlock<Block> registerEnergyCable(String id, MapColor color) {
+    private static RegistryObject<Block> registerEnergyCable(String id, MapColor color) {
         return BLOCKS.register(id, () -> new EnergyCableBlock(BlockBehaviour.Properties.of()
                 .mapColor(color).strength(1.0F).sound(SoundType.COPPER)));
     }

@@ -5,7 +5,7 @@ import com.industrialcrops.crop.CropGenetics;
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -13,7 +13,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public final class CropAnalysisDeviceMenu extends AbstractContainerMenu {
     private static final int MACHINE_SLOT_COUNT = 1;
@@ -25,7 +25,7 @@ public final class CropAnalysisDeviceMenu extends AbstractContainerMenu {
     private final CropAnalysisDeviceBlockEntity blockEntity;
     private final BlockPos pos;
 
-    public CropAnalysisDeviceMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buffer) {
+    public CropAnalysisDeviceMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buffer) {
         this(containerId, playerInventory, readBlockEntity(playerInventory, buffer));
     }
 
@@ -124,7 +124,7 @@ public final class CropAnalysisDeviceMenu extends AbstractContainerMenu {
 
     private static CropAnalysisDeviceBlockEntity readBlockEntity(
             Inventory inventory,
-            RegistryFriendlyByteBuf buffer
+            FriendlyByteBuf buffer
     ) {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity blockEntity = inventory.player.level().getBlockEntity(pos);

@@ -5,7 +5,7 @@ import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -15,7 +15,7 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public final class IncubatorMenu extends AbstractContainerMenu implements UpgradeableMenu {
     public static final int UPGRADE_X=-68,UPGRADE_Y=28,UPGRADE_SPACING=22;
@@ -32,7 +32,7 @@ public final class IncubatorMenu extends AbstractContainerMenu implements Upgrad
     private int progress;
     private boolean upgradeSlotsVisible;
 
-    public IncubatorMenu(int containerId, Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    public IncubatorMenu(int containerId, Inventory inventory, FriendlyByteBuf buffer) {
         this(containerId, inventory, readBlockEntity(inventory, buffer));
     }
 
@@ -159,7 +159,7 @@ public final class IncubatorMenu extends AbstractContainerMenu implements Upgrad
         };
     }
 
-    private static IncubatorBlockEntity readBlockEntity(Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    private static IncubatorBlockEntity readBlockEntity(Inventory inventory, FriendlyByteBuf buffer) {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity blockEntity = inventory.player.level().getBlockEntity(pos);
         if (blockEntity instanceof IncubatorBlockEntity slime_converter) {

@@ -17,6 +17,8 @@
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-blue?style=flat-square"></a>
 </p>
 
+> 当前分支：**Minecraft 1.20.1 / Forge 47+ / Java 17**。Minecraft 1.21.1 NeoForge 版本请切换到 [`main`](https://github.com/Yesaz0erq/Industrial_crops/tree/main)。
+
 ## 简介
 
 **Industrial Crops** 是一个围绕工业农业与自动化生产构建的 Minecraft Mod。玩家可以培育工业作物、分析和改良遗传品质，再使用机器、物流网络与能源系统形成完整生产线。

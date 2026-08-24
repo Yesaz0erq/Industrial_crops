@@ -11,8 +11,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -165,7 +163,7 @@ public final class ItemNetworkTerminalBlockEntity extends BlockEntity implements
     private void add(ItemStack stack, long amount) {
         if (stack.isEmpty() || amount <= 0 || !isNetworkMaterial(stack)) return;
         for (Entry entry : entries) {
-            if (ItemStack.isSameItemSameComponents(entry.stack, stack)) {
+            if (ItemStack.isSameItemSameTags(entry.stack, stack)) {
                 entry.count = Math.min(Long.MAX_VALUE, entry.count + amount);
                 setChanged(); return;
             }
@@ -183,12 +181,7 @@ public final class ItemNetworkTerminalBlockEntity extends BlockEntity implements
     /** Prevents duplication of nested inventories such as filled shulker boxes and bundles. */
     public static boolean isCopyable(ItemStack stack) {
         if (stack.isEmpty() || !isNetworkMaterial(stack)) return false;
-        var container = stack.get(DataComponents.CONTAINER);
-        if (container != null && container.nonEmptyStream().findAny().isPresent()) return false;
-        var bundle = stack.get(DataComponents.BUNDLE_CONTENTS);
-        if (bundle != null && !bundle.isEmpty()) return false;
-        var blockEntityData = stack.get(DataComponents.BLOCK_ENTITY_DATA);
-        if (blockEntityData != null && containsStoredItems(blockEntityData.copyTag())) return false;
+        if (stack.hasTag() && containsStoredItems(stack.getTag())) return false;
         return true;
     }
 
@@ -208,7 +201,7 @@ public final class ItemNetworkTerminalBlockEntity extends BlockEntity implements
 
     private @Nullable MatterMachineBlockEntity firstMachine(MatterMachineBlockEntity.Kind kind) {
         List<MatterMachineBlockEntity> machines = findMachines(kind);
-        return machines.isEmpty() ? null : machines.getFirst();
+        return machines.isEmpty() ? null : machines.get(0);
     }
 
     private List<MatterMachineBlockEntity> findMachines(MatterMachineBlockEntity.Kind kind) {
@@ -234,21 +227,21 @@ public final class ItemNetworkTerminalBlockEntity extends BlockEntity implements
         return result;
     }
 
-    @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    @Override protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         ListTag list = new ListTag();
         for (Entry entry : entries) {
             CompoundTag item = new CompoundTag();
-            item.put("Stack", entry.stack.save(registries)); item.putLong("Count", entry.count); list.add(item);
+            item.put("Stack", entry.stack.save(new CompoundTag())); item.putLong("Count", entry.count); list.add(item);
         }
         tag.put("Items", list);
         tag.putInt("SelectedIndex", selectedIndex);
     }
-    @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries); entries.clear();
+    @Override public void load(CompoundTag tag) {
+        super.load(tag); entries.clear();
         ListTag list = tag.getList("Items", Tag.TAG_COMPOUND);
         for (int i=0;i<list.size();i++) {
-            CompoundTag item=list.getCompound(i); ItemStack stack=ItemStack.parseOptional(registries,item.getCompound("Stack"));
+            CompoundTag item=list.getCompound(i); ItemStack stack=ItemStack.of(item.getCompound("Stack"));
             long count=item.getLong("Count"); if(!stack.isEmpty()&&count>0&&isNetworkMaterial(stack)) entries.add(new Entry(stack.copyWithCount(1),count));
         }
         selectedIndex = tag.getInt("SelectedIndex");

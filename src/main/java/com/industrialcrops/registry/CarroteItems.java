@@ -6,32 +6,33 @@ import com.industrialcrops.item.UniversalReplicationDeviceItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public final class CarroteItems {
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Carrote.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Carrote.MOD_ID);
 
-    public static final DeferredItem<CarroteItem> CARROTE = ITEMS.register("carrote",
+    public static final RegistryObject<CarroteItem> CARROTE = ITEMS.register("carrote",
             () -> new CarroteItem(new Item.Properties().rarity(Rarity.EPIC)));
-    public static final DeferredItem<Item> CARROTE_STEEL_INGOT = ITEMS.register("carrote_steel_ingot",
+    public static final RegistryObject<Item> CARROTE_STEEL_INGOT = ITEMS.register("carrote_steel_ingot",
             () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
-    public static final DeferredItem<Item> STABLE_MATTER_INGOT = ITEMS.register("stable_matter_ingot",
+    public static final RegistryObject<Item> STABLE_MATTER_INGOT = ITEMS.register("stable_matter_ingot",
             () -> new Item(new Item.Properties().rarity(Rarity.EPIC).fireResistant()));
 
-    public static final DeferredItem<BlockItem> CARROTE_STEEL_DEVICE_CASING =
+    public static final RegistryObject<BlockItem> CARROTE_STEEL_DEVICE_CASING =
             registerBlockItem("carrote_steel_device_casing", CarroteBlocks.CARROTE_STEEL_DEVICE_CASING);
-    public static final DeferredItem<BlockItem> CARROTE_STEEL_BLOCK =
+    public static final RegistryObject<BlockItem> CARROTE_STEEL_BLOCK =
             registerBlockItem("carrote_steel_block", CarroteBlocks.CARROTE_STEEL_BLOCK);
-    public static final DeferredItem<BlockItem> STABLE_MATTER_BLOCK =
+    public static final RegistryObject<BlockItem> STABLE_MATTER_BLOCK =
             registerBlockItem("stable_matter_block", CarroteBlocks.STABLE_MATTER_BLOCK);
-    public static final DeferredItem<BlockItem> MIMIC_BLOCK =
+    public static final RegistryObject<BlockItem> MIMIC_BLOCK =
             registerBlockItem("mimic_block", CarroteBlocks.MIMIC_BLOCK);
-    public static final DeferredItem<BlockItem> CARROTE_STEEL_FORGE =
+    public static final RegistryObject<BlockItem> CARROTE_STEEL_FORGE =
             registerBlockItem("carrote_steel_forge", CarroteBlocks.CARROTE_STEEL_FORGE);
-    public static final DeferredItem<BlockItem> MATERIAL_HARDENING_DEVICE =
+    public static final RegistryObject<BlockItem> MATERIAL_HARDENING_DEVICE =
             registerBlockItem("material_hardening_device", CarroteBlocks.MATERIAL_HARDENING_DEVICE);
-    public static final DeferredItem<UniversalReplicationDeviceItem> UNIVERSAL_REPLICATION_DEVICE =
+    public static final RegistryObject<UniversalReplicationDeviceItem> UNIVERSAL_REPLICATION_DEVICE =
             ITEMS.register("universal_replication_device",
                     () -> new UniversalReplicationDeviceItem(
                             CarroteBlocks.UNIVERSAL_REPLICATION_DEVICE.get(),
@@ -40,8 +41,8 @@ public final class CarroteItems {
     private CarroteItems() {
     }
 
-    private static DeferredItem<BlockItem> registerBlockItem(
-            String id, net.neoforged.neoforge.registries.DeferredBlock<? extends net.minecraft.world.level.block.Block> block) {
+    private static RegistryObject<BlockItem> registerBlockItem(
+            String id, net.minecraftforge.registries.RegistryObject<? extends net.minecraft.world.level.block.Block> block) {
         return ITEMS.register(id, () -> new BlockItem(block.get(), new Item.Properties()));
     }
 }

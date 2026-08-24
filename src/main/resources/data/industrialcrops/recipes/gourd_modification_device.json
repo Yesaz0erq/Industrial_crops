@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "IGI",
+    "MCP",
+    "RSR"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "G": {
+      "item": "minecraft:glass_pane"
+    },
+    "M": {
+      "item": "industrialcrops:industrial_melon"
+    },
+    "C": {
+      "item": "industrialcrops:iron_device_casing"
+    },
+    "P": {
+      "item": "industrialcrops:industrial_pumpkin"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "S": {
+      "item": "industrialcrops:component_substrate"
+    }
+  },
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:gourd_modification_device"
+  }
+}

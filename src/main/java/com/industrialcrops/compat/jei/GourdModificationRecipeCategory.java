@@ -26,7 +26,7 @@ public final class GourdModificationRecipeCategory
 
     public GourdModificationRecipeCategory(IGuiHelper guiHelper) {
         icon = guiHelper.createDrawableItemStack(
-                new ItemStack(ModBlocks.GOURD_MODIFICATION_DEVICE.asItem())
+                new ItemStack(ModBlocks.GOURD_MODIFICATION_DEVICE.get().asItem())
         );
     }
 

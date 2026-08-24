@@ -2,7 +2,7 @@ package com.industrialcrops.machine;
 
 import com.industrialcrops.registry.ModItems;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 /** Resolves the strongest installed speed component. Only one tier is effective at a time. */
 public final class SpeedUpgradeHelper {

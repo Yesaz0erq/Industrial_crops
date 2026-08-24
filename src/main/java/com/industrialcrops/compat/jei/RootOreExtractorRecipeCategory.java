@@ -26,7 +26,7 @@ public final class RootOreExtractorRecipeCategory implements IRecipeCategory<Roo
     private final IDrawable icon;
 
     public RootOreExtractorRecipeCategory(IGuiHelper guiHelper) {
-        this.icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.ROOT_ORE_EXTRACTOR.asItem()));
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.ROOT_ORE_EXTRACTOR.get().asItem()));
     }
 
     @Override

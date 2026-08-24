@@ -3,7 +3,6 @@ package com.industrialcrops.block.entity;
 import com.industrialcrops.crop.CropGenetics;
 import com.industrialcrops.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -65,8 +64,8 @@ public final class CropGeneticsBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putBoolean("Initialized", initialized);
         tag.putInt("DominantQuality", genes.dominantTier());
         tag.putInt("RecessiveQuality", genes.recessiveTier());
@@ -76,8 +75,8 @@ public final class CropGeneticsBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         initialized = tag.getBoolean("Initialized");
         genes = CropGenetics.normalize(
                 tag.getInt("DominantQuality"), tag.getInt("RecessiveQuality"));

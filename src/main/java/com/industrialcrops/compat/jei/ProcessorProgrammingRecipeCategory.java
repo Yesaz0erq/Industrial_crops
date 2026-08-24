@@ -20,7 +20,7 @@ public final class ProcessorProgrammingRecipeCategory implements IRecipeCategory
     private final IDrawable icon;
 
     public ProcessorProgrammingRecipeCategory(IGuiHelper guiHelper) {
-        icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.PROCESSOR_PROGRAMMER.asItem()));
+        icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.PROCESSOR_PROGRAMMER.get().asItem()));
     }
 
     @Override public RecipeType<ManipulatorRecipeDisplay> getRecipeType() { return TYPE; }

@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.industrialcrops.network.ModNetworking;
 import org.jetbrains.annotations.Nullable;
 
 /** RS2 crafting-grid layout backed by the terminal's unlimited item-data repository. */
@@ -44,7 +44,7 @@ public final class ItemNetworkTerminalScreen extends IndustrialContainerScreen<I
         int desiredRows = Math.max(ItemNetworkTerminalMenu.MIN_ROWS, Math.min(
                 ItemNetworkTerminalMenu.MAX_ROWS, available / 18 - 3));
         if (desiredRows != menu.getVisibleRows()) {
-            PacketDistributor.sendToServer(new ResizeStorageMenuPayload(menu.getBlockPos(), desiredRows, true));
+            ModNetworking.sendToServer(new ResizeStorageMenuPayload(menu.getBlockPos(), desiredRows, true));
         }
         searchBox = addRenderableWidget(new EditBox(font, leftPos + SEARCH_X, topPos + SEARCH_Y,
                 SEARCH_WIDTH, 12, Component.translatable("gui.industrialcrops.storage.search")));
@@ -52,7 +52,7 @@ public final class ItemNetworkTerminalScreen extends IndustrialContainerScreen<I
         searchBox.setMaxLength(64);
         searchBox.setTextColor(IndustrialGuiStyle.TEXT);
         searchBox.setTextColorUneditable(IndustrialGuiStyle.MUTED_TEXT);
-        searchBox.setResponder(value -> PacketDistributor.sendToServer(new StorageSearchPayload(value)));
+        searchBox.setResponder(value -> ModNetworking.sendToServer(new StorageSearchPayload(value)));
     }
 
     @Override
@@ -73,19 +73,8 @@ public final class ItemNetworkTerminalScreen extends IndustrialContainerScreen<I
     }
 
     @Override
-    protected void renderSlotContents(GuiGraphics graphics, ItemStack stack, Slot slot, @Nullable String countString) {
-        if (slot.index < menu.getVisibleSlotCount()) {
-            // Explicitly retain the single-item decoration. The remaining
-            // network counts are rendered with the scaled overlay below.
-            super.renderSlotContents(graphics, stack, slot, menu.count(slot.index) == 1 ? "1" : "");
-            return;
-        }
-        super.renderSlotContents(graphics, stack, slot, countString);
-    }
-
-    @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
+        renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTick);
         drawItemCounts(graphics);
         if (menu.selectedVisible() >= 0) {
@@ -119,13 +108,13 @@ public final class ItemNetworkTerminalScreen extends IndustrialContainerScreen<I
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double verticalAmount) {
         if (!insideStorageArea(mouseX, mouseY) && !insideScrollbar(mouseX, mouseY)) {
-            return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+            return super.mouseScrolled(mouseX, mouseY, verticalAmount);
         }
         if (verticalAmount > 0) setOffset(menu.page() - 1);
         else if (verticalAmount < 0) setOffset(menu.page() + 1);
-        else return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        else return super.mouseScrolled(mouseX, mouseY, verticalAmount);
         return true;
     }
 

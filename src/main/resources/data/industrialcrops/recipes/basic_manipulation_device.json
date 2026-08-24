@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": {
+      "item": "industrialcrops:copper_device_casing"
+    },
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "I": {
+      "item": "minecraft:copper_ingot"
+    },
+    "K": {
+      "item": "minecraft:crafting_table"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "RGR",
+    "ICI",
+    "RKR"
+  ],
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:basic_manipulation_device"
+  }
+}

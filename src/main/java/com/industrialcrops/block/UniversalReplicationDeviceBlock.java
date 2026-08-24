@@ -5,7 +5,6 @@ import com.industrialcrops.block.entity.UniversalReplicationDeviceBlockEntity;
 import com.industrialcrops.network.payload.UniversalReplicaSyncPayload;
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.replication.UniversalReplicaData;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,7 +13,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -37,31 +35,23 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 import java.util.Collections;
 import java.util.IdentityHashMap;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.IItemHandler;
 
 /**
  * A permanent Carrote-steel shell that runs an independent copy of the block
  * on its right. The world block, model and loot never become the copied block.
  */
 public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
-    public static final MapCodec<UniversalReplicationDeviceBlock> CODEC =
-            simpleCodec(UniversalReplicationDeviceBlock::new);
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public UniversalReplicationDeviceBlock(Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
+@Override
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
@@ -94,26 +84,8 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState shellState, Level level,
-            BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        BlockEntity entity = level.getBlockEntity(pos);
-        if (entity == null) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        }
-        var previousMenu = player.containerMenu;
-        ItemInteractionResult result = UniversalReplicaData.getMirroredState(level, entity)
-                .map(mirrored -> UniversalReplicaData.call(level, pos, entity, mirrored,
-                        () -> mirrored.useItemOn(stack, level, player, hand, hit)))
-                .orElse(ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
-        if (!level.isClientSide() && player.containerMenu != previousMenu) {
-            UniversalReplicaData.registerMenu(player.containerMenu, level, pos, entity);
-        }
-        return result;
-    }
-
-    @Override
-    protected InteractionResult useWithoutItem(BlockState shellState, Level level, BlockPos pos,
-            Player player, BlockHitResult hit) {
+    public InteractionResult use(BlockState shellState, Level level, BlockPos pos,
+            Player player, InteractionHand hand, BlockHitResult hit) {
         BlockEntity entity = level.getBlockEntity(pos);
         if (entity == null) {
             return InteractionResult.PASS;
@@ -130,7 +102,7 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
         var previousMenu = player.containerMenu;
         InteractionResult result = UniversalReplicaData.getMirroredState(level, entity)
                 .map(mirrored -> UniversalReplicaData.call(level, pos, entity, mirrored,
-                        () -> mirrored.useWithoutItem(level, player, hit)))
+                        () -> mirrored.use(level, player, hand, hit)))
                 .orElse(InteractionResult.PASS);
         if (!level.isClientSide() && player.containerMenu != previousMenu) {
             UniversalReplicaData.registerMenu(player.containerMenu, level, pos, entity);
@@ -156,7 +128,7 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void neighborChanged(BlockState shellState, Level level, BlockPos pos, Block neighborBlock,
+    public void neighborChanged(BlockState shellState, Level level, BlockPos pos, Block neighborBlock,
             BlockPos neighborPos, boolean movedByPiston) {
         BlockEntity entity = level.getBlockEntity(pos);
         if (entity == null) {
@@ -164,11 +136,12 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
         }
         UniversalReplicaData.getMirroredState(level, entity).ifPresent(mirrored ->
                 UniversalReplicaData.run(level, pos, entity, mirrored,
-                        () -> mirrored.handleNeighborChanged(level, pos, neighborBlock, neighborPos, movedByPiston)));
+                        () -> mirrored.getBlock().neighborChanged(mirrored, level, pos, neighborBlock,
+                                neighborPos, movedByPiston)));
     }
 
     @Override
-    protected boolean isSignalSource(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         // The mirrored state is stored in the block entity, which this
         // state-only query cannot access. Returning true allows the delegated
         // signal methods below to decide the actual strength.
@@ -176,7 +149,7 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected int getSignal(BlockState shellState, BlockGetter getter, BlockPos pos, Direction direction) {
+    public int getSignal(BlockState shellState, BlockGetter getter, BlockPos pos, Direction direction) {
         if (!(getter instanceof Level level)) {
             return 0;
         }
@@ -191,7 +164,7 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected int getDirectSignal(BlockState shellState, BlockGetter getter, BlockPos pos,
+    public int getDirectSignal(BlockState shellState, BlockGetter getter, BlockPos pos,
             Direction direction) {
         if (!(getter instanceof Level level)) {
             return 0;
@@ -207,12 +180,12 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected boolean hasAnalogOutputSignal(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState shellState, Level level, BlockPos pos) {
+    public int getAnalogOutputSignal(BlockState shellState, Level level, BlockPos pos) {
         BlockEntity entity = level.getBlockEntity(pos);
         if (entity == null) {
             return 0;
@@ -250,7 +223,7 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
     private static @Nullable IEnergyStorage getEnergyCapabilitySafely(
             Level level, BlockPos pos, @Nullable Direction side) {
         try {
-            return level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, side);
+            return com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ENERGY, pos, side);
         } catch (Throwable throwable) {
             IndustrialCrops.LOGGER.warn("FE capability probe failed for {} at {} from side {}",
                     level.getBlockState(pos), pos, side, throwable);
@@ -267,11 +240,11 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
         try {
             BlockEntity replicaEntity = level.getBlockEntity(destination);
             if (sourceEntity != null) {
-                CompoundTag snapshot = sourceEntity.saveWithFullMetadata(level.registryAccess());
+                CompoundTag snapshot = sourceEntity.saveWithFullMetadata();
                 snapshot.putInt("x", destination.getX());
                 snapshot.putInt("y", destination.getY());
                 snapshot.putInt("z", destination.getZ());
-                replicaEntity = BlockEntity.loadStatic(destination, sourceState, snapshot, level.registryAccess());
+                replicaEntity = BlockEntity.loadStatic(destination, sourceState, snapshot);
                 if (replicaEntity == null) {
                     return false;
                 }
@@ -283,9 +256,7 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
             }
             UniversalReplicaData.setMirroredState(replicaEntity, sourceState);
             UniversalReplicaData.markFeValidated(replicaEntity);
-            level.invalidateCapabilities(destination);
             clearCopiedContents(level, destination, replicaEntity);
-            level.invalidateCapabilities(destination);
             UniversalReplicaSyncPayload.sendToTracking(level, replicaEntity);
             return true;
         } catch (Throwable throwable) {
@@ -303,7 +274,6 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
         }
         level.removeBlockEntity(pos);
         level.setBlockEntity(new UniversalReplicationDeviceBlockEntity(pos, shellState));
-        level.invalidateCapabilities(pos);
         level.sendBlockUpdated(pos, shellState, shellState, Block.UPDATE_CLIENTS);
     }
 
@@ -321,11 +291,11 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
         Set<IItemHandler> itemHandlers = Collections.newSetFromMap(new IdentityHashMap<>());
         Set<IFluidHandler> fluidHandlers = Collections.newSetFromMap(new IdentityHashMap<>());
         for (Direction side : Direction.values()) {
-            clearItemHandler(level.getCapability(Capabilities.ItemHandler.BLOCK, pos, side), itemHandlers);
-            clearFluidHandler(level.getCapability(Capabilities.FluidHandler.BLOCK, pos, side), fluidHandlers);
+            clearItemHandler(com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ITEM_HANDLER, pos, side), itemHandlers);
+            clearFluidHandler(com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.FLUID_HANDLER, pos, side), fluidHandlers);
         }
-        clearItemHandler(level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null), itemHandlers);
-        clearFluidHandler(level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null), fluidHandlers);
+        clearItemHandler(com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ITEM_HANDLER, pos, null), itemHandlers);
+        clearFluidHandler(com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.FLUID_HANDLER, pos, null), fluidHandlers);
         replicaEntity.setChanged();
     }
 

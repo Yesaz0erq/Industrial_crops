@@ -4,7 +4,7 @@ import com.industrialcrops.block.entity.GourdModificationDeviceBlockEntity;
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -13,7 +13,7 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public final class GourdModificationDeviceMenu extends AbstractContainerMenu {
     private static final int MACHINE_SLOT_COUNT = 3;
@@ -28,7 +28,7 @@ public final class GourdModificationDeviceMenu extends AbstractContainerMenu {
     public GourdModificationDeviceMenu(
             int containerId,
             Inventory playerInventory,
-            RegistryFriendlyByteBuf buffer
+            FriendlyByteBuf buffer
     ) {
         this(containerId, playerInventory, readBlockEntity(playerInventory, buffer));
     }
@@ -172,7 +172,7 @@ public final class GourdModificationDeviceMenu extends AbstractContainerMenu {
 
     private static GourdModificationDeviceBlockEntity readBlockEntity(
             Inventory inventory,
-            RegistryFriendlyByteBuf buffer
+            FriendlyByteBuf buffer
     ) {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity blockEntity = inventory.player.level().getBlockEntity(pos);

@@ -1,29 +1,23 @@
 package com.industrialcrops.network.payload;
 
-import com.industrialcrops.IndustrialCrops;
 import com.industrialcrops.screen.AdvancedIndustrialStorageMenu;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import java.util.function.Supplier;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.network.NetworkEvent;
 
-public record StorageCraftingTransferPayload(ResourceLocation recipeId) implements CustomPacketPayload {
-    public static final Type<StorageCraftingTransferPayload> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "storage_crafting_transfer"));
-    public static final StreamCodec<ByteBuf, StorageCraftingTransferPayload> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.stringUtf8(256).map(ResourceLocation::parse, ResourceLocation::toString),
-            StorageCraftingTransferPayload::recipeId,
-            StorageCraftingTransferPayload::new);
-
-    public static void handle(StorageCraftingTransferPayload payload, IPayloadContext context) {
-        if (!(context.player().containerMenu instanceof AdvancedIndustrialStorageMenu menu)) return;
-        context.player().level().getRecipeManager().byKey(payload.recipeId).ifPresent(holder -> {
-            if (holder.value() instanceof CraftingRecipe recipe) menu.transferCraftingRecipe(recipe);
-        });
+public record StorageCraftingTransferPayload(ResourceLocation recipeId) {
+    public static void encode(StorageCraftingTransferPayload p, FriendlyByteBuf b) { b.writeResourceLocation(p.recipeId); }
+    public static StorageCraftingTransferPayload decode(FriendlyByteBuf b) { return new StorageCraftingTransferPayload(b.readResourceLocation()); }
+    public static void handle(StorageCraftingTransferPayload p, Supplier<NetworkEvent.Context> supplier) {
+        ServerPlayer player = supplier.get().getSender();
+        if (player != null && player.containerMenu instanceof AdvancedIndustrialStorageMenu menu) {
+            player.level().getRecipeManager().byKey(p.recipeId).ifPresent(recipe -> {
+                if (recipe instanceof CraftingRecipe crafting) menu.transferCraftingRecipe(crafting);
+            });
+        }
+        supplier.get().setPacketHandled(true);
     }
-
-    @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
 }

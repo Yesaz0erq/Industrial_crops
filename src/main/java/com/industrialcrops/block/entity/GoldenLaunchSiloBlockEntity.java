@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -28,8 +27,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 /** Stores explosive potatoes, four upgrade slots and the persistent coordinate target. */
@@ -342,9 +341,9 @@ public final class GoldenLaunchSiloBlockEntity extends BlockEntity implements Me
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
         tag.putInt("TargetX", target.getX());
         tag.putInt("TargetY", target.getY());
         tag.putInt("TargetZ", target.getZ());
@@ -362,10 +361,10 @@ public final class GoldenLaunchSiloBlockEntity extends BlockEntity implements Me
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Inventory")) {
-            inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+            inventory.deserializeNBT(tag.getCompound("Inventory"));
             normalizeUpgradeSlotCount();
         }
         target = new BlockPos(tag.getInt("TargetX"), tag.getInt("TargetY"), tag.getInt("TargetZ"));
@@ -404,7 +403,7 @@ public final class GoldenLaunchSiloBlockEntity extends BlockEntity implements Me
                 continue;
             }
             for (ItemStack existing : upgrades) {
-                if (!remaining.isEmpty() && ItemStack.isSameItemSameComponents(existing, remaining)) {
+                if (!remaining.isEmpty() && ItemStack.isSameItemSameTags(existing, remaining)) {
                     int moved = Math.min(remaining.getCount(), existing.getMaxStackSize() - existing.getCount());
                     existing.grow(moved);
                     remaining.shrink(moved);

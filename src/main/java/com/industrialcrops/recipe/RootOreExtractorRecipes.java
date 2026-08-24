@@ -16,7 +16,7 @@ public final class RootOreExtractorRecipes {
             recipe(new ItemStack(Items.WHEAT_SEEDS), new ItemStack(ModItems.BAGGED_INDUSTRIAL_WHEAT_SEEDS.get())),
             recipe(new ItemStack(Items.MELON_SEEDS), new ItemStack(ModItems.BAGGED_INDUSTRIAL_MELON_SEEDS.get())),
             recipe(new ItemStack(Items.PUMPKIN_SEEDS), new ItemStack(ModItems.BAGGED_INDUSTRIAL_PUMPKIN_SEEDS.get())),
-            recipe(new ItemStack(Blocks.HAY_BLOCK.asItem()), new ItemStack(ModBlocks.INDUSTRIAL_WHEAT_BLOCK.asItem())),
+            recipe(new ItemStack(Blocks.HAY_BLOCK.asItem()), new ItemStack(ModBlocks.INDUSTRIAL_WHEAT_BLOCK.get().asItem())),
             recipe(new ItemStack(Blocks.MELON.asItem()), new ItemStack(ModItems.INDUSTRIAL_MELON.get())),
             recipe(new ItemStack(Blocks.PUMPKIN.asItem()), new ItemStack(ModItems.INDUSTRIAL_PUMPKIN.get()))
     );

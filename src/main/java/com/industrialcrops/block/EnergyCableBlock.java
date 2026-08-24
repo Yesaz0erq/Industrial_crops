@@ -2,7 +2,6 @@ package com.industrialcrops.block;
 
 import com.industrialcrops.block.entity.EnergyCableBlockEntity;
 import com.industrialcrops.registry.ModBlockEntities;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -22,11 +21,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.jetbrains.annotations.Nullable;
 
 public final class EnergyCableBlock extends BaseEntityBlock {
-    public static final MapCodec<EnergyCableBlock> CODEC = simpleCodec(EnergyCableBlock::new);
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
     public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
     public static final BooleanProperty EAST = BlockStateProperties.EAST;
@@ -41,9 +39,7 @@ public final class EnergyCableBlock extends BaseEntityBlock {
         registerDefaultState(stateDefinition.any().setValue(NORTH, false).setValue(SOUTH, false)
                 .setValue(EAST, false).setValue(WEST, false).setValue(UP, false).setValue(DOWN, false));
     }
-
-    @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
-    @Override public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+@Override public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new EnergyCableBlockEntity(pos, state);
     }
     @Override public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
@@ -54,19 +50,19 @@ public final class EnergyCableBlock extends BaseEntityBlock {
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) {
         return connectedState(defaultBlockState(), context.getLevel(), context.getClickedPos());
     }
-    @Override protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState,
+    @Override public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState,
             LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         return state.setValue(property(direction), canConnect(level, neighborPos, direction.getOpposite()));
     }
-    @Override protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    @Override public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         int index = 0;
         for (Direction direction : Direction.values()) if (state.getValue(property(direction))) index |= 1 << direction.ordinal();
         return SHAPES[index];
     }
-    @Override protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    @Override public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return getShape(state, level, pos, context);
     }
-    @Override protected RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
+    @Override public RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(NORTH, SOUTH, EAST, WEST, UP, DOWN);
     }
@@ -79,7 +75,7 @@ public final class EnergyCableBlock extends BaseEntityBlock {
     private static boolean canConnect(LevelAccessor level, BlockPos pos, Direction side) {
         if (level.getBlockState(pos).getBlock() instanceof EnergyCableBlock) return true;
         return level instanceof Level actual
-                && actual.getCapability(Capabilities.EnergyStorage.BLOCK, pos, side) != null;
+                && com.industrialcrops.util.ForgeCapabilityUtil.find(actual, ForgeCapabilities.ENERGY, pos, side) != null;
     }
     private static BooleanProperty property(Direction direction) {
         return switch (direction) {

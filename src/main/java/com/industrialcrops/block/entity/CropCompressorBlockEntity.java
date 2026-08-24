@@ -6,7 +6,6 @@ import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
 import com.industrialcrops.machine.MachineInventoryHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -17,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 public final class CropCompressorBlockEntity extends BlockEntity implements MenuProvider {
@@ -61,13 +60,13 @@ public final class CropCompressorBlockEntity extends BlockEntity implements Menu
 
     public static ItemStack getCompressionResult(ItemStack input) {
         if (input.is(ModItems.INDUSTRIAL_CARROT.get())) {
-            return new ItemStack(ModBlocks.INDUSTRIAL_CARROT_BLOCK.asItem());
+            return new ItemStack(ModBlocks.INDUSTRIAL_CARROT_BLOCK.get().asItem());
         }
         if (input.is(ModItems.INDUSTRIAL_POTATO.get())) {
-            return new ItemStack(ModBlocks.INDUSTRIAL_POTATO_BLOCK.asItem());
+            return new ItemStack(ModBlocks.INDUSTRIAL_POTATO_BLOCK.get().asItem());
         }
         if (input.is(ModItems.INDUSTRIAL_WHEAT.get())) {
-            return new ItemStack(ModBlocks.INDUSTRIAL_WHEAT_BLOCK.asItem());
+            return new ItemStack(ModBlocks.INDUSTRIAL_WHEAT_BLOCK.get().asItem());
         }
         return ItemStack.EMPTY;
     }
@@ -130,17 +129,17 @@ public final class CropCompressorBlockEntity extends BlockEntity implements Menu
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("Inventory", inventory.serializeNBT(registries));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("Inventory", inventory.serializeNBT());
         tag.putInt("Progress", progress);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains("Inventory")) {
-            inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+            inventory.deserializeNBT(tag.getCompound("Inventory"));
             MachineInventoryHelper.ensureSize(inventory, UPGRADE_SLOT_START + UPGRADE_SLOT_COUNT);
         }
         progress = tag.getInt("Progress");
@@ -160,7 +159,7 @@ public final class CropCompressorBlockEntity extends BlockEntity implements Menu
         if (outputStack.isEmpty()) {
             return true;
         }
-        if (!ItemStack.isSameItemSameComponents(outputStack, resultStack)) {
+        if (!ItemStack.isSameItemSameTags(outputStack, resultStack)) {
             return false;
         }
         return outputStack.getCount() + resultStack.getCount() <= outputStack.getMaxStackSize();

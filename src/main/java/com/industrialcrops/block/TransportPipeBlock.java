@@ -3,7 +3,6 @@ package com.industrialcrops.block;
 import com.industrialcrops.block.entity.TransportPipeBlockEntity;
 import com.industrialcrops.basic_pipe.PipeTransferUtil;
 import com.industrialcrops.registry.ModBlockEntities;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -26,7 +25,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public final class TransportPipeBlock extends BaseEntityBlock {
-    public static final MapCodec<TransportPipeBlock> CODEC = simpleCodec(TransportPipeBlock::new);
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
     public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
     public static final BooleanProperty EAST = BlockStateProperties.EAST;
@@ -53,13 +51,7 @@ public final class TransportPipeBlock extends BaseEntityBlock {
                 .setValue(UP, false)
                 .setValue(DOWN, false));
     }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
-    @Override
+@Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new TransportPipeBlockEntity(pos, state);
     }
@@ -76,23 +68,20 @@ public final class TransportPipeBlock extends BaseEntityBlock {
         return withConnectionState(defaultBlockState(), context.getLevel(), context.getClickedPos());
     }
 
-    @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+    @Override public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         return state.setValue(getProperty(direction), PipeTransferUtil.isPipe(neighborState) || PipeTransferUtil.canConnectEndpoint(level, neighborPos, direction.getOpposite()));
     }
 
-    @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    @Override public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return getPipeShape(state);
+    }
+
+    @Override public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return getPipeShape(state);
     }
 
     @Override
-    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return getPipeShape(state);
-    }
-
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 

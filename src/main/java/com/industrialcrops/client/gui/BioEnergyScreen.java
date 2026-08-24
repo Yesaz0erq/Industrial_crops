@@ -83,7 +83,7 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
     }
 
     @Override public void render(GuiGraphics graphics, int mouseX, int mouseY, float tick) {
-        renderBackground(graphics, mouseX, mouseY, tick);
+        renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, tick);
         renderUpgradeTab(graphics, mouseX, mouseY);
         if (menu.kind() == BioEnergyMachineBlockEntity.Kind.INCINERATOR

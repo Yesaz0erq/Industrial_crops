@@ -4,7 +4,7 @@ import com.industrialcrops.block.entity.ItemNetworkTerminalBlockEntity;
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -23,9 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
-import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import java.util.Optional;
 
@@ -61,7 +59,7 @@ public final class ItemNetworkTerminalMenu extends AbstractContainerMenu {
     private int syncedSelected = -1;
     private String searchQuery = "";
 
-    public ItemNetworkTerminalMenu(int id, Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    public ItemNetworkTerminalMenu(int id, Inventory inventory, FriendlyByteBuf buffer) {
         this(id, inventory, readOpenData(inventory, buffer));
     }
 
@@ -237,7 +235,7 @@ public final class ItemNetworkTerminalMenu extends AbstractContainerMenu {
         return stillValid(ContainerLevelAccess.create(player.level(), pos), player, ModBlocks.ITEM_NETWORK_TERMINAL.get());
     }
 
-    private static OpenData readOpenData(Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    private static OpenData readOpenData(Inventory inventory, FriendlyByteBuf buffer) {
         BlockPos pos = buffer.readBlockPos();
         int rows = buffer.readableBytes() > 0 ? buffer.readVarInt() : MIN_ROWS;
         BlockEntity blockEntity = inventory.player.level().getBlockEntity(pos);
@@ -251,16 +249,14 @@ public final class ItemNetworkTerminalMenu extends AbstractContainerMenu {
 
     private void updateCraftingResult(Level level) {
         if (level.isClientSide || level.getServer() == null || !(player instanceof ServerPlayer serverPlayer)) return;
-        CraftingInput input = craftingSlots.asCraftInput();
         ItemStack result = ItemStack.EMPTY;
-        Optional<RecipeHolder<CraftingRecipe>> optional = level.getServer().getRecipeManager()
-                .getRecipeFor(RecipeType.CRAFTING, input, level, (RecipeHolder<CraftingRecipe>) null);
+        Optional<CraftingRecipe> optional = level.getServer().getRecipeManager()
+                .getRecipeFor(RecipeType.CRAFTING, craftingSlots, level);
         if (optional.isPresent()) {
-            RecipeHolder<CraftingRecipe> holder = optional.get();
-            if (resultSlots.setRecipeUsed(level, serverPlayer, holder)) {
-                ItemStack assembled = holder.value().assemble(input, level.registryAccess());
-                if (assembled.isItemEnabled(level.enabledFeatures())) result = assembled;
-            }
+            CraftingRecipe recipe = optional.get();
+            resultSlots.setRecipeUsed(recipe);
+            ItemStack assembled = recipe.assemble(craftingSlots, level.registryAccess());
+            if (assembled.isItemEnabled(level.enabledFeatures())) result = assembled;
         }
         resultSlots.setItem(0, result);
         setRemoteSlot(resultSlotIndex, result);

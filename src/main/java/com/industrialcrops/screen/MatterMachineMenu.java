@@ -7,7 +7,7 @@ import com.industrialcrops.registry.ModMenus;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +18,7 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public final class MatterMachineMenu extends AbstractContainerMenu {
     public static final int BUTTON_OPERATE = 0;
@@ -52,7 +52,7 @@ public final class MatterMachineMenu extends AbstractContainerMenu {
     private String searchQuery = "";
     private boolean upgradeSlotsVisible;
 
-    public MatterMachineMenu(int id, Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    public MatterMachineMenu(int id, Inventory inventory, FriendlyByteBuf buffer) {
         this(id, inventory, read(inventory, buffer));
     }
 
@@ -328,7 +328,7 @@ public final class MatterMachineMenu extends AbstractContainerMenu {
         return filtered < firstVisible || filtered >= firstVisible + TERMINAL_SLOTS ? -1 : filtered - firstVisible;
     }
 
-    private static MatterMachineBlockEntity read(Inventory inventory, RegistryFriendlyByteBuf buffer) {
+    private static MatterMachineBlockEntity read(Inventory inventory, FriendlyByteBuf buffer) {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity entity = inventory.player.level().getBlockEntity(pos);
         if (entity instanceof MatterMachineBlockEntity machine) return machine;

@@ -10,9 +10,9 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.renderer.specialty.DynamicGeoEntityRenderer;
+import software.bernie.geckolib.renderer.DynamicGeoEntityRenderer;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -61,25 +61,6 @@ public abstract class IndustrialSlimeRenderer<T extends Entity & GeoAnimatable> 
     }
 
     protected RenderType shellRenderType(ResourceLocation texture) {
-        RenderType.CompositeState.CompositeStateBuilder builder = RenderType.CompositeState.builder()
-                .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
-                .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
-                .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                .setCullState(RenderStateShard.NO_CULL)
-                .setLightmapState(RenderStateShard.LIGHTMAP)
-                .setOverlayState(RenderStateShard.OVERLAY)
-                .setWriteMaskState(RenderStateShard.COLOR_WRITE);
-        if (shellDepthTest) {
-            builder.setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST);
-        }
-        return RenderType.create(
-                shellRenderTypeName,
-                DefaultVertexFormat.NEW_ENTITY,
-                VertexFormat.Mode.QUADS,
-                1536,
-                true,
-                true,
-                builder.createCompositeState(true)
-        );
+        return RenderType.entityTranslucent(texture);
     }
 }

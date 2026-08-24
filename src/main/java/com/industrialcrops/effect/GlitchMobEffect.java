@@ -10,14 +10,13 @@ public final class GlitchMobEffect extends MobEffect {
     }
 
     @Override
-    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+    public boolean isDurationEffectTick(int duration, int amplifier) {
         return true;
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    public void applyEffectTick(LivingEntity entity, int amplifier) {
         if (entity.isAlive() && entity.getHealth() > 1.0F) entity.setHealth(1.0F);
         if (entity.isAlive()) entity.setAbsorptionAmount(0.0F);
-        return true;
     }
 }

@@ -4,7 +4,6 @@ import com.industrialcrops.block.MimicBlock;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -102,8 +101,8 @@ public final class MimicBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt("Progress", progress);
         if (owner != null) {
             tag.putUUID("Owner", owner);
@@ -111,8 +110,8 @@ public final class MimicBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         progress = Math.max(0, Math.min(TRANSFORM_TICKS, tag.getInt("Progress")));
         owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : null;
     }

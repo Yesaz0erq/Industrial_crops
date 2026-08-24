@@ -6,7 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -23,7 +23,7 @@ public final class IndustrialFruitBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         BlockPos pos = BlockPos.containing(builder.getParameter(LootContextParams.ORIGIN));
         CropGenetics.Genes genes = null;
         BlockEntity droppedBlockEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
@@ -54,7 +54,7 @@ public final class IndustrialFruitBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
         ItemStack result = new ItemStack(asItem());
         if (level.getBlockEntity(pos) instanceof CropGeneticsBlockEntity genetics
                 && genetics.isInitialized()) {
