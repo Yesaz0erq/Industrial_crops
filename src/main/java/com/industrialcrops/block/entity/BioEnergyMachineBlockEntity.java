@@ -28,6 +28,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -153,7 +155,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
 
     private boolean consumeFuel() {
         ItemStack stack = inventory.getStackInSlot(0);
-        int fuelTicks = stack.getBurnTime(null);
+        int fuelTicks = burnTime(stack);
         if (fuelTicks <= 0) return false;
         ItemStack remainder = stack.getCraftingRemainingItem();
         stack.shrink(1);
@@ -233,7 +235,11 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
 
     private boolean isItemValid(ItemStack stack) {
         return kind == Kind.GENERATOR ? classifyFuel(stack) != FuelTier.NONE
-                : kind == Kind.INCINERATOR && stack.getBurnTime(null) > 0;
+                : kind == Kind.INCINERATOR && burnTime(stack) > 0;
+    }
+
+    private static int burnTime(ItemStack stack) {
+        return ForgeHooks.getBurnTime(stack, RecipeType.SMELTING);
     }
 
     public int removeResidue(int amount) {

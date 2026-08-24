@@ -10,7 +10,8 @@ public final class ProcessorProgrammingRecipes {
             recipe(ModItems.GUIDANCE_COMPONENT.get(),
                     ingredient(ModItems.COMPONENT_SUBSTRATE.get(), 1),
                     ingredient(Items.GOLD_INGOT, 4),
-                    ingredient(Items.REDSTONE, 4)),
+                    ingredient(Items.REDSTONE, 4),
+                    ingredient(Items.COMPASS, 1)),
             recipe(ModItems.INDUSTRIAL_STORAGE_COMPONENT_1.get(),
                     ingredient(ModItems.COMPONENT_SUBSTRATE.get(), 1),
                     ingredient(Items.CHEST, 1),
@@ -44,12 +45,18 @@ public final class ProcessorProgrammingRecipes {
                     ingredient(Items.QUARTZ, 2),
                     ingredient(Items.GOLD_INGOT, 2)),
             recipe(ModItems.SPEED_COMPONENT_2.get(),
-                    ingredient(ModItems.SPEED_COMPONENT_1.get(), 2)),
+                    ingredient(ModItems.SPEED_COMPONENT_1.get(), 1),
+                    ingredient(Items.GLOWSTONE_DUST, 2),
+                    ingredient(Items.REDSTONE, 2)),
             recipe(ModItems.SPEED_COMPONENT_3.get(),
-                    ingredient(ModItems.SPEED_COMPONENT_1.get(), 4)),
+                    ingredient(ModItems.SPEED_COMPONENT_2.get(), 2),
+                    ingredient(Items.GLOWSTONE_DUST, 4),
+                    ingredient(Items.REDSTONE, 8)),
             recipe(ModItems.SPEED_COMPONENT_4.get(),
-                    ingredient(ModItems.SPEED_COMPONENT_1.get(), 8),
-                    ingredient(Items.BLAZE_POWDER, 2))
+                    ingredient(ModItems.SPEED_COMPONENT_3.get(), 2),
+                    ingredient(Items.GLOWSTONE_DUST, 4),
+                    ingredient(Items.REDSTONE, 4),
+                    ingredient(Items.BLAZE_POWDER, 1))
     );
 
     private ProcessorProgrammingRecipes() {
