@@ -90,6 +90,67 @@ final class IndustrialGuiStyle {
                 0, 73, width, bottomHeight, 256, 256);
     }
 
+    /**
+     * Draws the item terminal as separate RS2-style regions instead of stretching
+     * complete rows from the old fixed-height texture.  The latter also copied the
+     * texture's right edge and scrollbar once per row, producing the stepped white
+     * borders visible on tall terminals.
+     */
+    static void drawRs2TerminalBackground(
+            GuiGraphics graphics,
+            ResourceLocation texture,
+            int x,
+            int y,
+            int rows
+    ) {
+        final int width = 193;
+        final int lowerWidth = 176;
+        final int topHeight = 19;
+        final int rowHeight = 18;
+        final int networkHeight = rows * rowHeight;
+        final int playerInventoryY = 36 + networkHeight;
+        final int playerHotbarY = playerInventoryY + 58;
+        final int height = playerHotbarY + 24;
+        final int networkBottom = topHeight + networkHeight;
+        final int lowerTop = networkBottom + 6;
+
+        // Keep the authored title/search header, then construct the variable-height
+        // body from the same nine-slot row used by the RS2 grid reference.
+        graphics.blit(texture, x, y, 0, 0, width, topHeight, width, 229);
+
+        // RS2's grid narrows from 193 px to 176 px below the scrollable area.
+        // Keeping the full terminal width here created the unwanted strip beside
+        // the player's inventory in-game.
+        graphics.fill(x, y + topHeight, x + width, y + networkBottom + 4, PANEL);
+        graphics.fill(x, y + networkBottom + 4, x + width - 1, y + networkBottom + 5, PANEL);
+        graphics.fill(x, y + networkBottom + 5, x + width - 2, y + lowerTop, PANEL);
+        graphics.fill(x, y + lowerTop, x + lowerWidth, y + height, PANEL);
+        graphics.fill(x, y + topHeight, x + 1, y + height, SHADOW);
+        graphics.fill(x + 1, y + topHeight, x + 2, y + height - 1, HIGHLIGHT);
+        graphics.fill(x + width - 2, y + topHeight, x + width - 1, y + networkBottom + 4, HIGHLIGHT);
+        graphics.fill(x + width - 1, y + topHeight, x + width, y + networkBottom + 4, SHADOW);
+        graphics.fill(x + width - 2, y + networkBottom + 4, x + width - 1, y + networkBottom + 5, SHADOW);
+        graphics.fill(x + width - 3, y + networkBottom + 5, x + width - 2, y + lowerTop, SHADOW);
+        graphics.fill(x + lowerWidth - 2, y + lowerTop, x + lowerWidth - 1, y + height - 1, HIGHLIGHT);
+        graphics.fill(x + lowerWidth - 1, y + lowerTop, x + lowerWidth, y + height, SHADOW);
+        graphics.fill(x, y + height - 2, x + lowerWidth, y + height - 1, HIGHLIGHT);
+        graphics.fill(x, y + height - 1, x + lowerWidth, y + height, SHADOW);
+
+        for (int row = 0; row < rows; row++) {
+            drawRs2GridRow(graphics, x + 7, y + topHeight + row * rowHeight);
+        }
+
+        // The scrollbar is its own inset region, matching RS2's grid/portable-grid
+        // layout without duplicating the outer border for every storage row.
+        drawInsetPanel(graphics, x + 172, y + topHeight, 18, networkHeight);
+
+        // Slot coordinates are one pixel inside their 18x18 background wells.
+        for (int row = 0; row < 3; row++) {
+            drawRs2GridRow(graphics, x + 7, y + playerInventoryY - 1 + row * rowHeight);
+        }
+        drawRs2GridRow(graphics, x + 7, y + playerHotbarY - 1);
+    }
+
     static void drawRs2GridRow(GuiGraphics graphics, int x, int y) {
         graphics.blit(RS2_GRID_ROW, x, y, 0, 0, 162, 18, 162, 18);
     }

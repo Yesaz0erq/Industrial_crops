@@ -42,6 +42,10 @@
     "industrialcrops:electric_furnace",
     "industrialcrops:digital_miniature_forest",
     "industrialcrops:automatic_planter",
+    "industrialcrops:mixer",
+    "industrialcrops:crop_compressor",
+    "industrialcrops:crop_analysis_device",
+    "industrialcrops:explosive_potato_launcher",
     "carrote:carrote_steel_forge",
     "carrote:material_hardening_device"
   ]

@@ -14,10 +14,10 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
-/** RS2 crafting-grid layout backed by the terminal's unlimited item-data repository. */
+/** RS2-style network storage followed directly by the player's inventory. */
 public final class ItemNetworkTerminalScreen extends IndustrialContainerScreen<ItemNetworkTerminalMenu> {
-    private static final ResourceLocation BACKGROUND = IndustrialGuiStyle.containerTexture("item_network_management_terminal_rs2");
-    private static final int BOTTOM_HEIGHT = 156;
+    private static final ResourceLocation BACKGROUND = IndustrialGuiStyle.containerTexture("item_network_management_terminal");
+    private static final int BOTTOM_HEIGHT = 100;
     private static final int SEARCH_ICON_X = 79;
     private static final int SEARCH_X = 95;
     private static final int SEARCH_Y = 7;
@@ -40,9 +40,9 @@ public final class ItemNetworkTerminalScreen extends IndustrialContainerScreen<I
     protected void init() {
         super.init();
         titleLabelX = 8;
-        int available = height - 19 - BOTTOM_HEIGHT;
+        int available = height - 38 - BOTTOM_HEIGHT;
         int desiredRows = Math.max(ItemNetworkTerminalMenu.MIN_ROWS, Math.min(
-                ItemNetworkTerminalMenu.MAX_ROWS, available / 18 - 3));
+                ItemNetworkTerminalMenu.MAX_ROWS, available / 18));
         if (desiredRows != menu.getVisibleRows()) {
             PacketDistributor.sendToServer(new ResizeStorageMenuPayload(menu.getBlockPos(), desiredRows, true));
         }
@@ -57,11 +57,8 @@ public final class ItemNetworkTerminalScreen extends IndustrialContainerScreen<I
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        IndustrialGuiStyle.drawRs2StretchingBackground(
-                graphics, BACKGROUND, leftPos, topPos, menu.getVisibleRows(), BOTTOM_HEIGHT);
-        for (int row = 0; row < menu.getVisibleRows(); row++) {
-            IndustrialGuiStyle.drawRs2GridRow(graphics, leftPos + 7, topPos + 19 + row * 18);
-        }
+        IndustrialGuiStyle.drawRs2TerminalBackground(
+                graphics, BACKGROUND, leftPos, topPos, menu.getVisibleRows());
         IndustrialGuiStyle.drawRs2SearchIcon(graphics, leftPos + SEARCH_ICON_X, topPos + 5);
         drawScrollbar(graphics);
     }
