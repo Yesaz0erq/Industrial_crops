@@ -1,0 +1,63 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:automatic_planter",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.automation.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.automation.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "automatic_planter": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:automatic_planter"
+          }
+        ]
+      }
+    },
+    "advanced_manipulation_device": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:advanced_manipulation_device"
+          }
+        ]
+      }
+    },
+    "processor_programming_device": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:processor_programming_device"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "automatic_planter"
+    ],
+    [
+      "advanced_manipulation_device"
+    ],
+    [
+      "processor_programming_device"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/processor_age",
+  "rewards": {
+    "experience": 100
+  }
+}

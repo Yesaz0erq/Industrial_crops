@@ -174,6 +174,7 @@ public final class MatterMachineMenu extends AbstractContainerMenu {
     public boolean hasConnectedTerminal() { return machineData.get(6) != 0; }
     public boolean canStartOperation() { return machineData.get(7) != 0; }
     public boolean isOperating() { return machineData.get(8) != 0; }
+    public boolean isAutomaticCopying() { return machineData.get(9) != 0; }
     public int page() { return syncedPage; }
     public int totalPages() { return totalPages; }
     public int selectedVisible() { return syncedSelected; }

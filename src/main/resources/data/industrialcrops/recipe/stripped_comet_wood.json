@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "industrialcrops:stripped_comet_log"
+    }
+  },
+  "result": {
+    "count": 3,
+    "id": "industrialcrops:stripped_comet_wood"
+  }
+}

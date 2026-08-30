@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:crystal_ingot",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.crystal_ingot.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.crystal_ingot.description"
+    }
+  },
+  "criteria": {
+    "ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:crystal_ingot"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "ingot"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/energy_crystal"
+}

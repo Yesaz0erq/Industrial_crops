@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "industrialcrops:block/stripped_comet_log_top",
+    "side": "industrialcrops:block/stripped_comet_log"
+  }
+}

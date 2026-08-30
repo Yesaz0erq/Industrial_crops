@@ -1,6 +1,6 @@
 package com.industrialcrops.block.entity;
 
-import com.industrialcrops.block.TransportPipeBlock;
+import com.industrialcrops.basic_pipe.PipeTransferUtil;
 import com.industrialcrops.screen.MatterMachineMenu;
 import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
@@ -51,6 +51,8 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
     private final Kind kind;
     private int progress;
     private boolean operationRequested;
+    private boolean automaticCopying;
+    private ItemStack automaticCopyTarget = ItemStack.EMPTY;
     private int selectedNetworkIndex = -1;
     private int energyInputSides = ALL_SIDES;
     // Several menu/data queries can ask for the terminal during one server tick.
@@ -73,6 +75,7 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
                 case 6 -> hasConnectedTerminal() ? 1 : 0;
                 case 7 -> canStartOperation() ? 1 : 0;
                 case 8 -> operationRequested ? 1 : 0;
+                case 9 -> automaticCopying ? 1 : 0;
                 default -> 0;
             };
         }
@@ -90,7 +93,7 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
 
         @Override
         public int getCount() {
-            return 9;
+            return 10;
         }
     };
 
@@ -115,8 +118,10 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
     }
 
     private void serverTick() {
+        if (automaticCopying && !hasAutomaticComponent()) stopAutomaticCopying();
         if (!operationRequested) {
             pullEnergyFromNeighbors();
+            tryStartAutomaticCopy();
             return;
         }
 
@@ -137,13 +142,17 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
                 if (terminal.count(selectedNetworkIndex) <= 0) selectedNetworkIndex = -1;
             }
             resetOperation();
+            tryStartAutomaticCopy();
         }
         setChanged();
     }
 
     public boolean isItemValid(int slot, ItemStack stack) {
         int upgradeStart = getUpgradeSlotStart();
-        if (slot >= upgradeStart && slot < upgradeStart + UPGRADE_SLOT_COUNT) return isMachineUpgrade(stack);
+        if (slot >= upgradeStart && slot < upgradeStart + UPGRADE_SLOT_COUNT) {
+            return isMachineUpgrade(stack)
+                    && (!stack.is(ModItems.AUTOMATIC_COMPONENT.get()) || kind == Kind.COPIER);
+        }
         if (kind != Kind.DIGITIZER || slot < 0 || slot >= DIGITIZER_MAIN_SLOT_COUNT) return false;
         return stack.is(ModItems.INDUSTRIAL_CARROT.get())
                 || stack.is(com.industrialcrops.registry.CarroteItems.CARROTE_STEEL_INGOT.get())
@@ -156,6 +165,7 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
     public static boolean isMachineUpgrade(ItemStack stack) {
         return stack.is(ModItems.POWER_COMPONENT.get())
                 || stack.is(ModItems.RAPID_FIRE_COMPONENT.get())
+                || stack.is(ModItems.AUTOMATIC_COMPONENT.get())
                 || stack.is(ModItems.GOLD_UPGRADE_KIT.get())
                 || SpeedUpgradeHelper.isSpeedUpgrade(stack);
     }
@@ -173,7 +183,24 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
 
     /** Selects a terminal entry and starts the matching operation as one server-side action. */
     public boolean requestNetworkOperation(int absoluteIndex) {
-        return selectNetworkEntry(absoluteIndex) && requestOperation();
+        if (!selectNetworkEntry(absoluteIndex)) return false;
+        if (kind == Kind.COPIER && automaticCopying) {
+            stopAutomaticCopying();
+            return true;
+        }
+        if (kind == Kind.COPIER && hasAutomaticComponent()) {
+            ItemNetworkTerminalBlockEntity terminal = findConnectedTerminal();
+            if (terminal == null || !terminal.canOperateWith(this, absoluteIndex)) return false;
+            automaticCopyTarget = terminal.displayStack(absoluteIndex);
+            automaticCopying = true;
+            if (!requestOperation()) {
+                stopAutomaticCopying();
+                return false;
+            }
+            setChanged();
+            return true;
+        }
+        return requestOperation();
     }
 
     public boolean performNetworkOperation(Player player) {
@@ -232,6 +259,38 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
 
     private boolean canContinueOperation(ItemNetworkTerminalBlockEntity terminal) {
         return kind == Kind.DIGITIZER ? hasDigitizerInput() : terminal.canOperateWith(this, selectedNetworkIndex);
+    }
+
+    private void tryStartAutomaticCopy() {
+        if (kind != Kind.COPIER || !automaticCopying || operationRequested) return;
+        ItemNetworkTerminalBlockEntity terminal = findConnectedTerminal();
+        if (terminal == null) return;
+        if (!isAutomaticCopyTargetValid(terminal)) {
+            stopAutomaticCopying();
+            return;
+        }
+        requestOperation();
+    }
+
+    private boolean isAutomaticCopyTargetValid(ItemNetworkTerminalBlockEntity terminal) {
+        return selectedNetworkIndex >= 0
+                && ItemStack.isSameItemSameComponents(automaticCopyTarget, terminal.displayStack(selectedNetworkIndex))
+                && terminal.count(selectedNetworkIndex) > 0;
+    }
+
+    private boolean hasAutomaticComponent() {
+        int start = getUpgradeSlotStart();
+        for (int slot = start; slot < start + UPGRADE_SLOT_COUNT; slot++) {
+            if (inventory.getStackInSlot(slot).is(ModItems.AUTOMATIC_COMPONENT.get())) return true;
+        }
+        return false;
+    }
+
+    private void stopAutomaticCopying() {
+        if (!automaticCopying && automaticCopyTarget.isEmpty()) return;
+        automaticCopying = false;
+        automaticCopyTarget = ItemStack.EMPTY;
+        setChanged();
     }
 
     private boolean hasDigitizerInput() {
@@ -381,6 +440,10 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
     public boolean selectNetworkEntry(int absoluteIndex) {
         ItemNetworkTerminalBlockEntity terminal = findConnectedTerminal();
         if (kind == Kind.DIGITIZER || terminal == null || terminal.count(absoluteIndex) <= 0) return false;
+        if (automaticCopying && !ItemStack.isSameItemSameComponents(
+                automaticCopyTarget, terminal.displayStack(absoluteIndex))) {
+            stopAutomaticCopying();
+        }
         selectedNetworkIndex = absoluteIndex;
         setChanged();
         return true;
@@ -412,7 +475,7 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
                     cachedTerminalPos = next.immutable();
                     return terminal;
                 }
-                if (level.getBlockState(next).getBlock() instanceof TransportPipeBlock) {
+                if (PipeTransferUtil.isPipe(level.getBlockState(next))) {
                     visited.add(next);
                     queue.addLast(next);
                 }
@@ -429,6 +492,7 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
     public ContainerData getData() { return data; }
     public Kind getKind() { return kind; }
     public boolean isOperationRequested() { return operationRequested; }
+    public boolean isAutomaticCopying() { return automaticCopying; }
 
     public boolean canAcceptReconstructed(ItemStack stack) {
         if (kind != Kind.RECONSTRUCTOR || stack.isEmpty()) return false;
@@ -464,6 +528,8 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
         tag.putInt("Energy", energy.getEnergyStored());
         tag.putInt("Progress", progress);
         tag.putBoolean("OperationRequested", operationRequested);
+        tag.putBoolean("AutomaticCopying", automaticCopying);
+        if (!automaticCopyTarget.isEmpty()) tag.put("AutomaticCopyTarget", automaticCopyTarget.save(registries));
         tag.putInt("SelectedNetworkIndex", selectedNetworkIndex);
         tag.putInt("EnergyInputSides", energyInputSides);
     }
@@ -487,6 +553,14 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
         energy.setStored(tag.getInt("Energy"));
         progress = tag.getInt("Progress");
         operationRequested = tag.getBoolean("OperationRequested");
+        automaticCopying = tag.getBoolean("AutomaticCopying");
+        automaticCopyTarget = tag.contains("AutomaticCopyTarget")
+                ? ItemStack.parseOptional(registries, tag.getCompound("AutomaticCopyTarget"))
+                : ItemStack.EMPTY;
+        if (!automaticCopying || automaticCopyTarget.isEmpty()) {
+            automaticCopying = false;
+            automaticCopyTarget = ItemStack.EMPTY;
+        }
         selectedNetworkIndex = tag.contains("SelectedNetworkIndex") ? tag.getInt("SelectedNetworkIndex") : -1;
         energyInputSides = tag.contains("EnergyInputSides") ? tag.getInt("EnergyInputSides") & ALL_SIDES : ALL_SIDES;
     }

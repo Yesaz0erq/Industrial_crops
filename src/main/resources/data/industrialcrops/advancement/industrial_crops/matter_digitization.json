@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:matter_digitization_device",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.matter_digitization.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.matter_digitization.description"
+    }
+  },
+  "criteria": {
+    "digitizer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:matter_digitization_device"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "digitizer"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/processor_age"
+}

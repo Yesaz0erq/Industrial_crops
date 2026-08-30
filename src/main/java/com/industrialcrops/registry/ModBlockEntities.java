@@ -31,6 +31,10 @@ import com.industrialcrops.block.entity.ElectricFurnaceBlockEntity;
 import com.industrialcrops.block.entity.DigitalMiniatureForestBlockEntity;
 import com.industrialcrops.block.entity.CropGeneticsBlockEntity;
 import com.industrialcrops.block.entity.AutomaticPlanterBlockEntity;
+import com.industrialcrops.block.entity.PipeSorterBlockEntity;
+import com.industrialcrops.block.entity.FluidPipeBlockEntity;
+import com.industrialcrops.block.entity.GoldPlasmaExtractorBlockEntity;
+import com.industrialcrops.block.entity.CopperFluidStorageCabinetBlockEntity;
 
 public final class ModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
@@ -94,6 +98,18 @@ public final class ModBlockEntities {
                             ModBlocks.ADVANCED_OUTPUT_PIPE.get()
                     )
                     .build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PipeSorterBlockEntity>> PIPE_SORTER =
+            BLOCK_ENTITIES.register("pipe_sorter", () -> BlockEntityType.Builder
+                    .of(PipeSorterBlockEntity::new, ModBlocks.PIPE_SORTER.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidPipeBlockEntity>> FLUID_PIPE =
+            BLOCK_ENTITIES.register("gold_fluid_pipe", () -> BlockEntityType.Builder
+                    .of(FluidPipeBlockEntity::new, ModBlocks.GOLD_FLUID_PIPE.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GoldPlasmaExtractorBlockEntity>> GOLD_PLASMA_EXTRACTOR =
+            BLOCK_ENTITIES.register("gold_plasma_extractor", () -> BlockEntityType.Builder
+                    .of(GoldPlasmaExtractorBlockEntity::new, ModBlocks.GOLD_PLASMA_EXTRACTOR.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CopperFluidStorageCabinetBlockEntity>> COPPER_FLUID_STORAGE_CABINET =
+            BLOCK_ENTITIES.register("copper_fluid_storage_cabinet", () -> BlockEntityType.Builder
+                    .of(CopperFluidStorageCabinetBlockEntity::new, ModBlocks.COPPER_FLUID_STORAGE_CABINET.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IncubatorBlockEntity>> INCUBATOR =
             BLOCK_ENTITIES.register("slime_converter", () -> BlockEntityType.Builder
@@ -158,6 +174,11 @@ public final class ModBlockEntities {
                             ModBlocks.INDUSTRIAL_WHEAT_CROP.get(),
                             ModBlocks.INDUSTRIAL_MELON_CROP.get(),
                             ModBlocks.INDUSTRIAL_PUMPKIN_CROP.get(),
+                            ModBlocks.PRISM_POD_CROP.get(),
+                            ModBlocks.EMBERCOIL_CROP.get(),
+                            ModBlocks.STARBLOOM_CROP.get(),
+                            ModBlocks.NEONBULB_CROP.get(),
+                            ModBlocks.FLUXSTALK_CROP.get(),
                             ModBlocks.INDUSTRIAL_MELON_BLOCK.get(),
                             ModBlocks.INDUSTRIAL_PUMPKIN_BLOCK.get())
                     .build(null));

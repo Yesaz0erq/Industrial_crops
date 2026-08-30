@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "industrialcrops:block/stripped_comet_log_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "industrialcrops:block/stripped_comet_log"
+    },
+    "axis=z": {
+      "model": "industrialcrops:block/stripped_comet_log_horizontal",
+      "x": 90
+    }
+  }
+}

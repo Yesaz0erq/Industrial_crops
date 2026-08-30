@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "industrialcrops:empty_bag" },
+    { "item": "industrialcrops:prism_pod_seeds" }
+  ],
+  "result": { "count": 1, "id": "industrialcrops:bagged_prism_pod_seeds" }
+}

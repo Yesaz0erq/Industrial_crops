@@ -19,6 +19,8 @@ import com.industrialcrops.client.gui.BioEnergyScreen;
 import com.industrialcrops.client.gui.ElectricFurnaceScreen;
 import com.industrialcrops.client.gui.DigitalMiniatureForestScreen;
 import com.industrialcrops.client.gui.AutomaticPlanterScreen;
+import com.industrialcrops.client.gui.PipeSorterScreen;
+import com.industrialcrops.client.gui.GoldPlasmaExtractorScreen;
 import com.industrialcrops.client.renderer.BrownCreateSlimeRenderer;
 import com.industrialcrops.client.renderer.DiamondProcessorSlimeRenderer;
 import com.industrialcrops.client.renderer.DigitalMiniatureForestRenderer;
@@ -31,8 +33,11 @@ import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModEntities;
 import com.industrialcrops.registry.ModMenus;
+import com.industrialcrops.registry.ModFluids;
+import com.industrialcrops.registry.ModWoodTypes;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.world.level.block.CropBlock;
 import net.neoforged.api.distmarker.Dist;
@@ -43,10 +48,16 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
 @EventBusSubscriber(modid = IndustrialCrops.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class IndustrialCropsClient {
     private IndustrialCropsClient() {
+    }
+
+    @SubscribeEvent
+    public static void clientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> Sheets.addWoodType(ModWoodTypes.COMET));
     }
 
     @SubscribeEvent
@@ -69,6 +80,8 @@ public final class IndustrialCropsClient {
         event.register(ModMenus.BIO_ENERGY_MACHINE.get(), BioEnergyScreen::new);
         event.register(ModMenus.ELECTRIC_FURNACE.get(), ElectricFurnaceScreen::new);
         event.register(ModMenus.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestScreen::new);
+        event.register(ModMenus.PIPE_SORTER.get(), PipeSorterScreen::new);
+        event.register(ModMenus.GOLD_PLASMA_EXTRACTOR.get(), GoldPlasmaExtractorScreen::new);
     }
 
     @SubscribeEvent
@@ -78,7 +91,31 @@ public final class IndustrialCropsClient {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_WHEAT_CROP.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_MELON_CROP.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_PUMPKIN_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.PRISM_POD_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.EMBERCOIL_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.STARBLOOM_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.NEONBULB_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUXSTALK_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.ENERGY_BUSH.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.DIGITAL_MINIATURE_FOREST.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_SAPLING.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.POTTED_COMET_SAPLING.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_LEAVES.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_DOOR.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_TRAPDOOR.get(), RenderType.cutout());
+    }
+
+    @SubscribeEvent
+    public static void registerFluidTypeExtensions(net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent event) {
+        event.registerFluidType(new net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions() {
+            private final ResourceLocation STILL = ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID,
+                    "block/concentrated_plasma_juice_still");
+            private final ResourceLocation FLOWING = ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID,
+                    "block/concentrated_plasma_juice_flowing");
+            @Override public ResourceLocation getStillTexture() { return STILL; }
+            @Override public ResourceLocation getFlowingTexture() { return FLOWING; }
+            @Override public int getTintColor() { return 0xFF4FBEFF; }
+        }, ModFluids.CONCENTRATED_PLASMA_JUICE_TYPE.get());
     }
 
     @SubscribeEvent

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "GGG",
+    "GBG",
+    "GGG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_nugget"
+    },
+    "B": {
+      "item": "industrialcrops:basic_pipe"
+    }
+  },
+  "result": {
+    "id": "industrialcrops:gold_fluid_pipe",
+    "count": 8
+  }
+}

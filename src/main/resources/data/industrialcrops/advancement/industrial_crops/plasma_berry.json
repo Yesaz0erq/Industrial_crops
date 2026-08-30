@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:plasma_berry",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.plasma_berry.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.plasma_berry.description"
+    }
+  },
+  "criteria": {
+    "berry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:plasma_berry"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "berry"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/five_wonders"
+}

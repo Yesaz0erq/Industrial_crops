@@ -21,6 +21,9 @@ import com.industrialcrops.block.ReinforcedControlDeviceBlock;
 import com.industrialcrops.block.RootOreExtractorBlock;
 import com.industrialcrops.block.SlimeIncubatorBlock;
 import com.industrialcrops.block.TransportPipeBlock;
+import com.industrialcrops.block.PipeSorterBlock;
+import com.industrialcrops.block.PlasmaJuiceBlock;
+import com.industrialcrops.block.PlasmaJuiceCauldronBlock;
 import com.industrialcrops.block.EnergyCableBlock;
 import com.industrialcrops.block.MatterDigitizerBlock;
 import com.industrialcrops.block.DigitizedItemCopierBlock;
@@ -34,9 +37,31 @@ import com.industrialcrops.block.ResidueIncineratorBlock;
 import com.industrialcrops.block.ElectricFurnaceBlock;
 import com.industrialcrops.block.DigitalMiniatureForestBlock;
 import com.industrialcrops.block.AutomaticPlanterBlock;
+import com.industrialcrops.block.CopperFluidStorageCabinetBlock;
+import com.industrialcrops.block.EnergyBushBlock;
+import com.industrialcrops.block.FluidPipeBlock;
+import com.industrialcrops.block.GoldPlasmaExtractorBlock;
+import com.industrialcrops.block.CometSoilBlock;
+import com.industrialcrops.block.StrippableRotatedPillarBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.CeilingHangingSignBlock;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.SaplingBlock;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.StandingSignBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.block.WallHangingSignBlock;
+import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -70,6 +95,8 @@ public final class ModBlocks {
     public static final DeferredBlock<Block> COPPER_DEVICE_CASING = registerMachineBlock("copper_device_casing");
     public static final DeferredBlock<Block> IRON_DEVICE_CASING = registerMachineBlock("iron_device_casing");
     public static final DeferredBlock<Block> PROCESSOR_GOLD_DEVICE_CASING = registerMachineBlock("processor_integrated_gold_device_casing");
+    public static final DeferredBlock<Block> CRYSTAL_STEEL_DEVICE_CASING = BLOCKS.register("crystal_steel_device_casing",
+            () -> new Block(machineProperties().mapColor(MapColor.COLOR_PURPLE)));
     public static final DeferredBlock<Block> ROOT_ORE_EXTRACTOR = BLOCKS.register("basic_crop_conversion_device",
             () -> new RootOreExtractorBlock(machineProperties()));
     public static final DeferredBlock<Block> CROP_COMPRESSOR = BLOCKS.register("crop_compressor",
@@ -143,6 +170,15 @@ public final class ModBlocks {
     public static final DeferredBlock<Block> ADVANCED_PIPE = registerPipeBlock("advanced_pipe");
     public static final DeferredBlock<Block> ADVANCED_INPUT_PIPE = registerPipeBlock("advanced_input_pipe");
     public static final DeferredBlock<Block> ADVANCED_OUTPUT_PIPE = registerPipeBlock("advanced_output_pipe");
+    public static final DeferredBlock<Block> PIPE_SORTER = BLOCKS.register("pipe_sorter",
+            () -> new PipeSorterBlock(machineProperties().mapColor(MapColor.GOLD)));
+    public static final DeferredBlock<Block> GOLD_FLUID_PIPE = BLOCKS.register("gold_fluid_pipe",
+            () -> new FluidPipeBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.GOLD).strength(1.0F).sound(SoundType.COPPER)));
+    public static final DeferredBlock<Block> GOLD_PLASMA_EXTRACTOR = BLOCKS.register("gold_plasma_extractor",
+            () -> new GoldPlasmaExtractorBlock(machineProperties().mapColor(MapColor.GOLD)));
+    public static final DeferredBlock<Block> COPPER_FLUID_STORAGE_CABINET = BLOCKS.register("copper_fluid_storage_cabinet",
+            () -> new CopperFluidStorageCabinetBlock(machineProperties().mapColor(MapColor.COLOR_ORANGE)));
 
     public static final DeferredBlock<Block> INDUSTRIAL_CARROT_CROP = BLOCKS.register("industrial_carrot_crop",
             () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_CARROT,
@@ -157,6 +193,108 @@ public final class ModBlocks {
             () -> new IndustrialGourdCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_MELON_SEEDS, INDUSTRIAL_MELON_BLOCK));
     public static final DeferredBlock<Block> INDUSTRIAL_PUMPKIN_CROP = BLOCKS.register("industrial_pumpkin_crop",
             () -> new IndustrialGourdCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_PUMPKIN_SEEDS, INDUSTRIAL_PUMPKIN_BLOCK));
+    public static final DeferredBlock<Block> PRISM_POD_CROP = BLOCKS.register("prism_pod_crop",
+            () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_PRISM_POD_SEEDS,
+                    ModItems.PRISM_POD, 2, 2));
+    public static final DeferredBlock<Block> EMBERCOIL_CROP = BLOCKS.register("embercoil_crop",
+            () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_EMBERCOIL_SEEDS,
+                    ModItems.EMBERCOIL, 2, 3));
+    public static final DeferredBlock<Block> STARBLOOM_CROP = BLOCKS.register("starbloom_crop",
+            () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_STARBLOOM_SEEDS,
+                    ModItems.STARBLOOM, 1, 2));
+    public static final DeferredBlock<Block> NEONBULB_CROP = BLOCKS.register("neonbulb_crop",
+            () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_NEONBULB_SEEDS,
+                    ModItems.NEONBULB, 2, 3));
+    public static final DeferredBlock<Block> FLUXSTALK_CROP = BLOCKS.register("fluxstalk_crop",
+            () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_FLUXSTALK_SEEDS,
+                    ModItems.FLUXSTALK, 1, 2));
+    public static final DeferredBlock<Block> ENERGY_BUSH = BLOCKS.register("energy_bush",
+            () -> new EnergyBushBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_BLUE).noCollission().randomTicks().instabreak()
+                    .sound(SoundType.SWEET_BERRY_BUSH).pushReaction(PushReaction.DESTROY)));
+    public static final DeferredBlock<net.minecraft.world.level.block.LiquidBlock> CONCENTRATED_PLASMA_JUICE = BLOCKS.register(
+            "concentrated_plasma_juice", () -> new PlasmaJuiceBlock(
+                    ModFluids.CONCENTRATED_PLASMA_JUICE.get(),
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.COLOR_BLUE)
+                            .replaceable()
+                            .noCollission()
+                            .strength(100.0F)
+                            .lightLevel(state -> 2)
+                            .pushReaction(PushReaction.DESTROY)
+                            .noLootTable()
+                            .liquid()
+                            .sound(SoundType.EMPTY)));
+    public static final DeferredBlock<PlasmaJuiceCauldronBlock> PLASMA_JUICE_CAULDRON = BLOCKS.register(
+            "plasma_juice_cauldron", () -> new PlasmaJuiceCauldronBlock(
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.CAULDRON)));
+
+    public static final DeferredBlock<Block> COMET_SOIL = BLOCKS.register("comet_soil",
+            () -> new CometSoilBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DIRT)
+                    .mapColor(MapColor.COLOR_PURPLE)
+                    .strength(0.55F)
+                    .sound(SoundType.ROOTED_DIRT)));
+    public static final DeferredBlock<RotatedPillarBlock> STRIPPED_COMET_LOG = BLOCKS.register("stripped_comet_log",
+            () -> new RotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_WARPED_STEM)
+                    .mapColor(MapColor.COLOR_PURPLE)));
+    public static final DeferredBlock<RotatedPillarBlock> STRIPPED_COMET_WOOD = BLOCKS.register("stripped_comet_wood",
+            () -> new RotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_WARPED_HYPHAE)
+                    .mapColor(MapColor.COLOR_PURPLE)));
+    public static final DeferredBlock<RotatedPillarBlock> COMET_LOG = BLOCKS.register("comet_log",
+            () -> new StrippableRotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_STEM)
+                    .mapColor(MapColor.COLOR_PURPLE), STRIPPED_COMET_LOG));
+    public static final DeferredBlock<RotatedPillarBlock> COMET_WOOD = BLOCKS.register("comet_wood",
+            () -> new StrippableRotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_HYPHAE)
+                    .mapColor(MapColor.COLOR_PURPLE), STRIPPED_COMET_WOOD));
+    public static final DeferredBlock<Block> COMET_PLANKS = BLOCKS.register("comet_planks",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_PLANKS)
+                    .mapColor(MapColor.COLOR_PURPLE)));
+    public static final DeferredBlock<StairBlock> COMET_STAIRS = BLOCKS.register("comet_stairs",
+            () -> new StairBlock(COMET_PLANKS.get().defaultBlockState(),
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_STAIRS)));
+    public static final DeferredBlock<SlabBlock> COMET_SLAB = BLOCKS.register("comet_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_SLAB)));
+    public static final DeferredBlock<FenceBlock> COMET_FENCE = BLOCKS.register("comet_fence",
+            () -> new FenceBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_FENCE)));
+    public static final DeferredBlock<FenceGateBlock> COMET_FENCE_GATE = BLOCKS.register("comet_fence_gate",
+            () -> new FenceGateBlock(ModWoodTypes.COMET,
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_FENCE_GATE)));
+    public static final DeferredBlock<DoorBlock> COMET_DOOR = BLOCKS.register("comet_door",
+            () -> new DoorBlock(ModWoodTypes.COMET_SET,
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_DOOR)));
+    public static final DeferredBlock<TrapDoorBlock> COMET_TRAPDOOR = BLOCKS.register("comet_trapdoor",
+            () -> new TrapDoorBlock(ModWoodTypes.COMET_SET,
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_TRAPDOOR)));
+    public static final DeferredBlock<PressurePlateBlock> COMET_PRESSURE_PLATE = BLOCKS.register("comet_pressure_plate",
+            () -> new PressurePlateBlock(ModWoodTypes.COMET_SET,
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_PRESSURE_PLATE)));
+    public static final DeferredBlock<ButtonBlock> COMET_BUTTON = BLOCKS.register("comet_button",
+            () -> new ButtonBlock(ModWoodTypes.COMET_SET, 30,
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_BUTTON)));
+    public static final DeferredBlock<LeavesBlock> COMET_LEAVES = BLOCKS.register("comet_leaves",
+            () -> new LeavesBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LEAVES)
+                    .mapColor(MapColor.COLOR_PURPLE)));
+    public static final DeferredBlock<SaplingBlock> COMET_SAPLING = BLOCKS.register("comet_sapling",
+            () -> new SaplingBlock(ModTreeGrowers.COMET,
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING)
+                            .mapColor(MapColor.COLOR_PURPLE)));
+    public static final DeferredBlock<StandingSignBlock> COMET_SIGN = BLOCKS.register("comet_sign",
+            () -> new StandingSignBlock(ModWoodTypes.COMET,
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_SIGN)));
+    public static final DeferredBlock<WallSignBlock> COMET_WALL_SIGN = BLOCKS.register("comet_wall_sign",
+            () -> new WallSignBlock(ModWoodTypes.COMET,
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_WALL_SIGN)
+                            .lootFrom(COMET_SIGN)));
+    public static final DeferredBlock<CeilingHangingSignBlock> COMET_HANGING_SIGN = BLOCKS.register("comet_hanging_sign",
+            () -> new CeilingHangingSignBlock(ModWoodTypes.COMET,
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_HANGING_SIGN)));
+    public static final DeferredBlock<WallHangingSignBlock> COMET_WALL_HANGING_SIGN = BLOCKS.register("comet_wall_hanging_sign",
+            () -> new WallHangingSignBlock(ModWoodTypes.COMET,
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_WALL_HANGING_SIGN)
+                            .lootFrom(COMET_HANGING_SIGN)));
+    public static final DeferredBlock<FlowerPotBlock> POTTED_COMET_SAPLING = BLOCKS.register("potted_comet_sapling",
+            () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, COMET_SAPLING,
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_OAK_SAPLING)));
 
     private ModBlocks() {
     }

@@ -99,6 +99,16 @@ public final class ModCapabilities {
                 (entity, side) -> entity.getEnergyStorage(side));
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.MIXER.get(),
                 (entity, side) -> entity.getInventory());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.PIPE_SORTER.get(),
+                (entity, side) -> entity.getInputHandler());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.GOLD_PLASMA_EXTRACTOR.get(),
+                (entity, side) -> entity.getInventory());
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.GOLD_PLASMA_EXTRACTOR.get(),
+                (entity, side) -> entity.getEnergyStorage(side));
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.GOLD_PLASMA_EXTRACTOR.get(),
+                (entity, side) -> entity.getOutputHandler());
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.COPPER_FLUID_STORAGE_CABINET.get(),
+                (entity, side) -> entity.getTank());
     }
 
     private static <T extends com.industrialcrops.block.entity.MatterMachineBlockEntity> void registerMatter(

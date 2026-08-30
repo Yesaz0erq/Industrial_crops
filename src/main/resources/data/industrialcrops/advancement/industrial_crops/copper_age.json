@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:copper_device_casing",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.copper_age.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.copper_age.description"
+    }
+  },
+  "criteria": {
+    "casing": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:copper_device_casing"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "casing"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/root"
+}

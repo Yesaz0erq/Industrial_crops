@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:comet_log",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.comet_lumber.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.comet_lumber.description"
+    }
+  },
+  "criteria": {
+    "log": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:comet_log"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "log"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/plant_comet_sapling"
+}

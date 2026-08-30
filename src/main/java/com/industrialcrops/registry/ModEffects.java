@@ -1,6 +1,7 @@
 package com.industrialcrops.registry;
 
 import com.industrialcrops.IndustrialCrops;
+import com.industrialcrops.effect.ElectrocutionMobEffect;
 import com.industrialcrops.effect.GlitchMobEffect;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
@@ -12,6 +13,8 @@ public final class ModEffects {
             DeferredRegister.create(Registries.MOB_EFFECT, IndustrialCrops.MOD_ID);
     public static final DeferredHolder<MobEffect, MobEffect> GLITCH =
             EFFECTS.register("glitch", GlitchMobEffect::new);
+    public static final DeferredHolder<MobEffect, MobEffect> ELECTROCUTION =
+            EFFECTS.register("electrocution", ElectrocutionMobEffect::new);
 
     private ModEffects() { }
 }

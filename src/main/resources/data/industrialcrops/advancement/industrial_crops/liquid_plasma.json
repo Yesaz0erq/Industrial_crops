@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:concentrated_plasma_juice_bucket",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.liquid_plasma.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.liquid_plasma.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "bucket": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:concentrated_plasma_juice_bucket"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "bucket"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/plasma_berry",
+  "rewards": {
+    "experience": 50
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:energy_crystal",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.energy_crystal.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.energy_crystal.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "crystal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:energy_crystal"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "crystal"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/liquid_plasma",
+  "rewards": {
+    "experience": 75
+  }
+}

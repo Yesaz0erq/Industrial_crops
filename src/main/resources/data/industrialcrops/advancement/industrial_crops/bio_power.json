@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:bio_energy_generator",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.bio_power.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.bio_power.description"
+    }
+  },
+  "criteria": {
+    "generator": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:bio_energy_generator"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "generator"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/copper_age"
+}

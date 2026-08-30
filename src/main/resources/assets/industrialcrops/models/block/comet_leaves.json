@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/leaves",
+  "textures": {
+    "all": "industrialcrops:block/comet_leaves"
+  }
+}

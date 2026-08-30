@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "industrialcrops:block/energy_bush_stage1"
+  }
+}

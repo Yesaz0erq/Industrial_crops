@@ -118,8 +118,10 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
                         || selected >= 0 && menu.count(selected) > 0;
                 // Selection and operation are validated atomically by the server. Keeping the button
                 // active here prevents one-tick menu-data latency from swallowing the user's click.
-                operateButton.active = selected >= 0 && menu.count(selected) > 0
-                        && validBatch && menu.hasConnectedTerminal() && !menu.isOperating();
+                operateButton.active = (menu.kind() == MatterMachineBlockEntity.Kind.COPIER
+                        && menu.isAutomaticCopying())
+                        || (selected >= 0 && menu.count(selected) > 0
+                        && validBatch && menu.hasConnectedTerminal() && !menu.isOperating());
             }
         }
         for (int side = 0; side < sideButtons.length; side++) {

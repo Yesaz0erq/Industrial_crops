@@ -1,6 +1,23 @@
 {
   "replace": false,
   "values": [
-    "industrialcrops:fusion_melon"
+    "industrialcrops:fusion_melon",
+    "industrialcrops:comet_log",
+    "industrialcrops:comet_wood",
+    "industrialcrops:stripped_comet_log",
+    "industrialcrops:stripped_comet_wood",
+    "industrialcrops:comet_planks",
+    "industrialcrops:comet_stairs",
+    "industrialcrops:comet_slab",
+    "industrialcrops:comet_fence",
+    "industrialcrops:comet_fence_gate",
+    "industrialcrops:comet_door",
+    "industrialcrops:comet_trapdoor",
+    "industrialcrops:comet_pressure_plate",
+    "industrialcrops:comet_button",
+    "industrialcrops:comet_sign",
+    "industrialcrops:comet_wall_sign",
+    "industrialcrops:comet_hanging_sign",
+    "industrialcrops:comet_wall_hanging_sign"
   ]
 }

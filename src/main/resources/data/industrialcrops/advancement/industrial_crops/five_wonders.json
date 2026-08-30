@@ -1,0 +1,89 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:starbloom",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.five_wonders.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.five_wonders.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "prism_pod": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:prism_pod"
+          }
+        ]
+      }
+    },
+    "embercoil": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:embercoil"
+          }
+        ]
+      }
+    },
+    "starbloom": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:starbloom"
+          }
+        ]
+      }
+    },
+    "neonbulb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:neonbulb"
+          }
+        ]
+      }
+    },
+    "fluxstalk": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:fluxstalk"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "prism_pod"
+    ],
+    [
+      "embercoil"
+    ],
+    [
+      "starbloom"
+    ],
+    [
+      "neonbulb"
+    ],
+    [
+      "fluxstalk"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/first_harvest",
+  "rewards": {
+    "experience": 100
+  }
+}

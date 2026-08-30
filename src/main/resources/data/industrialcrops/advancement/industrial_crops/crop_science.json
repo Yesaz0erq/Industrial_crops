@@ -1,0 +1,50 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:crop_analysis_device",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.crop_science.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.crop_science.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "analysis": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:crop_analysis_device"
+          }
+        ]
+      }
+    },
+    "gourd": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:gourd_modification_device"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "analysis"
+    ],
+    [
+      "gourd"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/iron_age",
+  "rewards": {
+    "experience": 75
+  }
+}

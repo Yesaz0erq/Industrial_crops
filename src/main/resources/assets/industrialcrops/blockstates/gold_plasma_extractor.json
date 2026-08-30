@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "industrialcrops:block/gold_plasma_extractor"
+    },
+    "facing=east": {
+      "model": "industrialcrops:block/gold_plasma_extractor",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "industrialcrops:block/gold_plasma_extractor",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "industrialcrops:block/gold_plasma_extractor",
+      "y": 270
+    }
+  }
+}

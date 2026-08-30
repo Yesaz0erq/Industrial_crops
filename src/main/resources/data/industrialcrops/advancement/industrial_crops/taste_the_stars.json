@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:comet_fruit",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.taste_the_stars.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.taste_the_stars.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "fruit": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": "industrialcrops:comet_fruit"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "fruit"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/comet_lumber",
+  "rewards": {
+    "experience": 50
+  }
+}

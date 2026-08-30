@@ -1,0 +1,50 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:advanced_energy_cable",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.advanced_power.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.advanced_power.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "cable": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:advanced_energy_cable"
+          }
+        ]
+      }
+    },
+    "furnace": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:electric_furnace"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "cable"
+    ],
+    [
+      "furnace"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/power_grid",
+  "rewards": {
+    "experience": 100
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:industrial_melon",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.industrial_gourds.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.industrial_gourds.description"
+    }
+  },
+  "criteria": {
+    "melon": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:industrial_melon"
+          }
+        ]
+      }
+    },
+    "pumpkin": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:industrial_pumpkin"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "melon"
+    ],
+    [
+      "pumpkin"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/first_harvest"
+}

@@ -1,6 +1,6 @@
 package com.industrialcrops.block.entity;
 
-import com.industrialcrops.block.TransportPipeBlock;
+import com.industrialcrops.basic_pipe.PipeTransferUtil;
 import com.industrialcrops.machine.PoweredMachineSupport;
 import com.industrialcrops.machine.MachineInventoryHelper;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
@@ -156,7 +156,7 @@ public final class DigitalMiniatureForestBlockEntity extends BlockEntity impleme
                     cachedTerminalPos = next.immutable();
                     return terminal;
                 }
-                if (level.getBlockState(next).getBlock() instanceof TransportPipeBlock) queue.addLast(next);
+                if (PipeTransferUtil.isPipe(level.getBlockState(next))) queue.addLast(next);
             }
         }
         return null;

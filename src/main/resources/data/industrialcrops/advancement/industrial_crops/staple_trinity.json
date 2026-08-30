@@ -1,0 +1,63 @@
+{
+  "display": {
+    "icon": {
+      "id": "industrialcrops:bagged_industrial_wheat_seeds",
+      "count": 1
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.staple_trinity.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.staple_trinity.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "carrot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:industrial_carrot"
+          }
+        ]
+      }
+    },
+    "potato": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:industrial_potato"
+          }
+        ]
+      }
+    },
+    "wheat": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "industrialcrops:industrial_wheat"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "carrot"
+    ],
+    [
+      "potato"
+    ],
+    [
+      "wheat"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/first_harvest",
+  "rewards": {
+    "experience": 50
+  }
+}
