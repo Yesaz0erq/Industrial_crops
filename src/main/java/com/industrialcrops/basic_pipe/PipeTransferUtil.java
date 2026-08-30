@@ -70,7 +70,8 @@ public final class PipeTransferUtil {
     }
 
     public static boolean isPipe(BlockState state) {
-        return isBasicPipe(state) || isReinforcedPipe(state) || isAdvancedPipe(state);
+        return isBasicPipe(state) || isReinforcedPipe(state) || isAdvancedPipe(state)
+                || state.is(ModBlocks.PIPE_SORTER.get());
     }
 
     public static boolean isInputPipe(BlockState state) {
@@ -109,6 +110,10 @@ public final class PipeTransferUtil {
                 }
 
                 BlockState nextState = level.getBlockState(next);
+                if (nextState.is(ModBlocks.PIPE_SORTER.get())) {
+                    endpoints.add(new Endpoint(next, direction.getOpposite()));
+                    continue;
+                }
                 if (!isPipe(nextState)) {
                     continue;
                 }

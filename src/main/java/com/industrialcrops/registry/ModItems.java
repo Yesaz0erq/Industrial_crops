@@ -16,8 +16,12 @@ import com.industrialcrops.item.FusionMelonBlockItem;
 import com.industrialcrops.item.FusionIngotPickaxeItem;
 import com.industrialcrops.item.ShimmeringItem;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
+import net.minecraft.world.item.SignItem;
+import net.minecraft.world.item.HangingSignItem;
 import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -42,6 +46,8 @@ public final class ModItems {
             () -> new FertilizerBagItem(baggedProperties(), FertilizerBagItem.Mode.FAST_GROWTH));
     public static final RegistryObject<FertilizerBagItem> FERTILIZER_FERTILE_SOIL = ITEMS.register("fertilizer_fertile_soil",
             () -> new FertilizerBagItem(baggedProperties(), FertilizerBagItem.Mode.FERTILE_SOIL));
+    public static final RegistryObject<FertilizerBagItem> STRANGE_FERTILIZER = ITEMS.register("strange_fertilizer",
+            () -> new FertilizerBagItem(baggedProperties(), FertilizerBagItem.Mode.COMET_SOIL));
     public static final RegistryObject<AnimalFeedBagItem> FEED_BAG_BASIC = registerFeedBag("feed_bag_basic", AnimalFeedBagItem.Mode.BASIC);
     public static final RegistryObject<AnimalFeedBagItem> FEED_BAG_HEALING = registerFeedBag("feed_bag_healing", AnimalFeedBagItem.Mode.HEALING);
     public static final RegistryObject<AnimalFeedBagItem> FEED_BAG_GROWTH = registerFeedBag("feed_bag_growth", AnimalFeedBagItem.Mode.GROWTH);
@@ -53,6 +59,51 @@ public final class ModItems {
             () -> new BaggedCropItem(ModBlocks.INDUSTRIAL_MELON_CROP.get(), baggedProperties()));
     public static final RegistryObject<BaggedCropItem> BAGGED_INDUSTRIAL_PUMPKIN_SEEDS = ITEMS.register("bagged_industrial_pumpkin_seeds",
             () -> new BaggedCropItem(ModBlocks.INDUSTRIAL_PUMPKIN_CROP.get(), baggedProperties()));
+    public static final RegistryObject<GeneticCropBlockItem> PRISM_POD_SEEDS = ITEMS.register("prism_pod_seeds",
+            () -> new GeneticCropBlockItem(ModBlocks.PRISM_POD_CROP.get(), new Item.Properties()));
+    public static final RegistryObject<BaggedCropItem> BAGGED_PRISM_POD_SEEDS = ITEMS.register("bagged_prism_pod_seeds",
+            () -> new BaggedCropItem(ModBlocks.PRISM_POD_CROP.get(), baggedProperties()));
+    public static final RegistryObject<GeneticCropItem> PRISM_POD = ITEMS.register("prism_pod",
+            () -> new GeneticCropItem(new Item.Properties()));
+    public static final RegistryObject<GeneticCropBlockItem> EMBERCOIL_SEEDS = ITEMS.register("embercoil_seeds",
+            () -> new GeneticCropBlockItem(ModBlocks.EMBERCOIL_CROP.get(), new Item.Properties()));
+    public static final RegistryObject<BaggedCropItem> BAGGED_EMBERCOIL_SEEDS = ITEMS.register("bagged_embercoil_seeds",
+            () -> new BaggedCropItem(ModBlocks.EMBERCOIL_CROP.get(), baggedProperties()));
+    public static final RegistryObject<GeneticCropItem> EMBERCOIL = ITEMS.register("embercoil",
+            () -> new GeneticCropItem(new Item.Properties()));
+    public static final RegistryObject<GeneticCropBlockItem> STARBLOOM_SEEDS = ITEMS.register("starbloom_seeds",
+            () -> new GeneticCropBlockItem(ModBlocks.STARBLOOM_CROP.get(), new Item.Properties()));
+    public static final RegistryObject<BaggedCropItem> BAGGED_STARBLOOM_SEEDS = ITEMS.register("bagged_starbloom_seeds",
+            () -> new BaggedCropItem(ModBlocks.STARBLOOM_CROP.get(), baggedProperties()));
+    public static final RegistryObject<GeneticCropItem> STARBLOOM = ITEMS.register("starbloom",
+            () -> new GeneticCropItem(new Item.Properties()));
+    public static final RegistryObject<GeneticCropBlockItem> NEONBULB_SEEDS = ITEMS.register("neonbulb_seeds",
+            () -> new GeneticCropBlockItem(ModBlocks.NEONBULB_CROP.get(), new Item.Properties()));
+    public static final RegistryObject<BaggedCropItem> BAGGED_NEONBULB_SEEDS = ITEMS.register("bagged_neonbulb_seeds",
+            () -> new BaggedCropItem(ModBlocks.NEONBULB_CROP.get(), baggedProperties()));
+    public static final RegistryObject<GeneticCropItem> NEONBULB = ITEMS.register("neonbulb",
+            () -> new GeneticCropItem(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(4).saturationMod(0.5F).build())));
+    public static final RegistryObject<GeneticCropBlockItem> FLUXSTALK_SEEDS = ITEMS.register("fluxstalk_seeds",
+            () -> new GeneticCropBlockItem(ModBlocks.FLUXSTALK_CROP.get(), new Item.Properties()));
+    public static final RegistryObject<BaggedCropItem> BAGGED_FLUXSTALK_SEEDS = ITEMS.register("bagged_fluxstalk_seeds",
+            () -> new BaggedCropItem(ModBlocks.FLUXSTALK_CROP.get(), baggedProperties()));
+    public static final RegistryObject<GeneticCropItem> FLUXSTALK = ITEMS.register("fluxstalk",
+            () -> new GeneticCropItem(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(3).saturationMod(0.4F).build())));
+    public static final RegistryObject<ItemNameBlockItem> PLASMA_BERRY = ITEMS.register("plasma_berry",
+            () -> new ItemNameBlockItem(ModBlocks.ENERGY_BUSH.get(), new Item.Properties().food(
+                    new FoodProperties.Builder().nutrition(3).saturationMod(0.35F).build())));
+    public static final RegistryObject<BucketItem> CONCENTRATED_PLASMA_JUICE_BUCKET = ITEMS.register(
+            "concentrated_plasma_juice_bucket", () -> new BucketItem(
+                    ModFluids.CONCENTRATED_PLASMA_JUICE.get(), new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ENERGY_CRYSTAL = ITEMS.register("energy_crystal",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> CRYSTAL_INGOT = ITEMS.register("crystal_ingot",
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> COMET_FRUIT = ITEMS.register("comet_fruit",
+            () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(5).saturationMod(0.65F).build())));
     public static final RegistryObject<GeneticCropProductBlockItem> INDUSTRIAL_MELON = ITEMS.register("industrial_melon",
             () -> new GeneticCropProductBlockItem(ModBlocks.INDUSTRIAL_MELON_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<GeneticCropProductBlockItem> INDUSTRIAL_PUMPKIN = ITEMS.register("industrial_pumpkin",
@@ -83,6 +134,8 @@ public final class ModItems {
     public static final RegistryObject<Item> RAPID_FIRE_COMPONENT = ITEMS.register("rapid_fire_component",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE)));
     public static final RegistryObject<Item> POWER_COMPONENT = ITEMS.register("power_component",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> AUTOMATIC_COMPONENT = ITEMS.register("automatic_component",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE)));
     public static final RegistryObject<Item> UPGRADE_KIT_SUBSTRATE = ITEMS.register("upgrade_kit_substrate",
             () -> new Item(new Item.Properties()));
@@ -130,6 +183,7 @@ public final class ModItems {
     public static final RegistryObject<BlockItem> COPPER_DEVICE_CASING = registerBlockItem("copper_device_casing", ModBlocks.COPPER_DEVICE_CASING);
     public static final RegistryObject<BlockItem> IRON_DEVICE_CASING = registerBlockItem("iron_device_casing", ModBlocks.IRON_DEVICE_CASING);
     public static final RegistryObject<BlockItem> PROCESSOR_GOLD_DEVICE_CASING = registerBlockItem("processor_integrated_gold_device_casing", ModBlocks.PROCESSOR_GOLD_DEVICE_CASING);
+    public static final RegistryObject<BlockItem> CRYSTAL_STEEL_DEVICE_CASING = registerBlockItem("crystal_steel_device_casing", ModBlocks.CRYSTAL_STEEL_DEVICE_CASING);
     public static final RegistryObject<BlockItem> ROOT_ORE_EXTRACTOR = registerBlockItem("basic_crop_conversion_device", ModBlocks.ROOT_ORE_EXTRACTOR);
     public static final RegistryObject<BlockItem> CROP_COMPRESSOR = registerBlockItem("crop_compressor", ModBlocks.CROP_COMPRESSOR);
     public static final RegistryObject<BlockItem> CROP_ANALYSIS_DEVICE =
@@ -172,12 +226,38 @@ public final class ModItems {
     public static final RegistryObject<BlockItem> ADVANCED_PIPE = registerBlockItem("advanced_pipe", ModBlocks.ADVANCED_PIPE);
     public static final RegistryObject<BlockItem> ADVANCED_INPUT_PIPE = registerBlockItem("advanced_input_pipe", ModBlocks.ADVANCED_INPUT_PIPE);
     public static final RegistryObject<BlockItem> ADVANCED_OUTPUT_PIPE = registerBlockItem("advanced_output_pipe", ModBlocks.ADVANCED_OUTPUT_PIPE);
+    public static final RegistryObject<BlockItem> PIPE_SORTER = registerBlockItem("pipe_sorter", ModBlocks.PIPE_SORTER);
+    public static final RegistryObject<BlockItem> GOLD_FLUID_PIPE = registerBlockItem("gold_fluid_pipe", ModBlocks.GOLD_FLUID_PIPE);
+    public static final RegistryObject<BlockItem> GOLD_PLASMA_EXTRACTOR = registerBlockItem("gold_plasma_extractor", ModBlocks.GOLD_PLASMA_EXTRACTOR);
+    public static final RegistryObject<BlockItem> COPPER_FLUID_STORAGE_CABINET = registerBlockItem(
+            "copper_fluid_storage_cabinet", ModBlocks.COPPER_FLUID_STORAGE_CABINET);
+    public static final RegistryObject<BlockItem> COMET_SOIL = registerBlockItem("comet_soil", ModBlocks.COMET_SOIL);
+    public static final RegistryObject<BlockItem> COMET_LOG = registerBlockItem("comet_log", ModBlocks.COMET_LOG);
+    public static final RegistryObject<BlockItem> COMET_WOOD = registerBlockItem("comet_wood", ModBlocks.COMET_WOOD);
+    public static final RegistryObject<BlockItem> STRIPPED_COMET_LOG = registerBlockItem("stripped_comet_log", ModBlocks.STRIPPED_COMET_LOG);
+    public static final RegistryObject<BlockItem> STRIPPED_COMET_WOOD = registerBlockItem("stripped_comet_wood", ModBlocks.STRIPPED_COMET_WOOD);
+    public static final RegistryObject<BlockItem> COMET_PLANKS = registerBlockItem("comet_planks", ModBlocks.COMET_PLANKS);
+    public static final RegistryObject<BlockItem> COMET_STAIRS = registerBlockItem("comet_stairs", ModBlocks.COMET_STAIRS);
+    public static final RegistryObject<BlockItem> COMET_SLAB = registerBlockItem("comet_slab", ModBlocks.COMET_SLAB);
+    public static final RegistryObject<BlockItem> COMET_FENCE = registerBlockItem("comet_fence", ModBlocks.COMET_FENCE);
+    public static final RegistryObject<BlockItem> COMET_FENCE_GATE = registerBlockItem("comet_fence_gate", ModBlocks.COMET_FENCE_GATE);
+    public static final RegistryObject<BlockItem> COMET_DOOR = registerBlockItem("comet_door", ModBlocks.COMET_DOOR);
+    public static final RegistryObject<BlockItem> COMET_TRAPDOOR = registerBlockItem("comet_trapdoor", ModBlocks.COMET_TRAPDOOR);
+    public static final RegistryObject<BlockItem> COMET_PRESSURE_PLATE = registerBlockItem("comet_pressure_plate", ModBlocks.COMET_PRESSURE_PLATE);
+    public static final RegistryObject<BlockItem> COMET_BUTTON = registerBlockItem("comet_button", ModBlocks.COMET_BUTTON);
+    public static final RegistryObject<BlockItem> COMET_LEAVES = registerBlockItem("comet_leaves", ModBlocks.COMET_LEAVES);
+    public static final RegistryObject<BlockItem> COMET_SAPLING = registerBlockItem("comet_sapling", ModBlocks.COMET_SAPLING);
+    public static final RegistryObject<SignItem> COMET_SIGN = ITEMS.register("comet_sign",
+            () -> new SignItem(new Item.Properties().stacksTo(16),
+                    ModBlocks.COMET_SIGN.get(), ModBlocks.COMET_WALL_SIGN.get()));
+    public static final RegistryObject<HangingSignItem> COMET_HANGING_SIGN = ITEMS.register("comet_hanging_sign",
+            () -> new HangingSignItem(ModBlocks.COMET_HANGING_SIGN.get(),
+                    ModBlocks.COMET_WALL_HANGING_SIGN.get(), new Item.Properties().stacksTo(16)));
 
     private ModItems() {
     }
 
-    private static RegistryObject<BlockItem> registerBlockItem(String id,
-            net.minecraftforge.registries.RegistryObject<? extends net.minecraft.world.level.block.Block> block) {
+    private static RegistryObject<BlockItem> registerBlockItem(String id, RegistryObject<? extends net.minecraft.world.level.block.Block> block) {
         return ITEMS.register(id, () -> new BlockItem(block.get(), new Item.Properties()));
     }
 

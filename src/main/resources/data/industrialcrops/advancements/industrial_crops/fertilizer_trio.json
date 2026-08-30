@@ -1,0 +1,69 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:strange_fertilizer"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.fertilizer_trio.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.fertilizer_trio.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "fertilizer_fast_growth": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:fertilizer_fast_growth"
+            ]
+          }
+        ]
+      }
+    },
+    "fertilizer_fertile_soil": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:fertilizer_fertile_soil"
+            ]
+          }
+        ]
+      }
+    },
+    "strange_fertilizer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:strange_fertilizer"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "fertilizer_fast_growth"
+    ],
+    [
+      "fertilizer_fertile_soil"
+    ],
+    [
+      "strange_fertilizer"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/mixer",
+  "rewards": {
+    "experience": 75
+  }
+}

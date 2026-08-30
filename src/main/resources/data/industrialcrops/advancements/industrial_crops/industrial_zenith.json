@@ -1,0 +1,114 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:crystal_steel_device_casing"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.industrial_zenith.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.industrial_zenith.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "crystal_steel_device_casing": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:crystal_steel_device_casing"
+            ]
+          }
+        ]
+      }
+    },
+    "fusion_ingot_pickaxe": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:fusion_ingot_pickaxe"
+            ]
+          }
+        ]
+      }
+    },
+    "comet_fruit": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:comet_fruit"
+            ]
+          }
+        ]
+      }
+    },
+    "industrial_storage_component_4": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:industrial_storage_component_4"
+            ]
+          }
+        ]
+      }
+    },
+    "matter_reconstruction_device": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:matter_reconstruction_device"
+            ]
+          }
+        ]
+      }
+    },
+    "gold_plasma_extractor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:gold_plasma_extractor"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "crystal_steel_device_casing"
+    ],
+    [
+      "fusion_ingot_pickaxe"
+    ],
+    [
+      "comet_fruit"
+    ],
+    [
+      "industrial_storage_component_4"
+    ],
+    [
+      "matter_reconstruction_device"
+    ],
+    [
+      "gold_plasma_extractor"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/crystal_steel",
+  "rewards": {
+    "experience": 500
+  }
+}

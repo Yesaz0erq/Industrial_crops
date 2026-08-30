@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "industrialcrops:block/gold_plasma_extractor_bottom",
+    "front": "industrialcrops:block/gold_plasma_extractor_front",
+    "side": "industrialcrops:block/gold_plasma_extractor_side",
+    "top": "industrialcrops:block/gold_plasma_extractor_top"
+  }
+}

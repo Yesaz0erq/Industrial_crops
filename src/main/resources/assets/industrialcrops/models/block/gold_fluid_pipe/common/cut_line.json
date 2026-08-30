@@ -1,0 +1,7 @@
+{
+  "parent": "industrialcrops:block/basic_pipe/template/cut_line",
+  "textures": {
+    "basic_pipe_type": "industrialcrops:block/item_gold_fluid_pipe",
+    "basic_pipe_structure": "industrialcrops:block/gold_fluid_pipe_structure"
+  }
+}

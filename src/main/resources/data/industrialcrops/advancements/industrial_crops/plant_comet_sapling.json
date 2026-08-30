@@ -1,0 +1,34 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:comet_sapling"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.plant_comet_sapling.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.plant_comet_sapling.description"
+    }
+  },
+  "criteria": {
+    "sapling": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "industrialcrops:comet_sapling"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "sapling"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/comet_soil"
+}

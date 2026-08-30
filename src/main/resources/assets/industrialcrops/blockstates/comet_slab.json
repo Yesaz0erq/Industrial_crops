@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "industrialcrops:block/comet_slab"
+    },
+    "type=double": {
+      "model": "industrialcrops:block/comet_planks"
+    },
+    "type=top": {
+      "model": "industrialcrops:block/comet_slab_top"
+    }
+  }
+}

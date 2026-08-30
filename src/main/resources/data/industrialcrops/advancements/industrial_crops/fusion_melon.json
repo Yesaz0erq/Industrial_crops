@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:fusion_melon"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.fusion_melon.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.fusion_melon.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "melon": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:fusion_melon"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "melon"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/industrial_gourds",
+  "rewards": {
+    "experience": 100
+  }
+}

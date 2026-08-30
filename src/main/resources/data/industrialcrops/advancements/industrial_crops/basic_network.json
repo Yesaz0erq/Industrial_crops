@@ -1,0 +1,69 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:basic_control_device"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.basic_network.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.basic_network.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "basic_storage_component": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:basic_storage_component"
+            ]
+          }
+        ]
+      }
+    },
+    "basic_control_device": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:basic_control_device"
+            ]
+          }
+        ]
+      }
+    },
+    "basic_pipe": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:basic_pipe"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "basic_storage_component"
+    ],
+    [
+      "basic_control_device"
+    ],
+    [
+      "basic_pipe"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/copper_age",
+  "rewards": {
+    "experience": 50
+  }
+}

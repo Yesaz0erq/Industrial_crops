@@ -1,0 +1,114 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:advanced_industrial_storage_device"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.industrial_empire.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.industrial_empire.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "advanced_industrial_storage_device": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:advanced_industrial_storage_device"
+            ]
+          }
+        ]
+      }
+    },
+    "industrial_storage_component_4": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:industrial_storage_component_4"
+            ]
+          }
+        ]
+      }
+    },
+    "energy_battery": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:energy_battery"
+            ]
+          }
+        ]
+      }
+    },
+    "electric_furnace": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:electric_furnace"
+            ]
+          }
+        ]
+      }
+    },
+    "digitized_item_copier": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:digitized_item_copier"
+            ]
+          }
+        ]
+      }
+    },
+    "matter_reconstruction_device": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:matter_reconstruction_device"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "advanced_industrial_storage_device"
+    ],
+    [
+      "industrial_storage_component_4"
+    ],
+    [
+      "energy_battery"
+    ],
+    [
+      "electric_furnace"
+    ],
+    [
+      "digitized_item_copier"
+    ],
+    [
+      "matter_reconstruction_device"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/matter_mastery",
+  "rewards": {
+    "experience": 300
+  }
+}

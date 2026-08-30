@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:processor_integrated_gold_device_casing"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.processor_age.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.processor_age.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "casing": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:processor_integrated_gold_device_casing"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "casing"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/iron_age",
+  "rewards": {
+    "experience": 75
+  }
+}

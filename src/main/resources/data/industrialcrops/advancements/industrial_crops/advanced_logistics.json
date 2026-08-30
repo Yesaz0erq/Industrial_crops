@@ -1,0 +1,84 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:item_network_management_terminal"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.advanced_logistics.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.advanced_logistics.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "advanced_pipe": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:advanced_pipe"
+            ]
+          }
+        ]
+      }
+    },
+    "pipe_sorter": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:pipe_sorter"
+            ]
+          }
+        ]
+      }
+    },
+    "item_network_management_terminal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:item_network_management_terminal"
+            ]
+          }
+        ]
+      }
+    },
+    "remote_access_device": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:remote_access_device"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "advanced_pipe"
+    ],
+    [
+      "pipe_sorter"
+    ],
+    [
+      "item_network_management_terminal"
+    ],
+    [
+      "remote_access_device"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/processor_age",
+  "rewards": {
+    "experience": 100
+  }
+}

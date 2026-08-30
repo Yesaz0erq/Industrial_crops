@@ -2,6 +2,7 @@ package com.industrialcrops.block;
 
 import com.industrialcrops.block.entity.DigitalMiniatureForestBlockEntity;
 import com.industrialcrops.block.entity.ElectricFurnaceBlockEntity;
+import com.industrialcrops.block.entity.GoldPlasmaExtractorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
@@ -41,6 +42,7 @@ public abstract class GoldPoweredMachineBlock extends BaseEntityBlock {
         return (tickerLevel, pos, tickerState, entity) -> {
             if (entity instanceof ElectricFurnaceBlockEntity furnace) ElectricFurnaceBlockEntity.tick(tickerLevel, pos, tickerState, furnace);
             else if (entity instanceof DigitalMiniatureForestBlockEntity forest) DigitalMiniatureForestBlockEntity.tick(tickerLevel, pos, tickerState, forest);
+            else if (entity instanceof GoldPlasmaExtractorBlockEntity extractor) GoldPlasmaExtractorBlockEntity.tick(tickerLevel, pos, tickerState, extractor);
         };
     }
     @Override public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
@@ -54,6 +56,7 @@ public abstract class GoldPoweredMachineBlock extends BaseEntityBlock {
             ItemStackHandler inventory = null;
             if (level.getBlockEntity(pos) instanceof ElectricFurnaceBlockEntity furnace) inventory = furnace.getInventory();
             else if (level.getBlockEntity(pos) instanceof DigitalMiniatureForestBlockEntity forest) inventory = forest.getInventory();
+            else if (level.getBlockEntity(pos) instanceof GoldPlasmaExtractorBlockEntity extractor) inventory = extractor.getInventory();
             if (inventory != null) for (int slot = 0; slot < inventory.getSlots(); slot++) {
                 Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(slot));
             }

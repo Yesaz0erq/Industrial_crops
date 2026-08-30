@@ -19,6 +19,8 @@ import com.industrialcrops.client.gui.BioEnergyScreen;
 import com.industrialcrops.client.gui.ElectricFurnaceScreen;
 import com.industrialcrops.client.gui.DigitalMiniatureForestScreen;
 import com.industrialcrops.client.gui.AutomaticPlanterScreen;
+import com.industrialcrops.client.gui.PipeSorterScreen;
+import com.industrialcrops.client.gui.GoldPlasmaExtractorScreen;
 import com.industrialcrops.client.renderer.BrownCreateSlimeRenderer;
 import com.industrialcrops.client.renderer.DiamondProcessorSlimeRenderer;
 import com.industrialcrops.client.renderer.DigitalMiniatureForestRenderer;
@@ -31,8 +33,10 @@ import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModEntities;
 import com.industrialcrops.registry.ModMenus;
+import com.industrialcrops.registry.ModWoodTypes;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.level.block.CropBlock;
@@ -70,6 +74,9 @@ public final class IndustrialCropsClient {
             MenuScreens.register(ModMenus.BIO_ENERGY_MACHINE.get(), BioEnergyScreen::new);
             MenuScreens.register(ModMenus.ELECTRIC_FURNACE.get(), ElectricFurnaceScreen::new);
             MenuScreens.register(ModMenus.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestScreen::new);
+            MenuScreens.register(ModMenus.PIPE_SORTER.get(), PipeSorterScreen::new);
+            MenuScreens.register(ModMenus.GOLD_PLASMA_EXTRACTOR.get(), GoldPlasmaExtractorScreen::new);
+            Sheets.addWoodType(ModWoodTypes.COMET);
         });
     }
 
@@ -81,7 +88,18 @@ public final class IndustrialCropsClient {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_WHEAT_CROP.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_MELON_CROP.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_PUMPKIN_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.PRISM_POD_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.EMBERCOIL_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.STARBLOOM_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.NEONBULB_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.FLUXSTALK_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.ENERGY_BUSH.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.DIGITAL_MINIATURE_FOREST.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_SAPLING.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.POTTED_COMET_SAPLING.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_LEAVES.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_DOOR.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_TRAPDOOR.get(), RenderType.cutout());
         });
     }
 

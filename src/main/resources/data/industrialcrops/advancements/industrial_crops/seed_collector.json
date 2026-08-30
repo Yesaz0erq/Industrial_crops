@@ -1,0 +1,99 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:bagged_prism_pod_seeds"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.seed_collector.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.seed_collector.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "bagged_prism_pod_seeds": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:bagged_prism_pod_seeds"
+            ]
+          }
+        ]
+      }
+    },
+    "bagged_embercoil_seeds": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:bagged_embercoil_seeds"
+            ]
+          }
+        ]
+      }
+    },
+    "bagged_starbloom_seeds": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:bagged_starbloom_seeds"
+            ]
+          }
+        ]
+      }
+    },
+    "bagged_neonbulb_seeds": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:bagged_neonbulb_seeds"
+            ]
+          }
+        ]
+      }
+    },
+    "bagged_fluxstalk_seeds": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:bagged_fluxstalk_seeds"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "bagged_prism_pod_seeds"
+    ],
+    [
+      "bagged_embercoil_seeds"
+    ],
+    [
+      "bagged_starbloom_seeds"
+    ],
+    [
+      "bagged_neonbulb_seeds"
+    ],
+    [
+      "bagged_fluxstalk_seeds"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/five_wonders",
+  "rewards": {
+    "experience": 100
+  }
+}

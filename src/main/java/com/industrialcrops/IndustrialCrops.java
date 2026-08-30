@@ -7,13 +7,17 @@ import com.industrialcrops.registry.ModEntities;
 import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.registry.ModEffects;
 import com.industrialcrops.registry.ModMenus;
+import com.industrialcrops.registry.ModFluids;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +32,8 @@ public final class IndustrialCrops {
         ModBlocks.BLOCKS.register(modEventBus);
         ModEntities.ENTITY_TYPES.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
+        ModFluids.FLUID_TYPES.register(modEventBus);
+        ModFluids.FLUIDS.register(modEventBus);
         ModEffects.EFFECTS.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModMenus.MENUS.register(modEventBus);
@@ -35,8 +41,17 @@ public final class IndustrialCrops {
         com.industrialcrops.network.ModNetworking.init();
         modEventBus.addListener(EventPriority.LOWEST, this::registerCapabilities);
         modEventBus.addListener(this::registerEntityAttributes);
+        modEventBus.addListener(this::commonSetup);
 
         LOGGER.info("Loaded Industrial Crops Forge 1.20.1 branch.");
+    }
+
+    private void commonSetup(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            com.industrialcrops.registry.ModCauldronInteractions.bootstrap();
+            ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(
+                    ModBlocks.COMET_SAPLING.getId(), ModBlocks.POTTED_COMET_SAPLING);
+        });
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {

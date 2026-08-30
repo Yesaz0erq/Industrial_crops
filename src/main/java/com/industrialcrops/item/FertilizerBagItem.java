@@ -19,11 +19,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 
 public final class FertilizerBagItem extends Item {
     public enum Mode {
         FAST_GROWTH,
-        FERTILE_SOIL
+        FERTILE_SOIL,
+        COMET_SOIL
     }
 
     private final Mode mode;
@@ -54,13 +56,19 @@ public final class FertilizerBagItem extends Item {
                 fertile = fertile.setValue(FarmBlock.MOISTURE, FarmBlock.MAX_MOISTURE);
                 level.setBlock(pos, fertile, 3);
                 changed = true;
+            } else if (mode == Mode.COMET_SOIL
+                    && level.getBlockState(pos).is(BlockTags.DIRT)
+                    && !level.getBlockState(pos).is(ModBlocks.COMET_SOIL.get())) {
+                level.setBlock(pos, ModBlocks.COMET_SOIL.get().defaultBlockState(), 3);
+                changed = true;
             }
             if (changed) {
                 if (player != null) {
                     BagItemHelper.consumeAndReturnEmptyBag(player, context.getItemInHand());
                 }
                 level.playSound(null, pos, SoundEvents.BONE_MEAL_USE,
-                        SoundSource.BLOCKS, 0.8F, mode == Mode.FAST_GROWTH ? 1.1F : 0.8F);
+                        SoundSource.BLOCKS, 0.8F, mode == Mode.FAST_GROWTH ? 1.1F
+                                : mode == Mode.COMET_SOIL ? 0.65F : 0.8F);
             }
         }
         return changed || level.isClientSide()

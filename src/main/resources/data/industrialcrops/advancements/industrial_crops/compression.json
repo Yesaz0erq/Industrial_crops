@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:crop_compressor"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.compression.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.compression.description"
+    }
+  },
+  "criteria": {
+    "compressor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:crop_compressor"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "compressor"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/crop_conversion"
+}

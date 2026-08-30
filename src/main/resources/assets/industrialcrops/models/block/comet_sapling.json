@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "industrialcrops:block/comet_sapling"
+  }
+}

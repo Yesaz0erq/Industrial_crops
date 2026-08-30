@@ -19,6 +19,8 @@ import com.industrialcrops.screen.BioEnergyMenu;
 import com.industrialcrops.screen.ElectricFurnaceMenu;
 import com.industrialcrops.screen.DigitalMiniatureForestMenu;
 import com.industrialcrops.screen.AutomaticPlanterMenu;
+import com.industrialcrops.screen.PipeSorterMenu;
+import com.industrialcrops.screen.GoldPlasmaExtractorMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
@@ -121,6 +123,12 @@ public final class ModMenus {
     public static final RegistryObject<MenuType<DigitalMiniatureForestMenu>> DIGITAL_MINIATURE_FOREST =
             MENUS.register("digital_miniature_forest", () -> new MenuType<>(
                     (IContainerFactory<DigitalMiniatureForestMenu>) DigitalMiniatureForestMenu::new, FeatureFlags.DEFAULT_FLAGS));
+    public static final RegistryObject<MenuType<PipeSorterMenu>> PIPE_SORTER =
+            MENUS.register("pipe_sorter", () -> new MenuType<>(
+                    (IContainerFactory<PipeSorterMenu>) PipeSorterMenu::new, FeatureFlags.DEFAULT_FLAGS));
+    public static final RegistryObject<MenuType<GoldPlasmaExtractorMenu>> GOLD_PLASMA_EXTRACTOR =
+            MENUS.register("gold_plasma_extractor", () -> new MenuType<>(
+                    (IContainerFactory<GoldPlasmaExtractorMenu>) GoldPlasmaExtractorMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     private ModMenus() {
     }

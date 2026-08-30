@@ -1,6 +1,6 @@
 package com.industrialcrops.block.entity;
 
-import com.industrialcrops.block.TransportPipeBlock;
+import com.industrialcrops.basic_pipe.PipeTransferUtil;
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.screen.BioEnergyMenu;
@@ -192,7 +192,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
                 BlockEntity entity = level.getBlockEntity(next);
                 if (entity instanceof BioEnergyMachineBlockEntity machine
                         && machine.kind == Kind.GENERATOR && machine.residue > 0) return machine;
-                if (level.getBlockState(next).getBlock() instanceof TransportPipeBlock) queue.addLast(next);
+                if (PipeTransferUtil.isPipe(level.getBlockState(next))) queue.addLast(next);
             }
         }
         return null;

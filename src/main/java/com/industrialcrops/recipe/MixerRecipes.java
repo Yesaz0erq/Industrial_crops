@@ -61,6 +61,17 @@ public final class MixerRecipes {
                     ),
                     new ItemStack(ModItems.EMPTY_BAG.get()),
                     new ItemStack(ModItems.FERTILIZER_FERTILE_SOIL.get())
+            ),
+            recipe(
+                    List.of(
+                            new ItemStack(ModItems.PRISM_POD.get()),
+                            new ItemStack(ModItems.EMBERCOIL.get()),
+                            new ItemStack(ModItems.STARBLOOM.get()),
+                            new ItemStack(ModItems.NEONBULB.get()),
+                            new ItemStack(ModItems.FLUXSTALK.get())
+                    ),
+                    new ItemStack(ModItems.EMPTY_BAG.get()),
+                    new ItemStack(ModItems.STRANGE_FERTILIZER.get())
             )
     );
 

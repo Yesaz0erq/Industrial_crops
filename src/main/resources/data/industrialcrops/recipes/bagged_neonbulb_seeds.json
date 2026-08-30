@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "industrialcrops:empty_bag"
+    },
+    {
+      "item": "industrialcrops:neonbulb_seeds"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:bagged_neonbulb_seeds"
+  }
+}

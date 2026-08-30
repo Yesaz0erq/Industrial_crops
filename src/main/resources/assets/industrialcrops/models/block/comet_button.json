@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/button",
+  "textures": {
+    "texture": "industrialcrops:block/comet_planks"
+  }
+}

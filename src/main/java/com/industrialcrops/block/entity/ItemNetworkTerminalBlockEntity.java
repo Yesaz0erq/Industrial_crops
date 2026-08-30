@@ -1,6 +1,6 @@
 package com.industrialcrops.block.entity;
 
-import com.industrialcrops.block.TransportPipeBlock;
+import com.industrialcrops.basic_pipe.PipeTransferUtil;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.screen.ItemNetworkTerminalMenu;
 import java.util.ArrayDeque;
@@ -219,7 +219,7 @@ public final class ItemNetworkTerminalBlockEntity extends BlockEntity implements
                 if (entity instanceof MatterMachineBlockEntity machine) {
                     visited.add(next);
                     if (machine.getKind() == kind) result.add(machine);
-                } else if (level.getBlockState(next).getBlock() instanceof TransportPipeBlock) {
+                } else if (PipeTransferUtil.isPipe(level.getBlockState(next))) {
                     visited.add(next); queue.addLast(next);
                 }
             }
