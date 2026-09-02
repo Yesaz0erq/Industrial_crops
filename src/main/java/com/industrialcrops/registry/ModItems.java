@@ -101,8 +101,7 @@ public final class ModItems {
     public static final DeferredItem<Item> CRYSTAL_INGOT = ITEMS.register("crystal_ingot",
             () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
     public static final DeferredItem<Item> COMET_FRUIT = ITEMS.register("comet_fruit",
-            () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
-                    .nutrition(5).saturationModifier(0.65F).build())));
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
     public static final DeferredItem<GeneticCropProductBlockItem> INDUSTRIAL_MELON = ITEMS.register("industrial_melon",
             () -> new GeneticCropProductBlockItem(ModBlocks.INDUSTRIAL_MELON_BLOCK.get(), new Item.Properties()));
     public static final DeferredItem<GeneticCropProductBlockItem> INDUSTRIAL_PUMPKIN = ITEMS.register("industrial_pumpkin",
@@ -136,6 +135,10 @@ public final class ModItems {
             () -> new Item(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE)));
     public static final DeferredItem<Item> AUTOMATIC_COMPONENT = ITEMS.register("automatic_component",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final DeferredItem<Item> DIMENSION_UPGRADE_COMPONENT = ITEMS.register("dimension_upgrade_component",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final DeferredItem<Item> INFINITE_DIMENSION_UPGRADE_COMPONENT = ITEMS.register("infinite_dimension_upgrade_component",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.EPIC)));
     public static final DeferredItem<Item> UPGRADE_KIT_SUBSTRATE = ITEMS.register("upgrade_kit_substrate",
             () -> new Item(new Item.Properties()));
     public static final DeferredItem<Item> GOLD_UPGRADE_KIT = ITEMS.register("gold_upgrade_kit",

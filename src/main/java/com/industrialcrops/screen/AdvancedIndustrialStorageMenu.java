@@ -4,6 +4,7 @@ import com.industrialcrops.block.entity.AdvancedIndustrialStorageBlockEntity;
 import com.industrialcrops.block.entity.ReinforcedControlDeviceBlockEntity;
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
+import com.industrialcrops.machine.DimensionUpgradeHelper;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -102,7 +103,8 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
         this.blockEntity = blockEntity;
         this.pos = pos;
         this.remoteAccess = remoteAccess;
-        this.access = ContainerLevelAccess.create(inventory.player.level(), pos);
+        Level menuLevel = blockEntity.getLevel() == null ? inventory.player.level() : blockEntity.getLevel();
+        this.access = ContainerLevelAccess.create(menuLevel, pos);
         this.player = inventory.player;
         this.visibleRows = Math.max(MIN_ROWS, Math.min(MAX_ROWS, requestedRows));
         this.storageSlotCount = visibleRows * 9;
@@ -394,8 +396,11 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player player) {
         if (remoteAccess) {
-            return player.level().hasChunkAt(pos)
-                    && player.level().getBlockState(pos).is(ModBlocks.REINFORCED_CONTROL_DEVICE.get());
+            Level targetLevel = blockEntity.getLevel();
+            if (targetLevel == null || targetLevel.isClientSide()) return true;
+            return targetLevel.hasChunkAt(pos)
+                    && targetLevel.getBlockState(pos).is(ModBlocks.REINFORCED_CONTROL_DEVICE.get())
+                    && DimensionUpgradeHelper.canRemoteAccess(player, targetLevel, pos, blockEntity.getDimensionUpgrade());
         }
         return stillValid(access, player, ModBlocks.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get())
                 || stillValid(access, player, ModBlocks.REINFORCED_CONTROL_DEVICE.get());
@@ -723,4 +728,3 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
         }
     }
 }
-

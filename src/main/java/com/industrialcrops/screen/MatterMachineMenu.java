@@ -171,6 +171,7 @@ public final class MatterMachineMenu extends AbstractContainerMenu {
     }
     public boolean isEnergySideEnabled(Direction direction) { return (machineData.get(5) & (1 << direction.ordinal())) != 0; }
     public boolean isRelativeEnergySideEnabled(int relativeSide) { return isEnergySideEnabled(toWorldDirection(relativeSide)); }
+    public Direction worldDirectionForRelative(int relativeSide) { return toWorldDirection(relativeSide); }
     public boolean hasConnectedTerminal() { return machineData.get(6) != 0; }
     public boolean canStartOperation() { return machineData.get(7) != 0; }
     public boolean isOperating() { return machineData.get(8) != 0; }

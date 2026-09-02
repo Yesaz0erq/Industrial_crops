@@ -1,9 +1,36 @@
 {
-  "parent": "minecraft:block/orientable_with_bottom",
+  "ambientocclusion": false,
   "textures": {
     "bottom": "industrialcrops:block/copper_fluid_storage_cabinet_bottom",
-    "front": "industrialcrops:block/copper_fluid_storage_cabinet_front",
-    "side": "industrialcrops:block/copper_fluid_storage_cabinet_side",
-    "top": "industrialcrops:block/copper_fluid_storage_cabinet_top"
-  }
+    "side": "industrialcrops:block/copper_fluid_storage_cabinet_frame",
+    "top": "industrialcrops:block/copper_fluid_storage_cabinet_top",
+    "glass": "industrialcrops:block/copper_fluid_tank_glass",
+    "particle": "industrialcrops:block/copper_fluid_storage_cabinet_frame"
+  },
+  "elements": [
+    { "from": [0, 0, 0], "to": [16, 3, 16], "faces": {
+      "down": { "texture": "#bottom" }, "up": { "texture": "#top" }, "north": { "texture": "#side" },
+      "south": { "texture": "#side" }, "west": { "texture": "#side" }, "east": { "texture": "#side" }
+    }},
+    { "from": [0, 13, 0], "to": [16, 16, 16], "faces": {
+      "down": { "texture": "#bottom" }, "up": { "texture": "#top" }, "north": { "texture": "#side" },
+      "south": { "texture": "#side" }, "west": { "texture": "#side" }, "east": { "texture": "#side" }
+    }},
+    { "from": [0, 3, 0], "to": [3, 13, 3], "faces": {
+      "north": { "texture": "#side" }, "south": { "texture": "#side" }, "west": { "texture": "#side" }, "east": { "texture": "#side" }
+    }},
+    { "from": [13, 3, 0], "to": [16, 13, 3], "faces": {
+      "north": { "texture": "#side" }, "south": { "texture": "#side" }, "west": { "texture": "#side" }, "east": { "texture": "#side" }
+    }},
+    { "from": [0, 3, 13], "to": [3, 13, 16], "faces": {
+      "north": { "texture": "#side" }, "south": { "texture": "#side" }, "west": { "texture": "#side" }, "east": { "texture": "#side" }
+    }},
+    { "from": [13, 3, 13], "to": [16, 13, 16], "faces": {
+      "north": { "texture": "#side" }, "south": { "texture": "#side" }, "west": { "texture": "#side" }, "east": { "texture": "#side" }
+    }},
+    { "from": [3, 3, 2.9], "to": [13, 13, 3.1], "faces": { "north": { "uv": [0, 0, 16, 16], "texture": "#glass" }, "south": { "uv": [0, 0, 16, 16], "texture": "#glass" } } },
+    { "from": [3, 3, 12.9], "to": [13, 13, 13.1], "faces": { "north": { "uv": [0, 0, 16, 16], "texture": "#glass" }, "south": { "uv": [0, 0, 16, 16], "texture": "#glass" } } },
+    { "from": [2.9, 3, 3], "to": [3.1, 13, 13], "faces": { "west": { "uv": [0, 0, 16, 16], "texture": "#glass" }, "east": { "uv": [0, 0, 16, 16], "texture": "#glass" } } },
+    { "from": [12.9, 3, 3], "to": [13.1, 13, 13], "faces": { "west": { "uv": [0, 0, 16, 16], "texture": "#glass" }, "east": { "uv": [0, 0, 16, 16], "texture": "#glass" } } }
+  ]
 }

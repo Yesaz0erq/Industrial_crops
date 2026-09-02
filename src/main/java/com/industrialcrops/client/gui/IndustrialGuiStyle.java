@@ -272,6 +272,7 @@ final class IndustrialGuiStyle {
         graphics.fill(x + 1, y + height - 1, x + width, y + height, 0xFFB0B0B0);
         int innerHeight = height - 4;
         int filled = capacity <= 0 ? 0 : (int) ((long) innerHeight * Math.max(0, value) / capacity);
+        if (value > 0 && capacity > 0) filled = Math.max(2, filled);
         filled = Math.max(0, Math.min(innerHeight, filled));
         if (filled > 0) {
             int fillTop = y + 2 + innerHeight - filled;

@@ -37,8 +37,10 @@ public final class IndustrialItemTooltips {
         boolean functionalBlock = event.getItemStack().getItem() instanceof BlockItem;
         boolean goldUpgradeKit = id.getPath().equals("gold_upgrade_kit");
         boolean automaticComponent = id.getPath().equals("automatic_component");
+        boolean dimensionComponent = id.getPath().equals("dimension_upgrade_component")
+                || id.getPath().equals("infinite_dimension_upgrade_component");
         boolean fusionPickaxe = id.getPath().equals("fusion_ingot_pickaxe");
-        if (!functionalBlock && !goldUpgradeKit && !automaticComponent && !fusionPickaxe) return;
+        if (!functionalBlock && !goldUpgradeKit && !automaticComponent && !dimensionComponent && !fusionPickaxe) return;
 
         String key = "tooltip." + id.getNamespace() + ".function." + id.getPath();
         if (!I18n.exists(key)) return;

@@ -53,7 +53,7 @@ public final class GourdModificationDeviceMenu extends AbstractContainerMenu {
         addSlot(new SlotItemHandler(
                 blockEntity.getInventory(),
                 GourdModificationDeviceBlockEntity.MELON_INPUT_SLOT,
-                42,
+                37,
                 35
         ) {
             @Override
@@ -64,7 +64,7 @@ public final class GourdModificationDeviceMenu extends AbstractContainerMenu {
         addSlot(new SlotItemHandler(
                 blockEntity.getInventory(),
                 GourdModificationDeviceBlockEntity.PUMPKIN_INPUT_SLOT,
-                64,
+                69,
                 35
         ) {
             @Override

@@ -3,6 +3,7 @@ package com.industrialcrops.screen;
 import com.industrialcrops.block.entity.BasicCropStorageArrayBlockEntity;
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
+import com.industrialcrops.machine.DimensionUpgradeHelper;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -15,6 +16,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 public final class ReinforcedControlDeviceMenu extends AbstractContainerMenu {
@@ -28,6 +30,7 @@ public final class ReinforcedControlDeviceMenu extends AbstractContainerMenu {
     private final BlockPos controllerPos;
     private final List<BasicCropStorageArrayBlockEntity> drives;
     private final boolean remoteAccess;
+    private final Level controllerLevel;
     private int page;
     private int connected;
     private int syncedPage;
@@ -43,12 +46,18 @@ public final class ReinforcedControlDeviceMenu extends AbstractContainerMenu {
     }
 
     public ReinforcedControlDeviceMenu(int containerId, Inventory playerInventory, BlockPos controllerPos, boolean remoteAccess) {
+        this(containerId, playerInventory, controllerPos, remoteAccess, playerInventory.player.level());
+    }
+
+    public ReinforcedControlDeviceMenu(int containerId, Inventory playerInventory, BlockPos controllerPos,
+                                       boolean remoteAccess, Level controllerLevel) {
         super(ModMenus.REINFORCED_CONTROL_DEVICE.get(), containerId);
         this.controllerPos = controllerPos;
         this.remoteAccess = remoteAccess;
-        this.drives = playerInventory.player.level().isClientSide()
+        this.controllerLevel = controllerLevel;
+        this.drives = controllerLevel.isClientSide()
                 ? List.of()
-                : BasicCropStorageArrayBlockEntity.findAllAttached(playerInventory.player.level(), controllerPos);
+                : BasicCropStorageArrayBlockEntity.findAllAttached(controllerLevel, controllerPos);
 
         addDataSlots();
         addStorageSlots();
@@ -173,8 +182,11 @@ public final class ReinforcedControlDeviceMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player player) {
         if (remoteAccess) {
-            return player.level().hasChunkAt(controllerPos)
-                    && player.level().getBlockState(controllerPos).is(ModBlocks.CARROT_CONTROL_DEVICE.get());
+            if (controllerLevel.isClientSide()) return true;
+            return controllerLevel.hasChunkAt(controllerPos)
+                    && controllerLevel.getBlockState(controllerPos).is(ModBlocks.CARROT_CONTROL_DEVICE.get())
+                    && DimensionUpgradeHelper.canRemoteAccess(player, controllerLevel, controllerPos,
+                    DimensionUpgradeHelper.installedUpgrade(controllerLevel, controllerPos));
         }
         return stillValid(ContainerLevelAccess.create(player.level(), controllerPos), player, ModBlocks.CARROT_CONTROL_DEVICE.get());
     }
@@ -320,4 +332,3 @@ public final class ReinforcedControlDeviceMenu extends AbstractContainerMenu {
         }
     }
 }
-

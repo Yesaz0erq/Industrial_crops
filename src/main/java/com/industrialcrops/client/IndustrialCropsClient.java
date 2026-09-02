@@ -29,6 +29,7 @@ import com.industrialcrops.client.renderer.GoldenRedstoneLampSlimeRenderer;
 import com.industrialcrops.client.renderer.IncubatorBlockEntityRenderer;
 import com.industrialcrops.client.renderer.GoldenRocketRenderer;
 import com.industrialcrops.client.renderer.TargetMarkerRenderer;
+import com.industrialcrops.client.renderer.CopperFluidStorageCabinetRenderer;
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModEntities;
@@ -103,6 +104,7 @@ public final class IndustrialCropsClient {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_LEAVES.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_DOOR.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_TRAPDOOR.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.COPPER_FLUID_STORAGE_CABINET.get(), RenderType.cutoutMipped());
     }
 
     @SubscribeEvent
@@ -166,6 +168,7 @@ public final class IndustrialCropsClient {
         );
         event.registerBlockEntityRenderer(ModBlockEntities.INCUBATOR.get(), IncubatorBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.COPPER_FLUID_STORAGE_CABINET.get(), CopperFluidStorageCabinetRenderer::new);
         event.registerEntityRenderer(ModEntities.GOLDEN_ROCKET.get(), GoldenRocketRenderer::new);
         event.registerEntityRenderer(ModEntities.TARGET_MARKER.get(), TargetMarkerRenderer::new);
     }

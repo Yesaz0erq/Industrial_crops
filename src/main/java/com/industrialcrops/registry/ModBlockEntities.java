@@ -35,6 +35,7 @@ import com.industrialcrops.block.entity.PipeSorterBlockEntity;
 import com.industrialcrops.block.entity.FluidPipeBlockEntity;
 import com.industrialcrops.block.entity.GoldPlasmaExtractorBlockEntity;
 import com.industrialcrops.block.entity.CopperFluidStorageCabinetBlockEntity;
+import com.industrialcrops.block.entity.BasicControlDeviceBlockEntity;
 
 public final class ModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
@@ -82,6 +83,9 @@ public final class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReinforcedControlDeviceBlockEntity>> REINFORCED_CONTROL_DEVICE =
             BLOCK_ENTITIES.register("reinforced_control_device", () -> BlockEntityType.Builder
                     .of(ReinforcedControlDeviceBlockEntity::new, ModBlocks.REINFORCED_CONTROL_DEVICE.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BasicControlDeviceBlockEntity>> BASIC_CONTROL_DEVICE =
+            BLOCK_ENTITIES.register("basic_control_device", () -> BlockEntityType.Builder
+                    .of(BasicControlDeviceBlockEntity::new, ModBlocks.CARROT_CONTROL_DEVICE.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TransportPipeBlockEntity>> TRANSPORT_PIPE =
             BLOCK_ENTITIES.register("transport_pipe", () -> BlockEntityType.Builder

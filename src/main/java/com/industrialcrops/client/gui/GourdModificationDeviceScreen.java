@@ -28,12 +28,12 @@ public final class GourdModificationDeviceScreen
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         IndustrialGuiStyle.drawContainer(graphics, leftPos, topPos, imageWidth, imageHeight);
-        IndustrialGuiStyle.drawSlot(graphics, leftPos + 41, topPos + 34);
-        IndustrialGuiStyle.drawSlot(graphics, leftPos + 63, topPos + 34);
+        IndustrialGuiStyle.drawSlot(graphics, leftPos + 36, topPos + 34);
+        IndustrialGuiStyle.drawSlot(graphics, leftPos + 68, topPos + 34);
         IndustrialGuiStyle.drawSlot(graphics, leftPos + 123, topPos + 34);
         IndustrialGuiStyle.drawMekanismSmallRight(
                 graphics,
-                leftPos + 87,
+                leftPos + 92,
                 topPos + 40,
                 menu.getScaledProgress(28)
         );
@@ -53,17 +53,6 @@ public final class GourdModificationDeviceScreen
                 inventoryLabelY,
                 IndustrialGuiStyle.TEXT,
                 false
-        );
-        graphics.drawString(font, "+", 58, 40, IndustrialGuiStyle.TEXT, false);
-        IndustrialGuiStyle.drawFittedString(
-                graphics,
-                font,
-                Component.translatable("gui.industrialcrops.gourd_modification_device.hint").getString(),
-                8,
-                61,
-                160,
-                IndustrialGuiStyle.MUTED_TEXT,
-                true
         );
     }
 

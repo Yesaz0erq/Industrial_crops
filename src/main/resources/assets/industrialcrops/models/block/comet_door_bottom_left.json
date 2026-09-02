@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/door_bottom_left",
+  "parent": "minecraft:block/mangrove_door_bottom_left",
   "textures": {
     "bottom": "industrialcrops:block/comet_door_bottom",
     "top": "industrialcrops:block/comet_door_top"

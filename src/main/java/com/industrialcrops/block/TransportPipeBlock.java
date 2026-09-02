@@ -25,7 +25,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public final class TransportPipeBlock extends BaseEntityBlock {
+public class TransportPipeBlock extends BaseEntityBlock {
     public static final MapCodec<TransportPipeBlock> CODEC = simpleCodec(TransportPipeBlock::new);
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
     public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;

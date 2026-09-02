@@ -4,6 +4,7 @@ import com.industrialcrops.block.entity.BioEnergyMachineBlockEntity;
 import com.industrialcrops.screen.BioEnergyMenu;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -11,6 +12,14 @@ import net.minecraft.world.entity.player.Inventory;
 
 public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMenu> {
     private static final ResourceLocation BACKGROUND = IndustrialGuiStyle.containerTexture("bio_energy_machine");
+    private static final ResourceLocation SIDE_CONFIG_ICON = IndustrialGuiStyle.containerTexture("side_configuration");
+    private static final int CONFIG_PANEL_WIDTH = 60;
+    private static final int CONFIG_PANEL_HEIGHT = 81;
+    private final Button[] sideButtons = new Button[BioEnergyMenu.RELATIVE_SIDE_COUNT];
+    private Button configTab;
+    private Button allOnButton;
+    private Button allOffButton;
+    private boolean configPanelOpen;
 
     public BioEnergyScreen(BioEnergyMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -22,6 +31,40 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
     @Override protected void init() {
         super.init();
         titleLabelX = Math.max(8, (imageWidth - font.width(title)) / 2);
+        if (menu.kind() != BioEnergyMachineBlockEntity.Kind.BATTERY) return;
+        configTab = addRenderableWidget(Button.builder(Component.empty(), ignored -> {
+            configPanelOpen = !configPanelOpen;
+            refreshConfigButtons();
+        }).bounds(leftPos - 20, topPos + 19, 20, 20).build());
+        int panelX = leftPos - 80;
+        int panelY = topPos + 19;
+        for (int relativeSide = 0; relativeSide < BioEnergyMenu.RELATIVE_SIDE_COUNT; relativeSide++) {
+            int position = switch (relativeSide) {
+                case 0 -> 1;
+                case 1 -> 7;
+                case 2 -> 4;
+                case 3 -> 6;
+                case 4 -> 3;
+                case 5 -> 5;
+                default -> 0;
+            };
+            final int side = relativeSide;
+            sideButtons[side] = addRenderableWidget(Button.builder(Component.empty(), ignored -> toggleSide(side))
+                    .bounds(panelX + 3 + position % 3 * 18, panelY + 3 + position / 3 * 18, 18, 18).build());
+            sideButtons[side].setAlpha(0.0F);
+        }
+        allOnButton = addRenderableWidget(Button.builder(Component.empty(),
+                ignored -> setAllSides(true)).bounds(panelX + 3, panelY + 58, 27, 18).build());
+        allOffButton = addRenderableWidget(Button.builder(Component.empty(),
+                ignored -> setAllSides(false)).bounds(panelX + 30, panelY + 58, 27, 18).build());
+        allOnButton.setAlpha(0.0F);
+        allOffButton.setAlpha(0.0F);
+        refreshConfigButtons();
+    }
+
+    @Override protected void containerTick() {
+        super.containerTick();
+        refreshConfigButtons();
     }
 
     @Override protected boolean supportsUpgradeDrawer() {
@@ -34,6 +77,8 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
             IndustrialGuiStyle.drawRs2Slot(graphics, leftPos + 17, topPos + 34);
         }
         IndustrialGuiStyle.drawInsetPanel(graphics, leftPos + 47, topPos + 20, 82, 42);
+        if (configPanelOpen) IndustrialGuiStyle.drawCommonPanel(graphics, leftPos - 80, topPos + 19,
+                CONFIG_PANEL_WIDTH, CONFIG_PANEL_HEIGHT);
         int firstMeterX = leftPos + imageWidth + 2;
         int secondMeterX = firstMeterX + IndustrialGuiStyle.VERTICAL_METER_WIDTH + 2;
         if (menu.kind() == BioEnergyMachineBlockEntity.Kind.GENERATOR) {
@@ -86,6 +131,15 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
         renderBackground(graphics, mouseX, mouseY, tick);
         super.render(graphics, mouseX, mouseY, tick);
         renderUpgradeTab(graphics, mouseX, mouseY);
+        if (configTab != null) {
+            graphics.blit(SIDE_CONFIG_ICON, configTab.getX() + 2, configTab.getY() + 2,
+                    0, 0, 16, 16, 16, 16);
+            if (configPanelOpen) {
+                graphics.fill(configTab.getX(), configTab.getY(), configTab.getX() + 20, configTab.getY() + 1, 0xFF62E6A7);
+                graphics.fill(configTab.getX(), configTab.getY(), configTab.getX() + 1, configTab.getY() + 20, 0xFF62E6A7);
+            }
+        }
+        drawConfigButtons(graphics);
         if (menu.kind() == BioEnergyMachineBlockEntity.Kind.INCINERATOR
                 && mouseX >= leftPos + imageWidth + 2
                 && mouseX < leftPos + imageWidth + 2 + IndustrialGuiStyle.VERTICAL_METER_WIDTH
@@ -108,6 +162,103 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
                     menu.residue(), menu.residueCapacity())), mouseX, mouseY);
         }
         renderTooltip(graphics, mouseX, mouseY);
+        renderConfigTooltips(graphics, mouseX, mouseY);
+    }
+
+    private void refreshConfigButtons() {
+        for (int side = 0; side < sideButtons.length; side++) {
+            Button button = sideButtons[side];
+            if (button != null) {
+                button.visible = configPanelOpen;
+            }
+        }
+        if (allOnButton != null) allOnButton.visible = configPanelOpen;
+        if (allOffButton != null) allOffButton.visible = configPanelOpen;
+    }
+
+    private void drawConfigButtons(GuiGraphics graphics) {
+        if (!configPanelOpen) return;
+        for (int side = 0; side < sideButtons.length; side++) {
+            Button button = sideButtons[side];
+            if (button != null) drawMekanismFaceButton(graphics, button,
+                    menu.isRelativeEnergySideEnabled(side) ? 0xFF9C1D2E : 0xFF363A3E);
+        }
+        if (allOnButton != null) drawSolidButton(graphics, allOnButton, 0xFF239B50);
+        if (allOffButton != null) drawSolidButton(graphics, allOffButton, 0xFFB52A32);
+    }
+
+    private static void drawSolidButton(GuiGraphics graphics, Button button, int color) {
+        int x = button.getX();
+        int y = button.getY();
+        graphics.fill(x, y, x + button.getWidth(), y + button.getHeight(), 0xFF17191B);
+        graphics.fill(x + 2, y + 2, x + button.getWidth() - 2, y + button.getHeight() - 2, color);
+        if (button.isHovered()) {
+            graphics.fill(x + 1, y + 1, x + button.getWidth() - 1, y + 2, 0xFFD8DEE4);
+            graphics.fill(x + 1, y + 1, x + 2, y + button.getHeight() - 1, 0xFFD8DEE4);
+        }
+    }
+
+    private static void drawMekanismFaceButton(GuiGraphics graphics, Button button, int color) {
+        int x = button.getX();
+        int y = button.getY();
+        int right = x + button.getWidth();
+        int bottom = y + button.getHeight();
+        int light = adjustColor(color, 30);
+        int dark = adjustColor(color, -34);
+        graphics.fill(x, y, right, bottom, 0xFF111315);
+        graphics.fill(x + 2, y + 2, right - 2, bottom - 2, dark);
+        graphics.fill(x + 3, y + 3, right - 3, y + 8, light);
+        graphics.fill(x + 3, y + 8, right - 3, bottom - 3, color);
+        graphics.fill(x + 3, y + 3, x + 4, bottom - 3, adjustColor(color, 42));
+        graphics.fill(right - 4, y + 4, right - 3, bottom - 3, adjustColor(color, -48));
+        graphics.fill(x + 4, bottom - 4, right - 3, bottom - 3, adjustColor(color, -48));
+        if (button.isHovered()) {
+            graphics.fill(x + 1, y + 1, right - 1, y + 2, 0xFFE2E7EB);
+            graphics.fill(x + 1, y + 1, x + 2, bottom - 1, 0xFFE2E7EB);
+        }
+    }
+
+    private static int adjustColor(int color, int amount) {
+        int r = Math.max(0, Math.min(255, (color >> 16 & 255) + amount));
+        int g = Math.max(0, Math.min(255, (color >> 8 & 255) + amount));
+        int b = Math.max(0, Math.min(255, (color & 255) + amount));
+        return 0xFF000000 | r << 16 | g << 8 | b;
+    }
+
+    private String worldSideKey(int relativeSide) {
+        return "gui.industrialcrops.world_side." + menu.worldDirectionForRelative(relativeSide).getName();
+    }
+
+    private void renderConfigTooltips(GuiGraphics graphics, int mouseX, int mouseY) {
+        if (configTab != null && configTab.isMouseOver(mouseX, mouseY)) {
+            graphics.renderTooltip(font, Component.translatable("gui.industrialcrops.side_config"), mouseX, mouseY);
+            return;
+        }
+        if (!configPanelOpen) return;
+        for (int side = 0; side < sideButtons.length; side++) {
+            Button button = sideButtons[side];
+            if (button != null && button.isMouseOver(mouseX, mouseY)) {
+                graphics.renderTooltip(font, Component.translatable(menu.isRelativeEnergySideEnabled(side)
+                                ? "gui.industrialcrops.energy_side.output" : "gui.industrialcrops.energy_side.disabled",
+                        Component.translatable(worldSideKey(side))), mouseX, mouseY);
+                return;
+            }
+        }
+        if (allOnButton != null && allOnButton.isMouseOver(mouseX, mouseY)) {
+            graphics.renderTooltip(font, Component.translatable("gui.industrialcrops.side_config.all_on"), mouseX, mouseY);
+        } else if (allOffButton != null && allOffButton.isMouseOver(mouseX, mouseY)) {
+            graphics.renderTooltip(font, Component.translatable("gui.industrialcrops.side_config.all_off"), mouseX, mouseY);
+        }
+    }
+
+    private void toggleSide(int relativeSide) {
+        if (minecraft != null && minecraft.gameMode != null) minecraft.gameMode.handleInventoryButtonClick(
+                menu.containerId, BioEnergyMenu.BUTTON_SIDE_BASE + relativeSide);
+    }
+
+    private void setAllSides(boolean enabled) {
+        if (minecraft != null && minecraft.gameMode != null) minecraft.gameMode.handleInventoryButtonClick(
+                menu.containerId, enabled ? BioEnergyMenu.BUTTON_ALL_SIDES_ON : BioEnergyMenu.BUTTON_ALL_SIDES_OFF);
     }
 
     private static int percent(int value, int capacity) {

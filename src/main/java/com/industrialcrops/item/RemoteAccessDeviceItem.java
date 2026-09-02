@@ -4,12 +4,17 @@ import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.block.entity.AdvancedIndustrialStorageBlockEntity;
 import com.industrialcrops.screen.ReinforcedControlDeviceMenu;
 import com.industrialcrops.screen.AdvancedIndustrialStorageMenu;
+import com.industrialcrops.machine.DimensionUpgradeHelper;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -77,32 +82,32 @@ public final class RemoteAccessDeviceItem extends Item {
             }
             return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
         }
-        if (!level.dimension().location().equals(binding.dimension())) {
-            if (!level.isClientSide()) {
-                player.displayClientMessage(Component.translatable("message.industrialcrops.remote_access.wrong_dimension"), true);
-            }
+        if (level.isClientSide()) return InteractionResultHolder.success(stack);
+        if (!(player instanceof ServerPlayer serverPlayer)) return InteractionResultHolder.fail(stack);
+        ResourceKey<Level> dimensionKey = ResourceKey.create(Registries.DIMENSION, binding.dimension());
+        ServerLevel targetLevel = serverPlayer.server.getLevel(dimensionKey);
+        if (targetLevel == null || !targetLevel.hasChunkAt(binding.pos())) {
+            player.displayClientMessage(Component.translatable("message.industrialcrops.remote_access.unloaded"), true);
             return InteractionResultHolder.fail(stack);
         }
-        if (!level.hasChunkAt(binding.pos())) {
-            if (!level.isClientSide()) {
-                player.displayClientMessage(Component.translatable("message.industrialcrops.remote_access.unloaded"), true);
-            }
-            return InteractionResultHolder.fail(stack);
-        }
-        BlockState state = level.getBlockState(binding.pos());
+        BlockState state = targetLevel.getBlockState(binding.pos());
         if (!binding.kind().equals(controlKind(state))) {
-            if (!level.isClientSide()) {
-                player.displayClientMessage(Component.translatable("message.industrialcrops.remote_access.invalid"), true);
-            }
+            player.displayClientMessage(Component.translatable("message.industrialcrops.remote_access.invalid"), true);
             return InteractionResultHolder.fail(stack);
         }
-        if (!level.isClientSide()) {
-            openRemoteMenu(player, binding);
+        ItemStack upgrade = DimensionUpgradeHelper.installedUpgrade(targetLevel, binding.pos());
+        if (!DimensionUpgradeHelper.canRemoteAccess(player, targetLevel, binding.pos(), upgrade)) {
+            String message = level.dimension().equals(targetLevel.dimension())
+                    ? "message.industrialcrops.remote_access.out_of_range"
+                    : "message.industrialcrops.remote_access.wrong_dimension";
+            player.displayClientMessage(Component.translatable(message), true);
+            return InteractionResultHolder.fail(stack);
         }
+        openRemoteMenu(player, binding, targetLevel);
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
 
-    private static void openRemoteMenu(Player player, Binding binding) {
+    private static void openRemoteMenu(Player player, Binding binding, ServerLevel targetLevel) {
         BlockPos pos = binding.pos();
         if (BASIC_KIND.equals(binding.kind())) {
             player.openMenu(new MenuProvider() {
@@ -114,7 +119,7 @@ public final class RemoteAccessDeviceItem extends Item {
                 @Override
                 public @Nullable net.minecraft.world.inventory.AbstractContainerMenu createMenu(
                         int id, Inventory inventory, Player menuPlayer) {
-                    return new ReinforcedControlDeviceMenu(id, inventory, pos, true);
+                    return new ReinforcedControlDeviceMenu(id, inventory, pos, true, targetLevel);
                 }
             }, buffer -> {
                 buffer.writeBlockPos(pos);
@@ -130,7 +135,7 @@ public final class RemoteAccessDeviceItem extends Item {
                 @Override
                 public @Nullable net.minecraft.world.inventory.AbstractContainerMenu createMenu(
                         int id, Inventory inventory, Player menuPlayer) {
-                    if (!(player.level().getBlockEntity(pos) instanceof AdvancedIndustrialStorageBlockEntity storage)) {
+                    if (!(targetLevel.getBlockEntity(pos) instanceof AdvancedIndustrialStorageBlockEntity storage)) {
                         return null;
                     }
                     return new AdvancedIndustrialStorageMenu(id, inventory, storage, pos,

@@ -6,6 +6,8 @@ import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,6 +26,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import com.industrialcrops.machine.DimensionUpgradeHelper;
 
 public final class ReinforcedControlDeviceBlock extends BaseEntityBlock {
     public static final MapCodec<ReinforcedControlDeviceBlock> CODEC = simpleCodec(ReinforcedControlDeviceBlock::new);
@@ -56,6 +59,13 @@ public final class ReinforcedControlDeviceBlock extends BaseEntityBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (player.isShiftKeyDown() && level.getBlockEntity(pos) instanceof ReinforcedControlDeviceBlockEntity storage) {
+            if (!level.isClientSide()) {
+                ItemStack removed = storage.removeDimensionUpgrade();
+                if (!removed.isEmpty() && !player.getInventory().add(removed)) popResource(level, pos, removed);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide());
+        }
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ReinforcedControlDeviceBlockEntity storage) {
             player.openMenu(storage, buffer -> {
                 buffer.writeBlockPos(pos);
@@ -63,6 +73,23 @@ public final class ReinforcedControlDeviceBlock extends BaseEntityBlock {
             });
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+                                               Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (!DimensionUpgradeHelper.isDimensionUpgrade(stack)) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        if (!(level.getBlockEntity(pos) instanceof ReinforcedControlDeviceBlockEntity storage)) return ItemInteractionResult.FAIL;
+        if (!level.isClientSide() && storage.installDimensionUpgrade(stack) && !player.getAbilities().instabuild) stack.shrink(1);
+        return ItemInteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof ReinforcedControlDeviceBlockEntity storage) {
+            storage.releaseDimensionTicket();
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     @Override
@@ -101,4 +128,3 @@ public final class ReinforcedControlDeviceBlock extends BaseEntityBlock {
         builder.add(FACING);
     }
 }
-

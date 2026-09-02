@@ -13,18 +13,20 @@
     "frame": "goal"
   },
   "criteria": {
-    "fruit": {
-      "trigger": "minecraft:consume_item",
+    "essence": {
+      "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": {
-          "items": "industrialcrops:comet_fruit"
-        }
+        "items": [
+          {
+            "items": "industrialcrops:comet_fruit"
+          }
+        ]
       }
     }
   },
   "requirements": [
     [
-      "fruit"
+      "essence"
     ]
   ],
   "sends_telemetry_event": false,

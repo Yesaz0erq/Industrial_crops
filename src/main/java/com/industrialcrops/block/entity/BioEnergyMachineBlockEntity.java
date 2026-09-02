@@ -49,6 +49,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     public static final int GENERATOR_CAPACITY = 1_000_000;
     public static final int BATTERY_CAPACITY = 10_000_000;
     private static final int TRANSFER_RATE = 50_000;
+    private static final int ALL_SIDES = (1 << Direction.values().length) - 1;
     private static final int MAX_NETWORK_NODES = 512;
     public static final int GENERATOR_UPGRADE_START = 1;
     public static final int UPGRADE_SLOT_COUNT = 4;
@@ -60,6 +61,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     private int residue;
     private int burnTime;
     private int burnTimeTotal;
+    private int energyOutputSides = ALL_SIDES;
     private final ContainerData data = new ContainerData() {
         @Override public int get(int index) {
             return switch (index) {
@@ -76,6 +78,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
                 case 9 -> burnTimeTotal;
                 case 10 -> kind.ordinal();
                 case 11 -> currentTier().energy;
+                case 12 -> energyOutputSides;
                 default -> 0;
             };
         }
@@ -87,10 +90,11 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
                 case 6 -> residue = value;
                 case 8 -> burnTime = value;
                 case 9 -> burnTimeTotal = value;
+                case 12 -> energyOutputSides = value & ALL_SIDES;
                 default -> { }
             }
         }
-        @Override public int getCount() { return 12; }
+        @Override public int getCount() { return 13; }
     };
 
     protected BioEnergyMachineBlockEntity(BlockEntityType<?> type, Kind kind, BlockPos pos, BlockState state) {
@@ -168,6 +172,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     private void pushEnergyToNeighbors() {
         if (level == null || energy.getEnergyStored() <= 0) return;
         for (Direction direction : Direction.values()) {
+            if (kind == Kind.BATTERY && !isEnergyOutputEnabled(direction)) continue;
             IEnergyStorage target = level.getCapability(Capabilities.EnergyStorage.BLOCK,
                     worldPosition.relative(direction), direction.getOpposite());
             if (target == null || !target.canReceive()) continue;
@@ -252,6 +257,18 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     public ItemStackHandler getInventory() { return inventory; }
     public ContainerData getData() { return data; }
     public FuelTier currentTier() { return kind == Kind.GENERATOR ? classifyFuel(inventory.getStackInSlot(0)) : FuelTier.NONE; }
+    public boolean toggleEnergyOutput(Direction direction) {
+        energyOutputSides ^= 1 << direction.ordinal();
+        setChanged();
+        return isEnergyOutputEnabled(direction);
+    }
+    public void setAllEnergyOutputs(boolean enabled) {
+        energyOutputSides = enabled ? ALL_SIDES : 0;
+        setChanged();
+    }
+    public boolean isEnergyOutputEnabled(Direction direction) {
+        return (energyOutputSides & (1 << direction.ordinal())) != 0;
+    }
     public @Nullable IEnergyStorage getEnergyStorage(@Nullable Direction side) {
         return kind == Kind.INCINERATOR ? null : energy;
     }
@@ -264,6 +281,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
         tag.putInt("Residue", residue);
         tag.putInt("BurnTime", burnTime);
         tag.putInt("BurnTimeTotal", burnTimeTotal);
+        tag.putInt("EnergyOutputSides", energyOutputSides);
     }
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
@@ -277,6 +295,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
         residue = Math.max(0, Math.min(RESIDUE_CAPACITY, tag.getInt("Residue")));
         burnTime = Math.max(0, tag.getInt("BurnTime"));
         burnTimeTotal = Math.max(0, tag.getInt("BurnTimeTotal"));
+        energyOutputSides = tag.contains("EnergyOutputSides") ? tag.getInt("EnergyOutputSides") & ALL_SIDES : ALL_SIDES;
     }
     @Override public Component getDisplayName() { return Component.translatable(getBlockState().getBlock().getDescriptionId()); }
     @Override public @Nullable AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {

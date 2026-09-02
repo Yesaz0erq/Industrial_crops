@@ -20,6 +20,7 @@ import net.neoforged.neoforge.event.BlockEntityTypeAddBlocksEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.RegisterCauldronFluidContentEvent;
+import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
@@ -45,8 +46,13 @@ public final class IndustrialCrops {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::registerCauldronFluidContent);
         modEventBus.addListener(this::registerCometSignBlocks);
+        modEventBus.addListener(this::registerTicketControllers);
 
         LOGGER.info("Loaded Industrial Crops NeoForge branch.");
+    }
+
+    private void registerTicketControllers(RegisterTicketControllersEvent event) {
+        com.industrialcrops.machine.DimensionUpgradeHelper.registerTicketController(event);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
