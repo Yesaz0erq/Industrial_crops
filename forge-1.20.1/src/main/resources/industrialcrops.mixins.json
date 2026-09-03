@@ -1,0 +1,27 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.industrialcrops.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AbstractContainerMenuReplicaMixin",
+    "BlockFusionPickaxeLootMixin",
+    "BlockStateFusionPickaxeMixin",
+    "ContainerStackLimitMixin",
+    "ItemStackCodecStackLimitMixin",
+    "ItemStackHandlerStackLimitMixin",
+    "LevelUniversalReplicaMixin",
+    "ServerPlayerReplicaMenuMixin"
+  ],
+  "client": [
+    "client.AdvancementTabBackgroundMixin",
+    "client.BlockEntityRenderDispatcherMixin",
+    "client.CreativeModeTabSectionsMixin",
+    "client.CreativeInventorySectionsMixin",
+    "client.CreativeItemPickerMenuSectionsMixin",
+    "client.CreativeSectionSlotMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

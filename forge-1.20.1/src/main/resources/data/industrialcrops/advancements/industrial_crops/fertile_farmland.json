@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:fertile_farmland"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.fertile_farmland.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.fertile_farmland.description"
+    }
+  },
+  "criteria": {
+    "farmland": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:fertile_farmland"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "farmland"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/first_harvest"
+}

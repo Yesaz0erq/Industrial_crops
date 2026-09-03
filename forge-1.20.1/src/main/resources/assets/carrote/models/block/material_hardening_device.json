@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "carrote:block/carrote_steel_device_casing_bottom",
+    "top": "carrote:block/carrote_steel_device_casing_top",
+    "side": "carrote:block/carrote_steel_device_casing_side",
+    "front": "carrote:block/material_hardening_device_front"
+  }
+}

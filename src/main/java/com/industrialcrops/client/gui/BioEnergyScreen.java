@@ -180,41 +180,34 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
         if (!configPanelOpen) return;
         for (int side = 0; side < sideButtons.length; side++) {
             Button button = sideButtons[side];
-            if (button != null) drawMekanismFaceButton(graphics, button,
-                    menu.isRelativeEnergySideEnabled(side) ? 0xFF9C1D2E : 0xFF363A3E);
+            if (button != null) {
+                int color = switch (menu.relativeEnergySideMode(side)) {
+                    case OUTPUT -> 0xFF9B2535;
+                    case INPUT -> 0xFF285F9B;
+                    case NONE -> 0xFF3A3D40;
+                };
+                drawMekanismButton(graphics, button, color);
+            }
         }
-        if (allOnButton != null) drawSolidButton(graphics, allOnButton, 0xFF239B50);
-        if (allOffButton != null) drawSolidButton(graphics, allOffButton, 0xFFB52A32);
+        if (allOnButton != null) drawMekanismButton(graphics, allOnButton, 0xFF238E4C);
+        if (allOffButton != null) drawMekanismButton(graphics, allOffButton, 0xFFA52330);
     }
 
-    private static void drawSolidButton(GuiGraphics graphics, Button button, int color) {
-        int x = button.getX();
-        int y = button.getY();
-        graphics.fill(x, y, x + button.getWidth(), y + button.getHeight(), 0xFF17191B);
-        graphics.fill(x + 2, y + 2, x + button.getWidth() - 2, y + button.getHeight() - 2, color);
-        if (button.isHovered()) {
-            graphics.fill(x + 1, y + 1, x + button.getWidth() - 1, y + 2, 0xFFD8DEE4);
-            graphics.fill(x + 1, y + 1, x + 2, y + button.getHeight() - 1, 0xFFD8DEE4);
-        }
-    }
-
-    private static void drawMekanismFaceButton(GuiGraphics graphics, Button button, int color) {
+    private static void drawMekanismButton(GuiGraphics graphics, Button button, int color) {
         int x = button.getX();
         int y = button.getY();
         int right = x + button.getWidth();
         int bottom = y + button.getHeight();
-        int light = adjustColor(color, 30);
-        int dark = adjustColor(color, -34);
-        graphics.fill(x, y, right, bottom, 0xFF111315);
-        graphics.fill(x + 2, y + 2, right - 2, bottom - 2, dark);
-        graphics.fill(x + 3, y + 3, right - 3, y + 8, light);
-        graphics.fill(x + 3, y + 8, right - 3, bottom - 3, color);
-        graphics.fill(x + 3, y + 3, x + 4, bottom - 3, adjustColor(color, 42));
-        graphics.fill(right - 4, y + 4, right - 3, bottom - 3, adjustColor(color, -48));
-        graphics.fill(x + 4, bottom - 4, right - 3, bottom - 3, adjustColor(color, -48));
+        graphics.fill(x, y, right, bottom, 0xFF101214);
+        graphics.fill(x + 1, y + 1, right - 1, bottom - 1, 0xFF25292D);
+        graphics.fill(x + 2, y + 2, right - 2, bottom - 2, color);
+        graphics.fill(x + 2, y + 2, right - 2, y + 3, adjustColor(color, 28));
+        graphics.fill(x + 2, y + 3, x + 3, bottom - 2, adjustColor(color, 18));
+        graphics.fill(x + 2, bottom - 3, right - 2, bottom - 2, adjustColor(color, -32));
+        graphics.fill(right - 3, y + 3, right - 2, bottom - 2, adjustColor(color, -32));
         if (button.isHovered()) {
-            graphics.fill(x + 1, y + 1, right - 1, y + 2, 0xFFE2E7EB);
-            graphics.fill(x + 1, y + 1, x + 2, bottom - 1, 0xFFE2E7EB);
+            graphics.fill(x, y, right, y + 1, 0xFFA8DED9);
+            graphics.fill(x, y, x + 1, bottom, 0xFFA8DED9);
         }
     }
 
@@ -238,8 +231,12 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
         for (int side = 0; side < sideButtons.length; side++) {
             Button button = sideButtons[side];
             if (button != null && button.isMouseOver(mouseX, mouseY)) {
-                graphics.renderTooltip(font, Component.translatable(menu.isRelativeEnergySideEnabled(side)
-                                ? "gui.industrialcrops.energy_side.output" : "gui.industrialcrops.energy_side.disabled",
+                String key = switch (menu.relativeEnergySideMode(side)) {
+                    case OUTPUT -> "gui.industrialcrops.energy_side.output";
+                    case INPUT -> "gui.industrialcrops.energy_side.input";
+                    case NONE -> "gui.industrialcrops.energy_side.disabled";
+                };
+                graphics.renderTooltip(font, Component.translatable(key,
                         Component.translatable(worldSideKey(side))), mouseX, mouseY);
                 return;
             }

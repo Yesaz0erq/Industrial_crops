@@ -82,6 +82,13 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
     public int currentYield() { return data.get(11); }
     public boolean isEnergySideEnabled(Direction direction) { return (data.get(12) & (1 << direction.ordinal())) != 0; }
     public boolean isRelativeEnergySideEnabled(int relativeSide) { return isEnergySideEnabled(toWorldDirection(relativeSide)); }
+    public BioEnergyMachineBlockEntity.EnergySideMode relativeEnergySideMode(int relativeSide) {
+        Direction direction = toWorldDirection(relativeSide);
+        int bit = 1 << direction.ordinal();
+        if ((data.get(12) & bit) != 0) return BioEnergyMachineBlockEntity.EnergySideMode.OUTPUT;
+        if ((data.get(13) & bit) != 0) return BioEnergyMachineBlockEntity.EnergySideMode.INPUT;
+        return BioEnergyMachineBlockEntity.EnergySideMode.NONE;
+    }
     public Direction worldDirectionForRelative(int relativeSide) { return toWorldDirection(relativeSide); }
     public int scaledProgress(int width) {
         return maxProgress() <= 0 ? 0 : Math.max(0, Math.min(width, progress() * width / maxProgress()));
@@ -123,7 +130,7 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
     @Override public boolean clickMenuButton(Player player, int id) {
         if (blockEntity.getKind() != BioEnergyMachineBlockEntity.Kind.BATTERY) return false;
         if (id >= BUTTON_SIDE_BASE && id < BUTTON_SIDE_BASE + RELATIVE_SIDE_COUNT) {
-            blockEntity.toggleEnergyOutput(toWorldDirection(id - BUTTON_SIDE_BASE));
+            blockEntity.cycleEnergySide(toWorldDirection(id - BUTTON_SIDE_BASE));
             broadcastChanges();
             return true;
         }

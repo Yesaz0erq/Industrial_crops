@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "industrialcrops:comet_log",
+    "industrialcrops:comet_wood",
+    "industrialcrops:stripped_comet_log",
+    "industrialcrops:stripped_comet_wood"
+  ]
+}

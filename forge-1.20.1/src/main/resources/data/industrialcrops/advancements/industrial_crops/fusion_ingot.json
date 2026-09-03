@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:fusion_ingot"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.fusion_ingot.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.fusion_ingot.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:fusion_ingot"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "ingot"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/fusion_melon",
+  "rewards": {
+    "experience": 100
+  }
+}

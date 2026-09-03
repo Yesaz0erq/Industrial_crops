@@ -1,0 +1,61 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:industrial_wheat"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.first_harvest.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.first_harvest.description"
+    }
+  },
+  "criteria": {
+    "carrot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:industrial_carrot"
+            ]
+          }
+        ]
+      }
+    },
+    "potato": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:industrial_potato"
+            ]
+          }
+        ]
+      }
+    },
+    "wheat": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:industrial_wheat"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "carrot",
+      "potato",
+      "wheat"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/root"
+}

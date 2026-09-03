@@ -1,0 +1,6 @@
+{
+  "parent": "carrote:block/material_hardening_device",
+  "textures": {
+    "front": "carrote:block/material_hardening_device_front_lit"
+  }
+}

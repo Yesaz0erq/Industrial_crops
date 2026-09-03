@@ -1,0 +1,351 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "north": "true",
+        "south": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/node"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "south": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/core"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "north": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/node",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "north": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/core"
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "west": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/node",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "west": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/core"
+      }
+    },
+    {
+      "when": {
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/node",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/core"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/node",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/core"
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/node",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/core"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "south": "true",
+        "east": "false",
+        "west": "false",
+        "up": "false",
+        "down": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/line"
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "west": "true",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "down": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/line",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "east": "false",
+        "west": "false",
+        "north": "false",
+        "south": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/line",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "east": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cross",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "west": "true",
+        "north": "true",
+        "south": "true"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cross",
+        "x": 0
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "true"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cross_z"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "down": "false",
+        "west": "false",
+        "east": "false",
+        "south": "false",
+        "north": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/core"
+      }
+    },
+
+    {
+      "when": {
+        "north": "true",
+        "south": "true",
+        "east": "true",
+        "west": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cut_line"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "south": "true",
+        "east": "false",
+        "west": "true"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cut_line"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "south": "true",
+        "down": "false",
+        "up": "true"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cut_line"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "south": "true",
+        "down": "true",
+        "up": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cut_line"
+      }
+    },
+
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "east": "true",
+        "west": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cut_line",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "east": "false",
+        "west": "true"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cut_line",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "north": "false",
+        "south": "true"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cut_line",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "down": "true",
+        "north": "true",
+        "south": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cut_line",
+        "x": 90
+      }
+    },
+
+    {
+      "when": {
+        "east": "true",
+        "west": "true",
+        "north": "true",
+        "south": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cut_line",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "west": "true",
+        "north": "false",
+        "south": "true"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cut_line",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "west": "true",
+        "up": "false",
+        "down": "true"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cut_line",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "west": "true",
+        "up": "true",
+        "down": "false"
+      },
+      "apply": {
+        "model": "industrialcrops:block/basic_pipe/advanced/cut_line",
+        "y": 90
+      }
+    }
+  ]
+}
+
+

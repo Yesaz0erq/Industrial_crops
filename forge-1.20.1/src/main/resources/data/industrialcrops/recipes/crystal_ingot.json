@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "I",
+    "C",
+    "I"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "industrialcrops:energy_crystal"
+    }
+  },
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:crystal_ingot"
+  }
+}

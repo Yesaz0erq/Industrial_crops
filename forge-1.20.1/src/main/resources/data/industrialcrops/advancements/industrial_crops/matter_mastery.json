@@ -1,0 +1,54 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:matter_reconstruction_device"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.matter_mastery.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.matter_mastery.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "copier": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:digitized_item_copier"
+            ]
+          }
+        ]
+      }
+    },
+    "reconstructor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:matter_reconstruction_device"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "copier"
+    ],
+    [
+      "reconstructor"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/matter_digitization",
+  "rewards": {
+    "experience": 200
+  }
+}

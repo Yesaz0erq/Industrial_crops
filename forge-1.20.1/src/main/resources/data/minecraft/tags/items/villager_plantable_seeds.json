@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "industrialcrops:bagged_industrial_wheat_seeds",
+    "industrialcrops:bagged_industrial_melon_seeds",
+    "industrialcrops:bagged_industrial_pumpkin_seeds",
+    "industrialcrops:prism_pod_seeds",
+    "industrialcrops:bagged_prism_pod_seeds",
+    "industrialcrops:embercoil_seeds",
+    "industrialcrops:bagged_embercoil_seeds",
+    "industrialcrops:starbloom_seeds",
+    "industrialcrops:bagged_starbloom_seeds",
+    "industrialcrops:neonbulb_seeds",
+    "industrialcrops:bagged_neonbulb_seeds",
+    "industrialcrops:fluxstalk_seeds",
+    "industrialcrops:bagged_fluxstalk_seeds",
+    "industrialcrops:plasma_berry"
+  ]
+}

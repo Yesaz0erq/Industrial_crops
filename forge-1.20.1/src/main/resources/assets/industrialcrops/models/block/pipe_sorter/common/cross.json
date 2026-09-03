@@ -1,0 +1,7 @@
+{
+  "parent": "industrialcrops:block/basic_pipe/template/cross",
+  "textures": {
+    "basic_pipe_type": "industrialcrops:block/pipe_sorter_type",
+    "basic_pipe_structure": "industrialcrops:block/pipe_sorter_structure"
+  }
+}

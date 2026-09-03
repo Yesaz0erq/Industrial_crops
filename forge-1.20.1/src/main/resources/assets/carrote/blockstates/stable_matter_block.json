@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "carrote:block/stable_matter_block"
+    }
+  }
+}

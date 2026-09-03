@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "G G",
+    " B ",
+    "GGG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "B": {
+      "item": "industrialcrops:upgrade_kit_substrate"
+    }
+  },
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:gold_upgrade_kit"
+  }
+}

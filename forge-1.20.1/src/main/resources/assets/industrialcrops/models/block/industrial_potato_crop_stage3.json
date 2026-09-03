@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "industrialcrops:block/industrial_potato_crop_stage3"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "industrialcrops:block/comet_pressure_plate"
+    },
+    "powered=true": {
+      "model": "industrialcrops:block/comet_pressure_plate_down"
+    }
+  }
+}

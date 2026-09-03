@@ -13,7 +13,7 @@
 <p align="center">
   <a href="https://github.com/Yesaz0erq/Industrial_crops/tree/main"><img alt="Minecraft 1.21.1" src="https://img.shields.io/badge/Minecraft-1.21.1-62B47A?style=flat-square"></a>
   <a href="https://github.com/Yesaz0erq/Industrial_crops/tree/main"><img alt="NeoForge" src="https://img.shields.io/badge/NeoForge-21.1+-E85D3F?style=flat-square"></a>
-  <a href="https://github.com/Yesaz0erq/Industrial_crops/tree/forge-1.20.1"><img alt="Forge 1.20.1" src="https://img.shields.io/badge/Forge-1.20.1-F16436?style=flat-square"></a>
+  <a href="https://github.com/Yesaz0erq/Industrial_crops/tree/main/forge-1.20.1"><img alt="Forge 1.20.1" src="https://img.shields.io/badge/Forge-1.20.1-F16436?style=flat-square"></a>
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-blue?style=flat-square"></a>
 </p>
 
@@ -40,7 +40,7 @@
 | Minecraft | 加载器 | Java | Git 分支 | 状态 |
 |---|---|---:|---|---|
 | 1.21.1 | NeoForge 21.1+ | 21 | [`main`](https://github.com/Yesaz0erq/Industrial_crops/tree/main) | 主要版本 |
-| 1.20.1 | Forge 47+ | 17 | [`forge-1.20.1`](https://github.com/Yesaz0erq/Industrial_crops/tree/forge-1.20.1) | 移植版本 |
+| 1.20.1 | Forge 47+ | 17 | [`forge-1.20.1/`](https://github.com/Yesaz0erq/Industrial_crops/tree/main/forge-1.20.1) | 移植版本 |
 
 > 请确保下载的 JAR 与 Minecraft 和加载器版本一致；两个分支的成品不可混用。
 
@@ -65,9 +65,10 @@
 build/libs/industrial-crops-neoforge-1.0-K1.jar
 ```
 
-### Forge 1.20.1（`forge-1.20.1`）
+### Forge 1.20.1（`forge-1.20.1/`）
 
 ```powershell
+cd forge-1.20.1
 .\gradlew.bat clean build
 ```
 

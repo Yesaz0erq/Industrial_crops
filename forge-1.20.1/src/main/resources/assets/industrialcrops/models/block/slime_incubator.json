@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:block/cube",
+  "gui_light": "side",
+  "textures": {
+    "down": "industrialcrops:block/iron_device_bottom",
+    "up": "industrialcrops:block/iron_device_top",
+    "north": "industrialcrops:block/iron_device_side",
+    "south": "industrialcrops:block/slime_incubator_front",
+    "west": "industrialcrops:block/iron_device_side",
+    "east": "industrialcrops:block/iron_device_side",
+    "particle": "industrialcrops:block/iron_device_side"
+  }
+}

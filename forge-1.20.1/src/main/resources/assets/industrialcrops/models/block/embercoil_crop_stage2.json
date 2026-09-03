@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "industrialcrops:block/embercoil_crop_stage2"
+  }
+}

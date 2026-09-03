@@ -1,0 +1,48 @@
+package com.industrialcrops.registry;
+
+import com.industrialcrops.Carrote;
+import com.industrialcrops.item.CarroteItem;
+import com.industrialcrops.item.UniversalReplicationDeviceItem;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+
+public final class CarroteItems {
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Carrote.MOD_ID);
+
+    public static final RegistryObject<CarroteItem> CARROTE = ITEMS.register("carrote",
+            () -> new CarroteItem(new Item.Properties().rarity(Rarity.EPIC)));
+    public static final RegistryObject<Item> CARROTE_STEEL_INGOT = ITEMS.register("carrote_steel_ingot",
+            () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> STABLE_MATTER_INGOT = ITEMS.register("stable_matter_ingot",
+            () -> new Item(new Item.Properties().rarity(Rarity.EPIC).fireResistant()));
+
+    public static final RegistryObject<BlockItem> CARROTE_STEEL_DEVICE_CASING =
+            registerBlockItem("carrote_steel_device_casing", CarroteBlocks.CARROTE_STEEL_DEVICE_CASING);
+    public static final RegistryObject<BlockItem> CARROTE_STEEL_BLOCK =
+            registerBlockItem("carrote_steel_block", CarroteBlocks.CARROTE_STEEL_BLOCK);
+    public static final RegistryObject<BlockItem> STABLE_MATTER_BLOCK =
+            registerBlockItem("stable_matter_block", CarroteBlocks.STABLE_MATTER_BLOCK);
+    public static final RegistryObject<BlockItem> MIMIC_BLOCK =
+            registerBlockItem("mimic_block", CarroteBlocks.MIMIC_BLOCK);
+    public static final RegistryObject<BlockItem> CARROTE_STEEL_FORGE =
+            registerBlockItem("carrote_steel_forge", CarroteBlocks.CARROTE_STEEL_FORGE);
+    public static final RegistryObject<BlockItem> MATERIAL_HARDENING_DEVICE =
+            registerBlockItem("material_hardening_device", CarroteBlocks.MATERIAL_HARDENING_DEVICE);
+    public static final RegistryObject<UniversalReplicationDeviceItem> UNIVERSAL_REPLICATION_DEVICE =
+            ITEMS.register("universal_replication_device",
+                    () -> new UniversalReplicationDeviceItem(
+                            CarroteBlocks.UNIVERSAL_REPLICATION_DEVICE.get(),
+                            new Item.Properties().stacksTo(16).rarity(Rarity.EPIC)));
+
+    private CarroteItems() {
+    }
+
+    private static RegistryObject<BlockItem> registerBlockItem(
+            String id, net.minecraftforge.registries.RegistryObject<? extends net.minecraft.world.level.block.Block> block) {
+        return ITEMS.register(id, () -> new BlockItem(block.get(), new Item.Properties()));
+    }
+}

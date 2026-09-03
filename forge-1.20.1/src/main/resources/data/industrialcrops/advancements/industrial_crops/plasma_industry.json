@@ -1,0 +1,69 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:gold_plasma_extractor"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.plasma_industry.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.plasma_industry.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "gold_plasma_extractor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:gold_plasma_extractor"
+            ]
+          }
+        ]
+      }
+    },
+    "gold_fluid_pipe": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:gold_fluid_pipe"
+            ]
+          }
+        ]
+      }
+    },
+    "copper_fluid_storage_cabinet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:copper_fluid_storage_cabinet"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "gold_plasma_extractor"
+    ],
+    [
+      "gold_fluid_pipe"
+    ],
+    [
+      "copper_fluid_storage_cabinet"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/liquid_plasma",
+  "rewards": {
+    "experience": 100
+  }
+}

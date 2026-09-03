@@ -1,0 +1,54 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:basic_energy_cable"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.power_grid.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.power_grid.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "battery": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:energy_battery"
+            ]
+          }
+        ]
+      }
+    },
+    "cable": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:basic_energy_cable"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "battery"
+    ],
+    [
+      "cable"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/bio_power",
+  "rewards": {
+    "experience": 50
+  }
+}

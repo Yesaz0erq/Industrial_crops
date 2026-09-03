@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "industrialcrops:block/basic_crop_conversion_device_top",
+    "up": "industrialcrops:block/basic_crop_conversion_device_bottom",
+    "north": "industrialcrops:block/basic_crop_conversion_device_front",
+    "south": "industrialcrops:block/basic_crop_conversion_device_side",
+    "west": "industrialcrops:block/basic_crop_conversion_device_side",
+    "east": "industrialcrops:block/basic_crop_conversion_device_side",
+    "particle": "industrialcrops:block/basic_crop_conversion_device_side"
+  }
+}

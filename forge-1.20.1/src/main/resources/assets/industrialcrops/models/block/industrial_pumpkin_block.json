@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "industrialcrops:block/industrial_pumpkin_block_top",
+    "side": "industrialcrops:block/industrial_pumpkin_block_side"
+  }
+}
+

@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:industrial_carrot"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.root.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.root.description"
+    },
+    "background": "industrialcrops:textures/gui/advancements/backgrounds/space.png",
+    "show_toast": false,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "entered_world": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "entered_world"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

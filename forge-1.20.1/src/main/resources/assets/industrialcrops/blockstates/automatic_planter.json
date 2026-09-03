@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=east": { "model": "industrialcrops:block/automatic_planter", "y": 90 },
+    "facing=north": { "model": "industrialcrops:block/automatic_planter" },
+    "facing=south": { "model": "industrialcrops:block/automatic_planter", "y": 180 },
+    "facing=west": { "model": "industrialcrops:block/automatic_planter", "y": 270 }
+  }
+}

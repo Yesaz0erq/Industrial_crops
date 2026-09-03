@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "create:copper_chest",
+      "required": false
+    },
+    {
+      "id": "minecraft:copper_chest",
+      "required": false
+    },
+    {
+      "id": "ironchests:copper_chest",
+      "required": false
+    },
+    {
+      "id": "ironchest:copper_chest",
+      "required": false
+    },
+    {
+      "id": "reinfchest:copper_chest",
+      "required": false
+    }
+  ]
+}

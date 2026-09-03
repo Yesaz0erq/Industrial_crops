@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "industrialcrops:block/iron_device_bottom",
+    "front": "industrialcrops:block/reinforced_drive_front",
+    "side": "industrialcrops:block/iron_device_side",
+    "top": "industrialcrops:block/iron_device_top"
+  }
+}

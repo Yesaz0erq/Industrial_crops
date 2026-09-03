@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/mangrove_door_top_left",
+  "textures": {
+    "bottom": "industrialcrops:block/comet_door_bottom",
+    "top": "industrialcrops:block/comet_door_top"
+  }
+}

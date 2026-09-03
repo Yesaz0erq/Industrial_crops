@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:basic_crop_conversion_device"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.crop_conversion.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.crop_conversion.description"
+    }
+  },
+  "criteria": {
+    "device": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:basic_crop_conversion_device"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "device"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/copper_age"
+}

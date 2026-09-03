@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "group": "wooden_button",
+  "ingredients": [
+    {
+      "item": "industrialcrops:comet_planks"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:comet_button"
+  }
+}

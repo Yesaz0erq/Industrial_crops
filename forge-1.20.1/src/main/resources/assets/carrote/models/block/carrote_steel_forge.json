@@ -1,0 +1,337 @@
+{
+  "parent": "minecraft:block/block",
+  "credit": "Made with Blockbench; integrated for Industrial Crops",
+  "textures": {
+    "0": "carrote:block/carrote_steel_forge_side",
+    "1": "carrote:block/carrote_steel_forge_bottom",
+    "2": "carrote:block/carrote_steel_forge_top_rim",
+    "4": "carrote:block/carrote_steel_forge_side_rim",
+    "5": "carrote:block/carrote_steel_forge_pit_floor",
+    "6": "carrote:block/carrote_steel_forge_idle_vortex_8f",
+    "particle": "carrote:block/carrote_steel_forge_side"
+  },
+  "elements": [
+    {
+      "name": "foundation_16x8x16",
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            5,
+            16,
+            16
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            0,
+            5,
+            16,
+            16
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            0,
+            5,
+            16,
+            16
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            0,
+            5,
+            16,
+            16
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#5"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#1"
+        }
+      }
+    },
+    {
+      "name": "upper_north_wall",
+      "from": [
+        0,
+        11,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        3
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            5
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            13,
+            0,
+            16,
+            5
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            5
+          ],
+          "texture": "#4"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            3,
+            5
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            3
+          ],
+          "texture": "#2"
+        }
+      }
+    },
+    {
+      "name": "upper_south_wall",
+      "from": [
+        0,
+        11,
+        13
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            5
+          ],
+          "texture": "#4"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            3,
+            5
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            5
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            13,
+            0,
+            16,
+            5
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            0,
+            13,
+            16,
+            16
+          ],
+          "texture": "#2"
+        }
+      }
+    },
+    {
+      "name": "upper_west_wall",
+      "from": [
+        0,
+        11,
+        3
+      ],
+      "to": [
+        3,
+        16,
+        13
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            3,
+            0,
+            13,
+            5
+          ],
+          "texture": "#4"
+        },
+        "west": {
+          "uv": [
+            3,
+            0,
+            13,
+            5
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            0,
+            3,
+            3,
+            13
+          ],
+          "texture": "#2"
+        }
+      }
+    },
+    {
+      "name": "upper_east_wall",
+      "from": [
+        13,
+        11,
+        3
+      ],
+      "to": [
+        16,
+        16,
+        13
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            3,
+            0,
+            13,
+            5
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            3,
+            0,
+            13,
+            5
+          ],
+          "texture": "#4"
+        },
+        "up": {
+          "uv": [
+            13,
+            3,
+            16,
+            13
+          ],
+          "texture": "#2"
+        }
+      }
+    },
+    {
+      "name": "pit_floor_insert",
+      "from": [
+        3,
+        14,
+        3
+      ],
+      "to": [
+        13,
+        14.2,
+        13
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#5"
+        }
+      }
+    },
+    {
+      "name": "idle_vortex_plane",
+      "from": [
+        3.5,
+        14.22,
+        3.5
+      ],
+      "to": [
+        12.5,
+        14.24,
+        12.5
+      ],
+      "shade": false,
+      "faces": {
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#6"
+        }
+      }
+    }
+  ]
+}

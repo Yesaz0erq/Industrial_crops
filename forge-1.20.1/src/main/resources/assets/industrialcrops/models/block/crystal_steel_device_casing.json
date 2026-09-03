@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "industrialcrops:block/crystal_steel_device_bottom",
+    "side": "industrialcrops:block/crystal_steel_device_side",
+    "top": "industrialcrops:block/crystal_steel_device_top"
+  }
+}

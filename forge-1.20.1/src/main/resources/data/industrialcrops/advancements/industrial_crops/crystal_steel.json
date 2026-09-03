@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "item": "industrialcrops:crystal_steel_device_casing"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.crystal_steel.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.crystal_steel.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "casing": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:crystal_steel_device_casing"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "casing"
+    ]
+  ],
+  "sends_telemetry_event": false,
+  "parent": "industrialcrops:industrial_crops/crystal_ingot",
+  "rewards": {
+    "experience": 150
+  }
+}

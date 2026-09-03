@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "industrialcrops:block/residue_incinerator"
+    },
+    "facing=east": {
+      "model": "industrialcrops:block/residue_incinerator",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "industrialcrops:block/residue_incinerator",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "industrialcrops:block/residue_incinerator",
+      "y": 270
+    }
+  }
+}

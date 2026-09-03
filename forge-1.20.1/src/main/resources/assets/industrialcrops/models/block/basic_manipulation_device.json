@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "industrialcrops:block/device_bottom",
+    "front": "industrialcrops:block/manipulator_front",
+    "side": "industrialcrops:block/device_side",
+    "top": "industrialcrops:block/device_top"
+  }
+}

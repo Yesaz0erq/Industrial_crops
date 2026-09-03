@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "carrote:block/universal_replication_device" },
+    "facing=east": { "model": "carrote:block/universal_replication_device", "y": 90 },
+    "facing=south": { "model": "carrote:block/universal_replication_device", "y": 180 },
+    "facing=west": { "model": "carrote:block/universal_replication_device", "y": 270 }
+  }
+}

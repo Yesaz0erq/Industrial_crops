@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "industrialcrops:block/copper_fluid_storage_cabinet"
+    },
+    "facing=east": {
+      "model": "industrialcrops:block/copper_fluid_storage_cabinet",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "industrialcrops:block/copper_fluid_storage_cabinet",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "industrialcrops:block/copper_fluid_storage_cabinet",
+      "y": 270
+    }
+  }
+}

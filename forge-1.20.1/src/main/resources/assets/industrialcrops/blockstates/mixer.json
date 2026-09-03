@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "facing=north,lit=false": { "model": "industrialcrops:block/mixer" },
+    "facing=north,lit=true": { "model": "industrialcrops:block/mixer_lit" },
+    "facing=east,lit=false": { "model": "industrialcrops:block/mixer", "y": 90 },
+    "facing=east,lit=true": { "model": "industrialcrops:block/mixer_lit", "y": 90 },
+    "facing=south,lit=false": { "model": "industrialcrops:block/mixer", "y": 180 },
+    "facing=south,lit=true": { "model": "industrialcrops:block/mixer_lit", "y": 180 },
+    "facing=west,lit=false": { "model": "industrialcrops:block/mixer", "y": 270 },
+    "facing=west,lit=true": { "model": "industrialcrops:block/mixer_lit", "y": 270 }
+  }
+}
