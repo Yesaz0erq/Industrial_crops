@@ -7,7 +7,6 @@ import com.industrialcrops.entity.GoldenRedstoneLampSlime;
 import com.industrialcrops.entity.GrayGearSlime;
 import java.util.List;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

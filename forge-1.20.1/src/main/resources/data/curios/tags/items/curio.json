@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "carrote_curios:strength_carrote",
+    "carrote_curios:airborne_carrote",
+    "carrote_curios:greed_carrote",
+    "carrote_curios:luck_carrote",
+    "carrote_curios:enchanting_carrote",
+    "carrote_curios:smelting_carrote",
+    "carrote_curios:tasty_carrote",
+    "carrote_curios:flight_carrote",
+    "carrote_curios:arcane_carrote",
+    "carrote_curios:steel_carrote",
+    "industrialcrops:remote_access_device"
+  ]
+}

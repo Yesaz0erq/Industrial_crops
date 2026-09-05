@@ -182,7 +182,7 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
     public int getCraftingGridY() { return 78 + (visibleRows - MIN_ROWS) * 18; }
     public int getResultSlotY() { return getCraftingGridY() + 18; }
     public int getCellSlotsY() { return CELL_SLOTS_Y; }
-    public int getPlayerInventoryY() { return 165 + (visibleRows - MIN_ROWS) * 18; }
+    public int getPlayerInventoryY() { return 150 + (visibleRows - MIN_ROWS) * 18; }
     public int getPlayerHotbarY() { return getPlayerInventoryY() + 58; }
     public int getImageHeight() { return getPlayerHotbarY() + 24; }
     public BlockPos getBlockPos() { return pos; }

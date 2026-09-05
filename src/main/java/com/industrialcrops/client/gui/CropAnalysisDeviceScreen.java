@@ -29,7 +29,8 @@ public final class CropAnalysisDeviceScreen extends AbstractContainerScreen<Crop
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         IndustrialGuiStyle.drawContainer(graphics, leftPos, topPos, imageWidth, imageHeight);
         IndustrialGuiStyle.drawSlot(graphics, leftPos + 24, topPos + 34);
-        IndustrialGuiStyle.drawInsetPanel(graphics, leftPos + 49, topPos + 18, 119, 48);
+        IndustrialGuiStyle.drawInsetPanel(graphics, leftPos + 49, topPos + 23, 119, 44);
+        graphics.fill(leftPos + 50, topPos + 24, leftPos + 167, topPos + 66, 0xFF525C60);
         IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8, 84, 142);
     }
 
@@ -44,28 +45,28 @@ public final class CropAnalysisDeviceScreen extends AbstractContainerScreen<Crop
         if (stack.isEmpty()) {
             IndustrialGuiStyle.drawFittedComponent(graphics, font,
                     Component.translatable("gui.industrialcrops.crop_analysis_device.empty"),
-                    55, 37, 107, IndustrialGuiStyle.MUTED_TEXT, false);
+                    55, 40, 107, 0xFFF3F1EB, false);
             return;
         }
 
         CropGenetics.Genes genes = CropGenetics.read(stack);
         String cropName = IndustrialGuiStyle.fitText(font, stack.getHoverName(), 107);
-        graphics.drawString(font, cropName, 55, 23, IndustrialGuiStyle.TEXT, false);
+        graphics.drawString(font, cropName, 55, 27, 0xFFF3F1EB, false);
         if (genes == null) {
             IndustrialGuiStyle.drawFittedComponent(graphics, font,
                     Component.translatable("gui.industrialcrops.crop_analysis_device.no_genes"),
-                    55, 42, 107, IndustrialGuiStyle.WARNING, false);
+                    55, 45, 107, 0xFFFFB7A0, false);
             return;
         }
 
         IndustrialGuiStyle.drawFittedComponent(graphics, font,
                 Component.translatable("gui.industrialcrops.crop_analysis_device.dominant",
                         qualityName(genes.dominantQuality())),
-                55, 38, 107, IndustrialGuiStyle.TEXT, false);
+                55, 40, 107, 0xFFF3F1EB, false);
         IndustrialGuiStyle.drawFittedComponent(graphics, font,
                 Component.translatable("gui.industrialcrops.crop_analysis_device.recessive",
                         qualityName(genes.recessiveQuality())),
-                55, 52, 107, IndustrialGuiStyle.TEXT, false);
+                55, 53, 107, 0xFFF3F1EB, false);
     }
 
     private static MutableComponent qualityName(CropQuality quality) {

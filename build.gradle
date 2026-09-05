@@ -66,10 +66,18 @@ neoForge {
         carrote {
             sourceSet sourceSets.main
         }
+        carrote_curios {
+            sourceSet sourceSets.main
+        }
     }
 }
 
 repositories {
+    maven {
+        name = 'Curios'
+        url = 'https://maven.theillusivec4.top/'
+        content { includeGroup 'top.theillusivec4.curios' }
+    }
     maven {
         name = 'BlameJared'
         url = 'https://maven.blamejared.com'
@@ -81,6 +89,10 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'top.theillusivec4.curios:curios-neoforge:9.5.1+1.21.1'
+    if (!providers.gradleProperty('withoutCurios').map { it.toBoolean() }.getOrElse(false)) {
+        runtimeOnly 'top.theillusivec4.curios:curios-neoforge:9.5.1+1.21.1'
+    }
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:4.9.2"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"

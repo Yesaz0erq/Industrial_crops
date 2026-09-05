@@ -1,7 +1,6 @@
 package com.industrialcrops.block;
 
 import com.industrialcrops.block.entity.BasicCropStorageArrayBlockEntity;
-import com.industrialcrops.registry.ModBlockEntities;
 import com.mojang.serialization.MapCodec;
 import java.util.List;
 import net.minecraft.core.BlockPos;

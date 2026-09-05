@@ -1,8 +1,6 @@
 package com.industrialcrops.block.entity;
 
 import com.industrialcrops.block.MimicBlock;
-import com.industrialcrops.registry.ModBlockEntities;
-import com.industrialcrops.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;

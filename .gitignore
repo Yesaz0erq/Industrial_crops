@@ -29,3 +29,10 @@ hs_err_pid*
 !.env.example
 local.properties
 secrets.properties
+
+# Local build caches and design material
+.gradle-user/
+art/
+docs/
+tools/
+*.zip

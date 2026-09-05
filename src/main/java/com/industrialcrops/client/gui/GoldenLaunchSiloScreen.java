@@ -8,16 +8,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 /** Coordinate entry and four-slot upgrade screen for the Golden Launch Silo. */
 public final class GoldenLaunchSiloScreen extends IndustrialContainerScreen<GoldenLaunchSiloMenu> {
-    private static final ResourceLocation BACKGROUND = IndustrialGuiStyle.containerTexture("explosive_potato_launcher");
 
     private EditBox xField;
     private EditBox yField;
@@ -89,7 +86,12 @@ public final class GoldenLaunchSiloScreen extends IndustrialContainerScreen<Gold
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        IndustrialGuiStyle.drawBackground(graphics, BACKGROUND, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawContainer(graphics, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawWorkPanel(graphics, leftPos + 40, topPos + 21, 66, 58);
+        IndustrialGuiStyle.drawWorkPanel(graphics, leftPos + 109, topPos + 20, 59, 81);
+        IndustrialGuiStyle.drawMachineWell(graphics, leftPos + 17, topPos + 35);
+        IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8,
+                GoldenLaunchSiloMenu.PLAYER_INVENTORY_Y, GoldenLaunchSiloMenu.PLAYER_HOTBAR_Y);
         if (upgradePanelOpen) {
             IndustrialGuiStyle.drawCommonPanel(graphics, leftPos - 80, topPos + 20, 60, 52);
             for (int index = 0; index < GoldenLaunchSiloBlockEntity.UPGRADE_SLOT_COUNT; index++) {

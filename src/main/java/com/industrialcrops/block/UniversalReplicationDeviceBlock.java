@@ -3,7 +3,6 @@ package com.industrialcrops.block;
 import com.industrialcrops.IndustrialCrops;
 import com.industrialcrops.block.entity.UniversalReplicationDeviceBlockEntity;
 import com.industrialcrops.network.payload.UniversalReplicaSyncPayload;
-import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.replication.UniversalReplicaData;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;

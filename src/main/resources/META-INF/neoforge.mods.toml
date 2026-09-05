@@ -23,6 +23,37 @@ description = '''胡罗贝：悖钢、稳态物质与悖钢设备。'''
 [[mixins]]
 config = "industrialcrops.mixins.json"
 
+[[mods]]
+modId = "carrote_curios"
+version = "${version}"
+displayName = "Carrote Curios"
+authors = "${mod_author}"
+description = '''罗贝饰品：十种基于 Curios API 的胡萝卜饰品。'''
+
+[[mixins]]
+config = "carrote_curios.mixins.json"
+
+[[dependencies.carrote_curios]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${neoforge_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.carrote_curios]]
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraft_version}]"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.carrote_curios]]
+modId = "curios"
+type = "optional"
+versionRange = "[9.5.1,10)"
+ordering = "AFTER"
+side = "BOTH"
+
 [[dependencies.industrialcrops]]
 modId = "neoforge"
 type = "required"

@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +21,7 @@ public final class BasicManipulatorMenu extends AbstractContainerMenu {
     private final BlockPos manipulatorPos;
     private final @Nullable BasicCropStorageArrayBlockEntity drive;
     private final List<ManipulatorRecipeDisplay> recipes;
+    private final boolean advanced;
 
     public BasicManipulatorMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buffer) {
         this(containerId, playerInventory, buffer.readBlockPos());
@@ -30,8 +30,8 @@ public final class BasicManipulatorMenu extends AbstractContainerMenu {
     public BasicManipulatorMenu(int containerId, Inventory playerInventory, BlockPos manipulatorPos) {
         super(ModMenus.BASIC_MANIPULATOR.get(), containerId);
         this.manipulatorPos = manipulatorPos;
-        this.recipes = ManipulatorRecipes.forAdvanced(
-                playerInventory.player.level().getBlockState(manipulatorPos).is(ModBlocks.ADVANCED_MANIPULATOR.get()));
+        this.advanced = playerInventory.player.level().getBlockState(manipulatorPos).is(ModBlocks.ADVANCED_MANIPULATOR.get());
+        this.recipes = ManipulatorRecipes.forAdvanced(advanced);
         this.drive = playerInventory.player.level().isClientSide()
                 ? null
                 : BasicCropStorageArrayBlockEntity.findAttached(playerInventory.player.level(), manipulatorPos);
@@ -49,6 +49,10 @@ public final class BasicManipulatorMenu extends AbstractContainerMenu {
 
     public List<ManipulatorRecipeDisplay> recipes() {
         return recipes;
+    }
+
+    public boolean isAdvanced() {
+        return advanced;
     }
 
     @Override

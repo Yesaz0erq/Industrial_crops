@@ -1,8 +1,6 @@
 package com.industrialcrops.network.payload;
 
 import com.industrialcrops.Carrote;
-import com.industrialcrops.registry.ModBlocks;
-import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.replication.UniversalReplicaData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;

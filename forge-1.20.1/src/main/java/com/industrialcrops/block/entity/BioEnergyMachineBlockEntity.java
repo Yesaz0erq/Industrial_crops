@@ -1,7 +1,6 @@
 package com.industrialcrops.block.entity;
 
 import com.industrialcrops.basic_pipe.PipeTransferUtil;
-import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.screen.BioEnergyMenu;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
@@ -24,7 +23,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;

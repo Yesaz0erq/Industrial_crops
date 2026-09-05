@@ -14,7 +14,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.particles.ParticleTypes;
 import com.industrialcrops.block.CarroteSteelForgeBlock;
-import com.industrialcrops.registry.ModBlocks;
 
 /** A deliberately unstable item whose displayed name glitches without changing its registry identity. */
 public final class CarroteItem extends Item {

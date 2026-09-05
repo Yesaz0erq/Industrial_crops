@@ -3,6 +3,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.spongepowered.mixin' version '0.7.38'
 }
 
 version = mod_version
@@ -10,6 +11,7 @@ group = mod_group_id
 
 base { archivesName = archives_base_name }
 java {
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
@@ -25,6 +27,7 @@ minecraft {
             mods {
                 industrialcrops { source sourceSets.main }
                 carrote { source sourceSets.main }
+                carrote_curios { source sourceSets.main }
             }
         }
         client {}
@@ -38,7 +41,14 @@ minecraft {
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
+mixin {
+    add sourceSets.main, 'industrialcrops.refmap.json'
+    config 'industrialcrops.mixins.json'
+    config 'carrote_curios.mixins.json'
+}
+
 repositories {
+    maven { url = 'https://maven.theillusivec4.top/' }
     maven { url = 'https://maven.blamejared.com' }
     maven {
         name = 'GeckoLib'
@@ -51,6 +61,11 @@ repositories {
 }
 
 dependencies {
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    compileOnly fg.deobf('top.theillusivec4.curios:curios-forge:5.14.1+1.20.1')
+    if (!providers.gradleProperty('withoutCurios').map { it.toBoolean() }.getOrElse(false)) {
+        runtimeOnly fg.deobf('top.theillusivec4.curios:curios-forge:5.14.1+1.20.1')
+    }
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
     implementation 'com.eliotlash.mclib:mclib:20'

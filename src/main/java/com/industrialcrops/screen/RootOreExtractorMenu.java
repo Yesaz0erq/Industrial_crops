@@ -48,7 +48,7 @@ public final class RootOreExtractorMenu extends AbstractContainerMenu implements
         this.blockEntity = blockEntity;
         this.pos = pos;
 
-        addSlot(new SlotItemHandler(blockEntity.getInventory(), INPUT_SLOT, 39, 17) {
+        addSlot(new SlotItemHandler(blockEntity.getInventory(), INPUT_SLOT, 39, 25) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return RootOreExtractorBlockEntity.isAcceptedInput(stack);
@@ -60,7 +60,7 @@ public final class RootOreExtractorMenu extends AbstractContainerMenu implements
                 return RootOreExtractorBlockEntity.isCatalyst(stack);
             }
         });
-        addSlot(new SlotItemHandler(blockEntity.getInventory(), BAG_SLOT, 63, 17) {
+        addSlot(new SlotItemHandler(blockEntity.getInventory(), BAG_SLOT, 63, 25) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return RootOreExtractorBlockEntity.isEmptyBag(stack);

@@ -468,5 +468,7 @@
   "advancements.industrialcrops.progress.fusion_pickaxe.title": "终极采掘",
   "advancements.industrialcrops.progress.fusion_pickaxe.description": "制造融合锭镐",
   "advancements.industrialcrops.progress.industrial_zenith.title": "星际工业巅峰",
-  "advancements.industrialcrops.progress.industrial_zenith.description": "集齐彗星生态、电浆工业、物质科技与融合工具的终极成果"
+  "advancements.industrialcrops.progress.industrial_zenith.description": "集齐彗星生态、电浆工业、物质科技与融合工具的终极成果",
+  "death.attack.industrialcrops.electrocution": "%1$s被电死了",
+  "death.attack.industrialcrops.electrocution.player": "%1$s触电了"
 }

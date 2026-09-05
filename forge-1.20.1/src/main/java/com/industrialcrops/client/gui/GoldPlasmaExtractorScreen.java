@@ -32,9 +32,6 @@ public final class GoldPlasmaExtractorScreen extends IndustrialContainerScreen<G
     @Override protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         IndustrialGuiStyle.drawFittedString(graphics, font, title.getString(), 8, 6, 160, IndustrialGuiStyle.TEXT, true);
         graphics.drawString(font, playerInventoryTitle, 8, inventoryLabelY, IndustrialGuiStyle.MUTED_TEXT, false);
-        IndustrialGuiStyle.drawFittedString(graphics, font,
-                Component.translatable("gui.industrialcrops.fluid_amount_short", menu.fluidAmount()).getString(),
-                119, 76, 52, IndustrialGuiStyle.TEXT, true);
     }
 
     @Override public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {

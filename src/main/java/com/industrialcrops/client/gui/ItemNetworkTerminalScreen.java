@@ -5,7 +5,6 @@ import com.industrialcrops.network.payload.StorageSearchPayload;
 import com.industrialcrops.screen.ItemNetworkTerminalMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;

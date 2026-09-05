@@ -6,9 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -18,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 
 /** Six-row storage screen rendered with the shared vanilla container primitives. */
 public final class ReinforcedControlDeviceScreen extends IndustrialContainerScreen<ReinforcedControlDeviceMenu> {
-    private static final ResourceLocation BACKGROUND = IndustrialGuiStyle.containerTexture("reinforced_control_device");
     // Keep the page controls clear of both the title and the page number.
     private static final int PAGE_LEFT_X = 116;
     private static final int PAGE_RIGHT_X = 160;
@@ -59,7 +56,13 @@ public final class ReinforcedControlDeviceScreen extends IndustrialContainerScre
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        IndustrialGuiStyle.drawBackground(graphics, BACKGROUND, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawCommonPanel(graphics, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawPanel(graphics, leftPos + 6, topPos + 4, 164, 12, 0xFFB9BCBC);
+        IndustrialGuiStyle.drawWorkPanel(graphics, leftPos + 5, topPos + 15, 166, 112);
+        for (int row = 0; row < 6; row++) {
+            IndustrialGuiStyle.drawRs2GridRow(graphics, leftPos + 7, topPos + 17 + row * 18);
+        }
+        IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8, 140, 198);
     }
 
     @Override

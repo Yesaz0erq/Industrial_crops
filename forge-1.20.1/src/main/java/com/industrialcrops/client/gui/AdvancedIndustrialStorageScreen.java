@@ -10,20 +10,15 @@ import java.util.Set;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import com.industrialcrops.network.ModNetworking;
-import org.jetbrains.annotations.Nullable;
 
 /** RS2-style stretching storage/crafting screen used by the reinforced controller. */
 public final class AdvancedIndustrialStorageScreen extends IndustrialContainerScreen<AdvancedIndustrialStorageMenu> {
-    private static final ResourceLocation BACKGROUND = IndustrialGuiStyle.containerTexture("advanced_industrial_storage_rs2");
-    private static final int BOTTOM_HEIGHT = 174;
+    private static final int BOTTOM_HEIGHT = 159;
     private static final int SEARCH_ICON_X = 79;
     private static final int SEARCH_X = 95;
     private static final int SEARCH_Y = 7;
@@ -43,7 +38,7 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
         super(menu, inventory, title);
         imageWidth = 193;
         imageHeight = menu.getImageHeight();
-        inventoryLabelY = menu.getPlayerInventoryY() - 11;
+        inventoryLabelY = menu.getPlayerInventoryY() - 13;
     }
 
     @Override
@@ -73,8 +68,18 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        IndustrialGuiStyle.drawRs2StretchingBackground(
-                graphics, BACKGROUND, leftPos, topPos, menu.getVisibleRows(), BOTTOM_HEIGHT);
+        int gridY = menu.getCraftingGridY();
+        IndustrialGuiStyle.drawTerminalChassis(graphics, leftPos, topPos, imageHeight, gridY - 2);
+        IndustrialGuiStyle.drawInsetPanel(graphics, leftPos + 172, topPos + 19, 18, menu.getVisibleRows() * 18);
+        IndustrialGuiStyle.drawWorkPanel(graphics, leftPos + 18, topPos + gridY - 3, 148, 60);
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 3; column++) {
+                IndustrialGuiStyle.drawSlot(graphics, leftPos + 24 + column * 18, topPos + gridY - 1 + row * 18);
+            }
+        }
+        IndustrialGuiStyle.drawMachineWell(graphics, leftPos + 142, topPos + menu.getResultSlotY() - 1);
+        IndustrialGuiStyle.drawMekanismSmallRight(graphics, leftPos + 98, topPos + gridY + 23, 0);
+        IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 7, menu.getPlayerInventoryY(), menu.getPlayerHotbarY());
         for (int row = 0; row < menu.getVisibleRows(); row++) {
             IndustrialGuiStyle.drawRs2GridRow(graphics, leftPos + 7, topPos + 19 + row * 18);
         }

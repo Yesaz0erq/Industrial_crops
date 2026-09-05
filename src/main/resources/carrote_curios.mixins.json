@@ -1,0 +1,8 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.industrialcrops.curios.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": ["FinalDamageMixin", "FortuneLootMixin", "LootingMixin", "FoodDataMixin", "EnchantmentMenuMixin", "AnvilMenuMixin"],
+  "injectors": {"defaultRequire": 1}
+}

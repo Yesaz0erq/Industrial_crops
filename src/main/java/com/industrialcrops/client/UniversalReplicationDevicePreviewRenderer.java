@@ -4,7 +4,6 @@ import com.industrialcrops.Carrote;
 import com.industrialcrops.block.MimicBlock;
 import com.industrialcrops.block.UniversalReplicationDeviceBlock;
 import com.industrialcrops.client.renderer.WorldVolumeOutlineRenderer;
-import com.industrialcrops.registry.ModItems;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;

@@ -1,6 +1,5 @@
 package com.industrialcrops.block;
 
-import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.block.entity.BasicControlDeviceBlockEntity;
 import com.industrialcrops.machine.DimensionUpgradeHelper;
 import com.industrialcrops.screen.ReinforcedControlDeviceMenu;

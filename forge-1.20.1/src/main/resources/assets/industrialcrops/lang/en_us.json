@@ -468,5 +468,7 @@
   "advancements.industrialcrops.progress.fusion_pickaxe.title": "Ultimate Excavation",
   "advancements.industrialcrops.progress.fusion_pickaxe.description": "Craft a fusion ingot pickaxe",
   "advancements.industrialcrops.progress.industrial_zenith.title": "Interstellar Industrial Zenith",
-  "advancements.industrialcrops.progress.industrial_zenith.description": "Unite comet ecology, plasma industry, matter technology, and fusion tools"
+  "advancements.industrialcrops.progress.industrial_zenith.description": "Unite comet ecology, plasma industry, matter technology, and fusion tools",
+  "death.attack.industrialcrops.electrocution": "%1$s was electrocuted",
+  "death.attack.industrialcrops.electrocution.player": "%1$s died from an electric shock"
 }

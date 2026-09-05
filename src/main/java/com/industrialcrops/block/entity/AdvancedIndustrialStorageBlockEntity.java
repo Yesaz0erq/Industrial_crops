@@ -1,7 +1,6 @@
 package com.industrialcrops.block.entity;
 
 import com.industrialcrops.registry.ModBlockEntities;
-import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.item.IndustrialStorageComponentItem;
 import com.industrialcrops.machine.DimensionUpgradeHelper;
 import net.minecraft.core.BlockPos;

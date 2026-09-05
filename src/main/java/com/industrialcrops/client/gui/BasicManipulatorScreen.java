@@ -7,29 +7,28 @@ import com.industrialcrops.screen.BasicManipulatorMenu;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-/** A recipe browser styled as an oversized vanilla container rather than a separate application UI. */
+/** Shared recipe browser with tier-specific metal panels and matching display hitboxes. */
 public final class BasicManipulatorScreen extends IndustrialContainerScreen<BasicManipulatorMenu> {
-    private static final ResourceLocation BACKGROUND = IndustrialGuiStyle.containerTexture("basic_manipulation_device");
+    private final ResourceLocation background;
+    private static final int[][] INGREDIENT_SLOTS = {{218, 48}, {262, 48}, {218, 88}, {262, 88}};
     private static final int ENTRIES_PER_PAGE = 5;
-    private static final int LIST_X = 111;
-    private static final int LIST_Y = 31;
-    private static final int LIST_WIDTH = 86;
-    private static final int LIST_ROW_HEIGHT = 19;
-    private static final int PAGE_LEFT_X = 116;
-    private static final int PAGE_RIGHT_X = 193;
-    private static final int PAGE_Y = 139;
+    private static final int LIST_X = 8;
+    private static final int LIST_Y = 36;
+    private static final int LIST_WIDTH = 108;
+    private static final int LIST_ROW_HEIGHT = 18;
+    private static final int PAGE_LEFT_X = 20;
+    private static final int PAGE_RIGHT_X = 104;
+    private static final int PAGE_Y = 135;
     private static final int PAGE_BUTTON_SIZE = 18;
-    private static final int CRAFT_BUTTON_X = 206;
-    private static final int CRAFT_BUTTON_Y = 130;
-    private static final int CRAFT_BUTTON_WIDTH = 90;
+    private static final int CRAFT_BUTTON_X = 214;
+    private static final int CRAFT_BUTTON_Y = 128;
+    private static final int CRAFT_BUTTON_WIDTH = 80;
     private static final int CRAFT_BUTTON_HEIGHT = 18;
     private final List<ManipulatorRecipeDisplay> recipes;
 
@@ -41,6 +40,8 @@ public final class BasicManipulatorScreen extends IndustrialContainerScreen<Basi
     public BasicManipulatorScreen(BasicManipulatorMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.recipes = menu.recipes();
+        this.background = IndustrialGuiStyle.containerTexture(menu.isAdvanced()
+                ? "advanced_manipulation_device" : "basic_manipulation_device");
         imageWidth = 302;
         imageHeight = 240;
         inventoryLabelY = -1000;
@@ -82,7 +83,7 @@ public final class BasicManipulatorScreen extends IndustrialContainerScreen<Basi
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        IndustrialGuiStyle.drawBackground(graphics, BACKGROUND, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawBackground(graphics, background, leftPos, topPos, imageWidth, imageHeight);
         drawDirectoryRows(graphics);
     }
 
@@ -90,10 +91,12 @@ public final class BasicManipulatorScreen extends IndustrialContainerScreen<Basi
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         ManipulatorRecipeDisplay recipe = getSelectedRecipe();
         ItemStack output = recipe.output();
-        String fittedTitle = IndustrialGuiStyle.fitText(font, title, 286);
+        String fittedTitle = IndustrialGuiStyle.fitText(font, title, 260);
         graphics.drawString(font, fittedTitle, (imageWidth - font.width(fittedTitle)) / 2, 7, IndustrialGuiStyle.TEXT, false);
-        drawCentered(graphics, Component.translatable("gui.industrialcrops.manipulator.materials"), 251, 27, IndustrialGuiStyle.TEXT);
-        drawScaledItem(graphics, output, 54, 62, 2.0F);
+        drawCentered(graphics, Component.translatable("gui.industrialcrops.manipulator.materials"), 254, 25, IndustrialGuiStyle.TEXT);
+        drawCentered(graphics, Component.translatable("gui.industrialcrops.manipulator.products"), 62, 25, IndustrialGuiStyle.TEXT);
+        drawCentered(graphics, Component.translatable("gui.industrialcrops.manipulator.product_name"), 164, 25, IndustrialGuiStyle.TEXT);
+        drawScaledItem(graphics, output, 164, 67, 2.5F);
         drawProductName(graphics, output);
         drawDirectory(graphics);
         drawIngredients(graphics, recipe);
@@ -111,15 +114,19 @@ public final class BasicManipulatorScreen extends IndustrialContainerScreen<Basi
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (handleCatalogClick(mouseX, mouseY)) {
+        if (button == 0 && handleCatalogClick(mouseX, mouseY)) {
             return true;
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
     private void drawProductName(GuiGraphics graphics, ItemStack output) {
-        IndustrialGuiStyle.drawFittedString(graphics, font, output.getHoverName().getString(), 10, 95,
-                88, IndustrialGuiStyle.TEXT, false);
+        List<FormattedCharSequence> lines = font.split(output.getHoverName(), 76);
+        for (int line = 0; line < Math.min(3, lines.size()); line++) {
+            FormattedCharSequence text = lines.get(line);
+            graphics.drawString(font, text, 164 - font.width(text) / 2, 99 + line * 10,
+                    IndustrialGuiStyle.TEXT, false);
+        }
     }
 
     private void drawDirectoryRows(GuiGraphics graphics) {
@@ -128,8 +135,10 @@ public final class BasicManipulatorScreen extends IndustrialContainerScreen<Basi
         for (int index = start; index < end; index++) {
             int row = index - start;
             int rowY = LIST_Y + row * LIST_ROW_HEIGHT;
-            int fill = index == selectedRecipe ? 0xFFCECECE : IndustrialGuiStyle.SLOT;
+            int fill = index == selectedRecipe ? (menu.isAdvanced() ? 0xFFE1D5AD : 0xFFD8BDA7) : 0xFFAAAAAA;
             IndustrialGuiStyle.drawPanel(graphics, leftPos + LIST_X, topPos + rowY, LIST_WIDTH, 18, fill);
+            if (index == selectedRecipe) graphics.fill(leftPos + LIST_X + 1, topPos + rowY + 1,
+                    leftPos + LIST_X + 3, topPos + rowY + 17, menu.isAdvanced() ? 0xFFAE842F : 0xFF99512F);
         }
     }
 
@@ -141,14 +150,14 @@ public final class BasicManipulatorScreen extends IndustrialContainerScreen<Basi
             int rowY = LIST_Y + row * LIST_ROW_HEIGHT;
             ManipulatorRecipeDisplay entry = recipes.get(index);
             graphics.renderItem(entry.output(), LIST_X + 4, rowY + 1);
-            String name = font.plainSubstrByWidth(entry.output().getHoverName().getString(), 60);
+            String name = font.plainSubstrByWidth(entry.output().getHoverName().getString(), LIST_WIDTH - 27);
             int color = index == selectedRecipe ? IndustrialGuiStyle.TEXT : IndustrialGuiStyle.MUTED_TEXT;
-            graphics.drawString(font, name, LIST_X + 22 + Math.max(0, (60 - font.width(name)) / 2), rowY + 5, color, false);
+            graphics.drawString(font, name, LIST_X + 23, rowY + 5, color, false);
         }
     }
 
     private void drawIngredients(GuiGraphics graphics, ManipulatorRecipeDisplay recipe) {
-        int[][] slots = {{216, 50}, {254, 50}, {216, 88}, {254, 88}};
+        int[][] slots = INGREDIENT_SLOTS;
         for (int i = 0; i < recipe.ingredients().size() && i < slots.length; i++) {
             ManipulatorIngredient ingredient = recipe.ingredients().get(i);
             ItemStack stack = ingredient.displayStack();
@@ -160,7 +169,7 @@ public final class BasicManipulatorScreen extends IndustrialContainerScreen<Basi
 
     private void drawPageLabel(GuiGraphics graphics) {
         int totalPages = Math.max(1, (int) Math.ceil((double) recipes.size() / ENTRIES_PER_PAGE));
-        drawCentered(graphics, Component.literal((page + 1) + "/" + totalPages), (PAGE_LEFT_X + PAGE_RIGHT_X) / 2, PAGE_Y + 3, IndustrialGuiStyle.TEXT);
+        drawCentered(graphics, Component.literal((page + 1) + "/" + totalPages), (PAGE_LEFT_X + PAGE_RIGHT_X) / 2, PAGE_Y - 4, IndustrialGuiStyle.TEXT);
     }
 
     private ManipulatorRecipeDisplay getSelectedRecipe() {
@@ -203,7 +212,7 @@ public final class BasicManipulatorScreen extends IndustrialContainerScreen<Basi
         int relativeX = mouseX - leftPos;
         int relativeY = mouseY - topPos;
         ManipulatorRecipeDisplay recipe = getSelectedRecipe();
-        if (isWithin(relativeX, relativeY, 14, 34, 80, 56)) {
+        if (isWithin(relativeX, relativeY, 124, 41, 80, 50)) {
             graphics.renderTooltip(font, recipe.output(), mouseX, mouseY);
             return;
         }
@@ -218,7 +227,7 @@ public final class BasicManipulatorScreen extends IndustrialContainerScreen<Basi
             }
         }
 
-        int[][] ingredientSlots = {{216, 50}, {254, 50}, {216, 88}, {254, 88}};
+        int[][] ingredientSlots = INGREDIENT_SLOTS;
         for (int index = 0; index < recipe.ingredients().size() && index < ingredientSlots.length; index++) {
             int[] slot = ingredientSlots[index];
             if (isWithin(relativeX, relativeY, slot[0], slot[1], 18, 18)) {
@@ -253,5 +262,4 @@ public final class BasicManipulatorScreen extends IndustrialContainerScreen<Basi
         return mouseX >= areaX && mouseX < areaX + width && mouseY >= areaY && mouseY < areaY + height;
     }
 }
-
 

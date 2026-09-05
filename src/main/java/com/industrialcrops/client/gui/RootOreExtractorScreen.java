@@ -2,13 +2,10 @@ package com.industrialcrops.client.gui;
 
 import com.industrialcrops.screen.RootOreExtractorMenu;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public final class RootOreExtractorScreen extends UpgradeableMachineScreen<RootOreExtractorMenu> {
-    private static final ResourceLocation BACKGROUND = IndustrialGuiStyle.containerTexture("basic_crop_conversion_device");
 
     public RootOreExtractorScreen(RootOreExtractorMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -25,7 +22,12 @@ public final class RootOreExtractorScreen extends UpgradeableMachineScreen<RootO
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        IndustrialGuiStyle.drawBackground(graphics, BACKGROUND, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawContainer(graphics, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawSlot(graphics, leftPos + 38, topPos + 24);
+        IndustrialGuiStyle.drawSlot(graphics, leftPos + 62, topPos + 24);
+        IndustrialGuiStyle.drawSlot(graphics, leftPos + 50, topPos + 52);
+        IndustrialGuiStyle.drawSlot(graphics, leftPos + 115, topPos + 34);
+        IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8, 84, 142);
         IndustrialGuiStyle.drawMekanismSmallRight(graphics, leftPos + 79, topPos + 40, menu.getScaledProgress(28));
         drawUpgradeDrawer(graphics, RootOreExtractorMenu.UPGRADE_X, RootOreExtractorMenu.UPGRADE_Y);
     }

@@ -10,14 +10,10 @@ import net.minecraft.client.resources.model.ModelBakery;
 /**
  * Shared rendering primitives for Industrial Crops container screens.
  *
- * <p>The values intentionally mirror Minecraft's classic container palette:
- * {@code #C6C6C6} panels, {@code #8B8B8B} slot wells, white highlights and
- * {@code #373737} shadows. Keeping the primitives here prevents individual
- * machines from drifting into unrelated UI styles.</p>
+ * <p>Metal gray panels, warm highlights and copper accents match the manipulator
+ * screens. Functional fluid and status colors remain independent.</p>
  */
 final class IndustrialGuiStyle {
-    private static final ResourceLocation COMMON_BACKGROUND = ResourceLocation.fromNamespaceAndPath(
-            IndustrialCrops.MOD_ID, "textures/gui/common.png");
     private static final ResourceLocation WIDGETS = containerTexture("widgets");
     private static final ResourceLocation RS2_GRID_ROW = containerTexture("rs2_grid_row");
     private static final ResourceLocation RS2_SLOT = containerTexture("rs2_slot");
@@ -31,17 +27,16 @@ final class IndustrialGuiStyle {
     private static final int WIDGET_TEXTURE_WIDTH = 128;
     private static final int WIDGET_TEXTURE_HEIGHT = 64;
     private static final int SLOT_SIZE = 18;
-    private static final int ARROW_SOURCE_WIDTH = 28;
-    private static final int ARROW_HEIGHT = 17;
 
     static final int PANEL = 0xFFC6C6C6;
     static final int SLOT = 0xFF8B8B8B;
-    static final int SHADOW = 0xFF373737;
-    static final int DARK_SHADOW = 0xFF555555;
-    static final int HIGHLIGHT = 0xFFFFFFFF;
+    static final int SHADOW = 0xFF454747;
+    static final int DARK_SHADOW = 0xFF454747;
+    static final int HIGHLIGHT = 0xFFF3F1EB;
+    private static final int[] METAL_RIM_COLORS = {0xFF191B1C, HIGHLIGHT, 0xFF969B9C};
     static final int TEXT = 0xFF404040;
     static final int MUTED_TEXT = 0xFF606060;
-    static final int ACTIVE = 0xFFB85A30;
+    static final int ACTIVE = 0xFFA66A45;
     static final int INACTIVE = 0xFF555555;
     static final int WARNING = 0xFFAA0000;
     static final int ENERGY_RED = 0xFFC63D36;
@@ -66,6 +61,18 @@ final class IndustrialGuiStyle {
             int height
     ) {
         graphics.blit(texture, x, y, 0, 0, width, height, width, height);
+        drawMetalRim(graphics, x, y, width, height);
+    }
+
+    private static void drawMetalRim(GuiGraphics graphics, int x, int y, int width, int height) {
+        for (int inset = 0; inset < METAL_RIM_COLORS.length; inset++) {
+            int left = x + inset, top = y + inset;
+            int right = x + width - inset, bottom = y + height - inset;
+            graphics.fill(left, top, right, top + 1, METAL_RIM_COLORS[inset]);
+            graphics.fill(left, top, left + 1, bottom, METAL_RIM_COLORS[inset]);
+            graphics.fill(left, bottom - 1, right, bottom, inset == 1 ? SHADOW : METAL_RIM_COLORS[inset]);
+            graphics.fill(right - 1, top, right, bottom, inset == 1 ? SHADOW : METAL_RIM_COLORS[inset]);
+        }
     }
 
     /** Draws an RS2 stretching container exactly as its row-based screen implementation does. */
@@ -114,27 +121,7 @@ final class IndustrialGuiStyle {
         final int networkBottom = topHeight + networkHeight;
         final int lowerTop = networkBottom + 6;
 
-        // Keep the authored title/search header, then construct the variable-height
-        // body from the same nine-slot row used by the RS2 grid reference.
-        graphics.blit(texture, x, y, 0, 0, width, topHeight, width, 229);
-
-        // RS2's grid narrows from 193 px to 176 px below the scrollable area.
-        // Keeping the full terminal width here created the unwanted strip beside
-        // the player's inventory in-game.
-        graphics.fill(x, y + topHeight, x + width, y + networkBottom + 4, PANEL);
-        graphics.fill(x, y + networkBottom + 4, x + width - 1, y + networkBottom + 5, PANEL);
-        graphics.fill(x, y + networkBottom + 5, x + width - 2, y + lowerTop, PANEL);
-        graphics.fill(x, y + lowerTop, x + lowerWidth, y + height, PANEL);
-        graphics.fill(x, y + topHeight, x + 1, y + height, SHADOW);
-        graphics.fill(x + 1, y + topHeight, x + 2, y + height - 1, HIGHLIGHT);
-        graphics.fill(x + width - 2, y + topHeight, x + width - 1, y + networkBottom + 4, HIGHLIGHT);
-        graphics.fill(x + width - 1, y + topHeight, x + width, y + networkBottom + 4, SHADOW);
-        graphics.fill(x + width - 2, y + networkBottom + 4, x + width - 1, y + networkBottom + 5, SHADOW);
-        graphics.fill(x + width - 3, y + networkBottom + 5, x + width - 2, y + lowerTop, SHADOW);
-        graphics.fill(x + lowerWidth - 2, y + lowerTop, x + lowerWidth - 1, y + height - 1, HIGHLIGHT);
-        graphics.fill(x + lowerWidth - 1, y + lowerTop, x + lowerWidth, y + height, SHADOW);
-        graphics.fill(x, y + height - 2, x + lowerWidth, y + height - 1, HIGHLIGHT);
-        graphics.fill(x, y + height - 1, x + lowerWidth, y + height, SHADOW);
+        drawTerminalChassis(graphics, x, y, height, lowerTop);
 
         for (int row = 0; row < rows; row++) {
             drawRs2GridRow(graphics, x + 7, y + topHeight + row * rowHeight);
@@ -153,6 +140,14 @@ final class IndustrialGuiStyle {
 
     static void drawRs2GridRow(GuiGraphics graphics, int x, int y) {
         graphics.blit(RS2_GRID_ROW, x, y, 0, 0, 162, 18, 162, 18);
+    }
+
+    /** Joined wide network section and narrow inventory, with no border across the transparent cutout. */
+    static void drawTerminalChassis(GuiGraphics graphics, int x, int y, int height, int lowerTop) {
+        drawCommonPanel(graphics, x, y + lowerTop - 3, 176, height - lowerTop + 3);
+        drawCommonPanel(graphics, x, y, 193, lowerTop + 1);
+        graphics.fill(x + 3, y + lowerTop - 3, x + 173, y + lowerTop + 2, PANEL);
+        drawInsetPanel(graphics, x + 93, y + 4, 76, 12);
     }
 
     static void drawRs2Slot(GuiGraphics graphics, int x, int y) {
@@ -234,12 +229,45 @@ final class IndustrialGuiStyle {
 
     static void drawContainer(GuiGraphics graphics, int x, int y, int width, int height) {
         drawCommonPanel(graphics, x, y, width, height);
+        drawPanel(graphics, x + 6, y + 5, width - 12, 13, 0xFFB9BCBC);
+        graphics.fill(x + 12, y + 18, x + width - 12, y + 19, ACTIVE);
+    }
+
+    static void drawWorkPanel(GuiGraphics graphics, int x, int y, int width, int height) {
+        drawPanel(graphics, x, y, width, height, 0xFF969B9C);
+        drawPanel(graphics, x + 2, y + 2, width - 4, height - 4, 0xFFB4B8B8);
+        graphics.fill(x + 3, y + 3, x + width - 3, y + 4, 0xFF747E80);
+        graphics.fill(x + 3, y + 3, x + 4, y + height - 3, 0xFF747E80);
+    }
+
+    static void drawMachineWell(GuiGraphics graphics, int x, int y) {
+        drawPanel(graphics, x - 3, y - 3, 24, 24, 0xFF70797B);
+        drawSlot(graphics, x, y);
+        graphics.fill(x + 2, y - 3, x + 16, y - 2, ACTIVE);
     }
 
     /** Scales the shared neutral panel texture to the requested GUI or drawer bounds. */
     static void drawCommonPanel(GuiGraphics graphics, int x, int y, int width, int height) {
-        graphics.blit(COMMON_BACKGROUND, x, y, width, height,
-                0.0F, 0.0F, 256, 256, 256, 256);
+        graphics.fill(x, y, x + width, y + height, 0xFF191B1C);
+        drawPanel(graphics, x + 1, y + 1, width - 2, height - 2, 0xFF969B9C);
+        drawPanel(graphics, x + 3, y + 3, width - 6, height - 6, PANEL);
+    }
+
+    /** Paradox steel chassis with independent colors, leaving other machines' palette untouched. */
+    static void drawParadoxContainer(GuiGraphics graphics, int x, int y, int width, int height) {
+        graphics.fill(x, y, x + width, y + height, 0xFF09090D);
+        graphics.fill(x + 1, y + 1, x + width - 1, y + height - 1, 0xFF7E2536);
+        graphics.fill(x + 3, y + 3, x + width - 3, y + height - 3, 0xFF27252D);
+        graphics.fill(x + 5, y + 5, x + width - 5, y + 18, 0xFF3B303B);
+        graphics.fill(x + 12, y + 18, x + width - 12, y + 19, 0xFFCF4054);
+        graphics.fill(x + 3, y + height - 4, x + width - 3, y + height - 3, 0xFF4E2635);
+    }
+
+    static void drawParadoxSlot(GuiGraphics graphics, int x, int y) {
+        graphics.fill(x, y, x + 18, y + 18, 0xFF100E16);
+        graphics.fill(x + 1, y + 1, x + 17, y + 17, 0xFF403740);
+        graphics.fill(x + 1, y + 17, x + 18, y + 18, 0xFF965064);
+        graphics.fill(x + 17, y + 1, x + 18, y + 18, 0xFF965064);
     }
 
     static void drawPanel(GuiGraphics graphics, int x, int y, int width, int height, int fill) {
@@ -312,6 +340,7 @@ final class IndustrialGuiStyle {
     }
 
     static void drawPlayerInventory(GuiGraphics graphics, int leftPos, int topPos, int x, int inventoryY, int hotbarY) {
+        drawWorkPanel(graphics, leftPos + x - 3, topPos + inventoryY - 3, 166, hotbarY - inventoryY + 22);
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 9; column++) {
                 drawSlot(graphics, leftPos + x + column * 18 - 1, topPos + inventoryY + row * 18 - 1);

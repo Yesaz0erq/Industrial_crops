@@ -5,13 +5,11 @@ import com.industrialcrops.screen.BioEnergyMenu;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMenu> {
-    private static final ResourceLocation BACKGROUND = IndustrialGuiStyle.containerTexture("bio_energy_machine");
     private static final ResourceLocation SIDE_CONFIG_ICON = IndustrialGuiStyle.containerTexture("side_configuration");
     private static final int CONFIG_PANEL_WIDTH = 60;
     private static final int CONFIG_PANEL_HEIGHT = 81;
@@ -72,15 +70,19 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
     }
 
     @Override protected void renderBg(GuiGraphics graphics, float tick, int mouseX, int mouseY) {
-        IndustrialGuiStyle.drawBackground(graphics, BACKGROUND, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawContainer(graphics, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8, 84, 142);
         if (menu.kind() != BioEnergyMachineBlockEntity.Kind.BATTERY) {
-            IndustrialGuiStyle.drawRs2Slot(graphics, leftPos + 17, topPos + 34);
+            IndustrialGuiStyle.drawMachineWell(graphics, leftPos + 17, topPos + 34);
         }
-        IndustrialGuiStyle.drawInsetPanel(graphics, leftPos + 47, topPos + 20, 82, 42);
+        IndustrialGuiStyle.drawWorkPanel(graphics, leftPos + 44, topPos + 21, 88, 42);
+        IndustrialGuiStyle.drawInsetPanel(graphics, leftPos + 48, topPos + 25, 80, 34);
         if (configPanelOpen) IndustrialGuiStyle.drawCommonPanel(graphics, leftPos - 80, topPos + 19,
                 CONFIG_PANEL_WIDTH, CONFIG_PANEL_HEIGHT);
         int firstMeterX = leftPos + imageWidth + 2;
         int secondMeterX = firstMeterX + IndustrialGuiStyle.VERTICAL_METER_WIDTH + 2;
+        IndustrialGuiStyle.drawCommonPanel(graphics, firstMeterX - 2, topPos + 10,
+                menu.kind() == BioEnergyMachineBlockEntity.Kind.BATTERY ? 22 : 42, 62);
         if (menu.kind() == BioEnergyMachineBlockEntity.Kind.GENERATOR) {
             IndustrialGuiStyle.drawVerticalMeter(graphics, firstMeterX, topPos + 12, 58,
                     menu.energy(), menu.energyCapacity(), IndustrialGuiStyle.ENERGY_RED, false);
@@ -106,24 +108,25 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
         if (menu.kind() == BioEnergyMachineBlockEntity.Kind.GENERATOR) {
             IndustrialGuiStyle.drawFittedString(graphics, font,
                     Component.translatable("gui.industrialcrops.bio_generator.output", menu.currentYield()).getString(),
-                    51, 28, 74, IndustrialGuiStyle.TEXT, false);
+                    51, 29, 74, IndustrialGuiStyle.TEXT, false);
             IndustrialGuiStyle.drawFittedString(graphics, font,
                     Component.translatable("gui.industrialcrops.bio_generator.residue",
                             percent(menu.residue(), menu.residueCapacity())).getString(),
-                    51, 43, 74, IndustrialGuiStyle.TEXT, false);
+                    51, 44, 74, IndustrialGuiStyle.TEXT, false);
         } else if (menu.kind() == BioEnergyMachineBlockEntity.Kind.BATTERY) {
-            Component energy = Component.translatable("gui.industrialcrops.energy", menu.energy(), menu.energyCapacity());
-            IndustrialGuiStyle.drawFittedString(graphics, font, energy.getString(), 51, 34, 74,
+            IndustrialGuiStyle.drawFittedString(graphics, font, menu.energy() + " FE", 51, 29, 74,
+                    IndustrialGuiStyle.TEXT, false);
+            IndustrialGuiStyle.drawFittedString(graphics, font, "/ " + menu.energyCapacity() + " FE", 51, 44, 74,
                     IndustrialGuiStyle.TEXT, false);
         } else {
             Component burning = Component.translatable(menu.burnTime() > 0
                     ? "gui.industrialcrops.residue_incinerator.burning"
                     : "gui.industrialcrops.residue_incinerator.waiting");
-            IndustrialGuiStyle.drawFittedString(graphics, font, burning.getString(), 51, 28, 74,
+            IndustrialGuiStyle.drawFittedString(graphics, font, burning.getString(), 51, 29, 74,
                     IndustrialGuiStyle.TEXT, false);
             IndustrialGuiStyle.drawFittedString(graphics, font,
                     Component.translatable("gui.industrialcrops.residue_incinerator.fuel", menu.burnTime()).getString(),
-                    51, 43, 74, IndustrialGuiStyle.TEXT, false);
+                    51, 44, 74, IndustrialGuiStyle.TEXT, false);
         }
     }
 
@@ -198,16 +201,16 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
         int y = button.getY();
         int right = x + button.getWidth();
         int bottom = y + button.getHeight();
-        graphics.fill(x, y, right, bottom, 0xFF101214);
-        graphics.fill(x + 1, y + 1, right - 1, bottom - 1, 0xFF25292D);
+        graphics.fill(x, y, right, bottom, 0xFF454747);
+        graphics.fill(x + 1, y + 1, right - 1, bottom - 1, 0xFFB4B8B8);
         graphics.fill(x + 2, y + 2, right - 2, bottom - 2, color);
         graphics.fill(x + 2, y + 2, right - 2, y + 3, adjustColor(color, 28));
         graphics.fill(x + 2, y + 3, x + 3, bottom - 2, adjustColor(color, 18));
         graphics.fill(x + 2, bottom - 3, right - 2, bottom - 2, adjustColor(color, -32));
         graphics.fill(right - 3, y + 3, right - 2, bottom - 2, adjustColor(color, -32));
         if (button.isHovered()) {
-            graphics.fill(x, y, right, y + 1, 0xFFA8DED9);
-            graphics.fill(x, y, x + 1, bottom, 0xFFA8DED9);
+            graphics.fill(x, y, right, y + 1, 0xFFF3F1EB);
+            graphics.fill(x, y, x + 1, bottom, 0xFFF3F1EB);
         }
     }
 

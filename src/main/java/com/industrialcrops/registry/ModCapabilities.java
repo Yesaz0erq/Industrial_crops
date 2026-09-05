@@ -1,8 +1,5 @@
 package com.industrialcrops.registry;
 
-import com.industrialcrops.block.entity.BasicCropStorageArrayBlockEntity;
-import com.industrialcrops.block.entity.ReinforcedIndustrialStorageArrayBlockEntity;
-import com.industrialcrops.block.entity.RootOreExtractorBlockEntity;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 

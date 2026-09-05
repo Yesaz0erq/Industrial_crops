@@ -5,7 +5,6 @@ import com.industrialcrops.screen.AdvancedIndustrialStorageMenu;
 import com.industrialcrops.screen.ItemNetworkTerminalMenu;
 import com.industrialcrops.screen.MatterMachineMenu;
 import io.netty.buffer.ByteBuf;
-import java.nio.charset.StandardCharsets;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

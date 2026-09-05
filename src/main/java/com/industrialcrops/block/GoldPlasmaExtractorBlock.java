@@ -1,10 +1,8 @@
 package com.industrialcrops.block;
 
 import com.industrialcrops.block.entity.GoldPlasmaExtractorBlockEntity;
-import com.industrialcrops.registry.ModBlockEntities;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -13,7 +11,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.context.BlockPlaceContext;
 
 public final class GoldPlasmaExtractorBlock extends GoldPoweredMachineBlock {
     public static final MapCodec<GoldPlasmaExtractorBlock> CODEC = simpleCodec(GoldPlasmaExtractorBlock::new);

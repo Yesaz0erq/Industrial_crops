@@ -29,8 +29,6 @@ import com.industrialcrops.block.MatterDigitizerBlock;
 import com.industrialcrops.block.DigitizedItemCopierBlock;
 import com.industrialcrops.block.MatterReconstructorBlock;
 import com.industrialcrops.block.ItemNetworkTerminalBlock;
-import com.industrialcrops.block.BioEnergyMachineBlock;
-import com.industrialcrops.block.entity.BioEnergyMachineBlockEntity;
 import com.industrialcrops.block.BioEnergyGeneratorBlock;
 import com.industrialcrops.block.EnergyBatteryBlock;
 import com.industrialcrops.block.ResidueIncineratorBlock;
