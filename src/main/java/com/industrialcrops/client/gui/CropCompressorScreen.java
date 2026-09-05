@@ -2,13 +2,10 @@ package com.industrialcrops.client.gui;
 
 import com.industrialcrops.screen.CropCompressorMenu;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public final class CropCompressorScreen extends UpgradeableMachineScreen<CropCompressorMenu> {
-    private static final ResourceLocation BACKGROUND = IndustrialGuiStyle.containerTexture("crop_compressor");
 
     public CropCompressorScreen(CropCompressorMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -25,7 +22,11 @@ public final class CropCompressorScreen extends UpgradeableMachineScreen<CropCom
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        IndustrialGuiStyle.drawBackground(graphics, BACKGROUND, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawContainer(graphics, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawWorkPanel(graphics, leftPos + 30, topPos + 25, 112, 39);
+        IndustrialGuiStyle.drawMachineWell(graphics, leftPos + 55, topPos + 34);
+        IndustrialGuiStyle.drawMachineWell(graphics, leftPos + 115, topPos + 34);
+        IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8, 84, 142);
         IndustrialGuiStyle.drawMekanismSmallRight(graphics, leftPos + 80, topPos + 40, menu.getScaledProgress(28));
         drawUpgradeDrawer(graphics, CropCompressorMenu.UPGRADE_X, CropCompressorMenu.UPGRADE_Y);
     }

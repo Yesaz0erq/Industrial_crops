@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.industrialcrops.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AbstractContainerMenuReplicaMixin",
     "BlockFusionPickaxeLootMixin",
@@ -11,7 +11,8 @@
     "ItemStackCodecStackLimitMixin",
     "ItemStackHandlerStackLimitMixin",
     "LevelUniversalReplicaMixin",
-    "ServerPlayerReplicaMenuMixin"
+    "ServerPlayerReplicaMenuMixin",
+    "FriendlyByteBufStackLimitMixin"
   ],
   "client": [
     "client.AdvancementTabBackgroundMixin",
@@ -23,5 +24,6 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "refmap": "industrialcrops.refmap.json"
 }

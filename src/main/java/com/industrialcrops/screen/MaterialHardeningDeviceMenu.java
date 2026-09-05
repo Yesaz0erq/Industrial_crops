@@ -1,8 +1,6 @@
 package com.industrialcrops.screen;
 
 import com.industrialcrops.block.entity.MaterialHardeningDeviceBlockEntity;
-import com.industrialcrops.registry.ModBlocks;
-import com.industrialcrops.registry.ModMenus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

@@ -36,6 +36,7 @@ public final class GoldPlasmaExtractorBlockEntity extends BlockEntity implements
     private static final int ENERGY_PER_TICK = 40;
     private static final int RECEIVE_RATE = 5_000;
     private int progress;
+    private int syncedFluidAmount;
     private final TrackedEnergyStorage energy = new TrackedEnergyStorage();
     private final ItemStackHandler inventory = new ItemStackHandler(1) {
         @Override public boolean isItemValid(int slot, ItemStack stack) { return stack.is(ModItems.PLASMA_BERRY.get()); }
@@ -63,7 +64,7 @@ public final class GoldPlasmaExtractorBlockEntity extends BlockEntity implements
             case 1 -> energy.getEnergyStored() >>> 16;
             case 2 -> progress;
             case 3 -> PROCESS_TICKS;
-            case 4 -> outputTank.getFluidAmount();
+            case 4 -> level != null && level.isClientSide() ? syncedFluidAmount : outputTank.getFluidAmount();
             case 5 -> FLUID_CAPACITY;
             default -> 0;
         }; }
@@ -71,6 +72,7 @@ public final class GoldPlasmaExtractorBlockEntity extends BlockEntity implements
             if (index == 0) energy.setStored((energy.getEnergyStored() & 0xFFFF0000) | (value & 0xFFFF));
             else if (index == 1) energy.setStored((energy.getEnergyStored() & 0xFFFF) | ((value & 0xFFFF) << 16));
             else if (index == 2) progress = value;
+            else if (index == 4) syncedFluidAmount = Math.max(0, Math.min(FLUID_CAPACITY, value));
         }
         @Override public int getCount() { return 6; }
     };

@@ -1,16 +1,13 @@
 package com.industrialcrops.client.gui;
 
-import com.industrialcrops.block.entity.ItemNetworkTerminalBlockEntity;
 import com.industrialcrops.block.entity.MatterMachineBlockEntity;
 import com.industrialcrops.network.payload.MatterMachineSelectionPayload;
 import com.industrialcrops.network.payload.StorageSearchPayload;
 import com.industrialcrops.screen.MatterMachineMenu;
 import com.industrialcrops.registry.ModItems;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -19,9 +16,8 @@ import com.industrialcrops.network.ModNetworking;
 
 public final class MatterMachineScreen extends IndustrialContainerScreen<MatterMachineMenu> {
     private static final ResourceLocation SIDE_CONFIG_ICON = IndustrialGuiStyle.containerTexture("side_configuration");
-    private static final ResourceLocation MACHINE_BACKGROUND = IndustrialGuiStyle.containerTexture("matter_terminal_machine");
     private static final int CONFIG_PANEL_WIDTH = 60;
-    private static final int CONFIG_PANEL_HEIGHT = 61;
+    private static final int CONFIG_PANEL_HEIGHT = 81;
     private static final int SEARCH_X = 95;
     private static final int SEARCH_Y = 7;
     private static final int SEARCH_WIDTH = 67;
@@ -45,7 +41,7 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
         boolean digitizer = menu.kind() == MatterMachineBlockEntity.Kind.DIGITIZER;
         imageWidth = digitizer ? 176 : 193;
         imageHeight = 190;
-        inventoryLabelY = 99;
+        inventoryLabelY = 97;
     }
 
     @Override
@@ -87,22 +83,25 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
         int panelY = topPos + 19;
         for (int relativeSide = 0; relativeSide < MatterMachineMenu.RELATIVE_SIDE_COUNT; relativeSide++) {
             int position = switch (relativeSide) {
-                case 0 -> 0;
-                case 1 -> 3;
-                case 2 -> 1;
-                case 3 -> 4;
-                case 4 -> 5;
-                case 5 -> 2;
+                case 0 -> 1;
+                case 1 -> 7;
+                case 2 -> 4;
+                case 3 -> 6;
+                case 4 -> 3;
+                case 5 -> 5;
                 default -> 0;
             };
             final int side = relativeSide;
-            sideButtons[side] = addRenderableWidget(Button.builder(sideLabel(side), ignored -> toggleSide(side))
+            sideButtons[side] = addRenderableWidget(Button.builder(Component.empty(), ignored -> toggleSide(side))
                     .bounds(panelX + 3 + position % 3 * 18, panelY + 3 + position / 3 * 18, 18, 18).build());
+            sideButtons[side].setAlpha(0.0F);
         }
-        allOnButton = addRenderableWidget(Button.builder(Component.translatable("gui.industrialcrops.side_config.all_on"),
-                ignored -> setAllSides(true)).bounds(panelX + 3, panelY + 40, 27, 18).build());
-        allOffButton = addRenderableWidget(Button.builder(Component.translatable("gui.industrialcrops.side_config.all_off"),
-                ignored -> setAllSides(false)).bounds(panelX + 30, panelY + 40, 27, 18).build());
+        allOnButton = addRenderableWidget(Button.builder(Component.empty(),
+                ignored -> setAllSides(true)).bounds(panelX + 3, panelY + 58, 27, 18).build());
+        allOffButton = addRenderableWidget(Button.builder(Component.empty(),
+                ignored -> setAllSides(false)).bounds(panelX + 30, panelY + 58, 27, 18).build());
+        allOnButton.setAlpha(0.0F);
+        allOffButton.setAlpha(0.0F);
         refreshButtons();
     }
 
@@ -126,37 +125,25 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
         }
         for (int side = 0; side < sideButtons.length; side++) {
             Button button = sideButtons[side];
-            if (button != null) { button.visible = configPanelOpen; button.setMessage(sideLabel(side)); }
+            if (button != null) button.visible = configPanelOpen;
         }
         if (allOnButton != null) allOnButton.visible = configPanelOpen;
         if (allOffButton != null) allOffButton.visible = configPanelOpen;
         menu.setUpgradeSlotsVisible(upgradePanelOpen);
     }
 
-    private Component sideLabel(int relativeSide) {
-        return Component.translatable(relativeSideKey(relativeSide, true)).withStyle(
-                menu.isRelativeEnergySideEnabled(relativeSide) ? ChatFormatting.GREEN : ChatFormatting.DARK_GRAY);
-    }
-
-    private static String relativeSideKey(int relativeSide, boolean shortName) {
-        String side = switch (relativeSide) {
-            case 0 -> "up";
-            case 1 -> "down";
-            case 2 -> "front";
-            case 3 -> "back";
-            case 4 -> "left";
-            case 5 -> "right";
-            default -> "front";
-        };
-        return "gui.industrialcrops.relative_side." + side + (shortName ? ".short" : "");
-    }
-
     @Override
     protected void renderBg(GuiGraphics graphics, float tick, int mouseX, int mouseY) {
         boolean digitizer = menu.kind() == MatterMachineBlockEntity.Kind.DIGITIZER;
         if (digitizer) {
-            IndustrialGuiStyle.drawBackground(graphics, IndustrialGuiStyle.containerTexture("matter_digitization_device"),
-                    leftPos, topPos, imageWidth, imageHeight);
+            IndustrialGuiStyle.drawCommonPanel(graphics, leftPos, topPos, imageWidth, imageHeight);
+            IndustrialGuiStyle.drawPanel(graphics, leftPos + 6, topPos + 4, 164, 12, 0xFFB9BCBC);
+            IndustrialGuiStyle.drawWorkPanel(graphics, leftPos + 5, topPos + 17, 166, 58);
+            for (int row = 0; row < 3; row++) {
+                IndustrialGuiStyle.drawRs2GridRow(graphics, leftPos + 7, topPos + 19 + row * 18);
+            }
+            IndustrialGuiStyle.drawWorkPanel(graphics, leftPos + 7, topPos + 77, 162, 19);
+            IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8, 109, 167);
         } else {
             drawTerminalMachineBackground(graphics);
             for (int row = 0; row < MatterMachineMenu.TERMINAL_ROWS; row++) {
@@ -184,12 +171,15 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
     }
 
     private void drawTerminalMachineBackground(GuiGraphics graphics) {
-        IndustrialGuiStyle.drawBackground(graphics, MACHINE_BACKGROUND, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawTerminalChassis(graphics, leftPos, topPos, imageHeight, 77);
+        IndustrialGuiStyle.drawInsetPanel(graphics, leftPos + 172, topPos + 19, 18, 54);
+        IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8, 109, 167);
     }
 
     private void drawVerticalEnergyBar(GuiGraphics graphics) {
         int x = leftPos + imageWidth + 2;
         int y = topPos + 18;
+        IndustrialGuiStyle.drawCommonPanel(graphics, x - 2, y - 2, 22, 62);
         IndustrialGuiStyle.drawVerticalMeter(graphics, x, y, 58, menu.energy(),
                 MatterMachineBlockEntity.ENERGY_CAPACITY, IndustrialGuiStyle.ENERGY_RED, false);
     }
@@ -226,11 +216,12 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
                 graphics.fill(configTab.getX(), configTab.getY(), configTab.getX() + 1, configTab.getY() + 20, 0xFF62E6A7);
             }
         }
+        drawConfigButtons(graphics);
         if (upgradeTab != null) {
             graphics.renderItem(new ItemStack(ModItems.SPEED_COMPONENT_1.get()), upgradeTab.getX() + 2, upgradeTab.getY() + 2);
             if (upgradePanelOpen) {
-                graphics.fill(upgradeTab.getX(), upgradeTab.getY(), upgradeTab.getX() + 20, upgradeTab.getY() + 1, 0xFFB85A30);
-                graphics.fill(upgradeTab.getX(), upgradeTab.getY(), upgradeTab.getX() + 1, upgradeTab.getY() + 20, 0xFFB85A30);
+                graphics.fill(upgradeTab.getX(), upgradeTab.getY(), upgradeTab.getX() + 20, upgradeTab.getY() + 1, IndustrialGuiStyle.ACTIVE);
+                graphics.fill(upgradeTab.getX(), upgradeTab.getY(), upgradeTab.getX() + 1, upgradeTab.getY() + 20, IndustrialGuiStyle.ACTIVE);
             }
         }
         renderTooltip(graphics, mouseX, mouseY);
@@ -252,6 +243,46 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
             graphics.drawString(font, text, -textWidth, -8, 0xFFFFFFFF, true);
             graphics.pose().popPose();
         }
+    }
+
+    private void drawConfigButtons(GuiGraphics graphics) {
+        if (!configPanelOpen) return;
+        for (int side = 0; side < sideButtons.length; side++) {
+            Button button = sideButtons[side];
+            if (button != null) drawMekanismButton(graphics, button,
+                    menu.isRelativeEnergySideEnabled(side) ? 0xFF287F76 : 0xFF363A3E);
+        }
+        if (allOnButton != null) drawMekanismButton(graphics, allOnButton, 0xFF238E4C);
+        if (allOffButton != null) drawMekanismButton(graphics, allOffButton, 0xFFA52330);
+    }
+
+    private static void drawMekanismButton(GuiGraphics graphics, Button button, int color) {
+        int x = button.getX();
+        int y = button.getY();
+        int right = x + button.getWidth();
+        int bottom = y + button.getHeight();
+        graphics.fill(x, y, right, bottom, 0xFF454747);
+        graphics.fill(x + 1, y + 1, right - 1, bottom - 1, 0xFFB4B8B8);
+        graphics.fill(x + 2, y + 2, right - 2, bottom - 2, color);
+        graphics.fill(x + 2, y + 2, right - 2, y + 3, adjustColor(color, 28));
+        graphics.fill(x + 2, y + 3, x + 3, bottom - 2, adjustColor(color, 18));
+        graphics.fill(x + 2, bottom - 3, right - 2, bottom - 2, adjustColor(color, -32));
+        graphics.fill(right - 3, y + 3, right - 2, bottom - 2, adjustColor(color, -32));
+        if (button.isHovered()) {
+            graphics.fill(x, y, right, y + 1, 0xFFF3F1EB);
+            graphics.fill(x, y, x + 1, bottom, 0xFFF3F1EB);
+        }
+    }
+
+    private static int adjustColor(int color, int amount) {
+        int r = Math.max(0, Math.min(255, (color >> 16 & 255) + amount));
+        int g = Math.max(0, Math.min(255, (color >> 8 & 255) + amount));
+        int b = Math.max(0, Math.min(255, (color & 255) + amount));
+        return 0xFF000000 | r << 16 | g << 8 | b;
+    }
+
+    private String worldSideKey(int relativeSide) {
+        return "gui.industrialcrops.world_side." + menu.worldDirectionForRelative(relativeSide).getName();
     }
 
     @Override
@@ -354,9 +385,14 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
             if (button != null && button.isMouseOver(mouseX, mouseY)) {
                 graphics.renderTooltip(font, Component.translatable(menu.isRelativeEnergySideEnabled(side)
                                 ? "gui.industrialcrops.energy_side.input" : "gui.industrialcrops.energy_side.disabled",
-                        Component.translatable(relativeSideKey(side, false))), mouseX, mouseY);
+                        Component.translatable(worldSideKey(side))), mouseX, mouseY);
                 return;
             }
+        }
+        if (allOnButton != null && allOnButton.isMouseOver(mouseX, mouseY)) {
+            graphics.renderTooltip(font, Component.translatable("gui.industrialcrops.side_config.all_on"), mouseX, mouseY);
+        } else if (allOffButton != null && allOffButton.isMouseOver(mouseX, mouseY)) {
+            graphics.renderTooltip(font, Component.translatable("gui.industrialcrops.side_config.all_off"), mouseX, mouseY);
         }
     }
 

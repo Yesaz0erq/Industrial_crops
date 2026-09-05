@@ -36,7 +36,8 @@ public abstract class CreativeInventorySectionsMixin {
     private void industrialcrops$removeCreativeTabNameFromTooltip(
             ItemStack stack, CallbackInfoReturnable<List<Component>> callbackInfo) {
         String namespace = BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace();
-        if (!IndustrialCrops.MOD_ID.equals(namespace) && !Carrote.MOD_ID.equals(namespace)) {
+        if (!IndustrialCrops.MOD_ID.equals(namespace) && !Carrote.MOD_ID.equals(namespace)
+                && !com.industrialcrops.CarroteCurios.MOD_ID.equals(namespace)) {
             return;
         }
 

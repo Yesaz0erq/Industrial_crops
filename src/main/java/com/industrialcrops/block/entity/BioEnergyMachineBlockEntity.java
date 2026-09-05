@@ -1,7 +1,6 @@
 package com.industrialcrops.block.entity;
 
 import com.industrialcrops.basic_pipe.PipeTransferUtil;
-import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.screen.BioEnergyMenu;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
@@ -24,7 +23,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements MenuProvider {
     public enum Kind { GENERATOR, BATTERY, INCINERATOR }
+    public enum EnergySideMode { OUTPUT, INPUT, NONE }
     public enum FuelTier {
         NONE(0, 0), SEED(10_000, 50), CROP(40_000, 100), BLOCK_CROP(160_000, 250);
         final int energy;
@@ -50,6 +49,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     public static final int GENERATOR_CAPACITY = 1_000_000;
     public static final int BATTERY_CAPACITY = 10_000_000;
     private static final int TRANSFER_RATE = 50_000;
+    private static final int ALL_SIDES = (1 << Direction.values().length) - 1;
     private static final int MAX_NETWORK_NODES = 512;
     public static final int GENERATOR_UPGRADE_START = 1;
     public static final int UPGRADE_SLOT_COUNT = 4;
@@ -61,6 +61,9 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     private int residue;
     private int burnTime;
     private int burnTimeTotal;
+    private int energyOutputSides = ALL_SIDES;
+    private int energyInputSides;
+    private final IEnergyStorage[] sidedEnergy = new IEnergyStorage[Direction.values().length];
     private final ContainerData data = new ContainerData() {
         @Override public int get(int index) {
             return switch (index) {
@@ -77,6 +80,8 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
                 case 9 -> burnTimeTotal;
                 case 10 -> kind.ordinal();
                 case 11 -> currentTier().energy;
+                case 12 -> energyOutputSides;
+                case 13 -> energyInputSides;
                 default -> 0;
             };
         }
@@ -88,10 +93,12 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
                 case 6 -> residue = value;
                 case 8 -> burnTime = value;
                 case 9 -> burnTimeTotal = value;
+                case 12 -> energyOutputSides = value & ALL_SIDES;
+                case 13 -> energyInputSides = value & ALL_SIDES;
                 default -> { }
             }
         }
-        @Override public int getCount() { return 12; }
+        @Override public int getCount() { return 14; }
     };
 
     protected BioEnergyMachineBlockEntity(BlockEntityType<?> type, Kind kind, BlockPos pos, BlockState state) {
@@ -101,6 +108,9 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
         int receive = kind == Kind.BATTERY ? TRANSFER_RATE : 0;
         int extract = kind == Kind.INCINERATOR ? 0 : TRANSFER_RATE;
         energy = new TrackedEnergyStorage(capacity, receive, extract);
+        for (Direction direction : Direction.values()) {
+            sidedEnergy[direction.ordinal()] = new DirectionalEnergyStorage(direction);
+        }
         int slots = kind == Kind.BATTERY ? 0 : kind == Kind.GENERATOR ? 1 + UPGRADE_SLOT_COUNT : 1;
         inventory = new ItemStackHandler(slots) {
             @Override public boolean isItemValid(int slot, ItemStack stack) {
@@ -169,6 +179,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     private void pushEnergyToNeighbors() {
         if (level == null || energy.getEnergyStored() <= 0) return;
         for (Direction direction : Direction.values()) {
+            if (!isEnergyOutputEnabled(direction)) continue;
             IEnergyStorage target = com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ENERGY, worldPosition.relative(direction), direction.getOpposite());
             if (target == null || !target.canReceive()) continue;
             int offered = Math.min(TRANSFER_RATE, energy.getEnergyStored());
@@ -256,8 +267,48 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     public ItemStackHandler getInventory() { return inventory; }
     public ContainerData getData() { return data; }
     public FuelTier currentTier() { return kind == Kind.GENERATOR ? classifyFuel(inventory.getStackInSlot(0)) : FuelTier.NONE; }
+    public boolean toggleEnergyOutput(Direction direction) {
+        energyOutputSides ^= 1 << direction.ordinal();
+        setChanged();
+        return isEnergyOutputEnabled(direction);
+    }
+    public void setAllEnergyOutputs(boolean enabled) {
+        energyOutputSides = enabled ? ALL_SIDES : 0;
+        if (kind == Kind.BATTERY) energyInputSides = 0;
+        setChanged();
+    }
+    public EnergySideMode cycleEnergySide(Direction direction) {
+        if (kind != Kind.BATTERY) {
+            return toggleEnergyOutput(direction) ? EnergySideMode.OUTPUT : EnergySideMode.NONE;
+        }
+        EnergySideMode next = switch (getEnergySideMode(direction)) {
+            case OUTPUT -> EnergySideMode.INPUT;
+            case INPUT -> EnergySideMode.NONE;
+            case NONE -> EnergySideMode.OUTPUT;
+        };
+        setEnergySideMode(direction, next);
+        return next;
+    }
+    private void setEnergySideMode(Direction direction, EnergySideMode mode) {
+        int bit = 1 << direction.ordinal();
+        energyOutputSides &= ~bit;
+        energyInputSides &= ~bit;
+        if (mode == EnergySideMode.OUTPUT) energyOutputSides |= bit;
+        else if (mode == EnergySideMode.INPUT) energyInputSides |= bit;
+        setChanged();
+    }
+    public EnergySideMode getEnergySideMode(Direction direction) {
+        int bit = 1 << direction.ordinal();
+        if ((energyOutputSides & bit) != 0) return EnergySideMode.OUTPUT;
+        if (kind == Kind.BATTERY && (energyInputSides & bit) != 0) return EnergySideMode.INPUT;
+        return EnergySideMode.NONE;
+    }
+    public boolean isEnergyOutputEnabled(Direction direction) {
+        return (energyOutputSides & (1 << direction.ordinal())) != 0;
+    }
     public @Nullable IEnergyStorage getEnergyStorage(@Nullable Direction side) {
-        return kind == Kind.INCINERATOR ? null : energy;
+        if (kind == Kind.INCINERATOR) return null;
+        return side == null ? energy : sidedEnergy[side.ordinal()];
     }
 
     @Override protected void saveAdditional(CompoundTag tag) {
@@ -268,6 +319,8 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
         tag.putInt("Residue", residue);
         tag.putInt("BurnTime", burnTime);
         tag.putInt("BurnTimeTotal", burnTimeTotal);
+        tag.putInt("EnergyOutputSides", energyOutputSides);
+        tag.putInt("EnergyInputSides", energyInputSides);
     }
     @Override public void load(CompoundTag tag) {
         super.load(tag);
@@ -281,6 +334,9 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
         residue = Math.max(0, Math.min(RESIDUE_CAPACITY, tag.getInt("Residue")));
         burnTime = Math.max(0, tag.getInt("BurnTime"));
         burnTimeTotal = Math.max(0, tag.getInt("BurnTimeTotal"));
+        energyOutputSides = tag.contains("EnergyOutputSides") ? tag.getInt("EnergyOutputSides") & ALL_SIDES : ALL_SIDES;
+        energyInputSides = kind == Kind.BATTERY && tag.contains("EnergyInputSides")
+                ? tag.getInt("EnergyInputSides") & ALL_SIDES & ~energyOutputSides : 0;
     }
     @Override public Component getDisplayName() { return Component.translatable(getBlockState().getBlock().getDescriptionId()); }
     @Override public @Nullable AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
@@ -300,6 +356,26 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
             int extracted = super.extractEnergy(amount, simulate);
             if (extracted > 0 && !simulate) setChanged();
             return extracted;
+        }
+    }
+
+    private final class DirectionalEnergyStorage implements IEnergyStorage {
+        private final Direction side;
+
+        private DirectionalEnergyStorage(Direction side) { this.side = side; }
+        @Override public int receiveEnergy(int maxReceive, boolean simulate) {
+            return canReceive() ? energy.receiveEnergy(maxReceive, simulate) : 0;
+        }
+        @Override public int extractEnergy(int maxExtract, boolean simulate) {
+            return canExtract() ? energy.extractEnergy(maxExtract, simulate) : 0;
+        }
+        @Override public int getEnergyStored() { return energy.getEnergyStored(); }
+        @Override public int getMaxEnergyStored() { return energy.getMaxEnergyStored(); }
+        @Override public boolean canExtract() {
+            return getEnergySideMode(side) == EnergySideMode.OUTPUT && energy.canExtract();
+        }
+        @Override public boolean canReceive() {
+            return kind == Kind.BATTERY && getEnergySideMode(side) == EnergySideMode.INPUT && energy.canReceive();
         }
     }
 }

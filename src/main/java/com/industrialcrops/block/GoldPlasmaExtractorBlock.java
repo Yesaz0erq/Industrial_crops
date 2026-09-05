@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.context.BlockPlaceContext;
 
 public final class GoldPlasmaExtractorBlock extends GoldPoweredMachineBlock {
     public GoldPlasmaExtractorBlock(Properties properties) { super(properties); }

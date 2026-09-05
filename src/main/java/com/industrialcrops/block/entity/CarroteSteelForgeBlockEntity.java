@@ -1,8 +1,6 @@
 package com.industrialcrops.block.entity;
 
 import com.industrialcrops.block.CarroteSteelForgeBlock;
-import com.industrialcrops.registry.ModBlockEntities;
-import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.machine.MachineInventoryHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;

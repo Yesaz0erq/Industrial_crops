@@ -79,7 +79,10 @@ public final class CreativeSectionClient {
             int x = left + 8;
             int y = top + 17 + visibleRow * 18;
             CreativeSectionCatalog.Section section = entry.getValue();
-            graphics.blit(section.banner(), x, y, 0, 0, 162, 18, 162, 18);
+            int frames = section.banner().getNamespace().equals("carrote") ? 8 : 1;
+            var player = Minecraft.getInstance().player;
+            int frame = player == null ? 0 : (player.tickCount / 3) % frames;
+            graphics.blit(section.banner(), x, y, 0, frame * 18, 162, 18, 162, 18 * frames);
             graphics.drawString(font, section.title(), x + 6, y + 5, 0xFFF4F7FA, true);
         }
     }

@@ -71,3 +71,31 @@ mandatory=true
 versionRange="[${mod_version},)"
 ordering="AFTER"
 side="BOTH"
+
+[[mods]]
+modId="carrote_curios"
+version="${mod_version}"
+displayName="Carrote Curios"
+authors="${mod_authors}"
+description='十种胡罗贝饰品，可通过手持或 Curios 饰品栏生效。'
+
+[[dependencies.carrote_curios]]
+modId="forge"
+mandatory=true
+versionRange="${forge_version_range}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.carrote_curios]]
+modId="minecraft"
+mandatory=true
+versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.carrote_curios]]
+modId="curios"
+mandatory=false
+versionRange="[5.14.1,6)"
+ordering="AFTER"
+side="BOTH"

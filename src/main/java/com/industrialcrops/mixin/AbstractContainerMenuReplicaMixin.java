@@ -1,6 +1,5 @@
 package com.industrialcrops.mixin;
 
-import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.replication.UniversalReplicaData;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;

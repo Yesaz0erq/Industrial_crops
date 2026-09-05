@@ -1,7 +1,6 @@
 package com.industrialcrops.block.entity;
 
 import com.industrialcrops.block.MaterialHardeningDeviceBlock;
-import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.machine.MachineInventoryHelper;
 import com.industrialcrops.screen.MaterialHardeningDeviceMenu;
 import net.minecraft.core.BlockPos;

@@ -1,8 +1,8 @@
 package com.industrialcrops.block.entity;
 
 import com.industrialcrops.registry.ModBlockEntities;
-import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.item.IndustrialStorageComponentItem;
+import com.industrialcrops.machine.DimensionUpgradeHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -23,6 +23,18 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
     public static final int SLOTS_PER_CELL = 54;
     public static final int MAX_CELL_MULTIPLIER = 16;
     public static final int STORAGE_SLOT_COUNT = CELL_SLOT_COUNT * SLOTS_PER_CELL * MAX_CELL_MULTIPLIER;
+    private boolean dimensionTicketRequested;
+
+    private final ItemStackHandler dimensionUpgrade = new ItemStackHandler(1) {
+        @Override public int getSlotLimit(int slot) { return 1; }
+        @Override public boolean isItemValid(int slot, ItemStack stack) {
+            return DimensionUpgradeHelper.isDimensionUpgrade(stack);
+        }
+        @Override protected void onContentsChanged(int slot) {
+            setChanged();
+            refreshDimensionTicket();
+        }
+    };
 
     private final ItemStackHandler cellInventory = new ItemStackHandler(CELL_SLOT_COUNT) {
         @Override
@@ -133,6 +145,36 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
         return cellInventory;
     }
 
+    public ItemStack getDimensionUpgrade() { return dimensionUpgrade.getStackInSlot(0); }
+
+    public boolean installDimensionUpgrade(ItemStack stack) {
+        if (!getDimensionUpgrade().isEmpty() || !DimensionUpgradeHelper.isDimensionUpgrade(stack)) return false;
+        dimensionUpgrade.setStackInSlot(0, stack.copyWithCount(1));
+        return true;
+    }
+
+    public ItemStack removeDimensionUpgrade() { return dimensionUpgrade.extractItem(0, 1, false); }
+
+    public void releaseDimensionTicket() {
+        if (dimensionTicketRequested || !getDimensionUpgrade().isEmpty()) {
+            DimensionUpgradeHelper.forceOwnerChunk(this, false);
+            dimensionTicketRequested = false;
+        }
+    }
+
+    @Override public void onLoad() {
+        super.onLoad();
+        refreshDimensionTicket();
+    }
+
+    private void refreshDimensionTicket() {
+        boolean shouldForce = !getDimensionUpgrade().isEmpty();
+        if (level != null && shouldForce != dimensionTicketRequested) {
+            DimensionUpgradeHelper.forceOwnerChunk(this, shouldForce);
+            dimensionTicketRequested = shouldForce;
+        }
+    }
+
     public IItemHandler getPipeItemHandler() {
         return basic_pipeItemHandler;
     }
@@ -239,6 +281,7 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
         CompoundTag tag = new CompoundTag();
         tag.put("Cells", cellInventory.serializeNBT());
         tag.put("Storage", storageInventory.serializeNBT());
+        tag.put("DimensionUpgrade", dimensionUpgrade.serializeNBT());
         return tag;
     }
 
@@ -248,6 +291,9 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
         }
         if (tag.contains("Storage")) {
             readFixedSizeInventory(storageInventory, STORAGE_SLOT_COUNT, tag.getCompound("Storage"));
+        }
+        if (tag.contains("DimensionUpgrade")) {
+            readFixedSizeInventory(dimensionUpgrade, 1, tag.getCompound("DimensionUpgrade"));
         }
     }
 

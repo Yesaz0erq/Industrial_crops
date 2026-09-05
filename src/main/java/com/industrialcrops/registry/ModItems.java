@@ -102,8 +102,7 @@ public final class ModItems {
     public static final RegistryObject<Item> CRYSTAL_INGOT = ITEMS.register("crystal_ingot",
             () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
     public static final RegistryObject<Item> COMET_FRUIT = ITEMS.register("comet_fruit",
-            () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
-                    .nutrition(5).saturationMod(0.65F).build())));
+            () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
     public static final RegistryObject<GeneticCropProductBlockItem> INDUSTRIAL_MELON = ITEMS.register("industrial_melon",
             () -> new GeneticCropProductBlockItem(ModBlocks.INDUSTRIAL_MELON_BLOCK.get(), new Item.Properties()));
     public static final RegistryObject<GeneticCropProductBlockItem> INDUSTRIAL_PUMPKIN = ITEMS.register("industrial_pumpkin",
@@ -137,6 +136,10 @@ public final class ModItems {
             () -> new Item(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE)));
     public static final RegistryObject<Item> AUTOMATIC_COMPONENT = ITEMS.register("automatic_component",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> DIMENSION_UPGRADE_COMPONENT = ITEMS.register("dimension_upgrade_component",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> INFINITE_DIMENSION_UPGRADE_COMPONENT = ITEMS.register("infinite_dimension_upgrade_component",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.EPIC)));
     public static final RegistryObject<Item> UPGRADE_KIT_SUBSTRATE = ITEMS.register("upgrade_kit_substrate",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> GOLD_UPGRADE_KIT = ITEMS.register("gold_upgrade_kit",

@@ -1,8 +1,3 @@
 {
-  "parent": "minecraft:block/orientable",
-  "textures": {
-    "top": "industrialcrops:block/basic_pipe_structure",
-    "front": "industrialcrops:block/item_basic_pipe",
-    "side": "industrialcrops:block/basic_pipe_structure"
-  }
+  "parent": "industrialcrops:block/pipe_sorter/common/core"
 }

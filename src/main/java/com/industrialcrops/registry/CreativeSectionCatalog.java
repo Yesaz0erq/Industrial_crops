@@ -1,6 +1,8 @@
 package com.industrialcrops.registry;
 
 import com.industrialcrops.Carrote;
+import com.industrialcrops.CarroteCurios;
+import com.industrialcrops.curios.CarroteCuriosItems;
 import com.industrialcrops.IndustrialCrops;
 import com.industrialcrops.crop.CropGenetics;
 import net.minecraft.network.chat.Component;
@@ -20,7 +22,7 @@ public final class CreativeSectionCatalog {
     private CreativeSectionCatalog() {
     }
 
-    /** One combined tab with exactly two full-width section rows. */
+    /** One combined tab with a full-width row for each sibling mod. */
     public static List<Section> combinedSections() {
         return List.of(
                 section("itemGroup.industrialcrops.section.industrial_crops",
@@ -63,7 +65,9 @@ public final class CreativeSectionCatalog {
                         item(ModItems.INDUSTRIAL_STORAGE_COMPONENT_2), item(ModItems.INDUSTRIAL_STORAGE_COMPONENT_3),
                         item(ModItems.INDUSTRIAL_STORAGE_COMPONENT_4), item(ModItems.GUIDANCE_COMPONENT),
                         item(ModItems.EXPLOSIVE_POTATO), item(ModItems.RAPID_FIRE_COMPONENT),
-                        item(ModItems.POWER_COMPONENT), item(ModItems.AUTOMATIC_COMPONENT), item(ModItems.UPGRADE_KIT_SUBSTRATE),
+                        item(ModItems.POWER_COMPONENT), item(ModItems.AUTOMATIC_COMPONENT),
+                        item(ModItems.DIMENSION_UPGRADE_COMPONENT), item(ModItems.INFINITE_DIMENSION_UPGRADE_COMPONENT),
+                        item(ModItems.UPGRADE_KIT_SUBSTRATE),
                         item(ModItems.GOLD_UPGRADE_KIT), item(ModItems.SPEED_COMPONENT_1),
                         item(ModItems.SPEED_COMPONENT_2), item(ModItems.SPEED_COMPONENT_3),
                         item(ModItems.SPEED_COMPONENT_4), item(ModItems.BROWN_CREATE_SLIME_SPAWN_EGG),
@@ -111,7 +115,13 @@ public final class CreativeSectionCatalog {
                         item(CarroteItems.CARROTE_STEEL_FORGE), item(CarroteItems.STABLE_MATTER_INGOT),
                         item(CarroteItems.STABLE_MATTER_BLOCK), item(CarroteItems.MIMIC_BLOCK),
                         item(CarroteItems.MATERIAL_HARDENING_DEVICE),
-                        item(CarroteItems.UNIVERSAL_REPLICATION_DEVICE))
+                        item(CarroteItems.UNIVERSAL_REPLICATION_DEVICE)),
+                section("itemGroup.carrote_curios.section", CarroteCurios.MOD_ID, "carrote_curios",
+                        item(CarroteCuriosItems.STRENGTH), item(CarroteCuriosItems.AIRBORNE),
+                        item(CarroteCuriosItems.GREED), item(CarroteCuriosItems.LUCK),
+                        item(CarroteCuriosItems.ENCHANTING), item(CarroteCuriosItems.SMELTING),
+                        item(CarroteCuriosItems.TASTY), item(CarroteCuriosItems.FLIGHT),
+                        item(CarroteCuriosItems.ARCANE), item(CarroteCuriosItems.STEEL))
         );
     }
 
@@ -132,7 +142,7 @@ public final class CreativeSectionCatalog {
     @SafeVarargs
     private static Section section(String title, String namespace, String banner, Supplier<ItemStack>... items) {
         return new Section(Component.translatable(title),
-                new ResourceLocation(namespace, "creative_sections/" + banner),
+                new ResourceLocation(namespace, "textures/gui/sprites/creative_sections/" + banner + ".png"),
                 List.of(items));
     }
 

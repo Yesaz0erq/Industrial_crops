@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import com.industrialcrops.machine.DimensionUpgradeHelper;
 
 public final class ReinforcedControlDeviceBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
@@ -49,6 +50,12 @@ public final class ReinforcedControlDeviceBlock extends BaseEntityBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (DimensionUpgradeHelper.isDimensionUpgrade(stack)) {
+            if (!(level.getBlockEntity(pos) instanceof ReinforcedControlDeviceBlockEntity storage)) return InteractionResult.FAIL;
+            if (!level.isClientSide() && storage.installDimensionUpgrade(stack) && !player.getAbilities().instabuild) stack.shrink(1);
+            return InteractionResult.sidedSuccess(level.isClientSide());
+        }
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ReinforcedControlDeviceBlockEntity storage) {
             net.minecraftforge.network.NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer) player,storage, buffer -> {
                 buffer.writeBlockPos(pos);
@@ -56,6 +63,14 @@ public final class ReinforcedControlDeviceBlock extends BaseEntityBlock {
             });
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof ReinforcedControlDeviceBlockEntity storage) {
+            storage.releaseDimensionTicket();
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     @Override
@@ -94,4 +109,3 @@ public final class ReinforcedControlDeviceBlock extends BaseEntityBlock {
         builder.add(FACING);
     }
 }
-

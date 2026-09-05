@@ -29,8 +29,6 @@ import com.industrialcrops.block.MatterDigitizerBlock;
 import com.industrialcrops.block.DigitizedItemCopierBlock;
 import com.industrialcrops.block.MatterReconstructorBlock;
 import com.industrialcrops.block.ItemNetworkTerminalBlock;
-import com.industrialcrops.block.BioEnergyMachineBlock;
-import com.industrialcrops.block.entity.BioEnergyMachineBlockEntity;
 import com.industrialcrops.block.BioEnergyGeneratorBlock;
 import com.industrialcrops.block.EnergyBatteryBlock;
 import com.industrialcrops.block.ResidueIncineratorBlock;
@@ -42,6 +40,7 @@ import com.industrialcrops.block.EnergyBushBlock;
 import com.industrialcrops.block.FluidPipeBlock;
 import com.industrialcrops.block.GoldPlasmaExtractorBlock;
 import com.industrialcrops.block.CometSoilBlock;
+import com.industrialcrops.block.CometSaplingBlock;
 import com.industrialcrops.block.StrippableRotatedPillarBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -179,7 +178,7 @@ public final class ModBlocks {
     public static final RegistryObject<Block> GOLD_PLASMA_EXTRACTOR = BLOCKS.register("gold_plasma_extractor",
             () -> new GoldPlasmaExtractorBlock(machineProperties().mapColor(MapColor.GOLD)));
     public static final RegistryObject<Block> COPPER_FLUID_STORAGE_CABINET = BLOCKS.register("copper_fluid_storage_cabinet",
-            () -> new CopperFluidStorageCabinetBlock(machineProperties().mapColor(MapColor.COLOR_ORANGE)));
+            () -> new CopperFluidStorageCabinetBlock(machineProperties().mapColor(MapColor.COLOR_ORANGE).noOcclusion()));
 
     public static final RegistryObject<Block> INDUSTRIAL_CARROT_CROP = BLOCKS.register("industrial_carrot_crop",
             () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_CARROT,
@@ -273,7 +272,7 @@ public final class ModBlocks {
             () -> new LeavesBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LEAVES)
                     .mapColor(MapColor.COLOR_PURPLE)));
     public static final RegistryObject<SaplingBlock> COMET_SAPLING = BLOCKS.register("comet_sapling",
-            () -> new SaplingBlock(ModTreeGrowers.COMET,
+            () -> new CometSaplingBlock(ModTreeGrowers.COMET,
                     BlockBehaviour.Properties.copy(Blocks.OAK_SAPLING)
                             .mapColor(MapColor.COLOR_PURPLE)));
     public static final RegistryObject<StandingSignBlock> COMET_SIGN = BLOCKS.register("comet_sign",

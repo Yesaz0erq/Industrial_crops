@@ -1,10 +1,12 @@
 package com.industrialcrops.block.entity;
 
 import com.industrialcrops.registry.ModBlockEntities;
-import com.industrialcrops.registry.ModFluids;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -16,9 +18,14 @@ import org.jetbrains.annotations.Nullable;
 
 public final class CopperFluidStorageCabinetBlockEntity extends BlockEntity {
     public static final int CAPACITY = 16_000;
-    private final FluidTank tank = new FluidTank(CAPACITY,
-            stack -> stack.getFluid() == ModFluids.CONCENTRATED_PLASMA_JUICE.get()) {
-        @Override protected void onContentsChanged() { setChanged(); }
+    private final FluidTank tank = new FluidTank(CAPACITY) {
+        @Override protected void onContentsChanged() {
+            setChanged();
+            if (level != null && !level.isClientSide()) {
+                BlockState state = getBlockState();
+                level.sendBlockUpdated(worldPosition, state, state, 3);
+            }
+        }
     };
     private final LazyOptional<FluidTank> fluidCapability = LazyOptional.of(() -> tank);
 
@@ -35,6 +42,16 @@ public final class CopperFluidStorageCabinetBlockEntity extends BlockEntity {
     @Override public void load(CompoundTag tag) {
         super.load(tag);
         if (tag.contains("Tank")) tank.readFromNBT(tag.getCompound("Tank"));
+    }
+
+    @Override public CompoundTag getUpdateTag() {
+        CompoundTag tag = super.getUpdateTag();
+        tag.put("Tank", tank.writeToNBT(new CompoundTag()));
+        return tag;
+    }
+
+    @Override public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {

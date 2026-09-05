@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(targets = "net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen$ItemPickerMenu")
+@Mixin(net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen.ItemPickerMenu.class)
 public abstract class CreativeItemPickerMenuSectionsMixin {
     @Shadow
     protected abstract int getRowIndexForScroll(float scroll);

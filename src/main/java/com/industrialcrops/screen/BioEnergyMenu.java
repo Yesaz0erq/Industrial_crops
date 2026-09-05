@@ -1,10 +1,13 @@
 package com.industrialcrops.screen;
 
 import com.industrialcrops.block.entity.BioEnergyMachineBlockEntity;
+import com.industrialcrops.block.BioEnergyMachineBlock;
+import com.industrialcrops.block.BioEnergyMachineBlock;
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModMenus;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -18,6 +21,10 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public final class BioEnergyMenu extends AbstractContainerMenu implements UpgradeableMenu {
     public static final int UPGRADE_X=-68,UPGRADE_Y=28,UPGRADE_SPACING=22;
+    public static final int BUTTON_SIDE_BASE = 10;
+    public static final int BUTTON_ALL_SIDES_ON = 20;
+    public static final int BUTTON_ALL_SIDES_OFF = 21;
+    public static final int RELATIVE_SIDE_COUNT = 6;
     private final BioEnergyMachineBlockEntity blockEntity;
     private final BlockPos pos;
     private final ContainerData data;
@@ -74,6 +81,16 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
     public int burnTime() { return data.get(8); }
     public int burnTimeTotal() { return data.get(9); }
     public int currentYield() { return data.get(11); }
+    public boolean isEnergySideEnabled(Direction direction) { return (data.get(12) & (1 << direction.ordinal())) != 0; }
+    public boolean isRelativeEnergySideEnabled(int relativeSide) { return isEnergySideEnabled(toWorldDirection(relativeSide)); }
+    public BioEnergyMachineBlockEntity.EnergySideMode relativeEnergySideMode(int relativeSide) {
+        Direction direction = toWorldDirection(relativeSide);
+        int bit = 1 << direction.ordinal();
+        if ((data.get(12) & bit) != 0) return BioEnergyMachineBlockEntity.EnergySideMode.OUTPUT;
+        if ((data.get(13) & bit) != 0) return BioEnergyMachineBlockEntity.EnergySideMode.INPUT;
+        return BioEnergyMachineBlockEntity.EnergySideMode.NONE;
+    }
+    public Direction worldDirectionForRelative(int relativeSide) { return toWorldDirection(relativeSide); }
     public int scaledProgress(int width) {
         return maxProgress() <= 0 ? 0 : Math.max(0, Math.min(width, progress() * width / maxProgress()));
     }
@@ -109,6 +126,34 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
             case INCINERATOR -> ModBlocks.RESIDUE_INCINERATOR.get();
         };
         return stillValid(net.minecraft.world.inventory.ContainerLevelAccess.create(player.level(), pos), player, expected);
+    }
+
+    @Override public boolean clickMenuButton(Player player, int id) {
+        if (blockEntity.getKind() != BioEnergyMachineBlockEntity.Kind.BATTERY) return false;
+        if (id >= BUTTON_SIDE_BASE && id < BUTTON_SIDE_BASE + RELATIVE_SIDE_COUNT) {
+            blockEntity.cycleEnergySide(toWorldDirection(id - BUTTON_SIDE_BASE));
+            broadcastChanges();
+            return true;
+        }
+        if (id == BUTTON_ALL_SIDES_ON || id == BUTTON_ALL_SIDES_OFF) {
+            blockEntity.setAllEnergyOutputs(id == BUTTON_ALL_SIDES_ON);
+            broadcastChanges();
+            return true;
+        }
+        return false;
+    }
+
+    private Direction toWorldDirection(int relativeSide) {
+        Direction front = blockEntity.getBlockState().getValue(BioEnergyMachineBlock.FACING);
+        return switch (relativeSide) {
+            case 0 -> Direction.UP;
+            case 1 -> Direction.DOWN;
+            case 2 -> front;
+            case 3 -> front.getOpposite();
+            case 4 -> front.getCounterClockWise();
+            case 5 -> front.getClockWise();
+            default -> front;
+        };
     }
 
     private static BioEnergyMachineBlockEntity read(Inventory inventory, FriendlyByteBuf buffer) {

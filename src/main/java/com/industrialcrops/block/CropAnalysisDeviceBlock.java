@@ -1,7 +1,6 @@
 package com.industrialcrops.block;
 
 import com.industrialcrops.block.entity.CropAnalysisDeviceBlockEntity;
-import com.industrialcrops.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;

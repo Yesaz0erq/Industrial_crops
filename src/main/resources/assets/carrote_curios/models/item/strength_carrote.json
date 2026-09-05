@@ -1,0 +1,6 @@
+{
+  "textures": {
+    "layer0": "carrote_curios:item/strength_carrote"
+  },
+  "parent": "minecraft:item/generated"
+}
