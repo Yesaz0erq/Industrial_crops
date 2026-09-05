@@ -121,7 +121,10 @@ public final class CreativeSectionCatalog {
                         item(CarroteCuriosItems.GREED), item(CarroteCuriosItems.LUCK),
                         item(CarroteCuriosItems.ENCHANTING), item(CarroteCuriosItems.SMELTING),
                         item(CarroteCuriosItems.TASTY), item(CarroteCuriosItems.FLIGHT),
-                        item(CarroteCuriosItems.ARCANE), item(CarroteCuriosItems.STEEL))
+                        item(CarroteCuriosItems.ARCANE), item(CarroteCuriosItems.STEEL),
+                        item(CarroteCuriosItems.POWER), item(CarroteCuriosItems.PEACE),
+                        item(CarroteCuriosItems.SUBSTITUTE), item(CarroteCuriosItems.NIGHT_VISION),
+                        item(CarroteCuriosItems.BLAST), item(CarroteCuriosItems.FALL), item(CarroteCuriosItems.HELMET))
         );
     }
 

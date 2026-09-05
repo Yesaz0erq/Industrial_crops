@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class IndustrialSlimeRenderer<T extends Entity & GeoAnimatable> extends DynamicGeoEntityRenderer<T> {
     private final Map<ResourceLocation, RenderType> shellTypes = new ConcurrentHashMap<>();
+    private final Map<ResourceLocation, RenderType> containedShellTypes = new ConcurrentHashMap<>();
     private final String shellRenderTypeName;
     private final boolean shellDepthTest;
 
@@ -45,7 +46,8 @@ public abstract class IndustrialSlimeRenderer<T extends Entity & GeoAnimatable> 
     ) {
         if ("body".equals(bone.getName())) {
             if (ContainedSlimeRenderContext.isActive()) {
-                return RenderType.entityTranslucent(texture);
+                // Do not let the transparent shell write depth before the face and internal core.
+                return containedShellTypes.computeIfAbsent(texture, key -> shellRenderType(key, true));
             }
             return shellTypes.computeIfAbsent(texture, this::shellRenderType);
         }
@@ -61,6 +63,10 @@ public abstract class IndustrialSlimeRenderer<T extends Entity & GeoAnimatable> 
     }
 
     protected RenderType shellRenderType(ResourceLocation texture) {
+        return shellRenderType(texture, false);
+    }
+
+    private RenderType shellRenderType(ResourceLocation texture, boolean contained) {
         RenderType.CompositeState.CompositeStateBuilder builder = RenderType.CompositeState.builder()
                 .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
                 .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
@@ -69,11 +75,11 @@ public abstract class IndustrialSlimeRenderer<T extends Entity & GeoAnimatable> 
                 .setLightmapState(RenderStateShard.LIGHTMAP)
                 .setOverlayState(RenderStateShard.OVERLAY)
                 .setWriteMaskState(RenderStateShard.COLOR_WRITE);
-        if (shellDepthTest) {
+        if (contained || shellDepthTest) {
             builder.setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST);
         }
         return RenderType.create(
-                shellRenderTypeName,
+                shellRenderTypeName + (contained ? "_contained" : ""),
                 DefaultVertexFormat.NEW_ENTITY,
                 VertexFormat.Mode.QUADS,
                 1536,

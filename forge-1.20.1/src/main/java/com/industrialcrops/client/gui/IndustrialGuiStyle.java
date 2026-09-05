@@ -144,9 +144,12 @@ final class IndustrialGuiStyle {
 
     /** Joined wide network section and narrow inventory, with no border across the transparent cutout. */
     static void drawTerminalChassis(GuiGraphics graphics, int x, int y, int height, int lowerTop) {
-        drawCommonPanel(graphics, x, y + lowerTop - 3, 176, height - lowerTop + 3);
-        drawCommonPanel(graphics, x, y, 193, lowerTop + 1);
-        graphics.fill(x + 3, y + lowerTop - 3, x + 173, y + lowerTop + 2, PANEL);
+        // Paint nested silhouettes of the entire chassis instead of joining two bordered panels.
+        int[] layers = {0xFF191B1C, HIGHLIGHT, 0xFF969B9C, HIGHLIGHT, PANEL};
+        for (int inset = 0; inset < layers.length; inset++) {
+            graphics.fill(x + inset, y + inset, x + 193 - inset, y + lowerTop - inset, layers[inset]);
+            graphics.fill(x + inset, y + lowerTop - inset, x + 176 - inset, y + height - inset, layers[inset]);
+        }
         drawInsetPanel(graphics, x + 93, y + 4, 76, 12);
     }
 

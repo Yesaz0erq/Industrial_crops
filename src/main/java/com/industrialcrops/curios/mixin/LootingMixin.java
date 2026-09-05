@@ -17,7 +17,7 @@ public abstract class LootingMixin {
     @Inject(method = "getEnchantmentLevel", at = @At("RETURN"), cancellable = true)
     private static void carroteCurios$looting(Holder<Enchantment> enchantment, LivingEntity entity, CallbackInfoReturnable<Integer> cir) {
         if (enchantment.is(Enchantments.LOOTING) && CarroteCuriosEffects.has(entity, CarroteCuriosItems.GREED)) {
-            cir.setReturnValue(Math.max(3, cir.getReturnValue()));
+            cir.setReturnValue(Math.max(3 * CarroteCuriosEffects.count(entity, CarroteCuriosItems.GREED), cir.getReturnValue()));
         }
     }
 }

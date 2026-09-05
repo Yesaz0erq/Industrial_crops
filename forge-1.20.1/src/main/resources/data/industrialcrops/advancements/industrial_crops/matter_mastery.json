@@ -36,6 +36,18 @@
           }
         ]
       }
+    },
+    "digitizer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:matter_digitization_device"
+            ]
+          }
+        ]
+      }
     }
   },
   "requirements": [
@@ -44,10 +56,13 @@
     ],
     [
       "reconstructor"
+    ],
+    [
+      "digitizer"
     ]
   ],
   "sends_telemetry_event": false,
-  "parent": "industrialcrops:industrial_crops/matter_digitization",
+  "parent": "industrialcrops:industrial_crops/processor_age",
   "rewards": {
     "experience": 200
   }

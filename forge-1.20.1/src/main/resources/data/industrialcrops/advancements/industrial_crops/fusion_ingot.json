@@ -32,7 +32,7 @@
     ]
   ],
   "sends_telemetry_event": false,
-  "parent": "industrialcrops:industrial_crops/fusion_melon",
+  "parent": "industrialcrops:industrial_crops/industrial_gourds",
   "rewards": {
     "experience": 100
   }

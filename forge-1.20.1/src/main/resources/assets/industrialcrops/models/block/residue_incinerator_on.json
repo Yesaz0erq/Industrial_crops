@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "industrialcrops:block/processor_gold_device_bottom",
+    "front": "industrialcrops:block/residue_incinerator_front_on",
+    "side": "industrialcrops:block/processor_gold_device_side",
+    "top": "industrialcrops:block/processor_gold_device_top"
+  }
+}

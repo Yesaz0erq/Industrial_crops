@@ -30,19 +30,73 @@ public final class CarroteCuriosEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void incoming(LivingIncomingDamageEvent event) {
-        if (event.getAmount() > 0 && event.getEntity() instanceof Player player && blockAttack(player)) {
+        if (event.getAmount() > 0 && event.getEntity() instanceof Player player
+                && ((event.getSource().is(net.minecraft.tags.DamageTypeTags.IS_EXPLOSION) && has(player, CarroteCuriosItems.BLAST))
+                || (event.getSource().is(net.minecraft.tags.DamageTypeTags.IS_FALL) && has(player, CarroteCuriosItems.FALL))
+                || blockAttack(player))) {
             event.setCanceled(true);
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void death(net.neoforged.neoforge.event.entity.living.LivingDeathEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (saveFromDeath(player)) event.setCanceled(true);
+        else resetCarriedCharges(player);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void peacefulSpawns(net.neoforged.neoforge.event.entity.living.MobSpawnEvent.PositionCheck event) {
+        if (protectedSpawn(event, event.getSpawnType())) {
+            event.setResult(net.neoforged.neoforge.event.entity.living.MobSpawnEvent.PositionCheck.Result.FAIL);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void peacefulFinalize(net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent event) {
+        if (protectedSpawn(event, event.getSpawnType())) event.setSpawnCancelled(true);
+    }
+
+    private static boolean protectedSpawn(net.neoforged.neoforge.event.entity.living.MobSpawnEvent event,
+            net.minecraft.world.entity.MobSpawnType reason) {
+        if (reason != net.minecraft.world.entity.MobSpawnType.NATURAL
+                || event.getEntity().getType().getCategory() != net.minecraft.world.entity.MobCategory.MONSTER
+                || event.getEntity().getType().is(net.neoforged.neoforge.common.Tags.EntityTypes.BOSSES)) return false;
+        for (var player : event.getLevel().getLevel().players()) {
+            if (player.isAlive() && !player.isSpectator() && player.distanceToSqr(event.getX(), event.getY(), event.getZ()) <= 32 * 32
+                    && has(player, CarroteCuriosItems.PEACE)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @SubscribeEvent
+    public static void villageLoot(net.neoforged.neoforge.event.LootTableLoadEvent event) {
+        if (!event.getName().getNamespace().equals("minecraft") || !event.getName().getPath().startsWith("chests/village/")) return;
+        var pool = net.minecraft.world.level.storage.loot.LootPool.lootPool().name("carrote_curios:village_carrote")
+                .setRolls(net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly(1))
+                .when(net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition.randomChance(0.25F));
+        CarroteCuriosItems.ITEMS.getEntries().forEach(item -> pool.add(net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem(item.get())));
+        event.getTable().addPool(pool.build());
     }
 
     @SubscribeEvent
     public static void tick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (player.tickCount % 20 == 0) updateSubstituteCooldowns(player);
+        if (has(player, CarroteCuriosItems.NIGHT_VISION)) {
+            var vision = player.getEffect(MobEffects.NIGHT_VISION);
+            if (vision == null || (!vision.isInfiniteDuration() && vision.getDuration() < 220)) {
+                player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 240, 0, true, false, true));
+            }
+        }
         if (has(player, CarroteCuriosItems.LUCK)) {
+            int amplifier = 3 * count(player, CarroteCuriosItems.LUCK) - 1;
             var effect = player.getEffect(MobEffects.LUCK);
-            if (effect == null || effect.getAmplifier() < 2
-                    || (effect.getAmplifier() == 2 && !effect.isInfiniteDuration() && effect.getDuration() < 10)) {
-                player.addEffect(new MobEffectInstance(MobEffects.LUCK, 20, 2, true, false, true));
+            if (effect == null || effect.getAmplifier() < amplifier
+                    || (effect.getAmplifier() == amplifier && !effect.isInfiniteDuration() && effect.getDuration() < 10)) {
+                player.addEffect(new MobEffectInstance(MobEffects.LUCK, 20, amplifier, true, false, true));
             }
         }
         boolean equipped = has(player, CarroteCuriosItems.FLIGHT);
@@ -64,6 +118,7 @@ public final class CarroteCuriosEvents {
         var previous = event.getOriginal().getPersistentData();
         var next = event.getEntity().getPersistentData();
         next.putLong(STEEL_READY, previous.getLong(STEEL_READY));
+        next.putLong(HELMET_STEEL_READY, previous.getLong(HELMET_STEEL_READY));
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

@@ -11,6 +11,13 @@
     "carrote_curios:flight_carrote",
     "carrote_curios:arcane_carrote",
     "carrote_curios:steel_carrote",
-    "industrialcrops:remote_access_device"
+    "industrialcrops:remote_access_device",
+    "carrote_curios:power_carrote",
+    "carrote_curios:peace_carrote",
+    "carrote_curios:substitute_carrote",
+    "carrote_curios:night_vision_carrote",
+    "carrote_curios:blast_carrote",
+    "carrote_curios:fall_carrote",
+    "carrote_curios:helmet_carrote"
   ]
 }

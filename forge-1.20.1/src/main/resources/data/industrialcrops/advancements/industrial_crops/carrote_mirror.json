@@ -1,0 +1,34 @@
+{
+  "display": {
+    "description": {
+      "translate": "advancements.industrialcrops.progress.carrote_mirror.description"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.carrote_mirror.title"
+    },
+    "icon": {
+      "item": "carrote_curios:helmet_carrote"
+    }
+  },
+  "criteria": {
+    "obtained": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "carrote_curios:helmet_carrote"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "parent": "industrialcrops:industrial_crops/carrote_accessory",
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

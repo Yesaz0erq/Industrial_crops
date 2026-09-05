@@ -56,7 +56,7 @@
     ]
   ],
   "sends_telemetry_event": false,
-  "parent": "industrialcrops:industrial_crops/liquid_plasma",
+  "parent": "industrialcrops:industrial_crops/bio_power",
   "rewards": {
     "experience": 100
   }

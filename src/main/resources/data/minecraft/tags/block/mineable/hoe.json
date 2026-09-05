@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "industrialcrops:industrial_carrot_block",
+    "industrialcrops:industrial_potato_block",
+    "industrialcrops:industrial_wheat_block",
+    "industrialcrops:comet_leaves"
+  ]
+}

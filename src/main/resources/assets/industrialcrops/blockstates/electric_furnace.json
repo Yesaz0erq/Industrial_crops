@@ -1,18 +1,33 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,lit=false": {
       "model": "industrialcrops:block/electric_furnace"
     },
-    "facing=east": {
+    "facing=north,lit=true": {
+      "model": "industrialcrops:block/electric_furnace_on"
+    },
+    "facing=east,lit=false": {
       "model": "industrialcrops:block/electric_furnace",
       "y": 90
     },
-    "facing=south": {
+    "facing=east,lit=true": {
+      "model": "industrialcrops:block/electric_furnace_on",
+      "y": 90
+    },
+    "facing=south,lit=false": {
       "model": "industrialcrops:block/electric_furnace",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,lit=true": {
+      "model": "industrialcrops:block/electric_furnace_on",
+      "y": 180
+    },
+    "facing=west,lit=false": {
       "model": "industrialcrops:block/electric_furnace",
+      "y": 270
+    },
+    "facing=west,lit=true": {
+      "model": "industrialcrops:block/electric_furnace_on",
       "y": 270
     }
   }

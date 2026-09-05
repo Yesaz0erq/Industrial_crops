@@ -77,7 +77,7 @@
     ]
   ],
   "sends_telemetry_event": false,
-  "parent": "industrialcrops:industrial_crops/processor_age",
+  "parent": "industrialcrops:industrial_crops/basic_network",
   "rewards": {
     "experience": 100
   }

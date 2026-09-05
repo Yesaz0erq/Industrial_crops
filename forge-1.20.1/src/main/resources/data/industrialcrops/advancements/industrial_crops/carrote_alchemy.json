@@ -1,0 +1,34 @@
+{
+  "display": {
+    "description": {
+      "translate": "advancements.industrialcrops.progress.carrote_alchemy.description"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.carrote_alchemy.title"
+    },
+    "icon": {
+      "item": "carrote:carrote_steel_ingot"
+    }
+  },
+  "criteria": {
+    "obtained": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "carrote:carrote_steel_ingot"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "parent": "industrialcrops:industrial_crops/root",
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

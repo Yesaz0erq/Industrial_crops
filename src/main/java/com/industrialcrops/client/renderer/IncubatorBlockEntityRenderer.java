@@ -3,7 +3,6 @@ package com.industrialcrops.client.renderer;
 import com.industrialcrops.block.IncubatorBlock;
 import com.industrialcrops.block.entity.IncubatorBlockEntity;
 import com.industrialcrops.IndustrialCrops;
-import com.industrialcrops.registry.ModEntities;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -15,6 +14,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Slime;
+import software.bernie.geckolib.animatable.GeoEntity;
 
 public final class IncubatorBlockEntityRenderer implements BlockEntityRenderer<IncubatorBlockEntity> {
     private static final ResourceLocation GLASS_TEXTURE = ResourceLocation.fromNamespaceAndPath(
@@ -49,22 +49,35 @@ public final class IncubatorBlockEntityRenderer implements BlockEntityRenderer<I
             if (displaySlime != null) {
                 displaySlime.tickCount = (int) (slime_converter.getLevel().getGameTime() % Integer.MAX_VALUE);
                 displaySlime.setYRot(0.0F);
+                displaySlime.yRotO = 0.0F;
                 displaySlime.setYHeadRot(0.0F);
+                displaySlime.yHeadRotO = 0.0F;
                 displaySlime.yBodyRot = 0.0F;
                 displaySlime.yBodyRotO = 0.0F;
+                displaySlime.setXRot(0.0F);
+                displaySlime.xRotO = 0.0F;
+                // This is a render-only entity: never tick its AI or spawn jump particles.
+                // Keep GeckoLib's idle/core animation and animate the entire model together.
+                displaySlime.setOnGround(true);
+                float phase = ((slime_converter.getLevel().getGameTime()
+                        + Math.floorMod(slime_converter.getBlockPos().asLong(), 48L)) % 48L + partialTick) / 48.0F;
+                float airborne = Math.max(0.0F, (phase - 0.2F) / 0.6F);
+                float hop = airborne < 1.0F ? 4.0F * airborne * (1.0F - airborne) : 0.0F;
+                float squash = phase < 0.2F ? (float) Math.sin(phase / 0.2F * Math.PI)
+                        : phase > 0.8F ? (float) Math.sin((phase - 0.8F) / 0.2F * Math.PI) : 0.0F;
                 poseStack.pushPose();
-                poseStack.translate(0.5D, 0.08D, 0.5D);
-                // Slime models face local -Z, while the slime_converter window is local +Z.
-                poseStack.mulPose(Axis.YP.rotationDegrees(180.0F + facingRotation));
-                float scale = 0.38F / Math.max(1, slime_converter.getSlimeSize());
-                poseStack.scale(scale, scale, scale);
+                poseStack.translate(0.5D, 0.14D + hop * 0.12D, 0.5D);
+                // Entity renderers already rotate a zero-yaw model by 180 degrees to face +Z.
+                // Apply only the block rotation, so the face always points through the glass.
+                poseStack.mulPose(Axis.YP.rotationDegrees(facingRotation));
+                // Industrial geo models are fixed-size, unlike vanilla slimes' size-scaled renderer.
+                float scale = displaySlime instanceof GeoEntity ? 0.62F : 0.95F / displaySlime.getSize();
+                poseStack.scale(scale * (1.0F + squash * 0.08F),
+                        scale * (1.0F - squash * 0.12F), scale * (1.0F + squash * 0.08F));
                 ContainedSlimeRenderContext.setActive(true);
                 try {
-                    Minecraft.getInstance().getEntityRenderDispatcher().render(
+                    Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(displaySlime).render(
                             displaySlime,
-                            0.0D,
-                            0.0D,
-                            0.0D,
                             0.0F,
                             partialTick,
                             poseStack,
@@ -73,8 +86,8 @@ public final class IncubatorBlockEntityRenderer implements BlockEntityRenderer<I
                     );
                 } finally {
                     ContainedSlimeRenderContext.setActive(false);
+                    poseStack.popPose();
                 }
-                poseStack.popPose();
             }
         }
 
@@ -133,15 +146,11 @@ public final class IncubatorBlockEntityRenderer implements BlockEntityRenderer<I
     }
 
     private void refreshEntity(IncubatorBlockEntity slime_converter) {
-        if (displayedType == slime_converter.getSlimeType() && displayedSize == slime_converter.getSlimeSize()) {
+        if (displaySlime != null && displaySlime.level() == slime_converter.getLevel()
+                && displayedType == slime_converter.getSlimeType() && displayedSize == slime_converter.getSlimeSize()) {
             return;
         }
-        EntityType<? extends Slime> type = switch (slime_converter.getSlimeType()) {
-            case IncubatorBlockEntity.SLIME_COPPER -> ModEntities.BROWN_CREATE_SLIME.get();
-            case IncubatorBlockEntity.SLIME_IRON -> ModEntities.GRAY_GEAR_SLIME.get();
-            case IncubatorBlockEntity.SLIME_GOLD -> ModEntities.GOLDEN_REDSTONE_LAMP_SLIME.get();
-            default -> EntityType.SLIME;
-        };
+        EntityType<? extends Slime> type = IncubatorBlockEntity.getSlimeEntityType(slime_converter.getSlimeType());
         displaySlime = type.create(slime_converter.getLevel());
         if (displaySlime != null) {
             displaySlime.setSize(slime_converter.getSlimeSize(), true);

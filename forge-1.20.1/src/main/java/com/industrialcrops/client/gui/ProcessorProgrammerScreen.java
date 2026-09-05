@@ -24,12 +24,14 @@ public final class ProcessorProgrammerScreen extends UpgradeableMachineScreen<Pr
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        IndustrialGuiStyle.drawBackground(graphics, BACKGROUND, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawContainer(graphics, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawWorkPanel(graphics, leftPos + 10, topPos + 25, 156, 39);
+        IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8, 84, 142);
         for (int slot = 0; slot < 5; slot++) {
             IndustrialGuiStyle.drawSlot(graphics, leftPos + 16 + slot * 18, topPos + 34);
         }
         IndustrialGuiStyle.drawMekanismSmallRight(graphics, leftPos + 111, topPos + 40, menu.getScaledProgress(28));
-        IndustrialGuiStyle.drawSlot(graphics, leftPos + 142, topPos + 34);
+        IndustrialGuiStyle.drawMachineWell(graphics, leftPos + 142, topPos + 34);
         drawUpgradeDrawer(graphics, ProcessorProgrammerMenu.UPGRADE_X, ProcessorProgrammerMenu.UPGRADE_Y);
     }
 

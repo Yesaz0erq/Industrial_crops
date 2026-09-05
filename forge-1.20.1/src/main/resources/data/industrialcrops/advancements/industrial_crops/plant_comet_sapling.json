@@ -30,5 +30,5 @@
     ]
   ],
   "sends_telemetry_event": false,
-  "parent": "industrialcrops:industrial_crops/comet_soil"
+  "parent": "industrialcrops:industrial_crops/five_wonders"
 }

@@ -28,7 +28,7 @@ modId = "carrote_curios"
 version = "${version}"
 displayName = "Carrote Curios"
 authors = "${mod_author}"
-description = '''罗贝饰品：十种基于 Curios API 的胡萝卜饰品。'''
+description = '''胡罗贝饰品：十七种不同品质的胡萝卜饰品，可在村庄宝箱发现。支持可选 Curios 饰品栏与头盔能力复制。'''
 
 [[mixins]]
 config = "carrote_curios.mixins.json"
