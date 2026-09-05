@@ -18,6 +18,8 @@
     "industrialcrops:comet_sign",
     "industrialcrops:comet_wall_sign",
     "industrialcrops:comet_hanging_sign",
-    "industrialcrops:comet_wall_hanging_sign"
+    "industrialcrops:comet_wall_hanging_sign",
+    "industrialcrops:industrial_melon_block",
+    "industrialcrops:industrial_pumpkin_block"
   ]
 }

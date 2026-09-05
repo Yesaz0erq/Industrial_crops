@@ -73,6 +73,7 @@ public final class ElectricFurnaceBlockEntity extends BlockEntity implements Men
         PoweredMachineSupport.pullEnergy(level, pos, furnace.energy, RECEIVE_RATE);
         int step = SpeedUpgradeHelper.progressStep(furnace.inventory, UPGRADE_START, UPGRADE_COUNT, PROCESS_TICKS);
         boolean changed = false;
+        boolean working = false;
         for (int channel = 0; channel < CHANNELS; channel++) {
             RecipeResult recipe = furnace.recipe(channel);
             if (recipe == null || !furnace.canOutput(channel, recipe.result())) {
@@ -83,6 +84,7 @@ public final class ElectricFurnaceBlockEntity extends BlockEntity implements Men
             int cost = ENERGY_PER_BASE_TICK * advance;
             if (furnace.energy.getEnergyStored() < cost) continue;
             furnace.energy.consume(cost);
+            working = true;
             furnace.progress[channel] += advance;
             changed = true;
             if (furnace.progress[channel] >= PROCESS_TICKS) {
@@ -92,6 +94,8 @@ public final class ElectricFurnaceBlockEntity extends BlockEntity implements Men
             }
         }
         if (changed) furnace.setChanged();
+        var lit = com.industrialcrops.block.ElectricFurnaceBlock.LIT;
+        if (state.getValue(lit) != working) level.setBlock(pos, state.setValue(lit, working), 3);
     }
 
     private @Nullable RecipeResult recipe(int channel) {

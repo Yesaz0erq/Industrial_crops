@@ -1,0 +1,34 @@
+{
+  "display": {
+    "description": {
+      "translate": "advancements.industrialcrops.progress.carrote_stability.description"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.carrote_stability.title"
+    },
+    "icon": {
+      "item": "carrote:stable_matter_ingot"
+    }
+  },
+  "criteria": {
+    "obtained": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "carrote:stable_matter_ingot"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "parent": "industrialcrops:industrial_crops/carrote_alchemy",
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

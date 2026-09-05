@@ -32,7 +32,7 @@
     ]
   ],
   "sends_telemetry_event": false,
-  "parent": "industrialcrops:industrial_crops/crystal_ingot",
+  "parent": "industrialcrops:industrial_crops/plasma_industry",
   "rewards": {
     "experience": 150
   }

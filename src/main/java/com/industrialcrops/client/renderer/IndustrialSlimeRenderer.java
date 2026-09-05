@@ -1,6 +1,9 @@
 package com.industrialcrops.client.renderer;
 
 import com.industrialcrops.client.model.IndustrialSlimeModel;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -16,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class IndustrialSlimeRenderer<T extends Entity & GeoAnimatable> extends DynamicGeoEntityRenderer<T> {
     private final Map<ResourceLocation, RenderType> shellTypes = new ConcurrentHashMap<>();
+    private final Map<ResourceLocation, RenderType> containedShellTypes = new ConcurrentHashMap<>();
     private final String shellRenderTypeName;
     private final boolean shellDepthTest;
 
@@ -42,7 +46,8 @@ public abstract class IndustrialSlimeRenderer<T extends Entity & GeoAnimatable> 
     ) {
         if ("body".equals(bone.getName())) {
             if (ContainedSlimeRenderContext.isActive()) {
-                return RenderType.entityTranslucent(texture);
+                // Do not let the transparent shell write depth before the face and internal core.
+                return containedShellTypes.computeIfAbsent(texture, key -> shellRenderType(key, true));
             }
             return shellTypes.computeIfAbsent(texture, this::shellRenderType);
         }
@@ -58,6 +63,37 @@ public abstract class IndustrialSlimeRenderer<T extends Entity & GeoAnimatable> 
     }
 
     protected RenderType shellRenderType(ResourceLocation texture) {
-        return RenderType.entityTranslucent(texture);
+        return shellRenderType(texture, false);
     }
+
+    private RenderType shellRenderType(ResourceLocation texture, boolean contained) {
+        return ShellRenderState.create(shellRenderTypeName, texture, contained, shellDepthTest);
+    }
+
+    private static final class ShellRenderState extends RenderStateShard {
+        private ShellRenderState() { super("industrialcrops_shell", () -> {}, () -> {}); }
+
+        private static RenderType create(String shellRenderTypeName, ResourceLocation texture, boolean contained, boolean shellDepthTest) {
+            RenderType.CompositeState.CompositeStateBuilder builder = RenderType.CompositeState.builder()
+                    .setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
+                    .setTextureState(new TextureStateShard(texture, false, false))
+                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                    .setCullState(NO_CULL)
+                    .setLightmapState(LIGHTMAP)
+                    .setOverlayState(OVERLAY)
+                    .setWriteMaskState(COLOR_WRITE);
+            if (contained || shellDepthTest) {
+                builder.setDepthTestState(LEQUAL_DEPTH_TEST);
+            }
+            return RenderType.create(
+                    shellRenderTypeName + (contained ? "_contained" : ""),
+                    DefaultVertexFormat.NEW_ENTITY,
+                    VertexFormat.Mode.QUADS,
+                    1536,
+                    true,
+                    true,
+                    builder.createCompositeState(true)
+            );
+        }
+}
 }

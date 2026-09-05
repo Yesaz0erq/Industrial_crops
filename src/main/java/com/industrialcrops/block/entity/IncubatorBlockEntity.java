@@ -84,14 +84,7 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
             return false;
         }
 
-        EntityType<? extends Slime> entityType = switch (slimeType) {
-            case SLIME_COPPER -> ModEntities.BROWN_CREATE_SLIME.get();
-            case SLIME_IRON -> ModEntities.GRAY_GEAR_SLIME.get();
-            case SLIME_GOLD -> ModEntities.GOLDEN_REDSTONE_LAMP_SLIME.get();
-            case SLIME_DIAMOND -> ModEntities.DIAMOND_PROCESSOR_SLIME.get();
-            default -> EntityType.SLIME;
-        };
-        Slime slime = entityType.create(serverLevel);
+        Slime slime = getSlimeEntityType(slimeType).create(serverLevel);
         if (slime == null) {
             return false;
         }
@@ -112,6 +105,17 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
         progress = 0;
         sync();
         return true;
+    }
+
+    /** Shared by release and display, so all stored types use the same entity model. */
+    public static EntityType<? extends Slime> getSlimeEntityType(int type) {
+        return switch (type) {
+            case SLIME_COPPER -> ModEntities.BROWN_CREATE_SLIME.get();
+            case SLIME_IRON -> ModEntities.GRAY_GEAR_SLIME.get();
+            case SLIME_GOLD -> ModEntities.GOLDEN_REDSTONE_LAMP_SLIME.get();
+            case SLIME_DIAMOND -> ModEntities.DIAMOND_PROCESSOR_SLIME.get();
+            default -> EntityType.SLIME;
+        };
     }
 
     public void setStoredSlime(int type, int size) {

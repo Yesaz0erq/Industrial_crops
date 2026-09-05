@@ -127,7 +127,11 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
         switch (machine.kind) {
             case GENERATOR -> machine.tickGenerator();
             case BATTERY -> machine.pushEnergyToNeighbors();
-            case INCINERATOR -> machine.tickIncinerator();
+            case INCINERATOR -> {
+                boolean working = machine.tickIncinerator();
+                var lit = com.industrialcrops.block.ResidueIncineratorBlock.LIT;
+                if (state.getValue(lit) != working) level.setBlock(pos, state.setValue(lit, working), 3);
+            }
         }
     }
 
@@ -153,14 +157,16 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
         setChanged();
     }
 
-    private void tickIncinerator() {
+    private boolean tickIncinerator() {
         BioEnergyMachineBlockEntity generator = findGeneratorWithResidue();
-        if (generator == null) return;
-        if (burnTime <= 0 && !consumeFuel()) return;
+        if (generator == null) return false;
+        if (burnTime <= 0 && !consumeFuel()) return false;
         if (generator.removeResidue(1) > 0) {
             burnTime--;
             setChanged();
+            return true;
         }
+        return false;
     }
 
     private boolean consumeFuel() {

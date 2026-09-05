@@ -1,0 +1,32 @@
+{
+  "display": {
+    "description": {
+      "translate": "advancements.industrialcrops.progress.carrote_accessory.description"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.carrote_accessory.title"
+    },
+    "icon": {
+      "item": "carrote_curios:strength_carrote"
+    }
+  },
+  "criteria": {
+    "obtained": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "curios:carrote"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "parent": "industrialcrops:industrial_crops/root",
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

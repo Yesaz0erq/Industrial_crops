@@ -35,7 +35,7 @@ public abstract class EnchantmentMenuMixin {
     private void carroteCurios$arcane(ItemStack stack, int slot, int level, CallbackInfoReturnable<List<EnchantmentInstance>> cir) {
         if (CarroteCuriosEffects.has(carroteCurios$player, CarroteCuriosItems.ARCANE)) {
             cir.setReturnValue(cir.getReturnValue().stream()
-                    .map(entry -> new EnchantmentInstance(entry.enchantment, Math.min(255, entry.level + 1))).toList());
+                    .map(entry -> new EnchantmentInstance(entry.enchantment, Math.min(255, entry.level + CarroteCuriosEffects.count(carroteCurios$player, CarroteCuriosItems.ARCANE)))).toList());
         }
     }
 }

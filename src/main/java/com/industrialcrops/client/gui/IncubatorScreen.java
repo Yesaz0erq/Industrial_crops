@@ -41,7 +41,10 @@ public final class IncubatorScreen extends UpgradeableMachineScreen<IncubatorMen
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        IndustrialGuiStyle.drawBackground(graphics, BACKGROUND, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawContainer(graphics, leftPos, topPos, imageWidth, imageHeight);
+        IndustrialGuiStyle.drawWorkPanel(graphics, leftPos + 68, topPos + 24, 98, 45);
+        IndustrialGuiStyle.drawMachineWell(graphics, leftPos + 79, topPos + 34);
+        IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8, 84, 142);
         IndustrialGuiStyle.drawMekanismBar(graphics, leftPos + 121, topPos + 57, menu.getScaledProgress(25));
         drawUpgradeDrawer(graphics, IncubatorMenu.UPGRADE_X, IncubatorMenu.UPGRADE_Y);
     }

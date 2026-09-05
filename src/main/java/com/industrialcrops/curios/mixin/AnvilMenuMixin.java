@@ -25,7 +25,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         if (!output.isEmpty() && CarroteCuriosEffects.has(player, CarroteCuriosItems.ARCANE)
                 && !EnchantmentHelper.getEnchantments(inputSlots.getItem(1)).isEmpty()) {
             // Each preview is rebuilt from the inputs; rename/repair alone never awards levels.
-            CarroteCuriosEffects.boostEnchantments(output);
+            CarroteCuriosEffects.boostEnchantments(output, CarroteCuriosEffects.count(player, CarroteCuriosItems.ARCANE));
             broadcastChanges();
         }
     }

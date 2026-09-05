@@ -77,7 +77,7 @@ modId="carrote_curios"
 version="${mod_version}"
 displayName="Carrote Curios"
 authors="${mod_authors}"
-description='十种胡罗贝饰品，可通过手持或 Curios 饰品栏生效。'
+description='胡罗贝饰品：十七种不同品质的胡萝卜饰品，可在村庄宝箱发现。支持可选 Curios 饰品栏与头盔能力复制。'
 
 [[dependencies.carrote_curios]]
 modId="forge"
