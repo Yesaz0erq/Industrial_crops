@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "industrialcrops:block/crystal_steel_device_side",
+    "side": "industrialcrops:block/crystal_steel_device_side",
+    "top": "industrialcrops:block/crystal_steel_workbench_top",
+    "bottom": "industrialcrops:block/crystal_steel_device_bottom",
+    "front": "industrialcrops:block/crystal_steel_workbench_front"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#top"
+        },
+        "down": {
+          "texture": "#bottom"
+        },
+        "north": {
+          "texture": "#front"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        }
+      }
+    }
+  ]
+}

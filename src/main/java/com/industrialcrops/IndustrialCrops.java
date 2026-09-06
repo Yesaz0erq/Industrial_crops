@@ -28,6 +28,7 @@ public final class IndustrialCrops {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public IndustrialCrops() {
+        net.minecraft.world.item.crafting.ShapedRecipe.setCraftingSize(5, 5);
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModBlocks.BLOCKS.register(modEventBus);
         ModEntities.ENTITY_TYPES.register(modEventBus);

@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "industrialcrops:block/wireless_crystal_transmitter",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "industrialcrops:block/wireless_crystal_transmitter",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "industrialcrops:block/wireless_crystal_transmitter",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "industrialcrops:block/wireless_crystal_transmitter",
+      "y": 270
+    }
+  }
+}

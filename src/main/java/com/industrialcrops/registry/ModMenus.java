@@ -32,6 +32,10 @@ public final class ModMenus {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, IndustrialCrops.MOD_ID);
 
+    public static final RegistryObject<MenuType<com.industrialcrops.screen.CrystalSteelWorkbenchMenu>> CRYSTAL_STEEL_WORKBENCH =
+            MENUS.register("crystal_steel_workbench", () -> new MenuType<>(
+                    (IContainerFactory<com.industrialcrops.screen.CrystalSteelWorkbenchMenu>) com.industrialcrops.screen.CrystalSteelWorkbenchMenu::new,
+                    FeatureFlags.DEFAULT_FLAGS));
     public static final RegistryObject<MenuType<RootOreExtractorMenu>> ROOT_ORE_EXTRACTOR =
             MENUS.register("basic_crop_conversion_device", () -> new MenuType<>(
                     (IContainerFactory<RootOreExtractorMenu>) RootOreExtractorMenu::new,
@@ -129,6 +133,10 @@ public final class ModMenus {
     public static final RegistryObject<MenuType<GoldPlasmaExtractorMenu>> GOLD_PLASMA_EXTRACTOR =
             MENUS.register("gold_plasma_extractor", () -> new MenuType<>(
                     (IContainerFactory<GoldPlasmaExtractorMenu>) GoldPlasmaExtractorMenu::new, FeatureFlags.DEFAULT_FLAGS));
+
+    public static final RegistryObject<MenuType<com.industrialcrops.screen.WirelessEnergyTransmitterMenu>> WIRELESS_ENERGY_TRANSMITTER =
+            MENUS.register("wireless_energy_transmitter", () -> new MenuType<>(
+                    (IContainerFactory<com.industrialcrops.screen.WirelessEnergyTransmitterMenu>) com.industrialcrops.screen.WirelessEnergyTransmitterMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     private ModMenus() {
     }
