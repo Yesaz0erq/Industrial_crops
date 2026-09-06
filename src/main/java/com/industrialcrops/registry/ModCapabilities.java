@@ -8,6 +8,8 @@ public final class ModCapabilities {
     }
 
     public static void register(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.WIRELESS_ENERGY_TRANSMITTER.get(),
+                (entity, side) -> entity.getEnergyStorage(side));
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 ModBlockEntities.ROOT_ORE_EXTRACTOR.get(),
@@ -104,6 +106,8 @@ public final class ModCapabilities {
                 (entity, side) -> entity.getEnergyStorage(side));
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.GOLD_PLASMA_EXTRACTOR.get(),
                 (entity, side) -> entity.getOutputHandler());
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.CRYSTAL_STEEL_WORKBENCH.get(),
+                (entity, side) -> entity.getTank());
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.COPPER_FLUID_STORAGE_CABINET.get(),
                 (entity, side) -> entity.getTank());
     }

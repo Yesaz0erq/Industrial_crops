@@ -111,6 +111,9 @@ public final class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GoldPlasmaExtractorBlockEntity>> GOLD_PLASMA_EXTRACTOR =
             BLOCK_ENTITIES.register("gold_plasma_extractor", () -> BlockEntityType.Builder
                     .of(GoldPlasmaExtractorBlockEntity::new, ModBlocks.GOLD_PLASMA_EXTRACTOR.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.industrialcrops.block.entity.CrystalSteelWorkbenchBlockEntity>> CRYSTAL_STEEL_WORKBENCH =
+            BLOCK_ENTITIES.register("crystal_steel_workbench", () -> BlockEntityType.Builder
+                    .of(com.industrialcrops.block.entity.CrystalSteelWorkbenchBlockEntity::new, ModBlocks.CRYSTAL_STEEL_WORKBENCH.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CopperFluidStorageCabinetBlockEntity>> COPPER_FLUID_STORAGE_CABINET =
             BLOCK_ENTITIES.register("copper_fluid_storage_cabinet", () -> BlockEntityType.Builder
                     .of(CopperFluidStorageCabinetBlockEntity::new, ModBlocks.COPPER_FLUID_STORAGE_CABINET.get()).build(null));
@@ -186,6 +189,10 @@ public final class ModBlockEntities {
                             ModBlocks.INDUSTRIAL_MELON_BLOCK.get(),
                             ModBlocks.INDUSTRIAL_PUMPKIN_BLOCK.get())
                     .build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.industrialcrops.block.entity.WirelessEnergyTransmitterBlockEntity>> WIRELESS_ENERGY_TRANSMITTER =
+            BLOCK_ENTITIES.register("wireless_energy_transmitter", () -> BlockEntityType.Builder
+                    .of(com.industrialcrops.block.entity.WirelessEnergyTransmitterBlockEntity::new, ModBlocks.WIRELESS_ENERGY_TRANSMITTER.get()).build(null));
 
     private ModBlockEntities() {
     }

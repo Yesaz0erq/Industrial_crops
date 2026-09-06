@@ -20,8 +20,8 @@
   "itemGroup.carrote.section.carrote_steel": "胡罗贝与悖钢",
   "itemGroup.carrote.section.stable_matter": "稳态物质",
   "itemGroup.carrote.section.devices": "悖钢设备",
-  "tooltip.carrote.function.carrote_steel_forge": "将胡罗贝和下界合金锭投入炉内进行锻造；支持右键、丢入、漏斗和管道输入。",
-  "tooltip.carrote.function.material_hardening_device": "放入任意物品进行物质刚化，使其获得不可破坏属性且不再消耗耐久。",
-  "tooltip.carrote.function.mimic_block": "放置后等待5秒，使其转化为自身右侧方块；只复制方块状态，不复制容器内容。",
-  "tooltip.carrote.function.universal_replication_device": "放置在带FE属性设备的左侧，独立模拟右侧设备的能量与配置，不复制物品或流体；天蓝框可复制，红框不可复制。"
+  "tooltip.carrote.function.carrote_steel_forge": "锻造悖钢。将胡罗贝和下界合金锭投入炉内。",
+  "tooltip.carrote.function.material_hardening_device": "使物品不再消耗耐久。放入要处理的物品。",
+  "tooltip.carrote.function.mimic_block": "变为右侧的方块。放在目标方块左侧，等待5秒。",
+  "tooltip.carrote.function.universal_replication_device": "模拟右侧能量设备。放在目标设备左侧，等待复制完成。"
 }

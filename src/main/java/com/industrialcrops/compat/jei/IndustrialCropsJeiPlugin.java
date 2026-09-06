@@ -41,6 +41,7 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(
+                new CrystalWorkbenchRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
                 new RootOreExtractorRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
                 new ManipulatorRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
                 new CropCompressorRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
@@ -52,6 +53,7 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
+        registration.addRecipes(CrystalWorkbenchRecipeCategory.TYPE, com.industrialcrops.recipe.CrystalWorkbenchRecipes.all());
         registration.addRecipes(RootOreExtractorRecipeCategory.TYPE, RootOreExtractorRecipes.all());
         registration.addRecipes(ManipulatorRecipeCategory.TYPE, ManipulatorRecipes.all());
         registration.addRecipes(CropCompressorRecipeCategory.TYPE, CropCompressorRecipes.all());
@@ -62,6 +64,7 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.CRYSTAL_STEEL_WORKBENCH.asItem()), CrystalWorkbenchRecipeCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.ROOT_ORE_EXTRACTOR.asItem()), RootOreExtractorRecipeCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_MANIPULATOR.asItem()), ManipulatorRecipeCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.ADVANCED_MANIPULATOR.asItem()), ManipulatorRecipeCategory.TYPE);

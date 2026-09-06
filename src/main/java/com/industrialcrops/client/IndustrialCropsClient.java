@@ -63,6 +63,7 @@ public final class IndustrialCropsClient {
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(ModMenus.WIRELESS_ENERGY_TRANSMITTER.get(), com.industrialcrops.client.gui.WirelessEnergyTransmitterScreen::new);
         event.register(ModMenus.ROOT_ORE_EXTRACTOR.get(), RootOreExtractorScreen::new);
         event.register(ModMenus.CROP_COMPRESSOR.get(), CropCompressorScreen::new);
         event.register(ModMenus.CROP_ANALYSIS_DEVICE.get(), CropAnalysisDeviceScreen::new);
@@ -82,6 +83,7 @@ public final class IndustrialCropsClient {
         event.register(ModMenus.ELECTRIC_FURNACE.get(), ElectricFurnaceScreen::new);
         event.register(ModMenus.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestScreen::new);
         event.register(ModMenus.PIPE_SORTER.get(), PipeSorterScreen::new);
+        event.register(ModMenus.CRYSTAL_STEEL_WORKBENCH.get(), com.industrialcrops.client.gui.CrystalSteelWorkbenchScreen::new);
         event.register(ModMenus.GOLD_PLASMA_EXTRACTOR.get(), GoldPlasmaExtractorScreen::new);
     }
 
@@ -166,8 +168,10 @@ public final class IndustrialCropsClient {
                 ModEntities.DIAMOND_PROCESSOR_SLIME.get(),
                 DiamondProcessorSlimeRenderer::new
         );
+        event.registerBlockEntityRenderer(ModBlockEntities.WIRELESS_ENERGY_TRANSMITTER.get(), com.industrialcrops.client.renderer.WirelessEnergyTransmitterRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.INCUBATOR.get(), IncubatorBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.CRYSTAL_STEEL_WORKBENCH.get(), com.industrialcrops.client.renderer.CrystalSteelWorkbenchRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.COPPER_FLUID_STORAGE_CABINET.get(), CopperFluidStorageCabinetRenderer::new);
         event.registerEntityRenderer(ModEntities.GOLDEN_ROCKET.get(), GoldenRocketRenderer::new);
         event.registerEntityRenderer(ModEntities.TARGET_MARKER.get(), TargetMarkerRenderer::new);

@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_casing": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "industrialcrops:crystal_steel_device_casing"
+            ]
+          }
+        ]
+      }
+    },
+    "has_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "industrialcrops:crystal_steel_workbench"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_casing",
+      "has_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "industrialcrops:crystal_steel_workbench"
+    ]
+  }
+}

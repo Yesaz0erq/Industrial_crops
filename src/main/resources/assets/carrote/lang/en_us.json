@@ -20,8 +20,8 @@
   "itemGroup.carrote.section.carrote_steel": "Carrote and Carrote Steel",
   "itemGroup.carrote.section.stable_matter": "Stable Matter",
   "itemGroup.carrote.section.devices": "Carrote Steel Devices",
-  "tooltip.carrote.function.carrote_steel_forge": "Insert Carrote and a Netherite Ingot to forge them; accepts right-clicked items, dropped items, hoppers, and pipes.",
-  "tooltip.carrote.function.material_hardening_device": "Insert any item to harden it, making it unbreakable and preventing durability loss.",
-  "tooltip.carrote.function.mimic_block": "Place it and wait five seconds to transform it into the block on its right; block state is copied, but container contents are not.",
-  "tooltip.carrote.function.universal_replication_device": "Place it on the left side of an FE-capable device to emulate the device energy and configuration independently without copying items or fluids; sky blue is valid and red is invalid."
+  "tooltip.carrote.function.carrote_steel_forge": "Forges Carrote steel. Put Carrote and netherite ingots into the forge.",
+  "tooltip.carrote.function.material_hardening_device": "Makes items unbreakable. Insert the item to harden.",
+  "tooltip.carrote.function.mimic_block": "Transforms into the block on its right. Place to the left of the target and wait five seconds.",
+  "tooltip.carrote.function.universal_replication_device": "Replicates the energy device on its right. Place to the left of the target and wait for replication."
 }

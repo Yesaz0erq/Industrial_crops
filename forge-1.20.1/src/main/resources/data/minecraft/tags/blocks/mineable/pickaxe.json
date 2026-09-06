@@ -53,6 +53,8 @@
     "carrote:mimic_block",
     "carrote:carrote_steel_forge",
     "carrote:material_hardening_device",
-    "carrote:universal_replication_device"
+    "carrote:universal_replication_device",
+    "industrialcrops:wireless_energy_transmitter",
+    "industrialcrops:crystal_steel_workbench"
   ]
 }

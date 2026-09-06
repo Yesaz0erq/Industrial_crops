@@ -94,6 +94,8 @@ public final class ModBlocks {
     public static final DeferredBlock<Block> COPPER_DEVICE_CASING = registerMachineBlock("copper_device_casing");
     public static final DeferredBlock<Block> IRON_DEVICE_CASING = registerMachineBlock("iron_device_casing");
     public static final DeferredBlock<Block> PROCESSOR_GOLD_DEVICE_CASING = registerMachineBlock("processor_integrated_gold_device_casing");
+    public static final DeferredBlock<Block> CRYSTAL_STEEL_WORKBENCH = BLOCKS.register("crystal_steel_workbench",
+            () -> new com.industrialcrops.block.CrystalSteelWorkbenchBlock(machineProperties().mapColor(MapColor.COLOR_PURPLE)));
     public static final DeferredBlock<Block> CRYSTAL_STEEL_DEVICE_CASING = BLOCKS.register("crystal_steel_device_casing",
             () -> new Block(machineProperties().mapColor(MapColor.COLOR_PURPLE)));
     public static final DeferredBlock<Block> ROOT_ORE_EXTRACTOR = BLOCKS.register("basic_crop_conversion_device",
@@ -294,6 +296,10 @@ public final class ModBlocks {
     public static final DeferredBlock<FlowerPotBlock> POTTED_COMET_SAPLING = BLOCKS.register("potted_comet_sapling",
             () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, COMET_SAPLING,
                     BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_OAK_SAPLING)));
+
+    public static final DeferredBlock<Block> WIRELESS_ENERGY_TRANSMITTER = BLOCKS.register("wireless_energy_transmitter",
+            () -> new com.industrialcrops.block.WirelessEnergyTransmitterBlock(machineProperties()
+                    .mapColor(MapColor.COLOR_PURPLE).noOcclusion()));
 
     private ModBlocks() {
     }

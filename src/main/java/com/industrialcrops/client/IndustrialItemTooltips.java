@@ -48,6 +48,10 @@ public final class IndustrialItemTooltips {
         if (Screen.hasShiftDown()) {
             event.getToolTip().add(Component.translatable("tooltip.industrialcrops.function").withStyle(ChatFormatting.GOLD));
             event.getToolTip().add(Component.translatable(key).withStyle(ChatFormatting.GRAY));
+            if (id.getPath().equals("matter_digitization_device")) {
+                event.getToolTip().add(rainbow(Component.translatable(
+                        "tooltip.industrialcrops.matter_digitization_device.hint").getString()));
+            }
         } else {
             event.getToolTip().add(Component.translatable("tooltip.industrialcrops.hold_shift")
                     .withStyle(ChatFormatting.DARK_GRAY));

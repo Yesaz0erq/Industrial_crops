@@ -186,6 +186,7 @@ public final class ModItems {
     public static final RegistryObject<BlockItem> COPPER_DEVICE_CASING = registerBlockItem("copper_device_casing", ModBlocks.COPPER_DEVICE_CASING);
     public static final RegistryObject<BlockItem> IRON_DEVICE_CASING = registerBlockItem("iron_device_casing", ModBlocks.IRON_DEVICE_CASING);
     public static final RegistryObject<BlockItem> PROCESSOR_GOLD_DEVICE_CASING = registerBlockItem("processor_integrated_gold_device_casing", ModBlocks.PROCESSOR_GOLD_DEVICE_CASING);
+    public static final RegistryObject<BlockItem> CRYSTAL_STEEL_WORKBENCH = registerBlockItem("crystal_steel_workbench", ModBlocks.CRYSTAL_STEEL_WORKBENCH);
     public static final RegistryObject<BlockItem> CRYSTAL_STEEL_DEVICE_CASING = registerBlockItem("crystal_steel_device_casing", ModBlocks.CRYSTAL_STEEL_DEVICE_CASING);
     public static final RegistryObject<BlockItem> ROOT_ORE_EXTRACTOR = registerBlockItem("basic_crop_conversion_device", ModBlocks.ROOT_ORE_EXTRACTOR);
     public static final RegistryObject<BlockItem> CROP_COMPRESSOR = registerBlockItem("crop_compressor", ModBlocks.CROP_COMPRESSOR);
@@ -256,6 +257,8 @@ public final class ModItems {
     public static final RegistryObject<HangingSignItem> COMET_HANGING_SIGN = ITEMS.register("comet_hanging_sign",
             () -> new HangingSignItem(ModBlocks.COMET_HANGING_SIGN.get(),
                     ModBlocks.COMET_WALL_HANGING_SIGN.get(), new Item.Properties().stacksTo(16)));
+
+    public static final RegistryObject<BlockItem> WIRELESS_ENERGY_TRANSMITTER = registerBlockItem("wireless_energy_transmitter", ModBlocks.WIRELESS_ENERGY_TRANSMITTER);
 
     private ModItems() {
     }

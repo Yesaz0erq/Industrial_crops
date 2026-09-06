@@ -57,6 +57,8 @@ public final class IndustrialCropsClient {
     @SubscribeEvent
     public static void registerScreens(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
+            MenuScreens.register(ModMenus.WIRELESS_ENERGY_TRANSMITTER.get(), com.industrialcrops.client.gui.WirelessEnergyTransmitterScreen::new);
+            MenuScreens.register(ModMenus.CRYSTAL_STEEL_WORKBENCH.get(), com.industrialcrops.client.gui.CrystalSteelWorkbenchScreen::new);
             MenuScreens.register(ModMenus.ROOT_ORE_EXTRACTOR.get(), RootOreExtractorScreen::new);
             MenuScreens.register(ModMenus.CROP_COMPRESSOR.get(), CropCompressorScreen::new);
             MenuScreens.register(ModMenus.CROP_ANALYSIS_DEVICE.get(), CropAnalysisDeviceScreen::new);
@@ -151,8 +153,10 @@ public final class IndustrialCropsClient {
                 ModEntities.DIAMOND_PROCESSOR_SLIME.get(),
                 DiamondProcessorSlimeRenderer::new
         );
+        event.registerBlockEntityRenderer(ModBlockEntities.WIRELESS_ENERGY_TRANSMITTER.get(), com.industrialcrops.client.renderer.WirelessEnergyTransmitterRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.INCUBATOR.get(), IncubatorBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.CRYSTAL_STEEL_WORKBENCH.get(), com.industrialcrops.client.renderer.CrystalSteelWorkbenchRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.COPPER_FLUID_STORAGE_CABINET.get(), CopperFluidStorageCabinetRenderer::new);
         event.registerEntityRenderer(ModEntities.GOLDEN_ROCKET.get(), GoldenRocketRenderer::new);
         event.registerEntityRenderer(ModEntities.TARGET_MARKER.get(), TargetMarkerRenderer::new);

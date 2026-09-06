@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PC",
+    "TF"
+  ],
+  "key": {
+    "P": {
+      "item": "industrialcrops:comet_fruit"
+    },
+    "T": {
+      "item": "minecraft:crafting_table"
+    },
+    "C": {
+      "item": "industrialcrops:crystal_steel_device_casing"
+    },
+    "F": {
+      "item": "industrialcrops:copper_fluid_storage_cabinet"
+    }
+  },
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:crystal_steel_workbench"
+  }
+}
