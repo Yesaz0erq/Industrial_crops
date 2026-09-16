@@ -14,21 +14,21 @@ public final class CarroteItems {
 
     public static final DeferredItem<CarroteItem> CARROTE = ITEMS.register("carrote",
             () -> new CarroteItem(new Item.Properties().rarity(Rarity.EPIC)));
-    public static final DeferredItem<Item> CARROTE_STEEL_INGOT = ITEMS.register("carrote_steel_ingot",
+    public static final DeferredItem<Item> CARROTE_STEEL_INGOT = ITEMS.register("paradox_steel_ingot",
             () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
     public static final DeferredItem<Item> STABLE_MATTER_INGOT = ITEMS.register("stable_matter_ingot",
             () -> new Item(new Item.Properties().rarity(Rarity.EPIC).fireResistant()));
 
     public static final DeferredItem<BlockItem> CARROTE_STEEL_DEVICE_CASING =
-            registerBlockItem("carrote_steel_device_casing", CarroteBlocks.CARROTE_STEEL_DEVICE_CASING);
+            registerBlockItem("paradox_steel_device_casing", CarroteBlocks.CARROTE_STEEL_DEVICE_CASING);
     public static final DeferredItem<BlockItem> CARROTE_STEEL_BLOCK =
-            registerBlockItem("carrote_steel_block", CarroteBlocks.CARROTE_STEEL_BLOCK);
+            registerBlockItem("paradox_steel_block", CarroteBlocks.CARROTE_STEEL_BLOCK);
     public static final DeferredItem<BlockItem> STABLE_MATTER_BLOCK =
             registerBlockItem("stable_matter_block", CarroteBlocks.STABLE_MATTER_BLOCK);
     public static final DeferredItem<BlockItem> MIMIC_BLOCK =
             registerBlockItem("mimic_block", CarroteBlocks.MIMIC_BLOCK);
     public static final DeferredItem<BlockItem> CARROTE_STEEL_FORGE =
-            registerBlockItem("carrote_steel_forge", CarroteBlocks.CARROTE_STEEL_FORGE);
+            registerBlockItem("paradox_steel_forge", CarroteBlocks.CARROTE_STEEL_FORGE);
     public static final DeferredItem<BlockItem> MATERIAL_HARDENING_DEVICE =
             registerBlockItem("material_hardening_device", CarroteBlocks.MATERIAL_HARDENING_DEVICE);
     public static final DeferredItem<UniversalReplicationDeviceItem> UNIVERSAL_REPLICATION_DEVICE =

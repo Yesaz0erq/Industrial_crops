@@ -22,15 +22,24 @@ public final class CarroteCuriosItems {
     public static final RegistryObject<Item> FLIGHT = register("flight_carrote");
     public static final RegistryObject<Item> ARCANE = register("arcane_carrote");
     public static final RegistryObject<Item> STEEL = register("steel_carrote");
-    public static final RegistryObject<Item> POWER = register("power_carrote");
+    public static final RegistryObject<Item> POWER = register("powerful_carrote");
     public static final RegistryObject<Item> PEACE = register("peace_carrote");
     public static final RegistryObject<Item> SUBSTITUTE = register("substitute_carrote");
     public static final RegistryObject<Item> NIGHT_VISION = register("night_vision_carrote");
-    public static final RegistryObject<Item> BLAST = register("blast_carrote");
-    public static final RegistryObject<Item> FALL = register("fall_carrote");
+    public static final RegistryObject<Item> BLAST = register("blast_protection_carrote");
+    public static final RegistryObject<Item> FALL = register("fall_protection_carrote");
     public static final RegistryObject<Item> HELMET = ITEMS.register("helmet_carrote", HelmetAccessory::new);
 
+    public static final RegistryObject<Item> HARD = register("hard_carrote");
+    public static final RegistryObject<Item> UNBREAKABLE = register("unbreakable_carrote");
+    public static final RegistryObject<Item> RESISTANCE = register("resistance_carrote");
+    public static final RegistryObject<Item> THIEF = register("thief_carrote");
+    public static final RegistryObject<Item> ULTIMATE = register("ultimate_carrote");
+
     public static int defaultQuality(Item item) {
+        if (item == ULTIMATE.get()) return 5;
+        if (item == THIEF.get()) return 4;
+        if (item == UNBREAKABLE.get() || item == RESISTANCE.get()) return 2;
         if (item == HELMET.get()) return 3;
         if (item == POWER.get() || item == BLAST.get() || item == FLIGHT.get() || item == GREED.get()) return 2;
         if (item == SUBSTITUTE.get() || item == FALL.get() || item == ENCHANTING.get()
@@ -51,6 +60,20 @@ public final class CarroteCuriosItems {
         private Accessory(String name) {
             super(new Item.Properties().stacksTo(1));
             this.name = name;
+        }
+
+        @Override
+        public Component getName(ItemStack stack) {
+            Component original = super.getName(stack);
+            if (!name.equals("ultimate_carrote")) return original;
+            var result = Component.empty();
+            String text = original.getString();
+            float phase = (net.minecraft.Util.getMillis() % 4000L) / 4000F;
+            for (int i = 0; i < text.length(); i++) {
+                int color = net.minecraft.util.Mth.hsvToRgb((phase + i / (float)Math.max(1, text.length())) % 1F, .8F, 1F);
+                result.append(Component.literal(text.substring(i, i + 1)).withStyle(style -> style.withColor(color)));
+            }
+            return result;
         }
 
         @Override

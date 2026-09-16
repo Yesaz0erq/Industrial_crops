@@ -7,9 +7,9 @@
     "RPR"
   ],
   "key": {
-    "R": { "item": "carrote:carrote_steel_ingot" },
+    "R": { "item": "carrote:paradox_steel_ingot" },
     "I": { "item": "minecraft:iron_ingot" },
-    "C": { "item": "carrote:carrote_steel_device_casing" },
+    "C": { "item": "carrote:paradox_steel_device_casing" },
     "P": { "item": "industrialcrops:component_substrate" }
   },
   "result": {

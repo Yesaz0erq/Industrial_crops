@@ -30,8 +30,8 @@ public final class MatterMachineMenu extends AbstractContainerMenu {
     public static final int RELATIVE_SIDE_COUNT = 6;
     public static final int TERMINAL_ROWS = 3;
     public static final int TERMINAL_SLOTS = TERMINAL_ROWS * 9;
-    public static final int UPGRADE_SLOT_X = -68;
-    public static final int UPGRADE_SLOT_Y = 47;
+    public static final int UPGRADE_SLOT_X = -58;
+    public static final int UPGRADE_SLOT_Y = 45;
 
     private final MatterMachineBlockEntity blockEntity;
     private final BlockPos pos;
@@ -114,8 +114,8 @@ public final class MatterMachineMenu extends AbstractContainerMenu {
     private void addUpgradeSlots(MatterMachineBlockEntity entity) {
         int inventoryStart = entity.getUpgradeSlotStart();
         for (int index = 0; index < MatterMachineBlockEntity.UPGRADE_SLOT_COUNT; index++) {
-            int x = UPGRADE_SLOT_X + index % 2 * 22;
-            int y = UPGRADE_SLOT_Y + index / 2 * 22;
+            int x = UPGRADE_SLOT_X + index % 2 * 18;
+            int y = UPGRADE_SLOT_Y + index / 2 * 18;
             addSlot(new SlotItemHandler(entity.getInventory(), inventoryStart + index, x, y) {
                 @Override public boolean mayPlace(ItemStack stack) {
                     return MatterMachineBlockEntity.isMachineUpgrade(stack) && super.mayPlace(stack);

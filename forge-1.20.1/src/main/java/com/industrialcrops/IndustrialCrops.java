@@ -36,6 +36,8 @@ public final class IndustrialCrops {
         ModFluids.FLUID_TYPES.register(modEventBus);
         ModFluids.FLUIDS.register(modEventBus);
         ModEffects.EFFECTS.register(modEventBus);
+        com.industrialcrops.registry.ModPotions.POTIONS.register(modEventBus);
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(com.industrialcrops.effect.CropCombatEvents.class);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModMenus.MENUS.register(modEventBus);
         ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
@@ -49,6 +51,7 @@ public final class IndustrialCrops {
 
     private void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
+            com.industrialcrops.registry.ModPotions.brewing();
             com.industrialcrops.registry.ModCauldronInteractions.bootstrap();
             ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(
                     ModBlocks.COMET_SAPLING.getId(), ModBlocks.POTTED_COMET_SAPLING);

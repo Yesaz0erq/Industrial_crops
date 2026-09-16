@@ -58,25 +58,25 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
         super(ModBlockEntities.INCUBATOR.get(), pos, state);
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, IncubatorBlockEntity slime_converter) {
+    public static void tick(Level level, BlockPos pos, BlockState state, IncubatorBlockEntity slime_conversion_device) {
         if (level.isClientSide()) {
             return;
         }
-        int targetType = getOreSlimeType(slime_converter.inventory.getStackInSlot(0));
-        if (!slime_converter.hasSlime() || targetType == SLIME_NONE || targetType == slime_converter.slimeType) {
-            slime_converter.resetProgress();
+        int targetType = getOreSlimeType(slime_conversion_device.inventory.getStackInSlot(0));
+        if (!slime_conversion_device.hasSlime() || targetType == SLIME_NONE || targetType == slime_conversion_device.slimeType) {
+            slime_conversion_device.resetProgress();
             return;
         }
 
-        slime_converter.progress += SpeedUpgradeHelper.progressStep(slime_converter.inventory, UPGRADE_SLOT_START, UPGRADE_SLOT_COUNT, MAX_PROGRESS);
-        if (slime_converter.progress >= MAX_PROGRESS) {
-            slime_converter.inventory.extractItem(0, 1, false);
-            slime_converter.slimeType = targetType;
-            slime_converter.slimeSize = 1;
-            slime_converter.progress = 0;
-            slime_converter.sync();
+        slime_conversion_device.progress += SpeedUpgradeHelper.progressStep(slime_conversion_device.inventory, UPGRADE_SLOT_START, UPGRADE_SLOT_COUNT, MAX_PROGRESS);
+        if (slime_conversion_device.progress >= MAX_PROGRESS) {
+            slime_conversion_device.inventory.extractItem(0, 1, false);
+            slime_conversion_device.slimeType = targetType;
+            slime_conversion_device.slimeSize = 1;
+            slime_conversion_device.progress = 0;
+            slime_conversion_device.sync();
         } else {
-            slime_converter.setChanged();
+            slime_conversion_device.setChanged();
         }
     }
 
@@ -168,7 +168,7 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
             case SLIME_IRON -> Component.translatable("entity.industrialcrops.gray_gear_slime");
             case SLIME_GOLD -> Component.translatable("entity.industrialcrops.golden_redstone_lamp_slime");
             case SLIME_DIAMOND -> Component.translatable("entity.industrialcrops.blue_processor_slime");
-            default -> Component.translatable("gui.industrialcrops.slime_converter.empty");
+            default -> Component.translatable("gui.industrialcrops.slime_conversion_device.empty");
         };
     }
 
@@ -205,7 +205,7 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.industrialcrops.slime_converter");
+        return Component.translatable("block.industrialcrops.slime_conversion_device");
     }
 
     @Override

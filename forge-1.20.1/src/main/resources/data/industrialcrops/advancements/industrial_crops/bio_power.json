@@ -2,7 +2,7 @@
   "display": {
     "icon": {
       "count": 1,
-      "item": "industrialcrops:bio_energy_generator"
+      "item": "industrialcrops:bio_energy_generation_device"
     },
     "title": {
       "translate": "advancements.industrialcrops.progress.bio_power.title"
@@ -18,7 +18,7 @@
         "items": [
           {
             "items": [
-              "industrialcrops:bio_energy_generator"
+              "industrialcrops:bio_energy_generation_device"
             ]
           }
         ]

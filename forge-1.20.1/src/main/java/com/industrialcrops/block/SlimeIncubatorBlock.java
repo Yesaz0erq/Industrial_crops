@@ -56,18 +56,18 @@ public final class SlimeIncubatorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof SlimeIncubatorBlockEntity slime_converter) {
-            net.minecraftforge.network.NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer) player,slime_converter, buffer -> buffer.writeBlockPos(pos));
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, net.minecraft.world.InteractionHand hand, BlockHitResult hitResult) {
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof SlimeIncubatorBlockEntity slime_conversion_device) {
+            net.minecraftforge.network.NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer)player, slime_conversion_device, buffer -> buffer.writeBlockPos(pos));
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof SlimeIncubatorBlockEntity slime_converter) {
-            for (int slot = 0; slot < slime_converter.getSlots(); slot++) {
-                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), slime_converter.getStackInSlot(slot));
+        if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof SlimeIncubatorBlockEntity slime_conversion_device) {
+            for (int slot = 0; slot < slime_conversion_device.getSlots(); slot++) {
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), slime_conversion_device.getStackInSlot(slot));
             }
         }
         super.onRemove(state, level, pos, newState, movedByPiston);

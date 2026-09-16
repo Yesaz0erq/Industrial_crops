@@ -30,24 +30,24 @@ public final class IncubatorBlockEntityRenderer implements BlockEntityRenderer<I
 
     @Override
     public void render(
-            IncubatorBlockEntity slime_converter,
+            IncubatorBlockEntity slime_conversion_device,
             float partialTick,
             PoseStack poseStack,
             MultiBufferSource buffers,
             int packedLight,
             int packedOverlay
     ) {
-        if (slime_converter.getLevel() == null) {
+        if (slime_conversion_device.getLevel() == null) {
             return;
         }
 
         // JSON block-model Y rotations and PoseStack rotations use opposite signs.
         // Negating here keeps the rendered glass/slime aligned with the rotated frame on every axis.
-        float facingRotation = -slime_converter.getBlockState().getValue(IncubatorBlock.FACING).toYRot();
-        if (slime_converter.hasSlime()) {
-            refreshEntity(slime_converter);
+        float facingRotation = -slime_conversion_device.getBlockState().getValue(IncubatorBlock.FACING).toYRot();
+        if (slime_conversion_device.hasSlime()) {
+            refreshEntity(slime_conversion_device);
             if (displaySlime != null) {
-                displaySlime.tickCount = (int) (slime_converter.getLevel().getGameTime() % Integer.MAX_VALUE);
+                displaySlime.tickCount = (int) (slime_conversion_device.getLevel().getGameTime() % Integer.MAX_VALUE);
                 displaySlime.setYRot(0.0F);
                 displaySlime.yRotO = 0.0F;
                 displaySlime.setYHeadRot(0.0F);
@@ -59,8 +59,8 @@ public final class IncubatorBlockEntityRenderer implements BlockEntityRenderer<I
                 // This is a render-only entity: never tick its AI or spawn jump particles.
                 // Keep GeckoLib's idle/core animation and animate the entire model together.
                 displaySlime.setOnGround(true);
-                float phase = ((slime_converter.getLevel().getGameTime()
-                        + Math.floorMod(slime_converter.getBlockPos().asLong(), 48L)) % 48L + partialTick) / 48.0F;
+                float phase = ((slime_conversion_device.getLevel().getGameTime()
+                        + Math.floorMod(slime_conversion_device.getBlockPos().asLong(), 48L)) % 48L + partialTick) / 48.0F;
                 float airborne = Math.max(0.0F, (phase - 0.2F) / 0.6F);
                 float hop = airborne < 1.0F ? 4.0F * airborne * (1.0F - airborne) : 0.0F;
                 float squash = phase < 0.2F ? (float) Math.sin(phase / 0.2F * Math.PI)
@@ -146,19 +146,19 @@ public final class IncubatorBlockEntityRenderer implements BlockEntityRenderer<I
                 .endVertex();
     }
 
-    private void refreshEntity(IncubatorBlockEntity slime_converter) {
-        if (displaySlime != null && displaySlime.level() == slime_converter.getLevel()
-                && displayedType == slime_converter.getSlimeType() && displayedSize == slime_converter.getSlimeSize()) {
+    private void refreshEntity(IncubatorBlockEntity slime_conversion_device) {
+        if (displaySlime != null && displaySlime.level() == slime_conversion_device.getLevel()
+                && displayedType == slime_conversion_device.getSlimeType() && displayedSize == slime_conversion_device.getSlimeSize()) {
             return;
         }
-        EntityType<? extends Slime> type = IncubatorBlockEntity.getSlimeEntityType(slime_converter.getSlimeType());
-        displaySlime = type.create(slime_converter.getLevel());
+        EntityType<? extends Slime> type = IncubatorBlockEntity.getSlimeEntityType(slime_conversion_device.getSlimeType());
+        displaySlime = type.create(slime_conversion_device.getLevel());
         if (displaySlime != null) {
-            displaySlime.setSize(slime_converter.getSlimeSize(), true);
+            displaySlime.setSize(slime_conversion_device.getSlimeSize(), true);
             displaySlime.setYRot(0.0F);
             displaySlime.setYHeadRot(0.0F);
         }
-        displayedType = slime_converter.getSlimeType();
-        displayedSize = slime_converter.getSlimeSize();
+        displayedType = slime_conversion_device.getSlimeType();
+        displayedSize = slime_conversion_device.getSlimeSize();
     }
 }

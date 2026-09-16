@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public final class ProcessorProgrammerScreen extends UpgradeableMachineScreen<ProcessorProgrammerMenu> {
-    private static final ResourceLocation BACKGROUND = IndustrialGuiStyle.containerTexture("processor_programming_device");
+    private static final ResourceLocation BACKGROUND = IndustrialGuiStyle.containerTexture("component_programming_device");
 
     public ProcessorProgrammerScreen(ProcessorProgrammerMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);

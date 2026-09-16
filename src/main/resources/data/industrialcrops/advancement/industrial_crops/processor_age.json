@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "industrialcrops:processor_integrated_gold_device_casing",
+      "id": "industrialcrops:component_substrate_integrated_gold_device_casing",
       "count": 1
     },
     "title": {
@@ -18,7 +18,7 @@
       "conditions": {
         "items": [
           {
-            "items": "industrialcrops:processor_integrated_gold_device_casing"
+            "items": "industrialcrops:component_substrate_integrated_gold_device_casing"
           }
         ]
       }

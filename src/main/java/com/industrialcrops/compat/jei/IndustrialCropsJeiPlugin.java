@@ -41,9 +41,11 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(
+                new PlasmaExtractionRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
                 new CrystalWorkbenchRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
                 new RootOreExtractorRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
                 new ManipulatorRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
+                new ManipulatorRecipeCategory(registration.getJeiHelpers().getGuiHelper(), true),
                 new CropCompressorRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
                 new GourdModificationRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
                 new MixerRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
@@ -53,9 +55,11 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
+        registration.addRecipes(PlasmaExtractionRecipeCategory.TYPE, java.util.List.of(new PlasmaExtractionRecipeCategory.Recipe()));
         registration.addRecipes(CrystalWorkbenchRecipeCategory.TYPE, com.industrialcrops.recipe.CrystalWorkbenchRecipes.all());
         registration.addRecipes(RootOreExtractorRecipeCategory.TYPE, RootOreExtractorRecipes.all());
-        registration.addRecipes(ManipulatorRecipeCategory.TYPE, ManipulatorRecipes.all());
+        registration.addRecipes(ManipulatorRecipeCategory.TYPE, ManipulatorRecipes.forAdvanced(false));
+        registration.addRecipes(ManipulatorRecipeCategory.ADVANCED_TYPE, ManipulatorRecipes.forAdvanced(true).stream().filter(r -> !ManipulatorRecipes.forAdvanced(false).contains(r)).toList());
         registration.addRecipes(CropCompressorRecipeCategory.TYPE, CropCompressorRecipes.all());
         registration.addRecipes(GourdModificationRecipeCategory.TYPE, GourdModificationRecipes.all());
         registration.addRecipes(MixerRecipeCategory.TYPE, MixerRecipes.all());
@@ -64,10 +68,12 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GOLD_PLASMA_EXTRACTOR.asItem()), PlasmaExtractionRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.CRAFTING_PROCESSOR.asItem()), RecipeTypes.CRAFTING);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.CRYSTAL_STEEL_WORKBENCH.asItem()), CrystalWorkbenchRecipeCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.ROOT_ORE_EXTRACTOR.asItem()), RootOreExtractorRecipeCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_MANIPULATOR.asItem()), ManipulatorRecipeCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ADVANCED_MANIPULATOR.asItem()), ManipulatorRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ADVANCED_MANIPULATOR.asItem()), ManipulatorRecipeCategory.TYPE, ManipulatorRecipeCategory.ADVANCED_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.CROP_COMPRESSOR.asItem()), CropCompressorRecipeCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.GOURD_MODIFICATION_DEVICE.asItem()), GourdModificationRecipeCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.MIXER.asItem()), MixerRecipeCategory.TYPE);
@@ -94,6 +100,33 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
 
             @Override
             public IRecipeTransferError transferRecipe(AdvancedIndustrialStorageMenu menu,
+                                                       RecipeHolder<CraftingRecipe> recipe,
+                                                       IRecipeSlotsView recipeSlots,
+                                                       Player player,
+                                                       boolean maxTransfer,
+                                                       boolean doTransfer) {
+                if (doTransfer) PacketDistributor.sendToServer(new StorageCraftingTransferPayload(recipe.id()));
+                return null;
+            }
+        }, RecipeTypes.CRAFTING);
+        registration.addRecipeTransferHandler(new IRecipeTransferHandler<com.industrialcrops.screen.CraftingProcessorMenu, RecipeHolder<CraftingRecipe>>() {
+            @Override
+            public Class<? extends com.industrialcrops.screen.CraftingProcessorMenu> getContainerClass() {
+                return com.industrialcrops.screen.CraftingProcessorMenu.class;
+            }
+
+            @Override
+            public Optional<MenuType<com.industrialcrops.screen.CraftingProcessorMenu>> getMenuType() {
+                return Optional.of(ModMenus.CRAFTING_PROCESSOR.get());
+            }
+
+            @Override
+            public RecipeType<RecipeHolder<CraftingRecipe>> getRecipeType() {
+                return RecipeTypes.CRAFTING;
+            }
+
+            @Override
+            public IRecipeTransferError transferRecipe(com.industrialcrops.screen.CraftingProcessorMenu menu,
                                                        RecipeHolder<CraftingRecipe> recipe,
                                                        IRecipeSlotsView recipeSlots,
                                                        Player player,

@@ -37,16 +37,18 @@ public record ResizeStorageMenuPayload(BlockPos pos, int rows, boolean terminal)
     public static void handle(ResizeStorageMenuPayload payload, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) return;
         int rows = Math.max(3, Math.min(6, payload.rows));
-        if (player.distanceToSqr(payload.pos.getX() + .5, payload.pos.getY() + .5, payload.pos.getZ() + .5) > 64) return;
+
         if (payload.terminal) {
             if (!(player.containerMenu instanceof ItemNetworkTerminalMenu current)
                     || !current.getBlockPos().equals(payload.pos)
-                    || !(player.level().getBlockEntity(payload.pos) instanceof ItemNetworkTerminalBlockEntity blockEntity)) return;
+                    || !current.stillValid(player)) return;
+            var blockEntity=current.terminal();
             player.openMenu(provider(
                     blockEntity.getDisplayName(),
-                    (id, inventory, menuPlayer) -> new ItemNetworkTerminalMenu(id, inventory, blockEntity, payload.pos, rows)
-            ), buffer -> { buffer.writeBlockPos(payload.pos); buffer.writeVarInt(rows); });
+                    (id, inventory, menuPlayer) -> new ItemNetworkTerminalMenu(id, inventory, blockEntity, payload.pos, rows, current.isRemoteAccess())
+            ), buffer -> { buffer.writeBlockPos(payload.pos); buffer.writeVarInt(rows); buffer.writeBoolean(current.isRemoteAccess()); });
         } else {
+            if (player.distanceToSqr(payload.pos.getX()+.5,payload.pos.getY()+.5,payload.pos.getZ()+.5)>64) return;
             if (!(player.containerMenu instanceof AdvancedIndustrialStorageMenu current)
                     || !current.getBlockPos().equals(payload.pos)
                     || !(player.level().getBlockEntity(payload.pos) instanceof AdvancedIndustrialStorageBlockEntity blockEntity)) return;

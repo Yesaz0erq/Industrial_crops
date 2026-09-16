@@ -2,7 +2,7 @@
   "display": {
     "icon": {
       "count": 1,
-      "item": "industrialcrops:crystal_steel_device_casing"
+      "item": "industrialcrops:crystal_steel_casing"
     },
     "title": {
       "translate": "advancements.industrialcrops.progress.crystal_steel.title"
@@ -19,7 +19,7 @@
         "items": [
           {
             "items": [
-              "industrialcrops:crystal_steel_device_casing"
+              "industrialcrops:crystal_steel_casing"
             ]
           }
         ]

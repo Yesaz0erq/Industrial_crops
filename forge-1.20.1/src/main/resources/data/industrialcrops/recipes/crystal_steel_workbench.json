@@ -7,13 +7,13 @@
   ],
   "key": {
     "P": {
-      "item": "industrialcrops:comet_fruit"
+      "item": "industrialcrops:comet_essence"
     },
     "T": {
       "item": "minecraft:crafting_table"
     },
     "C": {
-      "item": "industrialcrops:crystal_steel_device_casing"
+      "item": "industrialcrops:crystal_steel_casing"
     },
     "F": {
       "item": "industrialcrops:copper_fluid_storage_cabinet"

@@ -18,7 +18,7 @@
       "conditions": {
         "items": [
           {
-            "items": "industrialcrops:digitized_item_copier"
+            "items": "industrialcrops:data_copying_device"
           }
         ]
       }

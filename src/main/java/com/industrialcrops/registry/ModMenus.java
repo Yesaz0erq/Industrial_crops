@@ -79,13 +79,13 @@ public final class ModMenus {
             ));
 
     public static final DeferredHolder<MenuType<?>, MenuType<IncubatorMenu>> INCUBATOR =
-            MENUS.register("slime_converter", () -> new MenuType<>(
+            MENUS.register("slime_conversion_device", () -> new MenuType<>(
                     (IContainerFactory<IncubatorMenu>) IncubatorMenu::new,
                     FeatureFlags.DEFAULT_FLAGS
             ));
 
     public static final DeferredHolder<MenuType<?>, MenuType<SlimeIncubatorMenu>> SLIME_INCUBATOR =
-            MENUS.register("slime_incubator", () -> new MenuType<>(
+            MENUS.register("slime_cultivation_device", () -> new MenuType<>(
                     (IContainerFactory<SlimeIncubatorMenu>) SlimeIncubatorMenu::new,
                     FeatureFlags.DEFAULT_FLAGS
             ));
@@ -103,12 +103,12 @@ public final class ModMenus {
             ));
 
     public static final DeferredHolder<MenuType<?>, MenuType<ProcessorProgrammerMenu>> PROCESSOR_PROGRAMMER =
-            MENUS.register("processor_programming_device", () -> new MenuType<>(
+            MENUS.register("component_programming_device", () -> new MenuType<>(
                     (IContainerFactory<ProcessorProgrammerMenu>) ProcessorProgrammerMenu::new,
                     FeatureFlags.DEFAULT_FLAGS
             ));
     public static final DeferredHolder<MenuType<?>, MenuType<AutomaticPlanterMenu>> AUTOMATIC_PLANTER =
-            MENUS.register("automatic_planter", () -> new MenuType<>(
+            MENUS.register("automatic_sowing_device", () -> new MenuType<>(
                     (IContainerFactory<AutomaticPlanterMenu>) AutomaticPlanterMenu::new,
                     FeatureFlags.DEFAULT_FLAGS
             ));
@@ -131,13 +131,22 @@ public final class ModMenus {
             MENUS.register("pipe_sorter", () -> new MenuType<>(
                     (IContainerFactory<PipeSorterMenu>) PipeSorterMenu::new, FeatureFlags.DEFAULT_FLAGS));
     public static final DeferredHolder<MenuType<?>, MenuType<GoldPlasmaExtractorMenu>> GOLD_PLASMA_EXTRACTOR =
-            MENUS.register("gold_plasma_extractor", () -> new MenuType<>(
+            MENUS.register("extraction_device", () -> new MenuType<>(
                     (IContainerFactory<GoldPlasmaExtractorMenu>) GoldPlasmaExtractorMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     public static final DeferredHolder<MenuType<?>, MenuType<com.industrialcrops.screen.WirelessEnergyTransmitterMenu>> WIRELESS_ENERGY_TRANSMITTER =
-            MENUS.register("wireless_energy_transmitter", () -> new MenuType<>(
+            MENUS.register("wireless_energy_transfer_device", () -> new MenuType<>(
                     (IContainerFactory<com.industrialcrops.screen.WirelessEnergyTransmitterMenu>) com.industrialcrops.screen.WirelessEnergyTransmitterMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
+    public static final DeferredHolder<MenuType<?>, MenuType<com.industrialcrops.screen.CrystalLogisticsMenu>> CRYSTAL_LOGISTICS =
+            MENUS.register("infinite_logistics_transfer_device", () -> new MenuType<>((IContainerFactory<com.industrialcrops.screen.CrystalLogisticsMenu>) com.industrialcrops.screen.CrystalLogisticsMenu::new, FeatureFlags.DEFAULT_FLAGS));
+
+    public static final DeferredHolder<MenuType<?>, MenuType<com.industrialcrops.screen.CraftingProcessorMenu>> CRAFTING_PROCESSOR =
+            MENUS.register("crafting_processing_device", () -> new MenuType<>((IContainerFactory<com.industrialcrops.screen.CraftingProcessorMenu>) com.industrialcrops.screen.CraftingProcessorMenu::new, FeatureFlags.DEFAULT_FLAGS));
+    public static final DeferredHolder<MenuType<?>, MenuType<com.industrialcrops.screen.TerrainProcessorMenu>> TERRAIN_PROCESSOR =
+            MENUS.register("terrain_processing_device", () -> new MenuType<>((IContainerFactory<com.industrialcrops.screen.TerrainProcessorMenu>) com.industrialcrops.screen.TerrainProcessorMenu::new, FeatureFlags.DEFAULT_FLAGS));
+    public static final DeferredHolder<MenuType<?>, MenuType<com.industrialcrops.screen.AnimalBreederMenu>> ANIMAL_BREEDER =
+            MENUS.register("automatic_animal_breeder", () -> new MenuType<>((IContainerFactory<com.industrialcrops.screen.AnimalBreederMenu>) com.industrialcrops.screen.AnimalBreederMenu::new, FeatureFlags.DEFAULT_FLAGS));
     private ModMenus() {
     }
 }

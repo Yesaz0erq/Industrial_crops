@@ -26,6 +26,13 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
     public static final int SLOTS_PER_CELL = 54;
     public static final int MAX_CELL_MULTIPLIER = 16;
     public static final int STORAGE_SLOT_COUNT = CELL_SLOT_COUNT * SLOTS_PER_CELL * MAX_CELL_MULTIPLIER;
+    public static final int FLUID_CAPACITY = 64_000;
+    private final net.neoforged.neoforge.fluids.capability.templates.FluidTank tank =
+            new net.neoforged.neoforge.fluids.capability.templates.FluidTank(FLUID_CAPACITY) {
+                @Override protected void onContentsChanged() { setChanged(); }
+            };
+    public boolean hasFluidStorage() { return getType() == ModBlockEntities.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get(); }
+    public net.neoforged.neoforge.fluids.capability.templates.FluidTank getTank() { return tank; }
     private boolean dimensionTicketRequested;
 
     private final ItemStackHandler dimensionUpgrade = new ItemStackHandler(1) {
@@ -282,6 +289,7 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
 
     private CompoundTag writeInventories(@Nullable HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
+        if (hasFluidStorage() && registries != null) tag.put("Fluid", tank.writeToNBT(registries, new CompoundTag()));
         tag.put("Cells", cellInventory.serializeNBT(registries));
         tag.put("Storage", storageInventory.serializeNBT(registries));
         tag.put("DimensionUpgrade", dimensionUpgrade.serializeNBT(registries));
@@ -289,6 +297,11 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
     }
 
     private void readInventories(CompoundTag tag, HolderLookup.Provider registries) {
+        if (hasFluidStorage()) {
+            tank.setFluid(net.neoforged.neoforge.fluids.FluidStack.EMPTY);
+            if (tag.contains("Fluid")) tank.readFromNBT(registries, tag.getCompound("Fluid"));
+            if (tank.getFluidAmount() > FLUID_CAPACITY) tank.getFluid().setAmount(FLUID_CAPACITY);
+        }
         if (tag.contains("Cells")) {
             readFixedSizeInventory(cellInventory, CELL_SLOT_COUNT, tag.getCompound("Cells"), registries);
         }

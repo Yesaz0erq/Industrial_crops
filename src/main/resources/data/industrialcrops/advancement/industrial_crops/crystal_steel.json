@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "industrialcrops:crystal_steel_device_casing",
+      "id": "industrialcrops:crystal_steel_casing",
       "count": 1
     },
     "title": {
@@ -18,7 +18,7 @@
       "conditions": {
         "items": [
           {
-            "items": "industrialcrops:crystal_steel_device_casing"
+            "items": "industrialcrops:crystal_steel_casing"
           }
         ]
       }

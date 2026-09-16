@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "industrialcrops:block/data_copying_device"
+    },
+    "facing=east": {
+      "model": "industrialcrops:block/data_copying_device",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "industrialcrops:block/data_copying_device",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "industrialcrops:block/data_copying_device",
+      "y": 270
+    }
+  }
+}

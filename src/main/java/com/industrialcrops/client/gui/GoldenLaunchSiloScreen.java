@@ -93,9 +93,9 @@ public final class GoldenLaunchSiloScreen extends IndustrialContainerScreen<Gold
         IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8,
                 GoldenLaunchSiloMenu.PLAYER_INVENTORY_Y, GoldenLaunchSiloMenu.PLAYER_HOTBAR_Y);
         if (upgradePanelOpen) {
-            IndustrialGuiStyle.drawCommonPanel(graphics, leftPos - 80, topPos + 20, 60, 52);
+            IndustrialGuiStyle.drawCommonPanel(graphics, leftPos - 62, topPos + 20, 42, 42);
             for (int index = 0; index < GoldenLaunchSiloBlockEntity.UPGRADE_SLOT_COUNT; index++) {
-                IndustrialGuiStyle.drawSlot(graphics,
+                IndustrialGuiStyle.drawRs2Slot(graphics,
                         leftPos + GoldenLaunchSiloMenu.UPGRADE_X - 1 + index % 2 * GoldenLaunchSiloMenu.UPGRADE_SPACING,
                         topPos + GoldenLaunchSiloMenu.UPGRADE_Y - 1 + index / 2 * GoldenLaunchSiloMenu.UPGRADE_SPACING);
             }

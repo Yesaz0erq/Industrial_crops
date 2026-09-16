@@ -7,7 +7,7 @@
       "translate": "advancements.industrialcrops.progress.carrote_alchemy.title"
     },
     "icon": {
-      "id": "carrote:carrote_steel_ingot"
+      "id": "carrote:paradox_steel_ingot"
     }
   },
   "criteria": {
@@ -15,14 +15,14 @@
       "conditions": {
         "items": [
           {
-            "items": "carrote:carrote_steel_ingot"
+            "items": "carrote:paradox_steel_ingot"
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
     }
   },
-  "parent": "industrialcrops:industrial_crops/root",
+  "parent": "industrialcrops:industrial_crops/carrote_discovery",
   "requirements": [
     [
       "obtained"

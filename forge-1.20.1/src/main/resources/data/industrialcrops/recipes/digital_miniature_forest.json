@@ -17,7 +17,7 @@
       "item": "minecraft:gold_ingot"
     },
     "C": {
-      "item": "industrialcrops:processor_integrated_gold_device_casing"
+      "item": "industrialcrops:component_substrate_integrated_gold_device_casing"
     },
     "R": {
       "item": "industrialcrops:reinforced_storage_component"

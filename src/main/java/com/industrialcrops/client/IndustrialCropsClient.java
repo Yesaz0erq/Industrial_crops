@@ -83,6 +83,10 @@ public final class IndustrialCropsClient {
         event.register(ModMenus.ELECTRIC_FURNACE.get(), ElectricFurnaceScreen::new);
         event.register(ModMenus.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestScreen::new);
         event.register(ModMenus.PIPE_SORTER.get(), PipeSorterScreen::new);
+        event.register(ModMenus.ANIMAL_BREEDER.get(), com.industrialcrops.client.gui.AnimalBreederScreen::new);
+        event.register(ModMenus.TERRAIN_PROCESSOR.get(), com.industrialcrops.client.gui.TerrainProcessorScreen::new);
+        event.register(ModMenus.CRAFTING_PROCESSOR.get(), com.industrialcrops.client.gui.CraftingProcessorScreen::new);
+        event.register(ModMenus.CRYSTAL_LOGISTICS.get(), com.industrialcrops.client.gui.CrystalLogisticsScreen::new);
         event.register(ModMenus.CRYSTAL_STEEL_WORKBENCH.get(), com.industrialcrops.client.gui.CrystalSteelWorkbenchScreen::new);
         event.register(ModMenus.GOLD_PLASMA_EXTRACTOR.get(), GoldPlasmaExtractorScreen::new);
     }
@@ -111,6 +115,13 @@ public final class IndustrialCropsClient {
 
     @SubscribeEvent
     public static void registerFluidTypeExtensions(net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent event) {
+        event.registerItem(new net.neoforged.neoforge.client.extensions.common.IClientItemExtensions() {
+            private com.industrialcrops.client.renderer.CrystalLogisticsItemRenderer renderer;
+            @Override public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                if (renderer == null) renderer = new com.industrialcrops.client.renderer.CrystalLogisticsItemRenderer();
+                return renderer;
+            }
+        }, ModBlocks.CRYSTAL_LOGISTICS.get().asItem());
         event.registerFluidType(new net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions() {
             private final ResourceLocation STILL = ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID,
                     "block/concentrated_plasma_juice_still");
@@ -172,6 +183,7 @@ public final class IndustrialCropsClient {
         event.registerBlockEntityRenderer(ModBlockEntities.INCUBATOR.get(), IncubatorBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.CRYSTAL_STEEL_WORKBENCH.get(), com.industrialcrops.client.renderer.CrystalSteelWorkbenchRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.CRYSTAL_LOGISTICS.get(), com.industrialcrops.client.renderer.CrystalLogisticsRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.COPPER_FLUID_STORAGE_CABINET.get(), CopperFluidStorageCabinetRenderer::new);
         event.registerEntityRenderer(ModEntities.GOLDEN_ROCKET.get(), GoldenRocketRenderer::new);
         event.registerEntityRenderer(ModEntities.TARGET_MARKER.get(), TargetMarkerRenderer::new);

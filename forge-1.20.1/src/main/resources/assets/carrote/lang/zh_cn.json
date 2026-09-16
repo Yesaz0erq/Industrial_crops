@@ -1,10 +1,10 @@
 {
   "item.carrote.carrote": "胡罗贝",
-  "item.carrote.carrote_steel_ingot": "悖钢锭",
+  "item.carrote.paradox_steel_ingot": "悖钢锭",
   "item.carrote.stable_matter_ingot": "稳态物质锭",
-  "block.carrote.carrote_steel_block": "悖钢块",
-  "block.carrote.carrote_steel_device_casing": "悖钢装置外壳",
-  "block.carrote.carrote_steel_forge": "悖钢锻造炉",
+  "block.carrote.paradox_steel_block": "悖钢块",
+  "block.carrote.paradox_steel_device_casing": "悖钢装置外壳",
+  "block.carrote.paradox_steel_forge": "悖钢锻造炉",
   "block.carrote.material_hardening_device": "物质刚化设备",
   "block.carrote.universal_replication_device": "通用复制设备",
   "message.carrote.universal_replication_device.no_source": "设备右侧不是可复制的功能方块。",
@@ -20,7 +20,7 @@
   "itemGroup.carrote.section.carrote_steel": "胡罗贝与悖钢",
   "itemGroup.carrote.section.stable_matter": "稳态物质",
   "itemGroup.carrote.section.devices": "悖钢设备",
-  "tooltip.carrote.function.carrote_steel_forge": "锻造悖钢。将胡罗贝和下界合金锭投入炉内。",
+  "tooltip.carrote.function.paradox_steel_forge": "锻造悖钢。将胡罗贝和下界合金锭投入炉内。",
   "tooltip.carrote.function.material_hardening_device": "使物品不再消耗耐久。放入要处理的物品。",
   "tooltip.carrote.function.mimic_block": "变为右侧的方块。放在目标方块左侧，等待5秒。",
   "tooltip.carrote.function.universal_replication_device": "模拟右侧能量设备。放在目标设备左侧，等待复制完成。"

@@ -25,7 +25,7 @@ public final class CrystalWorkbenchRecipeCategory implements IRecipeCategory<Cry
         for(int i=0;i<25;i++) builder.addSlot(RecipeIngredientRole.INPUT,2+i%5*18,2+i/5*18)
                 .setBackground(slot,-1,-1).addItemStack(recipe.inputs().get(i));
         builder.addSlot(RecipeIngredientRole.OUTPUT,110,38).setBackground(slot,-1,-1).addItemStack(recipe.output());
-        builder.addSlot(RecipeIngredientRole.INPUT,144,8).addFluidStack(recipe.fluid().getFluid(),recipe.fluid().getAmount())
+        if(!recipe.fluid().isEmpty()) builder.addSlot(RecipeIngredientRole.INPUT,144,8).addFluidStack(recipe.fluid().getFluid(),recipe.fluid().getAmount())
                 .setFluidRenderer(recipe.fluid().getAmount(),false,16,76);
     }
 }

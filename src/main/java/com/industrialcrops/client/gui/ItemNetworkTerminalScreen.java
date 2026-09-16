@@ -21,8 +21,8 @@ public final class ItemNetworkTerminalScreen extends IndustrialContainerScreen<I
     private static final int SEARCH_X = 95;
     private static final int SEARCH_Y = 7;
     private static final int SEARCH_WIDTH = 67;
-    private static final int SCROLL_X = 174;
-    private static final int SCROLL_Y = 20;
+    private static final int SCROLL_X = 175;
+    private static final int SCROLL_Y = 22;
     private static final int SCROLLER_HEIGHT = 15;
 
     private EditBox searchBox;
@@ -160,7 +160,7 @@ public final class ItemNetworkTerminalScreen extends IndustrialContainerScreen<I
     }
 
     private int scrollbarHeight() {
-        return menu.getVisibleRows() * 18 - 2;
+        return menu.getVisibleRows() * 18 - 6;
     }
 
     private boolean insideScrollbar(double mouseX, double mouseY) {

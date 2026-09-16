@@ -1,7 +1,11 @@
 {
   "replace": false,
   "values": [
-    "industrialcrops:wireless_energy_transmitter",
-    "industrialcrops:crystal_steel_workbench"
+    "industrialcrops:wireless_energy_transfer_device",
+    "industrialcrops:crystal_steel_workbench",
+    "industrialcrops:infinite_logistics_transfer_device",
+    "industrialcrops:crafting_processing_device",
+    "industrialcrops:terrain_processing_device",
+    "industrialcrops:automatic_animal_breeder"
   ]
 }

@@ -79,6 +79,8 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
     private int syncedScrollPositions = 1;
     private String searchQuery = "";
     private boolean cellSlotsVisible;
+    private boolean syncedFluidStorage;
+    private int syncedFluidId, syncedFluidAmount;
     private final int[] syncedCounts;
 
     public AdvancedIndustrialStorageMenu(int containerId, Inventory inventory, RegistryFriendlyByteBuf buffer) {
@@ -171,6 +173,18 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
             }
         });
 
+        addDataSlot(new DataSlot() {
+            public int get() { return blockEntity.hasFluidStorage() ? 1 : 0; }
+            public void set(int value) { syncedFluidStorage = value != 0; }
+        });
+        addDataSlot(new DataSlot() {
+            public int get() { return net.minecraft.core.registries.BuiltInRegistries.FLUID.getId(blockEntity.getTank().getFluid().getFluid()); }
+            public void set(int value) { syncedFluidId = value & 0xffff; }
+        });
+        addDataSlot(new DataSlot() {
+            public int get() { return blockEntity.getTank().getFluidAmount(); }
+            public void set(int value) { syncedFluidAmount = value & 0xffff; }
+        });
         addStorageSlots();
         addCellSlots();
         addSlot(new ResultSlot(inventory.player, craftingSlots, resultSlots, 0, resultSlot_X, getResultSlotY()));
@@ -179,6 +193,13 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
         addPlayerHotbar(inventory, PLAYER_INVENTORY_X, getPlayerHotbarY());
     }
 
+    public boolean hasFluidStorage() { return player.level().isClientSide() ? syncedFluidStorage : blockEntity.hasFluidStorage(); }
+    public net.neoforged.neoforge.fluids.FluidStack getStoredFluid() {
+        if (!player.level().isClientSide()) return blockEntity.getTank().getFluid().copy();
+        var fluid = net.minecraft.core.registries.BuiltInRegistries.FLUID.byId(syncedFluidId);
+        return fluid == null || fluid == net.minecraft.world.level.material.Fluids.EMPTY || syncedFluidAmount == 0
+                ? net.neoforged.neoforge.fluids.FluidStack.EMPTY : new net.neoforged.neoforge.fluids.FluidStack(fluid,syncedFluidAmount);
+    }
     public int getVisibleRows() { return visibleRows; }
     public int getVisibleSlotCount() { return storageSlotCount; }
     public int getCraftingGridY() { return 78 + (visibleRows - MIN_ROWS) * 18; }
@@ -399,7 +420,8 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
             Level targetLevel = blockEntity.getLevel();
             if (targetLevel == null || targetLevel.isClientSide()) return true;
             return targetLevel.hasChunkAt(pos)
-                    && targetLevel.getBlockState(pos).is(ModBlocks.REINFORCED_CONTROL_DEVICE.get())
+                    && (targetLevel.getBlockState(pos).is(ModBlocks.REINFORCED_CONTROL_DEVICE.get())
+                        || targetLevel.getBlockState(pos).is(ModBlocks.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get()))
                     && DimensionUpgradeHelper.canRemoteAccess(player, targetLevel, pos, blockEntity.getDimensionUpgrade());
         }
         return stillValid(access, player, ModBlocks.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get())

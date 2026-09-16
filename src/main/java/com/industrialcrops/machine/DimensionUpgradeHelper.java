@@ -59,6 +59,7 @@ public final class DimensionUpgradeHelper {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof BasicControlDeviceBlockEntity basic) return basic.getDimensionUpgrade();
         if (blockEntity instanceof AdvancedIndustrialStorageBlockEntity advanced) return advanced.getDimensionUpgrade();
+        if (blockEntity instanceof com.industrialcrops.block.entity.CrystalLogisticsBlockEntity logistics) return logistics.getDimensionUpgrade();
         return ItemStack.EMPTY;
     }
 }

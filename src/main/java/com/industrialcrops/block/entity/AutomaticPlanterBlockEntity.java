@@ -229,7 +229,7 @@ public final class AutomaticPlanterBlockEntity extends BlockEntity implements Me
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.industrialcrops.automatic_planter");
+        return Component.translatable("block.industrialcrops.automatic_sowing_device");
     }
 
     @Override

@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "id": "carrote:carrote"
+    },
+    "title": {
+      "translate": "advancements.industrialcrops.progress.carrote_discovery.title"
+    },
+    "description": {
+      "translate": "advancements.industrialcrops.progress.carrote_discovery.description"
+    }
+  },
+  "parent": "industrialcrops:industrial_crops/root",
+  "criteria": {
+    "obtained": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "carrote:carrote"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

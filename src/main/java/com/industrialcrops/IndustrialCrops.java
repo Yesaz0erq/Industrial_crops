@@ -39,6 +39,9 @@ public final class IndustrialCrops {
         ModFluids.FLUID_TYPES.register(modEventBus);
         ModFluids.FLUIDS.register(modEventBus);
         ModEffects.EFFECTS.register(modEventBus);
+        com.industrialcrops.registry.ModPotions.POTIONS.register(modEventBus);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.industrialcrops.registry.ModPotions::brewing);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.register(com.industrialcrops.effect.CropCombatEvents.class);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModMenus.MENUS.register(modEventBus);
         ModCreativeTabs.CREATIVE_TABS.register(modEventBus);

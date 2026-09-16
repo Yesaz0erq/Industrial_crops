@@ -24,15 +24,31 @@ public final class CarroteCuriosEffects {
         return count(entity, item) > 0;
     }
 
+    public static ItemStack activeHelmet(LivingEntity entity) {
+        if (entity == null) return ItemStack.EMPTY;
+        var worn = entity.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD);
+        if (worn.is(CarroteCuriosItems.HELMET.get())) return worn;
+        if (entity instanceof Player player && ultimateActive(entity)) {
+            return player.getInventory().items.stream().filter(s -> s.is(CarroteCuriosItems.HELMET.get())).findFirst().orElse(ItemStack.EMPTY);
+        }
+        return ItemStack.EMPTY;
+    }
+
     public static ItemStack copiedCarrote(LivingEntity entity) {
-        if (entity == null || !entity.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD).is(CarroteCuriosItems.HELMET.get()))
+        if (activeHelmet(entity).isEmpty())
             return ItemStack.EMPTY;
         if (curiosLoaded()) {
             for (var stack : CuriosIntegration.stacks(entity, true)) {
                 if (copyable(stack)) return effectiveCopy(stack);
             }
         }
-        return effectiveCopy(entity.getOffhandItem());
+        var offhand = effectiveCopy(entity.getOffhandItem());
+        if (!offhand.isEmpty() || !ultimateActive(entity)) return offhand;
+        if (entity instanceof Player player) {
+            return player.getInventory().items.stream().map(CarroteCuriosEffects::effectiveCopy)
+                    .filter(s -> !s.isEmpty()).findFirst().orElse(ItemStack.EMPTY);
+        }
+        return ItemStack.EMPTY;
     }
 
     private static boolean copyable(ItemStack stack) {
@@ -55,7 +71,16 @@ public final class CarroteCuriosEffects {
         return (normallyEquipped(entity, item.get()) ? 1 : 0) + (copiedCarrote(entity).is(item.get()) ? 1 : 0);
     }
 
+    public static boolean ultimateActive(LivingEntity entity) {
+        return directlyEquipped(entity, CarroteCuriosItems.ULTIMATE.get());
+    }
+
     private static boolean normallyEquipped(LivingEntity entity, Item accessory) {
+        return directlyEquipped(entity, accessory) || (entity instanceof Player player && ultimateActive(entity)
+                && player.getInventory().items.stream().anyMatch(stack -> stack.is(accessory)));
+    }
+
+    private static boolean directlyEquipped(LivingEntity entity, Item accessory) {
         if (entity == null) return false;
         if (entity.getMainHandItem().is(accessory) || entity.getOffhandItem().is(accessory)) return true;
         return curiosLoaded() && CuriosIntegration.isEquipped(entity, accessory);
@@ -90,6 +115,11 @@ public final class CarroteCuriosEffects {
         stacks.add(entity.getOffhandItem());
         stacks.add(entity.getMainHandItem());
         if (curiosLoaded()) stacks.addAll(CuriosIntegration.stacks(entity, false));
+        if (entity instanceof Player player && ultimateActive(entity)) {
+            for (var stack : player.getInventory().items) {
+                if (CarroteCuriosItems.isAccessory(stack) && !stacks.contains(stack)) stacks.add(stack);
+            }
+        }
         return stacks;
     }
 
@@ -107,7 +137,7 @@ public final class CarroteCuriosEffects {
         if (player.level().isClientSide) return false;
         // A same-kind accessory is one source; the helmet has its own independent charge.
         ItemStack original = activeStacks(player).stream().filter(s -> s.is(CarroteCuriosItems.SUBSTITUTE.get())).findFirst().orElse(ItemStack.EMPTY);
-        ItemStack helmet = player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD);
+        ItemStack helmet = activeHelmet(player);
         ItemStack charge = !original.isEmpty() && !isSpent(original) ? original
                 : copiedCarrote(player).is(CarroteCuriosItems.SUBSTITUTE.get()) && !isSpent(helmet) ? helmet : ItemStack.EMPTY;
         if (charge.isEmpty()) return false;

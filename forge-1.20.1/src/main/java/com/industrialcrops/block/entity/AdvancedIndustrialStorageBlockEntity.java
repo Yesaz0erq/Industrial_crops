@@ -18,11 +18,22 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+
 public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements MenuProvider {
     public static final int CELL_SLOT_COUNT = 6;
     public static final int SLOTS_PER_CELL = 54;
     public static final int MAX_CELL_MULTIPLIER = 16;
     public static final int STORAGE_SLOT_COUNT = CELL_SLOT_COUNT * SLOTS_PER_CELL * MAX_CELL_MULTIPLIER;
+    public static final int FLUID_CAPACITY = 64_000;
+    private final net.minecraftforge.fluids.capability.templates.FluidTank tank =
+            new net.minecraftforge.fluids.capability.templates.FluidTank(FLUID_CAPACITY) {
+                @Override protected void onContentsChanged() { setChanged(); }
+            };
+    public boolean hasFluidStorage() { return getType() == ModBlockEntities.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get(); }
+    public net.minecraftforge.fluids.capability.templates.FluidTank getTank() { return tank; }
     private boolean dimensionTicketRequested;
 
     private final ItemStackHandler dimensionUpgrade = new ItemStackHandler(1) {
@@ -279,6 +290,7 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
 
     private CompoundTag writeInventories() {
         CompoundTag tag = new CompoundTag();
+        if (hasFluidStorage()) tag.put("Fluid", tank.writeToNBT( new CompoundTag()));
         tag.put("Cells", cellInventory.serializeNBT());
         tag.put("Storage", storageInventory.serializeNBT());
         tag.put("DimensionUpgrade", dimensionUpgrade.serializeNBT());
@@ -286,6 +298,11 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
     }
 
     private void readInventories(CompoundTag tag) {
+        if (hasFluidStorage()) {
+            tank.setFluid(net.minecraftforge.fluids.FluidStack.EMPTY);
+            if (tag.contains("Fluid")) tank.readFromNBT( tag.getCompound("Fluid"));
+            if (tank.getFluidAmount() > FLUID_CAPACITY) tank.getFluid().setAmount(FLUID_CAPACITY);
+        }
         if (tag.contains("Cells")) {
             readFixedSizeInventory(cellInventory, CELL_SLOT_COUNT, tag.getCompound("Cells"));
         }
@@ -312,5 +329,23 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
 
     private static boolean isValidStorageSlot(int slot) {
         return slot >= 0 && slot < STORAGE_SLOT_COUNT;
+    }
+
+    private LazyOptional<net.minecraftforge.items.IItemHandler> forgeCapability0 = LazyOptional.of(this::getPipeItemHandler);
+    private LazyOptional<net.minecraftforge.fluids.capability.IFluidHandler> forgeCapability1 = LazyOptional.of(this::getTank);
+    @Override public <T> LazyOptional<T> getCapability(Capability<T> cap, @org.jetbrains.annotations.Nullable net.minecraft.core.Direction side) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER) return forgeCapability0.cast();
+        if (cap == ForgeCapabilities.FLUID_HANDLER && hasFluidStorage()) return forgeCapability1.cast();
+        return super.getCapability(cap, side);
+    }
+    @Override public void invalidateCaps() {
+        super.invalidateCaps();
+        forgeCapability0.invalidate();
+        forgeCapability1.invalidate();
+    }
+    @Override public void reviveCaps() {
+        super.reviveCaps();
+        forgeCapability0 = LazyOptional.of(this::getPipeItemHandler);
+        forgeCapability1 = LazyOptional.of(this::getTank);
     }
 }

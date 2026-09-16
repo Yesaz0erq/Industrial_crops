@@ -73,8 +73,8 @@ public final class IncubatorBlock extends BaseEntityBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
-        if (level.getBlockEntity(pos) instanceof IncubatorBlockEntity slime_converter) {
-            slime_converter.setStoredSlime(
+        if (level.getBlockEntity(pos) instanceof IncubatorBlockEntity slime_conversion_device) {
+            slime_conversion_device.setStoredSlime(
                     IncubatorBlockItem.getStoredType(stack),
                     IncubatorBlockItem.getStoredSize(stack)
             );
@@ -89,8 +89,8 @@ public final class IncubatorBlock extends BaseEntityBlock {
             Player player,
             BlockHitResult hitResult
     ) {
-        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof IncubatorBlockEntity slime_converter) {
-            player.openMenu(slime_converter, buffer -> buffer.writeBlockPos(pos));
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof IncubatorBlockEntity slime_conversion_device) {
+            player.openMenu(slime_conversion_device, buffer -> buffer.writeBlockPos(pos));
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     }
@@ -104,11 +104,11 @@ public final class IncubatorBlock extends BaseEntityBlock {
             boolean movedByPiston
     ) {
         if (!state.is(newState.getBlock()) && !level.isClientSide()
-                && level.getBlockEntity(pos) instanceof IncubatorBlockEntity slime_converter) {
+                && level.getBlockEntity(pos) instanceof IncubatorBlockEntity slime_conversion_device) {
             ItemStack machine = new ItemStack(ModItems.INCUBATOR.get());
-            slime_converter.writeStoredSlime(machine);
+            slime_conversion_device.writeStoredSlime(machine);
             Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), machine);
-            ItemStack ore = slime_converter.getInventory().getStackInSlot(0);
+            ItemStack ore = slime_conversion_device.getInventory().getStackInSlot(0);
             if (!ore.isEmpty()) {
                 Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), ore);
             }

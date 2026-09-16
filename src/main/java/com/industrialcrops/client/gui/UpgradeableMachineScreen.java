@@ -35,10 +35,10 @@ abstract class UpgradeableMachineScreen<M extends AbstractContainerMenu & Upgrad
 
     protected final void drawUpgradeDrawer(GuiGraphics graphics, int slotX, int slotY) {
         if (!upgradesOpen) return;
-        IndustrialGuiStyle.drawCommonPanel(graphics, leftPos - 80, topPos + 20, 60, 52);
+        IndustrialGuiStyle.drawCommonPanel(graphics, leftPos - 62, topPos + 20, 42, 42);
         for (int index = 0; index < 4; index++) {
-            IndustrialGuiStyle.drawSlot(graphics, leftPos + slotX - 1 + index % 2 * 22,
-                    topPos + slotY - 1 + index / 2 * 22);
+            IndustrialGuiStyle.drawRs2Slot(graphics, leftPos + slotX - 1 + index % 2 * 18,
+                    topPos + slotY - 1 + index / 2 * 18);
         }
     }
 

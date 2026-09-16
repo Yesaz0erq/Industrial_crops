@@ -109,7 +109,7 @@ public final class ModBlockEntities {
             BLOCK_ENTITIES.register("gold_fluid_pipe", () -> BlockEntityType.Builder
                     .of(FluidPipeBlockEntity::new, ModBlocks.GOLD_FLUID_PIPE.get()).build(null));
     public static final RegistryObject<BlockEntityType<GoldPlasmaExtractorBlockEntity>> GOLD_PLASMA_EXTRACTOR =
-            BLOCK_ENTITIES.register("gold_plasma_extractor", () -> BlockEntityType.Builder
+            BLOCK_ENTITIES.register("extraction_device", () -> BlockEntityType.Builder
                     .of(GoldPlasmaExtractorBlockEntity::new, ModBlocks.GOLD_PLASMA_EXTRACTOR.get()).build(null));
     public static final RegistryObject<BlockEntityType<com.industrialcrops.block.entity.CrystalSteelWorkbenchBlockEntity>> CRYSTAL_STEEL_WORKBENCH =
             BLOCK_ENTITIES.register("crystal_steel_workbench", () -> BlockEntityType.Builder
@@ -119,12 +119,12 @@ public final class ModBlockEntities {
                     .of(CopperFluidStorageCabinetBlockEntity::new, ModBlocks.COPPER_FLUID_STORAGE_CABINET.get()).build(null));
 
     public static final RegistryObject<BlockEntityType<IncubatorBlockEntity>> INCUBATOR =
-            BLOCK_ENTITIES.register("slime_converter", () -> BlockEntityType.Builder
+            BLOCK_ENTITIES.register("slime_conversion_device", () -> BlockEntityType.Builder
                     .of(IncubatorBlockEntity::new, ModBlocks.INCUBATOR.get())
                     .build(null));
 
     public static final RegistryObject<BlockEntityType<SlimeIncubatorBlockEntity>> SLIME_INCUBATOR =
-            BLOCK_ENTITIES.register("slime_incubator", () -> BlockEntityType.Builder
+            BLOCK_ENTITIES.register("slime_cultivation_device", () -> BlockEntityType.Builder
                     .of(SlimeIncubatorBlockEntity::new, ModBlocks.SLIME_INCUBATOR.get())
                     .build(null));
 
@@ -134,11 +134,11 @@ public final class ModBlockEntities {
                     .build(null));
 
     public static final RegistryObject<BlockEntityType<ProcessorProgrammerBlockEntity>> PROCESSOR_PROGRAMMER =
-            BLOCK_ENTITIES.register("processor_programming_device", () -> BlockEntityType.Builder
+            BLOCK_ENTITIES.register("component_programming_device", () -> BlockEntityType.Builder
                     .of(ProcessorProgrammerBlockEntity::new, ModBlocks.PROCESSOR_PROGRAMMER.get())
                     .build(null));
     public static final RegistryObject<BlockEntityType<AutomaticPlanterBlockEntity>> AUTOMATIC_PLANTER =
-            BLOCK_ENTITIES.register("automatic_planter", () -> BlockEntityType.Builder
+            BLOCK_ENTITIES.register("automatic_sowing_device", () -> BlockEntityType.Builder
                     .of(AutomaticPlanterBlockEntity::new, ModBlocks.AUTOMATIC_PLANTER.get())
                     .build(null));
 
@@ -146,7 +146,7 @@ public final class ModBlockEntities {
             BLOCK_ENTITIES.register("matter_digitization_device", () -> BlockEntityType.Builder
                     .of(MatterDigitizerBlockEntity::new, ModBlocks.MATTER_DIGITIZER.get()).build(null));
     public static final RegistryObject<BlockEntityType<DigitizedItemCopierBlockEntity>> DIGITIZED_ITEM_COPIER =
-            BLOCK_ENTITIES.register("digitized_item_copier", () -> BlockEntityType.Builder
+            BLOCK_ENTITIES.register("data_copying_device", () -> BlockEntityType.Builder
                     .of(DigitizedItemCopierBlockEntity::new, ModBlocks.DIGITIZED_ITEM_COPIER.get()).build(null));
     public static final RegistryObject<BlockEntityType<MatterReconstructorBlockEntity>> MATTER_RECONSTRUCTOR =
             BLOCK_ENTITIES.register("matter_reconstruction_device", () -> BlockEntityType.Builder
@@ -155,13 +155,13 @@ public final class ModBlockEntities {
             BLOCK_ENTITIES.register("item_network_management_terminal", () -> BlockEntityType.Builder
                     .of(ItemNetworkTerminalBlockEntity::new, ModBlocks.ITEM_NETWORK_TERMINAL.get()).build(null));
     public static final RegistryObject<BlockEntityType<BioEnergyGeneratorBlockEntity>> BIO_ENERGY_GENERATOR =
-            BLOCK_ENTITIES.register("bio_energy_generator", () -> BlockEntityType.Builder
+            BLOCK_ENTITIES.register("bio_energy_generation_device", () -> BlockEntityType.Builder
                     .of(BioEnergyGeneratorBlockEntity::new, ModBlocks.BIO_ENERGY_GENERATOR.get()).build(null));
     public static final RegistryObject<BlockEntityType<EnergyBatteryBlockEntity>> ENERGY_BATTERY =
-            BLOCK_ENTITIES.register("energy_battery", () -> BlockEntityType.Builder
+            BLOCK_ENTITIES.register("gold_energy_storage_cabinet", () -> BlockEntityType.Builder
                     .of(EnergyBatteryBlockEntity::new, ModBlocks.ENERGY_BATTERY.get()).build(null));
     public static final RegistryObject<BlockEntityType<ResidueIncineratorBlockEntity>> RESIDUE_INCINERATOR =
-            BLOCK_ENTITIES.register("residue_incinerator", () -> BlockEntityType.Builder
+            BLOCK_ENTITIES.register("incinerator", () -> BlockEntityType.Builder
                     .of(ResidueIncineratorBlockEntity::new, ModBlocks.RESIDUE_INCINERATOR.get()).build(null));
     public static final RegistryObject<BlockEntityType<EnergyCableBlockEntity>> ENERGY_CABLE =
             BLOCK_ENTITIES.register("energy_cable", () -> BlockEntityType.Builder
@@ -191,9 +191,18 @@ public final class ModBlockEntities {
                     .build(null));
 
     public static final RegistryObject<BlockEntityType<com.industrialcrops.block.entity.WirelessEnergyTransmitterBlockEntity>> WIRELESS_ENERGY_TRANSMITTER =
-            BLOCK_ENTITIES.register("wireless_energy_transmitter", () -> BlockEntityType.Builder
+            BLOCK_ENTITIES.register("wireless_energy_transfer_device", () -> BlockEntityType.Builder
                     .of(com.industrialcrops.block.entity.WirelessEnergyTransmitterBlockEntity::new, ModBlocks.WIRELESS_ENERGY_TRANSMITTER.get()).build(null));
 
+    public static final RegistryObject<BlockEntityType<com.industrialcrops.block.entity.CrystalLogisticsBlockEntity>> CRYSTAL_LOGISTICS =
+            BLOCK_ENTITIES.register("infinite_logistics_transfer_device", () -> BlockEntityType.Builder.of(com.industrialcrops.block.entity.CrystalLogisticsBlockEntity::new, ModBlocks.CRYSTAL_LOGISTICS.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<com.industrialcrops.block.entity.CraftingProcessorBlockEntity>> CRAFTING_PROCESSOR =
+            BLOCK_ENTITIES.register("crafting_processing_device", () -> BlockEntityType.Builder.of(com.industrialcrops.block.entity.CraftingProcessorBlockEntity::new, ModBlocks.CRAFTING_PROCESSOR.get()).build(null));
+    public static final RegistryObject<BlockEntityType<com.industrialcrops.block.entity.TerrainProcessorBlockEntity>> TERRAIN_PROCESSOR =
+            BLOCK_ENTITIES.register("terrain_processing_device", () -> BlockEntityType.Builder.of(com.industrialcrops.block.entity.TerrainProcessorBlockEntity::new, ModBlocks.TERRAIN_PROCESSOR.get()).build(null));
+    public static final RegistryObject<BlockEntityType<com.industrialcrops.block.entity.AnimalBreederBlockEntity>> ANIMAL_BREEDER =
+            BLOCK_ENTITIES.register("automatic_animal_breeder", () -> BlockEntityType.Builder.of(com.industrialcrops.block.entity.AnimalBreederBlockEntity::new, ModBlocks.ANIMAL_BREEDER.get()).build(null));
     private ModBlockEntities() {
     }
 }

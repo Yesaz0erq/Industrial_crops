@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
 public final class BioEnergyMenu extends AbstractContainerMenu implements UpgradeableMenu {
-    public static final int UPGRADE_X=-68,UPGRADE_Y=28,UPGRADE_SPACING=22;
+    public static final int UPGRADE_X=-58,UPGRADE_Y=24,UPGRADE_SPACING=18;
     public static final int BUTTON_SIDE_BASE = 10;
     public static final int BUTTON_ALL_SIDES_ON = 20;
     public static final int BUTTON_ALL_SIDES_OFF = 21;
@@ -54,7 +54,7 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
             });
         }
         if (entity.getKind() == BioEnergyMachineBlockEntity.Kind.GENERATOR) for(int i=0;i<4;i++){
-            int x=UPGRADE_X+i%2*22,y=UPGRADE_Y+i/2*22;addSlot(new SlotItemHandler(entity.getInventory(),1+i,x,y){
+            int x=UPGRADE_X+i%2* 18,y=UPGRADE_Y+i/2* 18;addSlot(new SlotItemHandler(entity.getInventory(),1+i,x,y){
                 @Override public boolean mayPlace(ItemStack stack){return SpeedUpgradeHelper.isSpeedUpgrade(stack);}
                 @Override public boolean isActive(){return upgradeSlotsVisible;}
             });

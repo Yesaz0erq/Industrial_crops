@@ -16,8 +16,8 @@ public final class CarroteBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Carrote.MOD_ID);
 
     public static final DeferredBlock<Block> CARROTE_STEEL_DEVICE_CASING =
-            registerMachineBlock("carrote_steel_device_casing");
-    public static final DeferredBlock<Block> CARROTE_STEEL_BLOCK = BLOCKS.register("carrote_steel_block",
+            registerMachineBlock("paradox_steel_device_casing");
+    public static final DeferredBlock<Block> CARROTE_STEEL_BLOCK = BLOCKS.register("paradox_steel_block",
             () -> new Block(machineProperties().mapColor(MapColor.COLOR_RED).strength(5.0F, 6.0F)));
     public static final DeferredBlock<Block> STABLE_MATTER_BLOCK = BLOCKS.register("stable_matter_block",
             () -> new Block(BlockBehaviour.Properties.of()
@@ -29,7 +29,7 @@ public final class CarroteBlocks {
                     .mapColor(MapColor.QUARTZ)
                     .strength(3.0F, 6.0F)
                     .sound(SoundType.AMETHYST)));
-    public static final DeferredBlock<Block> CARROTE_STEEL_FORGE = BLOCKS.register("carrote_steel_forge",
+    public static final DeferredBlock<Block> CARROTE_STEEL_FORGE = BLOCKS.register("paradox_steel_forge",
             () -> new CarroteSteelForgeBlock(machineProperties()
                     .mapColor(MapColor.COLOR_RED)
                     .noOcclusion()

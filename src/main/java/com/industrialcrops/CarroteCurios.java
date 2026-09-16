@@ -16,6 +16,7 @@ public final class CarroteCurios {
     public CarroteCurios(IEventBus bus) {
         CarroteCuriosItems.ITEMS.register(bus);
         NeoForge.EVENT_BUS.register(CarroteCuriosEvents.class);
+        NeoForge.EVENT_BUS.register(com.industrialcrops.curios.CarroteAdvancedEffects.class);
         bus.addListener(this::commonSetup);
     }
 

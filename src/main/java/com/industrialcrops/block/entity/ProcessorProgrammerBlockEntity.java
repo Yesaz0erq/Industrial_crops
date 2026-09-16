@@ -169,7 +169,7 @@ public final class ProcessorProgrammerBlockEntity extends BlockEntity implements
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.industrialcrops.processor_programming_device");
+        return Component.translatable("block.industrialcrops.component_programming_device");
     }
 
     @Override

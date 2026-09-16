@@ -16,10 +16,8 @@ public final class WirelessEnergyTransmitterScreen extends IndustrialContainerSc
     }
     @Override protected void init() {
         super.init();
-        local = addRenderableWidget(Button.builder(Component.translatable("gui.industrialcrops.wireless.local"), b -> choose(0))
-                .bounds(leftPos + 12, topPos + 119, 108, 20).build());
-        surrounding = addRenderableWidget(Button.builder(Component.translatable("gui.industrialcrops.wireless.surrounding"), b -> choose(1))
-                .bounds(leftPos + 128, topPos + 119, 108, 20).build());
+        local = addRenderableWidget(new CrystalButton(leftPos+12,topPos+119,108,20,Component.translatable("gui.industrialcrops.wireless.local"), b -> choose(0)));
+        surrounding = addRenderableWidget(new CrystalButton(leftPos+128,topPos+119,108,20,Component.translatable("gui.industrialcrops.wireless.surrounding"), b -> choose(1)));
     }
     private void choose(int radius) {
         if (minecraft != null && minecraft.gameMode != null) minecraft.gameMode.handleInventoryButtonClick(menu.containerId, radius);
@@ -30,7 +28,7 @@ public final class WirelessEnergyTransmitterScreen extends IndustrialContainerSc
         surrounding.active = menu.radius() != 1;
     }
     @Override protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        IndustrialGuiStyle.drawContainer(graphics, leftPos, topPos, imageWidth, imageHeight);
+        CrystalGuiStyle.drawContainer(graphics, leftPos, topPos, imageWidth, imageHeight);
         graphics.fill(leftPos + 12, topPos + 45, leftPos + 236, topPos + 55, 0xff192034);
         int width = (int)(224L * menu.energy() / WirelessEnergyTransmitterBlockEntity.ENERGY_CAPACITY);
         graphics.fill(leftPos + 12, topPos + 45, leftPos + 12 + width, topPos + 55, 0xff9974da);

@@ -19,7 +19,15 @@ public record StorageCraftingTransferPayload(ResourceLocation recipeId) implemen
             StorageCraftingTransferPayload::new);
 
     public static void handle(StorageCraftingTransferPayload payload, IPayloadContext context) {
-        if (!(context.player().containerMenu instanceof AdvancedIndustrialStorageMenu menu)) return;
+        if (context.player().containerMenu instanceof com.industrialcrops.screen.CraftingProcessorMenu processor) {
+            if (!processor.stillValid(context.player())) return;
+            context.player().level().getRecipeManager().byKey(payload.recipeId).ifPresent(holder -> {
+                if (holder.value() instanceof CraftingRecipe recipe && !recipe.isSpecial() && recipe.canCraftInDimensions(5,5))
+                    processor.machine().selectTarget(recipe.getResultItem(context.player().level().registryAccess()));
+            });
+            return;
+        }
+        if (!(context.player().containerMenu instanceof AdvancedIndustrialStorageMenu menu) || !menu.stillValid(context.player())) return;
         context.player().level().getRecipeManager().byKey(payload.recipeId).ifPresent(holder -> {
             if (holder.value() instanceof CraftingRecipe recipe) menu.transferCraftingRecipe(recipe);
         });

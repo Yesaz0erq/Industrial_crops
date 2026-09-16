@@ -106,8 +106,15 @@ public final class RemoteAccessDeviceItem extends Item {
 
     private static void openRemoteMenu(Player player, Binding binding, ServerLevel targetLevel) {
         BlockPos pos = binding.pos();
-        if (BASIC_KIND.equals(binding.kind())) {
-            net.minecraftforge.network.NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer) player,new MenuProvider() {
+        if ("network".equals(binding.kind()) && targetLevel.getBlockEntity(pos) instanceof com.industrialcrops.block.entity.ItemNetworkTerminalBlockEntity terminal) {
+            net.minecraftforge.network.NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer)player, new MenuProvider() {
+                public Component getDisplayName() { return terminal.getDisplayName(); }
+                public net.minecraft.world.inventory.AbstractContainerMenu createMenu(int id,Inventory inventory,Player menuPlayer) {
+                    return new com.industrialcrops.screen.ItemNetworkTerminalMenu(id,inventory,terminal,pos,6,true);
+                }
+            }, buffer->{buffer.writeBlockPos(pos);buffer.writeVarInt(6);buffer.writeBoolean(true);});
+        } else if (BASIC_KIND.equals(binding.kind())) {
+            net.minecraftforge.network.NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer)player, new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
                     return Component.translatable("block.industrialcrops.basic_control_device");
@@ -126,7 +133,7 @@ public final class RemoteAccessDeviceItem extends Item {
             net.minecraftforge.network.NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer) player,new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
-                    return Component.translatable("block.industrialcrops.reinforced_control_device");
+                    return targetLevel.getBlockState(pos).getBlock().getName();
                 }
 
                 @Override
@@ -166,21 +173,23 @@ public final class RemoteAccessDeviceItem extends Item {
     private static @Nullable String controlKind(BlockState state) {
         if (state.is(ModBlocks.CARROT_CONTROL_DEVICE.get())) return BASIC_KIND;
         if (state.is(ModBlocks.REINFORCED_CONTROL_DEVICE.get())) return REINFORCED_KIND;
+        if (state.is(ModBlocks.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get())) return REINFORCED_KIND;
+        if (state.is(ModBlocks.ITEM_NETWORK_TERMINAL.get())) return "network";
         return null;
     }
 
-    private static @Nullable Binding readBinding(ItemStack stack) {
-        var data = com.industrialcrops.util.ItemStackNbt.copyTag(stack);
-        var tag = data;
+    public static @Nullable Binding readBinding(ItemStack stack) {
+        if (!(stack.getItem() instanceof RemoteAccessDeviceItem)) return null;
+        var tag = com.industrialcrops.util.ItemStackNbt.copyTag(stack);
         String dimension = tag.getString(DIMENSION_TAG);
         String kind = tag.getString(KIND_TAG);
         if (dimension.isEmpty() || !tag.contains(POS_TAG, Tag.TAG_LONG) ||
-                (!BASIC_KIND.equals(kind) && !REINFORCED_KIND.equals(kind))) {
+                (!BASIC_KIND.equals(kind) && !REINFORCED_KIND.equals(kind) && !"network".equals(kind))) {
             return null;
         }
         ResourceLocation location = ResourceLocation.tryParse(dimension);
         return location == null ? null : new Binding(location, BlockPos.of(tag.getLong(POS_TAG)), kind);
     }
 
-    private record Binding(ResourceLocation dimension, BlockPos pos, String kind) {}
+    public record Binding(ResourceLocation dimension, BlockPos pos, String kind) {}
 }

@@ -185,7 +185,7 @@ public final class WirelessEnergyTransmitterBlockEntity extends BlockEntity impl
         }
     }
     public boolean isWorking() { return getBlockState().getValue(WirelessEnergyTransmitterBlock.ACTIVE); }
-    @Override public Component getDisplayName() { return Component.translatable("block.industrialcrops.wireless_energy_transmitter"); }
+    @Override public Component getDisplayName() { return Component.translatable("block.industrialcrops.wireless_energy_transfer_device"); }
     @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new WirelessEnergyTransmitterMenu(id, inventory, this);
     }

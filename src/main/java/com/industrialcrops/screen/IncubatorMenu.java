@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
 public final class IncubatorMenu extends AbstractContainerMenu implements UpgradeableMenu {
-    public static final int UPGRADE_X=-68,UPGRADE_Y=28,UPGRADE_SPACING=22;
+    public static final int UPGRADE_X=-58,UPGRADE_Y=24,UPGRADE_SPACING=18;
     private static final int MACHINE_SLOT_COUNT = 5;
     private static final int PLAYER_INVENTORY_START = 5;
     private static final int PLAYER_INVENTORY_END = 32;
@@ -56,7 +56,7 @@ public final class IncubatorMenu extends AbstractContainerMenu implements Upgrad
                 return IncubatorBlockEntity.isRawOre(stack);
             }
         });
-        for(int i=0;i<4;i++){int x=UPGRADE_X+i%2*22,y=UPGRADE_Y+i/2*22;addSlot(new SlotItemHandler(blockEntity.getInventory(),1+i,x,y){@Override public boolean mayPlace(ItemStack stack){return SpeedUpgradeHelper.isSpeedUpgrade(stack);}@Override public boolean isActive(){return upgradeSlotsVisible;}});}
+        for(int i=0;i<4;i++){int x=UPGRADE_X+i%2* 18,y=UPGRADE_Y+i/2* 18;addSlot(new SlotItemHandler(blockEntity.getInventory(),1+i,x,y){@Override public boolean mayPlace(ItemStack stack){return SpeedUpgradeHelper.isSpeedUpgrade(stack);}@Override public boolean isActive(){return upgradeSlotsVisible;}});}
         addPlayerInventory(inventory, 8, 84);
         addPlayerHotbar(inventory, 8, 142);
 
@@ -162,9 +162,9 @@ public final class IncubatorMenu extends AbstractContainerMenu implements Upgrad
     private static IncubatorBlockEntity readBlockEntity(Inventory inventory, RegistryFriendlyByteBuf buffer) {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity blockEntity = inventory.player.level().getBlockEntity(pos);
-        if (blockEntity instanceof IncubatorBlockEntity slime_converter) {
-            return slime_converter;
+        if (blockEntity instanceof IncubatorBlockEntity slime_conversion_device) {
+            return slime_conversion_device;
         }
-        throw new IllegalStateException("Missing slime_converter block entity at " + pos);
+        throw new IllegalStateException("Missing slime_conversion_device block entity at " + pos);
     }
 }

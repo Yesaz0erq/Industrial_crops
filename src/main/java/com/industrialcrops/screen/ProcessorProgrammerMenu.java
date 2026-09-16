@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
 public final class ProcessorProgrammerMenu extends AbstractContainerMenu implements UpgradeableMenu {
-    public static final int UPGRADE_X=-68,UPGRADE_Y=28,UPGRADE_SPACING=22;
+    public static final int UPGRADE_X=-58,UPGRADE_Y=24,UPGRADE_SPACING=18;
     private static final int PLAYER_START = ProcessorProgrammerBlockEntity.SLOT_COUNT + 4;
     private static final int PLAYER_END = PLAYER_START + 36;
     private final BlockPos pos;
@@ -50,7 +50,7 @@ public final class ProcessorProgrammerMenu extends AbstractContainerMenu impleme
                 return false;
             }
         });
-        for(int i=0;i<4;i++){int x=UPGRADE_X+i%2*22,y=UPGRADE_Y+i/2*22;addSlot(new SlotItemHandler(programmer.getInventory(),ProcessorProgrammerBlockEntity.UPGRADE_SLOT_START+i,x,y){@Override public boolean mayPlace(ItemStack stack){return SpeedUpgradeHelper.isSpeedUpgrade(stack);}@Override public boolean isActive(){return upgradeSlotsVisible;}});}
+        for(int i=0;i<4;i++){int x=UPGRADE_X+i%2* 18,y=UPGRADE_Y+i/2* 18;addSlot(new SlotItemHandler(programmer.getInventory(),ProcessorProgrammerBlockEntity.UPGRADE_SLOT_START+i,x,y){@Override public boolean mayPlace(ItemStack stack){return SpeedUpgradeHelper.isSpeedUpgrade(stack);}@Override public boolean isActive(){return upgradeSlotsVisible;}});}
         addPlayerInventory(playerInventory, 8, 84);
         addPlayerHotbar(playerInventory, 8, 142);
         addDataSlot(new DataSlot() {

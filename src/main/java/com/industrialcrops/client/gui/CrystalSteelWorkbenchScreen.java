@@ -14,16 +14,16 @@ public final class CrystalSteelWorkbenchScreen extends IndustrialContainerScreen
     }
     @Override protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         int x = leftPos, y = topPos;
-        IndustrialGuiStyle.drawContainer(graphics, x, y, imageWidth, imageHeight);
-        IndustrialGuiStyle.drawWorkPanel(graphics, x + 8, y + 24, 98, 98);
+        CrystalGuiStyle.drawContainer(graphics, x, y, imageWidth, imageHeight);
+        CrystalGuiStyle.drawWorkPanel(graphics, x + 8, y + 24, 98, 98);
         for (int row = 0; row < 5; row++) for (int col = 0; col < 5; col++)
-            IndustrialGuiStyle.drawSlot(graphics, x + 13 + col * 18, y + 29 + row * 18);
-        IndustrialGuiStyle.drawWorkPanel(graphics, x + 132, y + 60, 28, 28);
-        IndustrialGuiStyle.drawSlot(graphics, x + 137, y + 65);
-        IndustrialGuiStyle.drawWorkPanel(graphics, x + 174, y + 24, 30, 98);
+            CrystalGuiStyle.drawSlot(graphics, x + 13 + col * 18, y + 29 + row * 18);
+        CrystalGuiStyle.drawWorkPanel(graphics, x + 132, y + 60, 28, 28);
+        CrystalGuiStyle.drawSlot(graphics, x + 137, y + 65);
+        CrystalGuiStyle.drawWorkPanel(graphics, x + 174, y + 24, 30, 98);
         int tint = menu.fluid().isEmpty() ? 0xFF576875 : IClientFluidTypeExtensions.of(menu.fluid().getFluid()).getTintColor(menu.fluid());
         IndustrialGuiStyle.drawVerticalMeter(graphics, x + 180, y + 30, 86, menu.fluid().getAmount(), menu.capacity(), tint, false);
-        IndustrialGuiStyle.drawPlayerInventory(graphics, x, y, 26, 150, 208);
+        CrystalGuiStyle.drawPlayerInventory(graphics, x, y, 26, 150, 208);
     }
     @Override protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         super.renderLabels(graphics, mouseX, mouseY);

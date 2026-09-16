@@ -57,6 +57,10 @@ public final class IndustrialCropsClient {
     @SubscribeEvent
     public static void registerScreens(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
+            MenuScreens.register(ModMenus.CRYSTAL_LOGISTICS.get(), com.industrialcrops.client.gui.CrystalLogisticsScreen::new);
+            MenuScreens.register(ModMenus.CRAFTING_PROCESSOR.get(), com.industrialcrops.client.gui.CraftingProcessorScreen::new);
+            MenuScreens.register(ModMenus.TERRAIN_PROCESSOR.get(), com.industrialcrops.client.gui.TerrainProcessorScreen::new);
+            MenuScreens.register(ModMenus.ANIMAL_BREEDER.get(), com.industrialcrops.client.gui.AnimalBreederScreen::new);
             MenuScreens.register(ModMenus.WIRELESS_ENERGY_TRANSMITTER.get(), com.industrialcrops.client.gui.WirelessEnergyTransmitterScreen::new);
             MenuScreens.register(ModMenus.CRYSTAL_STEEL_WORKBENCH.get(), com.industrialcrops.client.gui.CrystalSteelWorkbenchScreen::new);
             MenuScreens.register(ModMenus.ROOT_ORE_EXTRACTOR.get(), RootOreExtractorScreen::new);
@@ -103,7 +107,7 @@ public final class IndustrialCropsClient {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_LEAVES.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_DOOR.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_TRAPDOOR.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.COPPER_FLUID_STORAGE_CABINET.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.COPPER_FLUID_STORAGE_CABINET.get(), RenderType.cutoutMipped());
         });
     }
 
@@ -157,6 +161,7 @@ public final class IndustrialCropsClient {
         event.registerBlockEntityRenderer(ModBlockEntities.INCUBATOR.get(), IncubatorBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.CRYSTAL_STEEL_WORKBENCH.get(), com.industrialcrops.client.renderer.CrystalSteelWorkbenchRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.CRYSTAL_LOGISTICS.get(), com.industrialcrops.client.renderer.CrystalLogisticsRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.COPPER_FLUID_STORAGE_CABINET.get(), CopperFluidStorageCabinetRenderer::new);
         event.registerEntityRenderer(ModEntities.GOLDEN_ROCKET.get(), GoldenRocketRenderer::new);
         event.registerEntityRenderer(ModEntities.TARGET_MARKER.get(), TargetMarkerRenderer::new);

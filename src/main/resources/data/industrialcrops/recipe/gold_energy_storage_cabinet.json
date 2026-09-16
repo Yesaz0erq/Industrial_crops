@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "GRG",
+    "RCR",
+    "GRG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "C": {
+      "item": "industrialcrops:component_substrate_integrated_gold_device_casing"
+    }
+  },
+  "result": {
+    "id": "industrialcrops:gold_energy_storage_cabinet",
+    "count": 1
+  }
+}

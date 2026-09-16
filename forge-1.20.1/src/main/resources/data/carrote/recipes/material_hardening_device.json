@@ -8,13 +8,13 @@
   ],
   "key": {
     "R": {
-      "item": "carrote:carrote_steel_ingot"
+      "item": "carrote:paradox_steel_ingot"
     },
     "I": {
       "item": "minecraft:iron_ingot"
     },
     "C": {
-      "item": "carrote:carrote_steel_device_casing"
+      "item": "carrote:paradox_steel_device_casing"
     },
     "P": {
       "item": "industrialcrops:component_substrate"

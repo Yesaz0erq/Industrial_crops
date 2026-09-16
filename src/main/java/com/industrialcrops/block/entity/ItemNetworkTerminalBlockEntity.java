@@ -144,6 +144,23 @@ public final class ItemNetworkTerminalBlockEntity extends BlockEntity implements
         add(stack, amount);
     }
 
+    public ItemStack craftingStored(ItemStack key) {
+        for (Entry entry : entries) if (ItemStack.isSameItemSameComponents(entry.stack,key))
+            return key.copyWithCount((int)Math.min(1000000L,entry.count));
+        return ItemStack.EMPTY;
+    }
+    public ItemStack craftingExtract(ItemStack key,int amount) {
+        for (int i=0;i<entries.size();i++) {
+            Entry entry=entries.get(i);
+            if (!ItemStack.isSameItemSameComponents(entry.stack,key)) continue;
+            int taken=(int)Math.min(entry.count,Math.max(0,amount));
+            entry.count-=taken;
+            if(entry.count==0) { entries.remove(i); selectedIndex=-1; }
+            setChanged(); return key.copyWithCount(taken);
+        }
+        return ItemStack.EMPTY;
+    }
+
     public ItemStack extractOneMatching(Predicate<ItemStack> predicate) {
         for (int index = 0; index < entries.size(); index++) {
             Entry entry = entries.get(index);

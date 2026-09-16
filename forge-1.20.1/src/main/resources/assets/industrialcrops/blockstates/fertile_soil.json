@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "moisture=0": { "model": "industrialcrops:block/fertile_soil" },
+    "moisture=1": { "model": "industrialcrops:block/fertile_soil" },
+    "moisture=2": { "model": "industrialcrops:block/fertile_soil" },
+    "moisture=3": { "model": "industrialcrops:block/fertile_soil" },
+    "moisture=4": { "model": "industrialcrops:block/fertile_soil" },
+    "moisture=5": { "model": "industrialcrops:block/fertile_soil" },
+    "moisture=6": { "model": "industrialcrops:block/fertile_soil" },
+    "moisture=7": { "model": "industrialcrops:block/fertile_soil" }
+  }
+}

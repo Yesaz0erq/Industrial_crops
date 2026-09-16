@@ -93,10 +93,10 @@ public final class ModBlocks {
 
     public static final DeferredBlock<Block> COPPER_DEVICE_CASING = registerMachineBlock("copper_device_casing");
     public static final DeferredBlock<Block> IRON_DEVICE_CASING = registerMachineBlock("iron_device_casing");
-    public static final DeferredBlock<Block> PROCESSOR_GOLD_DEVICE_CASING = registerMachineBlock("processor_integrated_gold_device_casing");
+    public static final DeferredBlock<Block> PROCESSOR_GOLD_DEVICE_CASING = registerMachineBlock("component_substrate_integrated_gold_device_casing");
     public static final DeferredBlock<Block> CRYSTAL_STEEL_WORKBENCH = BLOCKS.register("crystal_steel_workbench",
             () -> new com.industrialcrops.block.CrystalSteelWorkbenchBlock(machineProperties().mapColor(MapColor.COLOR_PURPLE)));
-    public static final DeferredBlock<Block> CRYSTAL_STEEL_DEVICE_CASING = BLOCKS.register("crystal_steel_device_casing",
+    public static final DeferredBlock<Block> CRYSTAL_STEEL_DEVICE_CASING = BLOCKS.register("crystal_steel_casing",
             () -> new Block(machineProperties().mapColor(MapColor.COLOR_PURPLE)));
     public static final DeferredBlock<Block> ROOT_ORE_EXTRACTOR = BLOCKS.register("basic_crop_conversion_device",
             () -> new RootOreExtractorBlock(machineProperties()));
@@ -108,7 +108,7 @@ public final class ModBlocks {
             () -> new GourdModificationDeviceBlock(machineProperties()));
     public static final DeferredBlock<Block> MIXER = BLOCKS.register("mixer",
             () -> new MixerBlock(machineProperties().mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER)));
-    public static final DeferredBlock<Block> FERTILE_FARMLAND = BLOCKS.register("fertile_farmland",
+    public static final DeferredBlock<Block> FERTILE_FARMLAND = BLOCKS.register("fertile_soil",
             () -> new FertileFarmlandBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.FARMLAND)
                     .mapColor(MapColor.DIRT)));
     public static final DeferredBlock<Block> INDUSTRIAL_CROP_STORAGE_ARRAY = BLOCKS.register("basic_storage_component",
@@ -119,23 +119,23 @@ public final class ModBlocks {
             () -> new BasicManipulatorBlock(machineProperties()));
     public static final DeferredBlock<Block> ADVANCED_MANIPULATOR = BLOCKS.register("advanced_manipulation_device",
             () -> new AdvancedManipulatorBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> PROCESSOR_PROGRAMMER = BLOCKS.register("processor_programming_device",
+    public static final DeferredBlock<Block> PROCESSOR_PROGRAMMER = BLOCKS.register("component_programming_device",
             () -> new ProcessorProgrammerBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> AUTOMATIC_PLANTER = BLOCKS.register("automatic_planter",
+    public static final DeferredBlock<Block> AUTOMATIC_PLANTER = BLOCKS.register("automatic_sowing_device",
             () -> new AutomaticPlanterBlock(machineProperties().mapColor(MapColor.GOLD)));
     public static final DeferredBlock<Block> MATTER_DIGITIZER = BLOCKS.register("matter_digitization_device",
             () -> new MatterDigitizerBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> DIGITIZED_ITEM_COPIER = BLOCKS.register("digitized_item_copier",
+    public static final DeferredBlock<Block> DIGITIZED_ITEM_COPIER = BLOCKS.register("data_copying_device",
             () -> new DigitizedItemCopierBlock(machineProperties().mapColor(MapColor.GOLD)));
     public static final DeferredBlock<Block> MATTER_RECONSTRUCTOR = BLOCKS.register("matter_reconstruction_device",
             () -> new MatterReconstructorBlock(machineProperties().mapColor(MapColor.GOLD)));
     public static final DeferredBlock<Block> ITEM_NETWORK_TERMINAL = BLOCKS.register("item_network_management_terminal",
             () -> new ItemNetworkTerminalBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> BIO_ENERGY_GENERATOR = BLOCKS.register("bio_energy_generator",
+    public static final DeferredBlock<Block> BIO_ENERGY_GENERATOR = BLOCKS.register("bio_energy_generation_device",
             () -> new BioEnergyGeneratorBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> ENERGY_BATTERY = BLOCKS.register("energy_battery",
+    public static final DeferredBlock<Block> ENERGY_BATTERY = BLOCKS.register("gold_energy_storage_cabinet",
             () -> new EnergyBatteryBlock(machineProperties().mapColor(MapColor.GOLD)));
-    public static final DeferredBlock<Block> RESIDUE_INCINERATOR = BLOCKS.register("residue_incinerator",
+    public static final DeferredBlock<Block> RESIDUE_INCINERATOR = BLOCKS.register("incinerator",
             () -> new ResidueIncineratorBlock(machineProperties().mapColor(MapColor.GOLD)));
     public static final DeferredBlock<Block> ELECTRIC_FURNACE = BLOCKS.register("electric_furnace",
             () -> new ElectricFurnaceBlock(machineProperties().mapColor(MapColor.GOLD)));
@@ -152,12 +152,12 @@ public final class ModBlocks {
             () -> new ReinforcedControlDeviceBlock(machineProperties()));
     public static final DeferredBlock<Block> ADVANCED_INDUSTRIAL_STORAGE_DEVICE = BLOCKS.register("advanced_industrial_storage_device",
             () -> new AdvancedIndustrialStorageBlock(machineProperties()));
-    public static final DeferredBlock<Block> INCUBATOR = BLOCKS.register("slime_converter",
+    public static final DeferredBlock<Block> INCUBATOR = BLOCKS.register("slime_conversion_device",
             () -> new IncubatorBlock(machineProperties()
                     .noOcclusion()
                     .noLootTable()
                     .pushReaction(PushReaction.BLOCK)));
-    public static final DeferredBlock<Block> SLIME_INCUBATOR = BLOCKS.register("slime_incubator",
+    public static final DeferredBlock<Block> SLIME_INCUBATOR = BLOCKS.register("slime_cultivation_device",
             () -> new SlimeIncubatorBlock(machineProperties()));
     public static final DeferredBlock<Block> GOLDEN_LAUNCH_SILO = BLOCKS.register("explosive_potato_launcher",
             () -> new GoldenLaunchSiloBlock(machineProperties().mapColor(MapColor.GOLD)));
@@ -176,7 +176,7 @@ public final class ModBlocks {
     public static final DeferredBlock<Block> GOLD_FLUID_PIPE = BLOCKS.register("gold_fluid_pipe",
             () -> new FluidPipeBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.GOLD).strength(1.0F).sound(SoundType.COPPER)));
-    public static final DeferredBlock<Block> GOLD_PLASMA_EXTRACTOR = BLOCKS.register("gold_plasma_extractor",
+    public static final DeferredBlock<Block> GOLD_PLASMA_EXTRACTOR = BLOCKS.register("extraction_device",
             () -> new GoldPlasmaExtractorBlock(machineProperties().mapColor(MapColor.GOLD)));
     public static final DeferredBlock<Block> COPPER_FLUID_STORAGE_CABINET = BLOCKS.register("copper_fluid_storage_cabinet",
             () -> new CopperFluidStorageCabinetBlock(machineProperties().mapColor(MapColor.COLOR_ORANGE).noOcclusion()));
@@ -297,10 +297,19 @@ public final class ModBlocks {
             () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, COMET_SAPLING,
                     BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_OAK_SAPLING)));
 
-    public static final DeferredBlock<Block> WIRELESS_ENERGY_TRANSMITTER = BLOCKS.register("wireless_energy_transmitter",
+    public static final DeferredBlock<Block> WIRELESS_ENERGY_TRANSMITTER = BLOCKS.register("wireless_energy_transfer_device",
             () -> new com.industrialcrops.block.WirelessEnergyTransmitterBlock(machineProperties()
                     .mapColor(MapColor.COLOR_PURPLE).noOcclusion()));
 
+    public static final DeferredBlock<Block> CRYSTAL_LOGISTICS = BLOCKS.register("infinite_logistics_transfer_device",
+            () -> new com.industrialcrops.block.CrystalLogisticsBlock(machineProperties().mapColor(MapColor.COLOR_BLUE).noOcclusion()));
+
+    public static final DeferredBlock<Block> CRAFTING_PROCESSOR = BLOCKS.register("crafting_processing_device",
+            () -> new com.industrialcrops.block.CraftingProcessorBlock(machineProperties().mapColor(MapColor.COLOR_BLUE)));
+    public static final DeferredBlock<Block> TERRAIN_PROCESSOR = BLOCKS.register("terrain_processing_device",
+            () -> new com.industrialcrops.block.TerrainProcessorBlock(machineProperties().mapColor(MapColor.COLOR_BLUE)));
+    public static final DeferredBlock<Block> ANIMAL_BREEDER = BLOCKS.register("automatic_animal_breeder",
+            () -> new com.industrialcrops.block.AnimalBreederBlock(machineProperties().mapColor(MapColor.COLOR_BLUE)));
     private ModBlocks() {
     }
 

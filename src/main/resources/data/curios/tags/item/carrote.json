@@ -11,12 +11,17 @@
     "carrote_curios:flight_carrote",
     "carrote_curios:arcane_carrote",
     "carrote_curios:steel_carrote",
-    "carrote_curios:power_carrote",
+    "carrote_curios:powerful_carrote",
     "carrote_curios:peace_carrote",
     "carrote_curios:substitute_carrote",
     "carrote_curios:night_vision_carrote",
-    "carrote_curios:blast_carrote",
-    "carrote_curios:fall_carrote",
-    "carrote_curios:helmet_carrote"
+    "carrote_curios:blast_protection_carrote",
+    "carrote_curios:fall_protection_carrote",
+    "carrote_curios:helmet_carrote",
+    "carrote_curios:hard_carrote",
+    "carrote_curios:unbreakable_carrote",
+    "carrote_curios:resistance_carrote",
+    "carrote_curios:thief_carrote",
+    "carrote_curios:ultimate_carrote"
   ]
 }

@@ -23,20 +23,28 @@ public final class ManipulatorRecipeCategory implements IRecipeCategory<Manipula
             ManipulatorRecipeDisplay.class
     );
 
+    public static final RecipeType<ManipulatorRecipeDisplay> ADVANCED_TYPE = RecipeType.create(
+            IndustrialCrops.MOD_ID, "advanced_manipulation_device", ManipulatorRecipeDisplay.class);
+    private final boolean advanced;
     private final IDrawable icon;
 
     public ManipulatorRecipeCategory(IGuiHelper guiHelper) {
-        this.icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.BASIC_MANIPULATOR.get().asItem()));
+        this(guiHelper, false);
+    }
+
+    public ManipulatorRecipeCategory(IGuiHelper guiHelper, boolean advanced) {
+        this.advanced = advanced;
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(advanced ? ModBlocks.ADVANCED_MANIPULATOR.get().asItem() : ModBlocks.BASIC_MANIPULATOR.get().asItem()));
     }
 
     @Override
     public RecipeType<ManipulatorRecipeDisplay> getRecipeType() {
-        return TYPE;
+        return advanced ? ADVANCED_TYPE : TYPE;
     }
 
     @Override
     public Component getTitle() {
-        return Component.translatable("block.industrialcrops.basic_manipulation_device");
+        return Component.translatable(advanced ? "block.industrialcrops.advanced_manipulation_device" : "block.industrialcrops.basic_manipulation_device");
     }
 
     @Override

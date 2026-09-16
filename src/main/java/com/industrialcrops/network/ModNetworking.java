@@ -30,6 +30,12 @@ public final class ModNetworking {
                 ResizeStorageMenuPayload.STREAM_CODEC,
                 ResizeStorageMenuPayload::handle
         );
+        registrar.playToServer(com.industrialcrops.network.payload.BreederConfigPayload.TYPE,
+                com.industrialcrops.network.payload.BreederConfigPayload.STREAM_CODEC, com.industrialcrops.network.payload.BreederConfigPayload::handle);
+        registrar.playToServer(com.industrialcrops.network.payload.TerrainConfigPayload.TYPE,
+                com.industrialcrops.network.payload.TerrainConfigPayload.STREAM_CODEC, com.industrialcrops.network.payload.TerrainConfigPayload::handle);
+        registrar.playToServer(com.industrialcrops.network.payload.LogisticsConfigPayload.TYPE,
+                com.industrialcrops.network.payload.LogisticsConfigPayload.STREAM_CODEC, com.industrialcrops.network.payload.LogisticsConfigPayload::handle);
         registrar.playToServer(StorageSearchPayload.TYPE, StorageSearchPayload.STREAM_CODEC, StorageSearchPayload::handle);
         registrar.playToServer(StorageCraftingTransferPayload.TYPE, StorageCraftingTransferPayload.STREAM_CODEC,
                 StorageCraftingTransferPayload::handle);

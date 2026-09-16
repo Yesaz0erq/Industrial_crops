@@ -16,7 +16,8 @@ public final class CarroteCurios {
     public CarroteCurios() {
         IEventBus bus = net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus();
         CarroteCuriosItems.ITEMS.register(bus);
-        MinecraftForge.EVENT_BUS.register(CarroteCuriosEvents.class);
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(CarroteCuriosEvents.class);
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.register(com.industrialcrops.curios.CarroteAdvancedEffects.class);
         bus.addListener(this::commonSetup);
     }
 

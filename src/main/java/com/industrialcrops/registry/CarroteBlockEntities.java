@@ -15,7 +15,7 @@ public final class CarroteBlockEntities {
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Carrote.MOD_ID);
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CarroteSteelForgeBlockEntity>> CARROTE_STEEL_FORGE =
-            BLOCK_ENTITIES.register("carrote_steel_forge", () -> BlockEntityType.Builder
+            BLOCK_ENTITIES.register("paradox_steel_forge", () -> BlockEntityType.Builder
                     .of(CarroteSteelForgeBlockEntity::new, CarroteBlocks.CARROTE_STEEL_FORGE.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MaterialHardeningDeviceBlockEntity>> MATERIAL_HARDENING_DEVICE =
             BLOCK_ENTITIES.register("material_hardening_device", () -> BlockEntityType.Builder

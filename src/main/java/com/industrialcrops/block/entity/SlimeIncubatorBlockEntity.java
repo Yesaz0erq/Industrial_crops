@@ -52,35 +52,35 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
         super(ModBlockEntities.SLIME_INCUBATOR.get(), pos, state);
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, SlimeIncubatorBlockEntity slime_converter) {
+    public static void tick(Level level, BlockPos pos, BlockState state, SlimeIncubatorBlockEntity slime_conversion_device) {
         if (level.isClientSide()) {
             return;
         }
 
-        ItemStack input = slime_converter.inventory.getStackInSlot(INPUT_SLOT);
+        ItemStack input = slime_conversion_device.inventory.getStackInSlot(INPUT_SLOT);
         int slimeType = getInputSlimeType(input);
         if (slimeType == IncubatorBlockEntity.SLIME_NONE) {
-            slime_converter.resetProgress();
+            slime_conversion_device.resetProgress();
             return;
         }
 
-        if (slime_converter.activeSlimeType != slimeType) {
-            slime_converter.activeSlimeType = slimeType;
-            slime_converter.progress = 0;
-            slime_converter.setChanged();
+        if (slime_conversion_device.activeSlimeType != slimeType) {
+            slime_conversion_device.activeSlimeType = slimeType;
+            slime_conversion_device.progress = 0;
+            slime_conversion_device.setChanged();
         }
 
         ItemStack result = getSlimeDrop(slimeType);
-        if (result.isEmpty() || !canOutputAccept(slime_converter.inventory.getStackInSlot(OUTPUT_SLOT), result)) {
+        if (result.isEmpty() || !canOutputAccept(slime_conversion_device.inventory.getStackInSlot(OUTPUT_SLOT), result)) {
             return;
         }
 
-        slime_converter.progress += SpeedUpgradeHelper.progressStep(slime_converter.inventory, UPGRADE_SLOT_START, UPGRADE_SLOT_COUNT, MAX_PROGRESS);
-        if (slime_converter.progress >= MAX_PROGRESS) {
-            slime_converter.insertOutput(result);
-            slime_converter.progress = 0;
+        slime_conversion_device.progress += SpeedUpgradeHelper.progressStep(slime_conversion_device.inventory, UPGRADE_SLOT_START, UPGRADE_SLOT_COUNT, MAX_PROGRESS);
+        if (slime_conversion_device.progress >= MAX_PROGRESS) {
+            slime_conversion_device.insertOutput(result);
+            slime_conversion_device.progress = 0;
         }
-        slime_converter.setChanged();
+        slime_conversion_device.setChanged();
     }
 
     public static boolean isAcceptedSlimeInput(ItemStack stack) {
@@ -164,7 +164,7 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.industrialcrops.slime_incubator");
+        return Component.translatable("block.industrialcrops.slime_cultivation_device");
     }
 
     @Override

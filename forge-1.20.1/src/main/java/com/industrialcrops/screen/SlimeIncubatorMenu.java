@@ -20,7 +20,7 @@ import net.minecraftforge.items.SlotItemHandler;
 public final class SlimeIncubatorMenu extends AbstractContainerMenu implements UpgradeableMenu {
     private static final int INPUT_SLOT = SlimeIncubatorBlockEntity.INPUT_SLOT;
     private static final int OUTPUT_SLOT = SlimeIncubatorBlockEntity.OUTPUT_SLOT;
-    public static final int UPGRADE_X=-68,UPGRADE_Y=28,UPGRADE_SPACING=22;
+    public static final int UPGRADE_X=-58,UPGRADE_Y=24,UPGRADE_SPACING=18;
     private static final int MACHINE_SLOT_COUNT = 6;
     private static final int PLAYER_INVENTORY_START = MACHINE_SLOT_COUNT;
     private static final int PLAYER_INVENTORY_END = PLAYER_INVENTORY_START + 27;
@@ -58,7 +58,7 @@ public final class SlimeIncubatorMenu extends AbstractContainerMenu implements U
                 return false;
             }
         });
-        for(int i=0;i<4;i++){int x=UPGRADE_X+i%2*22,y=UPGRADE_Y+i/2*22;addSlot(new SlotItemHandler(blockEntity.getInventory(),2+i,x,y){@Override public boolean mayPlace(ItemStack stack){return SpeedUpgradeHelper.isSpeedUpgrade(stack);}@Override public boolean isActive(){return upgradeSlotsVisible;}});}
+        for(int i=0;i<4;i++){int x=UPGRADE_X+i%2* 18,y=UPGRADE_Y+i/2* 18;addSlot(new SlotItemHandler(blockEntity.getInventory(),2+i,x,y){@Override public boolean mayPlace(ItemStack stack){return SpeedUpgradeHelper.isSpeedUpgrade(stack);}@Override public boolean isActive(){return upgradeSlotsVisible;}});}
 
         addPlayerInventory(inventory, 8, 84);
         addPlayerHotbar(inventory, 8, 142);
@@ -160,9 +160,9 @@ public final class SlimeIncubatorMenu extends AbstractContainerMenu implements U
     private static SlimeIncubatorBlockEntity readBlockEntity(Inventory inventory, FriendlyByteBuf buffer) {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity blockEntity = inventory.player.level().getBlockEntity(pos);
-        if (blockEntity instanceof SlimeIncubatorBlockEntity slime_converter) {
-            return slime_converter;
+        if (blockEntity instanceof SlimeIncubatorBlockEntity slime_conversion_device) {
+            return slime_conversion_device;
         }
-        throw new IllegalStateException("Missing slime slime_converter block entity at " + pos);
+        throw new IllegalStateException("Missing slime slime_conversion_device block entity at " + pos);
     }
 }

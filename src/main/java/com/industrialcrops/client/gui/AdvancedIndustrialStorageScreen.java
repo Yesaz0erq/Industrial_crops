@@ -25,8 +25,8 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
     private static final int SEARCH_X = 95;
     private static final int SEARCH_Y = 7;
     private static final int SEARCH_WIDTH = 67;
-    private static final int SCROLL_X = 174;
-    private static final int SCROLL_Y = 20;
+    private static final int SCROLL_X = 175;
+    private static final int SCROLL_Y = 22;
     private static final int SCROLLER_HEIGHT = 15;
 
     private EditBox searchBox;
@@ -73,7 +73,7 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
         int gridY = menu.getCraftingGridY();
         IndustrialGuiStyle.drawTerminalChassis(graphics, leftPos, topPos, imageHeight, gridY - 2);
         IndustrialGuiStyle.drawInsetPanel(graphics, leftPos + 172, topPos + 19, 18, menu.getVisibleRows() * 18);
-        IndustrialGuiStyle.drawWorkPanel(graphics, leftPos + 18, topPos + gridY - 3, 148, 60);
+        IndustrialGuiStyle.drawWorkPanel(graphics, leftPos + 21, topPos + gridY - 4, 145, 60);
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 3; column++) {
                 IndustrialGuiStyle.drawSlot(graphics, leftPos + 24 + column * 18, topPos + gridY - 1 + row * 18);
@@ -95,6 +95,12 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
         }
         IndustrialGuiStyle.drawRs2SearchIcon(graphics, leftPos + SEARCH_ICON_X, topPos + 5);
         drawScrollbar(graphics);
+        if (menu.hasFluidStorage()) {
+            var fluid=menu.getStoredFluid();
+            int color=fluid.isEmpty()?0xff4c9ed0:net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions.of(fluid.getFluid()).getTintColor(fluid);
+            IndustrialGuiStyle.drawCommonPanel(graphics,leftPos+195,topPos+19,24,80);
+            IndustrialGuiStyle.drawVerticalMeter(graphics,leftPos+198,topPos+22,74,fluid.getAmount(),AdvancedIndustrialStorageBlockEntity.FLUID_CAPACITY,color,false);
+        }
     }
 
     @Override
@@ -130,6 +136,12 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
             }
         }
         renderTooltip(graphics, mouseX, mouseY);
+        if (menu.hasFluidStorage() && mouseX>=leftPos+195 && mouseX<leftPos+219 && mouseY>=topPos+19 && mouseY<topPos+99) {
+            var fluid=menu.getStoredFluid();
+            graphics.renderComponentTooltip(font,java.util.List.of(
+                    fluid.isEmpty()?Component.translatable("gui.industrialcrops.empty_tank"):fluid.getHoverName(),
+                    Component.literal(fluid.getAmount()+" / 64,000 mB (64 B)")),mouseX,mouseY);
+        }
     }
 
     private void drawStorageCounts(GuiGraphics graphics) {
@@ -218,7 +230,7 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
     }
 
     private int scrollbarHeight() {
-        return menu.getVisibleRows() * 18 - 2;
+        return menu.getVisibleRows() * 18 - 6;
     }
 
     private boolean insideScrollbar(double x, double y) {

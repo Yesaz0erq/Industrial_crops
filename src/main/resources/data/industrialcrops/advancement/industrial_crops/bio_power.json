@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "industrialcrops:bio_energy_generator",
+      "id": "industrialcrops:bio_energy_generation_device",
       "count": 1
     },
     "title": {
@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "items": "industrialcrops:bio_energy_generator"
+            "items": "industrialcrops:bio_energy_generation_device"
           }
         ]
       }

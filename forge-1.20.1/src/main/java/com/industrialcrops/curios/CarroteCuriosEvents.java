@@ -108,6 +108,7 @@ public final class CarroteCuriosEvents {
         // Preserve independent steel charges across respawn.
         var previous = event.getOriginal().getPersistentData();
         var next = event.getEntity().getPersistentData();
+        next.putLong(CarroteAdvancedEffects.ABSORPTION_READY, previous.getLong(CarroteAdvancedEffects.ABSORPTION_READY));
         next.putLong(STEEL_READY, previous.getLong(STEEL_READY));
         next.putLong(HELMET_STEEL_READY, previous.getLong(HELMET_STEEL_READY));
     }

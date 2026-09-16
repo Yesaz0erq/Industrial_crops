@@ -42,7 +42,7 @@ public final class IncubatorBlockItem extends BlockItem {
         }
         if (getStoredType(stack) != IncubatorBlockEntity.SLIME_NONE) {
             if (!player.level().isClientSide()) {
-                player.displayClientMessage(Component.translatable("message.industrialcrops.slime_converter.occupied"), true);
+                player.displayClientMessage(Component.translatable("message.industrialcrops.slime_conversion_device.occupied"), true);
             }
             return InteractionResult.FAIL;
         }
@@ -66,10 +66,10 @@ public final class IncubatorBlockItem extends BlockItem {
         super.appendHoverText(stack, context, tooltip, flag);
         int type = getStoredType(stack);
         if (type == IncubatorBlockEntity.SLIME_NONE) {
-            tooltip.add(Component.translatable("tooltip.industrialcrops.slime_converter.empty"));
+            tooltip.add(Component.translatable("tooltip.industrialcrops.slime_conversion_device.empty"));
         } else {
             tooltip.add(Component.translatable(
-                    "tooltip.industrialcrops.slime_converter.contains",
+                    "tooltip.industrialcrops.slime_conversion_device.contains",
                     IncubatorBlockEntity.getSlimeName(type),
                     getStoredSize(stack)
             ));

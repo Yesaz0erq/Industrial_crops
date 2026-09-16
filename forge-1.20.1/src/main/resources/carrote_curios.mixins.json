@@ -10,7 +10,8 @@
     "FoodDataMixin",
     "EnchantmentMenuMixin",
     "AnvilMenuMixin",
-    "SmeltingLootMixin"
+    "FinalArmorMixin",
+    "PulseKnockbackMixin", "PulseArrowMixin"
   ],
   "injectors": {
     "defaultRequire": 1

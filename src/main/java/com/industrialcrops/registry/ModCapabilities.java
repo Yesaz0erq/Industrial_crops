@@ -8,6 +8,9 @@ public final class ModCapabilities {
     }
 
     public static void register(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.ANIMAL_BREEDER.get(), (entity, side) -> entity.itemCapability());
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.ANIMAL_BREEDER.get(), (entity, side) -> entity.energy());
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.ANIMAL_BREEDER.get(), (entity, side) -> entity.tank());
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.WIRELESS_ENERGY_TRANSMITTER.get(),
                 (entity, side) -> entity.getEnergyStorage(side));
         event.registerBlockEntity(
@@ -80,6 +83,10 @@ public final class ModCapabilities {
                 ModBlockEntities.AUTOMATIC_PLANTER.get(),
                 (blockEntity, side) -> blockEntity.getEnergyStorage(side)
         );
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.TERRAIN_PROCESSOR.get(), (entity, side) -> entity.itemCapability());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.CRAFTING_PROCESSOR.get(), (entity, side) -> entity.outputCapability());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.CRYSTAL_LOGISTICS.get(), (entity, side) -> entity.itemCapability());
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.CRYSTAL_LOGISTICS.get(), (entity, side) -> entity.fluidCapability());
         registerMatter(event, ModBlockEntities.MATTER_DIGITIZER.get());
         registerMatter(event, ModBlockEntities.DIGITIZED_ITEM_COPIER.get());
         registerMatter(event, ModBlockEntities.MATTER_RECONSTRUCTOR.get());
@@ -107,6 +114,8 @@ public final class ModCapabilities {
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.GOLD_PLASMA_EXTRACTOR.get(),
                 (entity, side) -> entity.getOutputHandler());
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.CRYSTAL_STEEL_WORKBENCH.get(),
+                (entity, side) -> entity.getTank());
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get(),
                 (entity, side) -> entity.getTank());
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.COPPER_FLUID_STORAGE_CABINET.get(),
                 (entity, side) -> entity.getTank());

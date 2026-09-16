@@ -2,7 +2,7 @@
   "display": {
     "icon": {
       "count": 1,
-      "item": "industrialcrops:processor_integrated_gold_device_casing"
+      "item": "industrialcrops:component_substrate_integrated_gold_device_casing"
     },
     "title": {
       "translate": "advancements.industrialcrops.progress.processor_age.title"
@@ -19,7 +19,7 @@
         "items": [
           {
             "items": [
-              "industrialcrops:processor_integrated_gold_device_casing"
+              "industrialcrops:component_substrate_integrated_gold_device_casing"
             ]
           }
         ]

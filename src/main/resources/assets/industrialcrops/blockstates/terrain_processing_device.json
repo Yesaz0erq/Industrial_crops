@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "industrialcrops:block/terrain_processing_device",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "industrialcrops:block/terrain_processing_device",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "industrialcrops:block/terrain_processing_device",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "industrialcrops:block/terrain_processing_device",
+      "y": 270
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "industrialcrops:automatic_planter",
+      "id": "industrialcrops:automatic_sowing_device",
       "count": 1
     },
     "title": {
@@ -13,12 +13,12 @@
     "frame": "goal"
   },
   "criteria": {
-    "automatic_planter": {
+    "automatic_sowing_device": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": "industrialcrops:automatic_planter"
+            "items": "industrialcrops:automatic_sowing_device"
           }
         ]
       }
@@ -33,12 +33,12 @@
         ]
       }
     },
-    "processor_programming_device": {
+    "component_programming_device": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": "industrialcrops:processor_programming_device"
+            "items": "industrialcrops:component_programming_device"
           }
         ]
       }
@@ -46,13 +46,13 @@
   },
   "requirements": [
     [
-      "automatic_planter"
+      "automatic_sowing_device"
     ],
     [
       "advanced_manipulation_device"
     ],
     [
-      "processor_programming_device"
+      "component_programming_device"
     ]
   ],
   "sends_telemetry_event": false,

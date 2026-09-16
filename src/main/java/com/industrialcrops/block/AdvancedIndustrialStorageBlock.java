@@ -63,6 +63,15 @@ public final class AdvancedIndustrialStorageBlock extends BaseEntityBlock {
     }
 
     @Override
+    protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+            Player player, net.minecraft.world.InteractionHand hand, BlockHitResult hit) {
+        if (level.getBlockEntity(pos) instanceof AdvancedIndustrialStorageBlockEntity storage
+                && net.neoforged.neoforge.fluids.FluidUtil.interactWithFluidHandler(player, hand, storage.getTank()))
+            return net.minecraft.world.ItemInteractionResult.sidedSuccess(level.isClientSide());
+        return net.minecraft.world.ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
         if (level.getBlockEntity(pos) instanceof AdvancedIndustrialStorageBlockEntity storage) {

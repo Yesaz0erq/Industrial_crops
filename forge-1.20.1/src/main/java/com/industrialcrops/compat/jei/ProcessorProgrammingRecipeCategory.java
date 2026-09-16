@@ -24,7 +24,7 @@ public final class ProcessorProgrammingRecipeCategory implements IRecipeCategory
     }
 
     @Override public RecipeType<ManipulatorRecipeDisplay> getRecipeType() { return TYPE; }
-    @Override public Component getTitle() { return Component.translatable("block.industrialcrops.processor_programming_device"); }
+    @Override public Component getTitle() { return Component.translatable("block.industrialcrops.component_programming_device"); }
     @Override public int getWidth() { return 138; }
     @Override public int getHeight() { return 42; }
     @Override public IDrawable getIcon() { return icon; }
