@@ -8,10 +8,10 @@
   ],
   "key": {
     "I": {
-      "item": "carrote:carrote_steel_ingot"
+      "item": "carrote:paradox_steel_ingot"
     },
     "C": {
-      "item": "carrote:carrote_steel_device_casing"
+      "item": "carrote:paradox_steel_device_casing"
     },
     "S": {
       "item": "industrialcrops:component_substrate"

@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "industrialcrops:block/automatic_animal_breeder_front",
+    "side": "industrialcrops:block/crystal_steel_device_side",
+    "top": "industrialcrops:block/crystal_steel_device_top",
+    "bottom": "industrialcrops:block/crystal_steel_device_bottom"
+  }
+}

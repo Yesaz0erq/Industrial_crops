@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "carrote:item/carrote_steel_ingot"
-  }
-}

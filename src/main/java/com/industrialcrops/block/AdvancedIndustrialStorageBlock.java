@@ -49,6 +49,10 @@ public final class AdvancedIndustrialStorageBlock extends BaseEntityBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof AdvancedIndustrialStorageBlockEntity storage
+                && net.minecraftforge.fluids.FluidUtil.interactWithFluidHandler(player, hand, storage.getTank()))
+            return net.minecraft.world.InteractionResult.sidedSuccess(level.isClientSide());
+
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof AdvancedIndustrialStorageBlockEntity storage) {
             net.minecraftforge.network.NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer) player,storage, buffer -> buffer.writeBlockPos(pos));
         }

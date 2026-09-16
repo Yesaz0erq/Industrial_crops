@@ -21,7 +21,7 @@ public final class ElectricFurnaceScreen extends IndustrialContainerScreen<Elect
         }
         IndustrialGuiStyle.drawPlayerInventory(g,leftPos,topPos,8,110,168);
         IndustrialGuiStyle.drawVerticalMeter(g,leftPos+imageWidth+2,topPos+20,58,menu.energy(),ElectricFurnaceBlockEntity.ENERGY_CAPACITY,IndustrialGuiStyle.ENERGY_RED,false);
-        if(upgradesOpen){IndustrialGuiStyle.drawCommonPanel(g,leftPos-80,topPos+20,60,52);for(int i=0;i<4;i++)IndustrialGuiStyle.drawSlot(g,leftPos+ElectricFurnaceMenu.UPGRADE_X-1+i%2*22,topPos+ElectricFurnaceMenu.UPGRADE_Y-1+i/2*22);}
+        if(upgradesOpen){IndustrialGuiStyle.drawCommonPanel(g,leftPos-62,topPos+20,42,42);for(int i=0;i<4;i++)IndustrialGuiStyle.drawRs2Slot(g,leftPos+ElectricFurnaceMenu.UPGRADE_X-1+i%2* 18,topPos+ElectricFurnaceMenu.UPGRADE_Y-1+i/2* 18);}
     }
     @Override protected void renderLabels(GuiGraphics g,int mx,int my){IndustrialGuiStyle.drawFittedString(g,font,title.getString(),8,6,160,IndustrialGuiStyle.TEXT,true);g.drawString(font,playerInventoryTitle,8,inventoryLabelY,IndustrialGuiStyle.MUTED_TEXT,false);}
     @Override public void render(GuiGraphics g,int mx,int my,float tick){renderBackground(g);super.render(g,mx,my,tick);drawUpgradeTab(g,mx,my);if(mx>=leftPos+178&&mx<leftPos+196&&my>=topPos+20&&my<topPos+78)g.renderTooltip(font,Component.translatable("gui.industrialcrops.energy",menu.energy(),ElectricFurnaceBlockEntity.ENERGY_CAPACITY),mx,my);renderTooltip(g,mx,my);}

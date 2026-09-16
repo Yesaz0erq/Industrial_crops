@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "GGG",
+    "GCG",
+    "GPG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "C": {
+      "item": "industrialcrops:component_substrate_integrated_gold_device_casing"
+    },
+    "P": {
+      "item": "industrialcrops:component_substrate"
+    }
+  },
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:extraction_device"
+  }
+}

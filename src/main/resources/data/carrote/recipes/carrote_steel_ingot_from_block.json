@@ -3,11 +3,11 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "carrote:carrote_steel_block"
+      "item": "carrote:paradox_steel_block"
     }
   ],
   "result": {
     "count": 9,
-    "item": "carrote:carrote_steel_ingot"
+    "item": "carrote:paradox_steel_ingot"
   }
 }

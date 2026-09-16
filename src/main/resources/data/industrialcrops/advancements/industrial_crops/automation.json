@@ -2,7 +2,7 @@
   "display": {
     "icon": {
       "count": 1,
-      "item": "industrialcrops:automatic_planter"
+      "item": "industrialcrops:automatic_sowing_device"
     },
     "title": {
       "translate": "advancements.industrialcrops.progress.automation.title"
@@ -13,13 +13,13 @@
     "frame": "goal"
   },
   "criteria": {
-    "automatic_planter": {
+    "automatic_sowing_device": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": [
-              "industrialcrops:automatic_planter"
+              "industrialcrops:automatic_sowing_device"
             ]
           }
         ]
@@ -37,13 +37,13 @@
         ]
       }
     },
-    "processor_programming_device": {
+    "component_programming_device": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": [
-              "industrialcrops:processor_programming_device"
+              "industrialcrops:component_programming_device"
             ]
           }
         ]
@@ -52,13 +52,13 @@
   },
   "requirements": [
     [
-      "automatic_planter"
+      "automatic_sowing_device"
     ],
     [
       "advanced_manipulation_device"
     ],
     [
-      "processor_programming_device"
+      "component_programming_device"
     ]
   ],
   "sends_telemetry_event": false,

@@ -42,17 +42,17 @@ public final class ModItems {
             () -> new BaggedCropItem(ModBlocks.INDUSTRIAL_POTATO_CROP.get(), baggedProperties()));
     public static final RegistryObject<GeneticCropItem> INDUSTRIAL_WHEAT = ITEMS.register("industrial_wheat",
             () -> new GeneticCropItem(new Item.Properties()));
-    public static final RegistryObject<FertilizerBagItem> FERTILIZER_FAST_GROWTH = ITEMS.register("fertilizer_fast_growth",
+    public static final RegistryObject<FertilizerBagItem> FERTILIZER_FAST_GROWTH = ITEMS.register("rapid_growth_fertilizer_bag",
             () -> new FertilizerBagItem(baggedProperties(), FertilizerBagItem.Mode.FAST_GROWTH));
-    public static final RegistryObject<FertilizerBagItem> FERTILIZER_FERTILE_SOIL = ITEMS.register("fertilizer_fertile_soil",
+    public static final RegistryObject<FertilizerBagItem> FERTILIZER_FERTILE_SOIL = ITEMS.register("fertile_soil_fertilizer_bag",
             () -> new FertilizerBagItem(baggedProperties(), FertilizerBagItem.Mode.FERTILE_SOIL));
-    public static final RegistryObject<FertilizerBagItem> STRANGE_FERTILIZER = ITEMS.register("strange_fertilizer",
+    public static final RegistryObject<FertilizerBagItem> STRANGE_FERTILIZER = ITEMS.register("strange_fertilizer_bag",
             () -> new FertilizerBagItem(baggedProperties(), FertilizerBagItem.Mode.COMET_SOIL));
-    public static final RegistryObject<AnimalFeedBagItem> FEED_BAG_BASIC = registerFeedBag("feed_bag_basic", AnimalFeedBagItem.Mode.BASIC);
-    public static final RegistryObject<AnimalFeedBagItem> FEED_BAG_HEALING = registerFeedBag("feed_bag_healing", AnimalFeedBagItem.Mode.HEALING);
-    public static final RegistryObject<AnimalFeedBagItem> FEED_BAG_GROWTH = registerFeedBag("feed_bag_growth", AnimalFeedBagItem.Mode.GROWTH);
-    public static final RegistryObject<AnimalFeedBagItem> FEED_BAG_FAST_BREEDING = registerFeedBag("feed_bag_fast_breeding", AnimalFeedBagItem.Mode.FAST_BREEDING);
-    public static final RegistryObject<AnimalFeedBagItem> FEED_BAG_RESISTANCE = registerFeedBag("feed_bag_resistance", AnimalFeedBagItem.Mode.RESISTANCE);
+    public static final RegistryObject<AnimalFeedBagItem> FEED_BAG_BASIC = registerFeedBag("normal_feed_bag", AnimalFeedBagItem.Mode.BASIC);
+    public static final RegistryObject<AnimalFeedBagItem> FEED_BAG_HEALING = registerFeedBag("health_restoration_feed_bag", AnimalFeedBagItem.Mode.HEALING);
+    public static final RegistryObject<AnimalFeedBagItem> FEED_BAG_GROWTH = registerFeedBag("rapid_growth_feed_bag", AnimalFeedBagItem.Mode.GROWTH);
+    public static final RegistryObject<AnimalFeedBagItem> FEED_BAG_FAST_BREEDING = registerFeedBag("rapid_breeding_feed_bag", AnimalFeedBagItem.Mode.FAST_BREEDING);
+    public static final RegistryObject<AnimalFeedBagItem> FEED_BAG_RESISTANCE = registerFeedBag("resistance_boost_feed_bag", AnimalFeedBagItem.Mode.RESISTANCE);
     public static final RegistryObject<BaggedCropItem> BAGGED_INDUSTRIAL_WHEAT_SEEDS = ITEMS.register("bagged_industrial_wheat_seeds",
             () -> new BaggedCropItem(ModBlocks.INDUSTRIAL_WHEAT_CROP.get(), baggedProperties()));
     public static final RegistryObject<BaggedCropItem> BAGGED_INDUSTRIAL_MELON_SEEDS = ITEMS.register("bagged_industrial_melon_seeds",
@@ -83,25 +83,25 @@ public final class ModItems {
             () -> new BaggedCropItem(ModBlocks.NEONBULB_CROP.get(), baggedProperties()));
     public static final RegistryObject<GeneticCropItem> NEONBULB = ITEMS.register("neonbulb",
             () -> new GeneticCropItem(new Item.Properties().food(new FoodProperties.Builder()
-                    .nutrition(4).saturationMod(0.5F).build())));
+                    .nutrition(4).saturationMod(1.25F).build())));
     public static final RegistryObject<GeneticCropBlockItem> FLUXSTALK_SEEDS = ITEMS.register("fluxstalk_seeds",
             () -> new GeneticCropBlockItem(ModBlocks.FLUXSTALK_CROP.get(), new Item.Properties()));
     public static final RegistryObject<BaggedCropItem> BAGGED_FLUXSTALK_SEEDS = ITEMS.register("bagged_fluxstalk_seeds",
             () -> new BaggedCropItem(ModBlocks.FLUXSTALK_CROP.get(), baggedProperties()));
     public static final RegistryObject<GeneticCropItem> FLUXSTALK = ITEMS.register("fluxstalk",
             () -> new GeneticCropItem(new Item.Properties().food(new FoodProperties.Builder()
-                    .nutrition(3).saturationMod(0.4F).build())));
-    public static final RegistryObject<ItemNameBlockItem> PLASMA_BERRY = ITEMS.register("plasma_berry",
+                    .nutrition(10).saturationMod(0.2F).build())));
+    public static final RegistryObject<ItemNameBlockItem> PLASMA_BERRY = ITEMS.register("plasma_fruit",
             () -> new ItemNameBlockItem(ModBlocks.ENERGY_BUSH.get(), new Item.Properties().food(
                     new FoodProperties.Builder().nutrition(3).saturationMod(0.35F).build())));
     public static final RegistryObject<BucketItem> CONCENTRATED_PLASMA_JUICE_BUCKET = ITEMS.register(
-            "concentrated_plasma_juice_bucket", () -> new BucketItem(
+            "plasma_juice_bucket", () -> new BucketItem(
                     ModFluids.CONCENTRATED_PLASMA_JUICE.get(), new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ENERGY_CRYSTAL = ITEMS.register("energy_crystal",
             () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
     public static final RegistryObject<Item> CRYSTAL_INGOT = ITEMS.register("crystal_ingot",
             () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE)));
-    public static final RegistryObject<Item> COMET_FRUIT = ITEMS.register("comet_fruit",
+    public static final RegistryObject<Item> COMET_FRUIT = ITEMS.register("comet_essence",
             () -> new Item(new Item.Properties().rarity(net.minecraft.world.item.Rarity.UNCOMMON)));
     public static final RegistryObject<GeneticCropProductBlockItem> INDUSTRIAL_MELON = ITEMS.register("industrial_melon",
             () -> new GeneticCropProductBlockItem(ModBlocks.INDUSTRIAL_MELON_BLOCK.get(), new Item.Properties()));
@@ -144,6 +144,8 @@ public final class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> GOLD_UPGRADE_KIT = ITEMS.register("gold_upgrade_kit",
             () -> new AdvancedManipulatorUpgradeItem(new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> MINING_UPGRADE_COMPONENT = ITEMS.register("mining_upgrade_component",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.EPIC)));
     public static final RegistryObject<Item> SPEED_COMPONENT_1 = registerSpeedUpgrade("speed_component_1");
     public static final RegistryObject<Item> SPEED_COMPONENT_2 = registerSpeedUpgrade("speed_component_2");
     public static final RegistryObject<Item> SPEED_COMPONENT_3 = registerSpeedUpgrade("speed_component_3");
@@ -182,12 +184,12 @@ public final class ModItems {
     public static final RegistryObject<BlockItem> INDUSTRIAL_WHEAT_BLOCK = registerBlockItem("industrial_wheat_block", ModBlocks.INDUSTRIAL_WHEAT_BLOCK);
     public static final RegistryObject<BlockItem> INDUSTRIAL_MELON_BLOCK = registerBlockItem("industrial_melon_block", ModBlocks.INDUSTRIAL_MELON_BLOCK);
     public static final RegistryObject<BlockItem> INDUSTRIAL_PUMPKIN_BLOCK = registerBlockItem("industrial_pumpkin_block", ModBlocks.INDUSTRIAL_PUMPKIN_BLOCK);
-    public static final RegistryObject<BlockItem> FERTILE_FARMLAND = registerBlockItem("fertile_farmland", ModBlocks.FERTILE_FARMLAND);
+    public static final RegistryObject<BlockItem> FERTILE_FARMLAND = registerBlockItem("fertile_soil", ModBlocks.FERTILE_FARMLAND);
     public static final RegistryObject<BlockItem> COPPER_DEVICE_CASING = registerBlockItem("copper_device_casing", ModBlocks.COPPER_DEVICE_CASING);
     public static final RegistryObject<BlockItem> IRON_DEVICE_CASING = registerBlockItem("iron_device_casing", ModBlocks.IRON_DEVICE_CASING);
-    public static final RegistryObject<BlockItem> PROCESSOR_GOLD_DEVICE_CASING = registerBlockItem("processor_integrated_gold_device_casing", ModBlocks.PROCESSOR_GOLD_DEVICE_CASING);
+    public static final RegistryObject<BlockItem> PROCESSOR_GOLD_DEVICE_CASING = registerBlockItem("component_substrate_integrated_gold_device_casing", ModBlocks.PROCESSOR_GOLD_DEVICE_CASING);
     public static final RegistryObject<BlockItem> CRYSTAL_STEEL_WORKBENCH = registerBlockItem("crystal_steel_workbench", ModBlocks.CRYSTAL_STEEL_WORKBENCH);
-    public static final RegistryObject<BlockItem> CRYSTAL_STEEL_DEVICE_CASING = registerBlockItem("crystal_steel_device_casing", ModBlocks.CRYSTAL_STEEL_DEVICE_CASING);
+    public static final RegistryObject<BlockItem> CRYSTAL_STEEL_DEVICE_CASING = registerBlockItem("crystal_steel_casing", ModBlocks.CRYSTAL_STEEL_DEVICE_CASING);
     public static final RegistryObject<BlockItem> ROOT_ORE_EXTRACTOR = registerBlockItem("basic_crop_conversion_device", ModBlocks.ROOT_ORE_EXTRACTOR);
     public static final RegistryObject<BlockItem> CROP_COMPRESSOR = registerBlockItem("crop_compressor", ModBlocks.CROP_COMPRESSOR);
     public static final RegistryObject<BlockItem> CROP_ANALYSIS_DEVICE =
@@ -199,15 +201,15 @@ public final class ModItems {
     public static final RegistryObject<BlockItem> CARROT_CONTROL_DEVICE = registerBlockItem("basic_control_device", ModBlocks.CARROT_CONTROL_DEVICE);
     public static final RegistryObject<BlockItem> BASIC_MANIPULATOR = registerBlockItem("basic_manipulation_device", ModBlocks.BASIC_MANIPULATOR);
     public static final RegistryObject<BlockItem> ADVANCED_MANIPULATOR = registerBlockItem("advanced_manipulation_device", ModBlocks.ADVANCED_MANIPULATOR);
-    public static final RegistryObject<BlockItem> PROCESSOR_PROGRAMMER = registerBlockItem("processor_programming_device", ModBlocks.PROCESSOR_PROGRAMMER);
-    public static final RegistryObject<BlockItem> AUTOMATIC_PLANTER = registerBlockItem("automatic_planter", ModBlocks.AUTOMATIC_PLANTER);
+    public static final RegistryObject<BlockItem> PROCESSOR_PROGRAMMER = registerBlockItem("component_programming_device", ModBlocks.PROCESSOR_PROGRAMMER);
+    public static final RegistryObject<BlockItem> AUTOMATIC_PLANTER = registerBlockItem("automatic_sowing_device", ModBlocks.AUTOMATIC_PLANTER);
     public static final RegistryObject<BlockItem> MATTER_DIGITIZER = registerBlockItem("matter_digitization_device", ModBlocks.MATTER_DIGITIZER);
-    public static final RegistryObject<BlockItem> DIGITIZED_ITEM_COPIER = registerBlockItem("digitized_item_copier", ModBlocks.DIGITIZED_ITEM_COPIER);
+    public static final RegistryObject<BlockItem> DIGITIZED_ITEM_COPIER = registerBlockItem("data_copying_device", ModBlocks.DIGITIZED_ITEM_COPIER);
     public static final RegistryObject<BlockItem> MATTER_RECONSTRUCTOR = registerBlockItem("matter_reconstruction_device", ModBlocks.MATTER_RECONSTRUCTOR);
     public static final RegistryObject<BlockItem> ITEM_NETWORK_TERMINAL = registerBlockItem("item_network_management_terminal", ModBlocks.ITEM_NETWORK_TERMINAL);
-    public static final RegistryObject<BlockItem> BIO_ENERGY_GENERATOR = registerBlockItem("bio_energy_generator", ModBlocks.BIO_ENERGY_GENERATOR);
-    public static final RegistryObject<BlockItem> ENERGY_BATTERY = registerBlockItem("energy_battery", ModBlocks.ENERGY_BATTERY);
-    public static final RegistryObject<BlockItem> RESIDUE_INCINERATOR = registerBlockItem("residue_incinerator", ModBlocks.RESIDUE_INCINERATOR);
+    public static final RegistryObject<BlockItem> BIO_ENERGY_GENERATOR = registerBlockItem("bio_energy_generation_device", ModBlocks.BIO_ENERGY_GENERATOR);
+    public static final RegistryObject<BlockItem> ENERGY_BATTERY = registerBlockItem("gold_energy_storage_cabinet", ModBlocks.ENERGY_BATTERY);
+    public static final RegistryObject<BlockItem> RESIDUE_INCINERATOR = registerBlockItem("incinerator", ModBlocks.RESIDUE_INCINERATOR);
     public static final RegistryObject<BlockItem> ELECTRIC_FURNACE = registerBlockItem("electric_furnace", ModBlocks.ELECTRIC_FURNACE);
     public static final RegistryObject<BlockItem> DIGITAL_MINIATURE_FOREST = registerBlockItem("digital_miniature_forest", ModBlocks.DIGITAL_MINIATURE_FOREST);
     public static final RegistryObject<BlockItem> BASIC_ENERGY_CABLE = registerBlockItem("basic_energy_cable", ModBlocks.BASIC_ENERGY_CABLE);
@@ -217,9 +219,9 @@ public final class ModItems {
     public static final RegistryObject<RemoteAccessDeviceItem> REMOTE_ACCESS_DEVICE = ITEMS.register("remote_access_device",
             () -> new RemoteAccessDeviceItem(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE)));
     public static final RegistryObject<BlockItem> ADVANCED_INDUSTRIAL_STORAGE_DEVICE = registerBlockItem("advanced_industrial_storage_device", ModBlocks.ADVANCED_INDUSTRIAL_STORAGE_DEVICE);
-    public static final RegistryObject<IncubatorBlockItem> INCUBATOR = ITEMS.register("slime_converter",
+    public static final RegistryObject<IncubatorBlockItem> INCUBATOR = ITEMS.register("slime_conversion_device",
             () -> new IncubatorBlockItem(ModBlocks.INCUBATOR.get(), new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<BlockItem> SLIME_INCUBATOR = registerBlockItem("slime_incubator", ModBlocks.SLIME_INCUBATOR);
+    public static final RegistryObject<BlockItem> SLIME_INCUBATOR = registerBlockItem("slime_cultivation_device", ModBlocks.SLIME_INCUBATOR);
     public static final RegistryObject<BlockItem> GOLDEN_LAUNCH_SILO = registerBlockItem("explosive_potato_launcher", ModBlocks.GOLDEN_LAUNCH_SILO);
     public static final RegistryObject<BlockItem> PIPE = registerBlockItem("basic_pipe", ModBlocks.PIPE);
     public static final RegistryObject<BlockItem> INPUT_PIPE = registerBlockItem("basic_input_pipe", ModBlocks.INPUT_PIPE);
@@ -232,7 +234,7 @@ public final class ModItems {
     public static final RegistryObject<BlockItem> ADVANCED_OUTPUT_PIPE = registerBlockItem("advanced_output_pipe", ModBlocks.ADVANCED_OUTPUT_PIPE);
     public static final RegistryObject<BlockItem> PIPE_SORTER = registerBlockItem("pipe_sorter", ModBlocks.PIPE_SORTER);
     public static final RegistryObject<BlockItem> GOLD_FLUID_PIPE = registerBlockItem("gold_fluid_pipe", ModBlocks.GOLD_FLUID_PIPE);
-    public static final RegistryObject<BlockItem> GOLD_PLASMA_EXTRACTOR = registerBlockItem("gold_plasma_extractor", ModBlocks.GOLD_PLASMA_EXTRACTOR);
+    public static final RegistryObject<BlockItem> GOLD_PLASMA_EXTRACTOR = registerBlockItem("extraction_device", ModBlocks.GOLD_PLASMA_EXTRACTOR);
     public static final RegistryObject<BlockItem> COPPER_FLUID_STORAGE_CABINET = registerBlockItem(
             "copper_fluid_storage_cabinet", ModBlocks.COPPER_FLUID_STORAGE_CABINET);
     public static final RegistryObject<BlockItem> COMET_SOIL = registerBlockItem("comet_soil", ModBlocks.COMET_SOIL);
@@ -258,8 +260,24 @@ public final class ModItems {
             () -> new HangingSignItem(ModBlocks.COMET_HANGING_SIGN.get(),
                     ModBlocks.COMET_WALL_HANGING_SIGN.get(), new Item.Properties().stacksTo(16)));
 
-    public static final RegistryObject<BlockItem> WIRELESS_ENERGY_TRANSMITTER = registerBlockItem("wireless_energy_transmitter", ModBlocks.WIRELESS_ENERGY_TRANSMITTER);
+    public static final RegistryObject<BlockItem> WIRELESS_ENERGY_TRANSMITTER = registerBlockItem("wireless_energy_transfer_device", ModBlocks.WIRELESS_ENERGY_TRANSMITTER);
 
+    public static final RegistryObject<BlockItem> CRYSTAL_LOGISTICS = ITEMS.register("infinite_logistics_transfer_device",
+            () -> new BlockItem(ModBlocks.CRYSTAL_LOGISTICS.get(), new Item.Properties()) {
+                @Override public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
+                    consumer.accept(new net.minecraftforge.client.extensions.common.IClientItemExtensions() {
+                        private com.industrialcrops.client.renderer.CrystalLogisticsItemRenderer renderer;
+                        @Override public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                            if (renderer == null) renderer = new com.industrialcrops.client.renderer.CrystalLogisticsItemRenderer();
+                            return renderer;
+                        }
+                    });
+                }
+            });
+
+    public static final RegistryObject<BlockItem> CRAFTING_PROCESSOR = registerBlockItem("crafting_processing_device", ModBlocks.CRAFTING_PROCESSOR);
+    public static final RegistryObject<BlockItem> ANIMAL_BREEDER = registerBlockItem("automatic_animal_breeder", ModBlocks.ANIMAL_BREEDER);
+    public static final RegistryObject<BlockItem> TERRAIN_PROCESSOR = registerBlockItem("terrain_processing_device", ModBlocks.TERRAIN_PROCESSOR);
     private ModItems() {
     }
 

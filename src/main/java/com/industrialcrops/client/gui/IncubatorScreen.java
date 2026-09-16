@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public final class IncubatorScreen extends UpgradeableMachineScreen<IncubatorMenu> {
-    private static final ResourceLocation BACKGROUND = IndustrialGuiStyle.containerTexture("slime_converter");
+    private static final ResourceLocation BACKGROUND = IndustrialGuiStyle.containerTexture("slime_conversion_device");
     private Button releaseButton;
 
     public IncubatorScreen(IncubatorMenu menu, Inventory inventory, Component title) {
@@ -23,7 +23,7 @@ public final class IncubatorScreen extends UpgradeableMachineScreen<IncubatorMen
         super.init();
         titleLabelX = (imageWidth - font.width(title)) / 2;
         releaseButton = addRenderableWidget(Button.builder(
-                        Component.translatable("gui.industrialcrops.slime_converter.release"),
+                        Component.translatable("gui.industrialcrops.slime_conversion_device.release"),
                         button -> {
                             if (minecraft != null && minecraft.gameMode != null) {
                                 minecraft.gameMode.handleInventoryButtonClick(menu.containerId, 0);

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "industrialcrops:block/bio_energy_generation_device"
+    },
+    "facing=east": {
+      "model": "industrialcrops:block/bio_energy_generation_device",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "industrialcrops:block/bio_energy_generation_device",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "industrialcrops:block/bio_energy_generation_device",
+      "y": 270
+    }
+  }
+}

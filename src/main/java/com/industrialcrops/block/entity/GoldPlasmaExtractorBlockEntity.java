@@ -33,7 +33,8 @@ public final class GoldPlasmaExtractorBlockEntity extends BlockEntity implements
     public static final int PROCESS_TICKS = 160;
     public static final int ENERGY_CAPACITY = 100_000;
     public static final int FLUID_CAPACITY = 8_000;
-    private static final int ENERGY_PER_TICK = 40;
+    public static final int ENERGY_PER_TICK = 40;
+    public static final int OUTPUT_AMOUNT = 1_000;
     private static final int RECEIVE_RATE = 5_000;
     private int progress;
     private int syncedFluidAmount;
@@ -82,7 +83,7 @@ public final class GoldPlasmaExtractorBlockEntity extends BlockEntity implements
     public static void tick(Level level, BlockPos pos, BlockState state, GoldPlasmaExtractorBlockEntity machine) {
         if (level.isClientSide()) return;
         PoweredMachineSupport.pullEnergy(level, pos, machine.energy, RECEIVE_RATE);
-        if (machine.inventory.getStackInSlot(0).isEmpty() || machine.outputTank.getFluidAmount() + 1_000 > FLUID_CAPACITY) {
+        if (machine.inventory.getStackInSlot(0).isEmpty() || machine.outputTank.getFluidAmount() + OUTPUT_AMOUNT > FLUID_CAPACITY) {
             machine.progress = 0;
             return;
         }
@@ -90,9 +91,9 @@ public final class GoldPlasmaExtractorBlockEntity extends BlockEntity implements
         machine.energy.consume(ENERGY_PER_TICK);
         machine.progress++;
         if (machine.progress >= PROCESS_TICKS) {
-            int filled = machine.outputTank.fill(new FluidStack(ModFluids.CONCENTRATED_PLASMA_JUICE.get(), 1_000),
+            int filled = machine.outputTank.fill(new FluidStack(ModFluids.CONCENTRATED_PLASMA_JUICE.get(), OUTPUT_AMOUNT),
                     net.minecraftforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE);
-            if (filled == 1_000) machine.inventory.extractItem(0, 1, false);
+            if (filled == OUTPUT_AMOUNT) machine.inventory.extractItem(0, 1, false);
             machine.progress = 0;
         }
         machine.setChanged();
@@ -107,7 +108,7 @@ public final class GoldPlasmaExtractorBlockEntity extends BlockEntity implements
     public FluidTank getOutputTank() { return outputTank; }
     public IFluidHandler getOutputHandler() { return outputHandler; }
     public ContainerData getData() { return data; }
-    @Override public Component getDisplayName() { return Component.translatable("block.industrialcrops.gold_plasma_extractor"); }
+    @Override public Component getDisplayName() { return Component.translatable("block.industrialcrops.extraction_device"); }
     @Override public @Nullable AbstractContainerMenu createMenu(int id, Inventory inv, Player player) { return new GoldPlasmaExtractorMenu(id, inv, this, worldPosition); }
     @Override protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag); tag.put("Inventory", inventory.serializeNBT());

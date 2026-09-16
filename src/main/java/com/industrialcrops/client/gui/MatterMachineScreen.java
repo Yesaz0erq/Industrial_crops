@@ -21,8 +21,8 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
     private static final int SEARCH_X = 95;
     private static final int SEARCH_Y = 7;
     private static final int SEARCH_WIDTH = 67;
-    private static final int SCROLL_X = 174;
-    private static final int SCROLL_Y = 20;
+    private static final int SCROLL_X = 175;
+    private static final int SCROLL_Y = 22;
     private static final int SCROLLER_HEIGHT = 15;
     private final Button[] sideButtons = new Button[MatterMachineMenu.RELATIVE_SIDE_COUNT];
     private Button configTab;
@@ -161,11 +161,11 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
         if (configPanelOpen) IndustrialGuiStyle.drawCommonPanel(graphics, leftPos - 80, topPos + 19,
                 CONFIG_PANEL_WIDTH, CONFIG_PANEL_HEIGHT);
         if (upgradePanelOpen) {
-            IndustrialGuiStyle.drawCommonPanel(graphics, leftPos - 80, topPos + 41, 60, 49);
+            IndustrialGuiStyle.drawCommonPanel(graphics, leftPos - 62, topPos + 41, 42, 42);
             for (int index = 0; index < MatterMachineBlockEntity.UPGRADE_SLOT_COUNT; index++) {
-                IndustrialGuiStyle.drawSlot(graphics,
-                        leftPos + MatterMachineMenu.UPGRADE_SLOT_X - 1 + index % 2 * 22,
-                        topPos + MatterMachineMenu.UPGRADE_SLOT_Y - 1 + index / 2 * 22);
+                IndustrialGuiStyle.drawRs2Slot(graphics,
+                        leftPos + MatterMachineMenu.UPGRADE_SLOT_X - 1 + index % 2 * 18,
+                        topPos + MatterMachineMenu.UPGRADE_SLOT_Y - 1 + index / 2 * 18);
             }
         }
     }
@@ -323,13 +323,13 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
     private void drawScrollbar(GuiGraphics graphics) {
         int positions = Math.max(1, menu.totalPages());
         boolean enabled = positions > 1;
-        int travel = 52 - SCROLLER_HEIGHT;
+        int travel = 48 - SCROLLER_HEIGHT;
         int y = topPos + SCROLL_Y + (enabled ? travel * menu.page() / (positions - 1) : 0);
         IndustrialGuiStyle.drawRs2Scrollbar(graphics, leftPos + SCROLL_X, y, draggingScrollbar, enabled);
     }
     private boolean insideScrollbar(double mouseX, double mouseY) {
         return mouseX >= leftPos + SCROLL_X && mouseX < leftPos + SCROLL_X + 12
-                && mouseY >= topPos + SCROLL_Y && mouseY < topPos + SCROLL_Y + 52;
+                && mouseY >= topPos + SCROLL_Y && mouseY < topPos + SCROLL_Y + 48;
     }
     private boolean insideStorageArea(double mouseX, double mouseY) {
         return mouseX >= leftPos + 7 && mouseX < leftPos + 169
@@ -337,7 +337,7 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
     }
     private void setOffsetFromMouse(double mouseY) {
         int positions = Math.max(1, menu.totalPages());
-        int travel = 52 - SCROLLER_HEIGHT;
+        int travel = 48 - SCROLLER_HEIGHT;
         if (positions <= 1) { setOffset(0); return; }
         double fraction = (mouseY - SCROLLER_HEIGHT / 2.0 - (topPos + SCROLL_Y)) / travel;
         setOffset((int) Math.floor(Math.max(0, Math.min(1, fraction)) * (positions - 1)));

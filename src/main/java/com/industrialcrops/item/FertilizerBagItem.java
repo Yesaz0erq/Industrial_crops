@@ -79,8 +79,11 @@ public final class FertilizerBagItem extends Item {
     public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable net.minecraft.world.level.Level level,
             List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltip, flag);
-        tooltip.add(Component.translatable(mode == Mode.FAST_GROWTH
-                ? "tooltip.industrialcrops.fertilizer_fast_growth"
-                : "tooltip.industrialcrops.fertilizer_fertile_soil"));
+        String tooltipKey = switch (mode) {
+            case FAST_GROWTH -> "tooltip.industrialcrops.rapid_growth_fertilizer_bag";
+            case FERTILE_SOIL -> "tooltip.industrialcrops.fertile_soil_fertilizer_bag";
+            case COMET_SOIL -> "tooltip.industrialcrops.fertilizer_comet_soil";
+        };
+        tooltip.add(Component.translatable(tooltipKey));
     }
 }

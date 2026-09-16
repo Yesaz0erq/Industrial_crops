@@ -20,7 +20,7 @@ public final class ManipulatorRecipes {
             reinforcedOutputPipe()
     );
     private static final List<ManipulatorRecipeDisplay> ADVANCED_RECIPES = List.of(
-            advancedPipe(), advancedInputPipe(), advancedOutputPipe(),
+            advancedPipe(), advancedInputPipe(), advancedOutputPipe(), goldFluidPipe(), advancedIndustrialStorage(),
             matterDigitizer(), digitizedItemCopier(), matterReconstructor(), itemNetworkTerminal()
     );
     private static final List<ManipulatorRecipeDisplay> ALL_RECIPES = java.util.stream.Stream
@@ -82,6 +82,22 @@ public final class ManipulatorRecipes {
                 List.of(ManipulatorIngredient.ofItem(Items.IRON_INGOT, 16), ManipulatorIngredient.ofItem(ModBlocks.OUTPUT_PIPE.get().asItem(), 4)),
                 new ItemStack(ModBlocks.REINFORCED_OUTPUT_PIPE.get().asItem(), 4)
         );
+    }
+
+    public static ManipulatorRecipeDisplay advancedIndustrialStorage() {
+        return new ManipulatorRecipeDisplay(List.of(
+                ManipulatorIngredient.ofItem(ModBlocks.REINFORCED_CONTROL_DEVICE.get().asItem(), 1),
+                ManipulatorIngredient.ofItem(ModBlocks.COPPER_FLUID_STORAGE_CABINET.get().asItem(), 4),
+                ManipulatorIngredient.ofItem(com.industrialcrops.registry.ModItems.COMPONENT_SUBSTRATE.get(), 2)),
+                new ItemStack(ModBlocks.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get().asItem()));
+    }
+
+    public static ManipulatorRecipeDisplay goldFluidPipe() {
+        return new ManipulatorRecipeDisplay(List.of(
+                ManipulatorIngredient.ofItem(Items.GOLD_NUGGET, 8),
+                ManipulatorIngredient.ofItem(ModBlocks.PIPE.get().asItem(), 1),
+                ManipulatorIngredient.ofItem(ModBlocks.COPPER_FLUID_STORAGE_CABINET.get().asItem(), 1)),
+                new ItemStack(ModBlocks.GOLD_FLUID_PIPE.get().asItem(), 8));
     }
 
     public static ManipulatorRecipeDisplay advancedPipe() {

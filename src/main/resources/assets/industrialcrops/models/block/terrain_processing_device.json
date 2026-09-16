@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "industrialcrops:block/terrain_processing_device_front",
+    "side": "industrialcrops:block/crystal_steel_device_side",
+    "top": "industrialcrops:block/crystal_steel_device_top",
+    "bottom": "industrialcrops:block/crystal_steel_device_bottom"
+  }
+}

@@ -19,7 +19,7 @@ import net.minecraftforge.items.SlotItemHandler;
 public final class CropCompressorMenu extends AbstractContainerMenu implements UpgradeableMenu {
     private static final int INPUT_SLOT = CropCompressorBlockEntity.INPUT_SLOT;
     private static final int OUTPUT_SLOT = CropCompressorBlockEntity.OUTPUT_SLOT;
-    public static final int UPGRADE_X=-68,UPGRADE_Y=28,UPGRADE_SPACING=22;
+    public static final int UPGRADE_X=-58,UPGRADE_Y=24,UPGRADE_SPACING=18;
     private static final int MACHINE_SLOT_COUNT = 6;
     private static final int PLAYER_INVENTORY_START = MACHINE_SLOT_COUNT;
     private static final int PLAYER_INVENTORY_END = PLAYER_INVENTORY_START + 27;
@@ -56,7 +56,7 @@ public final class CropCompressorMenu extends AbstractContainerMenu implements U
                 return false;
             }
         });
-        for(int i=0;i<4;i++){int x=UPGRADE_X+i%2*22,y=UPGRADE_Y+i/2*22;addSlot(new SlotItemHandler(blockEntity.getInventory(),2+i,x,y){@Override public boolean mayPlace(ItemStack stack){return SpeedUpgradeHelper.isSpeedUpgrade(stack);}@Override public boolean isActive(){return upgradeSlotsVisible;}});}
+        for(int i=0;i<4;i++){int x=UPGRADE_X+i%2* 18,y=UPGRADE_Y+i/2* 18;addSlot(new SlotItemHandler(blockEntity.getInventory(),2+i,x,y){@Override public boolean mayPlace(ItemStack stack){return SpeedUpgradeHelper.isSpeedUpgrade(stack);}@Override public boolean isActive(){return upgradeSlotsVisible;}});}
 
         addPlayerInventory(playerInventory, 8, 84);
         addPlayerHotbar(playerInventory, 8, 142);

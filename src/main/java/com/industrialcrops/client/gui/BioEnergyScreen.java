@@ -120,12 +120,12 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
                     IndustrialGuiStyle.TEXT, false);
         } else {
             Component burning = Component.translatable(menu.burnTime() > 0
-                    ? "gui.industrialcrops.residue_incinerator.burning"
-                    : "gui.industrialcrops.residue_incinerator.waiting");
+                    ? "gui.industrialcrops.incinerator.burning"
+                    : "gui.industrialcrops.incinerator.waiting");
             IndustrialGuiStyle.drawFittedString(graphics, font, burning.getString(), 51, 29, 74,
                     IndustrialGuiStyle.TEXT, false);
             IndustrialGuiStyle.drawFittedString(graphics, font,
-                    Component.translatable("gui.industrialcrops.residue_incinerator.fuel", menu.burnTime()).getString(),
+                    Component.translatable("gui.industrialcrops.incinerator.fuel", menu.burnTime()).getString(),
                     51, 44, 74, IndustrialGuiStyle.TEXT, false);
         }
     }
@@ -148,7 +148,7 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
                 && mouseX < leftPos + imageWidth + 2 + IndustrialGuiStyle.VERTICAL_METER_WIDTH
                 && mouseY >= topPos + 12 && mouseY < topPos + 70) {
             graphics.renderComponentTooltip(font, List.of(Component.translatable(
-                    "gui.industrialcrops.residue_incinerator.fuel", menu.burnTime())), mouseX, mouseY);
+                    "gui.industrialcrops.incinerator.fuel", menu.burnTime())), mouseX, mouseY);
         }
         if (menu.kind() != BioEnergyMachineBlockEntity.Kind.INCINERATOR
                 && mouseX >= leftPos + imageWidth + 2

@@ -28,6 +28,7 @@ public final class ItemNetworkTerminalMenu extends AbstractContainerMenu {
 
     private final ItemNetworkTerminalBlockEntity terminal;
     private final BlockPos pos;
+    private boolean remoteAccess;
     private final int visibleRows;
     private final int visibleSlots;
     private final int[] counts;
@@ -47,13 +48,16 @@ public final class ItemNetworkTerminalMenu extends AbstractContainerMenu {
     }
 
     private ItemNetworkTerminalMenu(int id, Inventory inventory, OpenData data) {
-        this(id, inventory, data.terminal(), data.terminal().getBlockPos(), data.rows());
+        this(id, inventory, data.terminal(), data.terminal().getBlockPos(), data.rows(), data.remote());
     }
 
     public ItemNetworkTerminalMenu(int id, Inventory inventory, ItemNetworkTerminalBlockEntity terminal, BlockPos pos) {
         this(id, inventory, terminal, pos, MIN_ROWS);
     }
 
+    public ItemNetworkTerminalMenu(int id,Inventory inventory,ItemNetworkTerminalBlockEntity terminal,BlockPos pos,int rows,boolean remote) {
+        this(id,inventory,terminal,pos,rows); remoteAccess=remote;
+    }
     public ItemNetworkTerminalMenu(
             int id,
             Inventory inventory,
@@ -122,6 +126,8 @@ public final class ItemNetworkTerminalMenu extends AbstractContainerMenu {
     public int getPlayerHotbarY() { return getPlayerInventoryY() + 58; }
     public int getImageHeight() { return getPlayerHotbarY() + 24; }
     public BlockPos getBlockPos() { return pos; }
+    public ItemNetworkTerminalBlockEntity terminal() { return terminal; }
+    public boolean isRemoteAccess() { return remoteAccess; }
     public int page() { return syncedPage; }
     public int totalPages() { return totalPages; }
     public int selectedVisible() { return syncedSelected; }
@@ -205,6 +211,8 @@ public final class ItemNetworkTerminalMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
+        if (remoteAccess) return player.level().isClientSide || !terminal.isRemoved() && terminal.getLevel()!=null && terminal.getLevel().hasChunkAt(pos) && terminal.getLevel().getBlockEntity(pos)==terminal &&
+                com.industrialcrops.machine.DimensionUpgradeHelper.canRemoteAccess(player,terminal.getLevel(),pos,ItemStack.EMPTY);
         return stillValid(ContainerLevelAccess.create(player.level(), pos), player,
                 ModBlocks.ITEM_NETWORK_TERMINAL.get());
     }
@@ -212,9 +220,15 @@ public final class ItemNetworkTerminalMenu extends AbstractContainerMenu {
     private static OpenData readOpenData(Inventory inventory, FriendlyByteBuf buffer) {
         BlockPos pos = buffer.readBlockPos();
         int rows = buffer.readableBytes() > 0 ? buffer.readVarInt() : MIN_ROWS;
+        boolean remote=buffer.readableBytes()>0 && buffer.readBoolean();
+        if(remote) {
+            var placeholder=new ItemNetworkTerminalBlockEntity(pos,ModBlocks.ITEM_NETWORK_TERMINAL.get().defaultBlockState());
+            placeholder.setLevel(inventory.player.level());
+            return new OpenData(placeholder,Math.max(MIN_ROWS,Math.min(MAX_ROWS,rows)),true);
+        }
         BlockEntity blockEntity = inventory.player.level().getBlockEntity(pos);
         if (blockEntity instanceof ItemNetworkTerminalBlockEntity terminal) {
-            return new OpenData(terminal, Math.max(MIN_ROWS, Math.min(MAX_ROWS, rows)));
+            return new OpenData(terminal, Math.max(MIN_ROWS, Math.min(MAX_ROWS, rows)),false);
         }
         throw new IllegalStateException("Missing item network terminal at " + pos);
     }
@@ -256,5 +270,5 @@ public final class ItemNetworkTerminalMenu extends AbstractContainerMenu {
         @Override public boolean mayPickup(Player player) { return false; }
     }
 
-    private record OpenData(ItemNetworkTerminalBlockEntity terminal, int rows) {}
+    private record OpenData(ItemNetworkTerminalBlockEntity terminal, int rows, boolean remote) {}
 }

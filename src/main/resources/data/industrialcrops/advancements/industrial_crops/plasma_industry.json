@@ -2,7 +2,7 @@
   "display": {
     "icon": {
       "count": 1,
-      "item": "industrialcrops:gold_plasma_extractor"
+      "item": "industrialcrops:extraction_device"
     },
     "title": {
       "translate": "advancements.industrialcrops.progress.plasma_industry.title"
@@ -13,13 +13,13 @@
     "frame": "goal"
   },
   "criteria": {
-    "gold_plasma_extractor": {
+    "extraction_device": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": [
-              "industrialcrops:gold_plasma_extractor"
+              "industrialcrops:extraction_device"
             ]
           }
         ]
@@ -52,7 +52,7 @@
   },
   "requirements": [
     [
-      "gold_plasma_extractor"
+      "extraction_device"
     ],
     [
       "gold_fluid_pipe"

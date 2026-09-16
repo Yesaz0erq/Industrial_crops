@@ -9,7 +9,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 /** Forge 1.20.1 SimpleChannel registration for the migrated packets. */
 public final class ModNetworking {
-    private static final String PROTOCOL = "1";
+    private static final String PROTOCOL = "2";
     public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(new ResourceLocation(IndustrialCrops.MOD_ID, "main"))
             .networkProtocolVersion(() -> PROTOCOL)
@@ -39,6 +39,15 @@ public final class ModNetworking {
         CHANNEL.messageBuilder(MatterMachineSelectionPayload.class, id++, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(MatterMachineSelectionPayload::encode).decoder(MatterMachineSelectionPayload::decode)
                 .consumerMainThread(MatterMachineSelectionPayload::handle).add();
+        CHANNEL.messageBuilder(BreederConfigPayload.class, id++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(BreederConfigPayload::encode).decoder(BreederConfigPayload::decode)
+                .consumerMainThread(BreederConfigPayload::handle).add();
+        CHANNEL.messageBuilder(TerrainConfigPayload.class, id++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(TerrainConfigPayload::encode).decoder(TerrainConfigPayload::decode)
+                .consumerMainThread(TerrainConfigPayload::handle).add();
+        CHANNEL.messageBuilder(LogisticsConfigPayload.class, id++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(LogisticsConfigPayload::encode).decoder(LogisticsConfigPayload::decode)
+                .consumerMainThread(LogisticsConfigPayload::handle).add();
         CHANNEL.messageBuilder(UniversalReplicaSyncPayload.class, id, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(UniversalReplicaSyncPayload::encode).decoder(UniversalReplicaSyncPayload::decode)
                 .consumerMainThread(UniversalReplicaSyncPayload::handle).add();
