@@ -14,7 +14,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -78,6 +77,7 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
     private int syncedScrollRow;
     private int syncedScrollPositions = 1;
     private String searchQuery = "";
+    private List<Integer> searchMatches = List.of();
     private boolean cellSlotsVisible;
     private boolean syncedFluidStorage;
     private int syncedFluidId, syncedFluidAmount;
@@ -289,11 +289,14 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
     public void setSearchQuery(String query) {
         searchQuery = query == null ? "" : query;
         scrollRow = 0;
+        searchMatches = matchingStorageSlots();
         broadcastChanges();
     }
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
+        if (ControllerStorageSorting.updateLocks(this, id)) return true;
+        if (id == ControllerStorageSorting.BUTTON_SORT) return ControllerStorageSorting.sort(this, player);
         if (id == BUTTON_PREVIOUS_PAGE && scrollRow > 0) {
             scrollRow = Math.max(0, scrollRow - visibleRows);
             broadcastChanges();
@@ -315,22 +318,9 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
 
     @Override
     public void clicked(int slotIndex, int button, ClickType clickType, Player player) {
-        if (slotIndex >= 0 && slotIndex < storageSlotEnd) {
-            int storageSlot = slotIndex;
-            if (clickType == ClickType.PICKUP) {
-                handleStorageClick(storageSlot, button);
-                return;
-            }
-            // Both Shift+left-click and Shift+right-click should move a stack
-            // directly into the player's inventory. This also backs the
-            // client-side drag gesture used by the controller screen.
-            if (clickType == ClickType.QUICK_MOVE && (button == 0 || button == 1)) {
-                quickMoveStorageToPlayer(storageSlot);
-            }
-            return;
+        if (!ControllerMenuInteractions.handle(this, slotIndex, button, clickType, player)) {
+            super.clicked(slotIndex, button, clickType, player);
         }
-
-        super.clicked(slotIndex, button, clickType, player);
     }
 
     @Override
@@ -429,11 +419,15 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
     }
 
     private void addStorageSlots() {
-        SimpleContainer placeholder = new SimpleContainer(storageSlotCount);
+        ControllerStorageContainer storage = new ControllerStorageContainer(storageSlotCount,
+                () -> player.level().isClientSide(),
+                slot -> blockEntity.getStorageStack(toAbsoluteStorageSlot(slot)),
+                (slot, stack) -> blockEntity.setStorageStack(toAbsoluteStorageSlot(slot), stack),
+                this::isStorageSlotUnlocked, blockEntity::setChanged);
         for (int row = 0; row < visibleRows; row++) {
             for (int col = 0; col < 9; col++) {
                 int slot = col + row * 9;
-                addSlot(new StorageSlot(placeholder, slot, STORAGE_SLOTS_X + col * 18, STORAGE_SLOTS_Y + row * 18));
+                addSlot(new ControllerStorageSlot(storage, slot, STORAGE_SLOTS_X + col * 18, STORAGE_SLOTS_Y + row * 18));
             }
         }
     }
@@ -583,35 +577,7 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
 
     private record CraftingTarget(int slot, Ingredient ingredient) {}
 
-    private void handleStorageClick(int storageSlot, int button) {
-        int absoluteStorageSlot = toAbsoluteStorageSlot(storageSlot);
-        if (!blockEntity.isStorageSlotUnlocked(absoluteStorageSlot)) {
-            return;
-        }
 
-        ItemStack cursor = getCarried();
-        ItemStack slotStack = blockEntity.getStorageStack(absoluteStorageSlot);
-
-        if (cursor.isEmpty()) {
-            if (slotStack.isEmpty()) {
-                return;
-            }
-            int amount = button == 1 ? 1 : Math.min(slotStack.getMaxStackSize(), slotStack.getCount());
-            setCarried(blockEntity.extractFromStorageSlot(absoluteStorageSlot, amount));
-            broadcastChanges();
-            return;
-        }
-
-        int amount = button == 1 ? 1 : cursor.getCount();
-        int inserted = blockEntity.insertIntoStorageSlot(absoluteStorageSlot, cursor.copyWithCount(amount));
-        if (inserted <= 0) {
-            return;
-        }
-
-        cursor.shrink(inserted);
-        setCarried(cursor.isEmpty() ? ItemStack.EMPTY : cursor);
-        broadcastChanges();
-    }
 
     private ItemStack quickMoveStorageToPlayer(int storageSlot) {
         int absoluteStorageSlot = toAbsoluteStorageSlot(storageSlot);
@@ -687,7 +653,7 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
             return -1;
         }
         if (searchQuery.isEmpty()) return clampScrollRow(scrollRow) * 9 + visibleSlot;
-        java.util.List<Integer> matches = matchingStorageSlots();
+        java.util.List<Integer> matches = searchMatches;
         int filtered = clampScrollRow(scrollRow) * 9 + visibleSlot;
         return filtered < matches.size() ? matches.get(filtered) : -1;
     }
@@ -697,7 +663,7 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
     }
 
     private int getScrollPositionCount() {
-        int size = searchQuery.isEmpty() ? getUnlockedStorageSlots() : matchingStorageSlots().size();
+        int size = searchQuery.isEmpty() ? getUnlockedStorageSlots() : searchMatches.size();
         return scrollPositionCountForSlots(size);
     }
 
@@ -720,33 +686,5 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
         return matches;
     }
 
-    private final class StorageSlot extends Slot {
-        private StorageSlot(SimpleContainer container, int index, int x, int y) {
-            super(container, index, x, y);
-        }
 
-        @Override
-        public ItemStack getItem() {
-            // On the client the proxy/container contents are populated by the
-            // server slot packets.  The server must always read the real
-            // controller block entity so remote extraction shows the actual
-            // stored stack instead of an empty placeholder.  Use the player
-            // level rather than the block entity level because remote clients
-            // intentionally use a level-less proxy block entity.
-            if (player.level().isClientSide()) {
-                return super.getItem();
-            }
-            return blockEntity.getStorageStack(toAbsoluteStorageSlot(getSlotIndex()));
-        }
-
-        @Override
-        public boolean mayPlace(ItemStack stack) {
-            return false;
-        }
-
-        @Override
-        public boolean mayPickup(Player player) {
-            return false;
-        }
-    }
 }

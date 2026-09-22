@@ -7,7 +7,6 @@ import com.industrialcrops.machine.DimensionUpgradeHelper;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -83,6 +82,8 @@ public final class ReinforcedControlDeviceMenu extends AbstractContainerMenu {
 
     @Override
     public boolean clickMenuButton(Player player, int id) {
+        if (ControllerStorageSorting.updateLocks(this, id)) return true;
+        if (id == ControllerStorageSorting.BUTTON_SORT) return ControllerStorageSorting.sort(this, player);
         if (drives.isEmpty()) {
             return false;
         }
@@ -104,20 +105,9 @@ public final class ReinforcedControlDeviceMenu extends AbstractContainerMenu {
 
     @Override
     public void clicked(int slotIndex, int button, ClickType clickType, Player player) {
-        if (slotIndex >= 0 && slotIndex < STORAGE_SLOT_COUNT) {
-            if (clickType == ClickType.PICKUP) {
-                handleStorageClick(slotIndex, button);
-                return;
-            }
-            // Minecraft uses the mouse button as part of a shift-click packet.
-            // Accept both buttons so Shift+right-click is a fast withdrawal too.
-            if (clickType == ClickType.QUICK_MOVE && (button == 0 || button == 1)) {
-                quickMoveStorageToPlayer(slotIndex);
-            }
-            return;
+        if (!ControllerMenuInteractions.handle(this, slotIndex, button, clickType, player)) {
+            super.clicked(slotIndex, button, clickType, player);
         }
-
-        super.clicked(slotIndex, button, clickType, player);
     }
 
     @Override
@@ -245,45 +235,21 @@ public final class ReinforcedControlDeviceMenu extends AbstractContainerMenu {
     }
 
     private void addStorageSlots() {
-        SimpleContainer placeholder = new SimpleContainer(STORAGE_SLOT_COUNT);
+        ControllerStorageContainer storage = new ControllerStorageContainer(STORAGE_SLOT_COUNT,
+                controllerLevel::isClientSide,
+                slot -> getCurrentDrive() == null ? ItemStack.EMPTY : getCurrentDrive().getStackInSlot(slot),
+                (slot, stack) -> { if (getCurrentDrive() != null) getCurrentDrive().setStackInSlot(slot, stack); },
+                slot -> controllerLevel.isClientSide() ? isConnected() : getCurrentDrive() != null,
+                () -> { if (getCurrentDrive() != null) getCurrentDrive().setChanged(); });
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 9; col++) {
                 int slot = col + row * 9;
-                addSlot(new StorageSlot(placeholder, slot, 8 + col * 18, 18 + row * 18));
+                addSlot(new ControllerStorageSlot(storage, slot, 8 + col * 18, 18 + row * 18));
             }
         }
     }
 
-    private void handleStorageClick(int slotIndex, int button) {
-        BasicCropStorageArrayBlockEntity drive = getCurrentDrive();
-        if (drive == null) {
-            return;
-        }
 
-        ItemStack cursor = getCarried();
-        ItemStack slotStack = drive.getStackInSlot(slotIndex);
-
-        if (cursor.isEmpty()) {
-            if (slotStack.isEmpty()) {
-                return;
-            }
-
-            int amount = button == 1 ? 1 : Math.min(slotStack.getMaxStackSize(), slotStack.getCount());
-            setCarried(drive.extractFromSlot(slotIndex, amount));
-            broadcastChanges();
-            return;
-        }
-
-        int amount = button == 1 ? 1 : cursor.getCount();
-        int inserted = drive.insertIntoSlot(slotIndex, cursor.copyWithCount(amount));
-        if (inserted <= 0) {
-            return;
-        }
-
-        cursor.shrink(inserted);
-        setCarried(cursor.isEmpty() ? ItemStack.EMPTY : cursor);
-        broadcastChanges();
-    }
 
     private void addPlayerInventory(Inventory inventory, int x, int y) {
         for (int row = 0; row < 3; row++) {
@@ -310,25 +276,5 @@ public final class ReinforcedControlDeviceMenu extends AbstractContainerMenu {
         return drives.isEmpty() ? null : drives.get(clampPage(page));
     }
 
-    private final class StorageSlot extends Slot {
-        private StorageSlot(SimpleContainer container, int index, int x, int y) {
-            super(container, index, x, y);
-        }
 
-        @Override
-        public ItemStack getItem() {
-            BasicCropStorageArrayBlockEntity drive = getCurrentDrive();
-            return drive == null ? super.getItem() : drive.getStackInSlot(getSlotIndex());
-        }
-
-        @Override
-        public boolean mayPlace(ItemStack stack) {
-            return false;
-        }
-
-        @Override
-        public boolean mayPickup(Player player) {
-            return false;
-        }
-    }
 }

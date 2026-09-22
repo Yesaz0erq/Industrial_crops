@@ -218,6 +218,10 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
         return isValidStorageSlot(slot) ? storageInventory.getStackInSlot(slot) : ItemStack.EMPTY;
     }
 
+    public void setStorageStack(int slot, ItemStack stack) {
+        if (isStorageSlotUnlocked(slot)) storageInventory.setStackInSlot(slot, stack.copy());
+    }
+
     public ItemStack extractFromStorageSlot(int slot, int amount) {
         if (!isStorageSlotUnlocked(slot)) {
             return ItemStack.EMPTY;

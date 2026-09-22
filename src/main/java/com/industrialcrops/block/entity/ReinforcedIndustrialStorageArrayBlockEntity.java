@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 public final class ReinforcedIndustrialStorageArrayBlockEntity extends BlockEntity {
     public static final int SLOT_COUNT = 54;
 
-    private final ItemStackHandler inventory = new ItemStackHandler(SLOT_COUNT) {
+    private final ItemStackHandler inventory = new com.industrialcrops.machine.BulkStorageItemHandler(SLOT_COUNT) {
         @Override
         protected int getStackLimit(int slot, ItemStack stack) {
             return Integer.MAX_VALUE;

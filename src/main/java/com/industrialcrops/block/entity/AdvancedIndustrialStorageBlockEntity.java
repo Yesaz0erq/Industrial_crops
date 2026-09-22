@@ -63,7 +63,7 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
         }
     };
 
-    private final ItemStackHandler storageInventory = new ItemStackHandler(STORAGE_SLOT_COUNT) {
+    private final ItemStackHandler storageInventory = new com.industrialcrops.machine.BulkStorageItemHandler(STORAGE_SLOT_COUNT) {
         @Override
         protected int getStackLimit(int slot, ItemStack stack) {
             return Integer.MAX_VALUE;
@@ -217,6 +217,10 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
         return isValidStorageSlot(slot) ? storageInventory.getStackInSlot(slot) : ItemStack.EMPTY;
     }
 
+    public void setStorageStack(int slot, ItemStack stack) {
+        if (isStorageSlotUnlocked(slot)) storageInventory.setStackInSlot(slot, stack.copy());
+    }
+
     public ItemStack extractFromStorageSlot(int slot, int amount) {
         if (!isStorageSlotUnlocked(slot)) {
             return ItemStack.EMPTY;
@@ -314,7 +318,7 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
     }
 
     private static void readFixedSizeInventory(ItemStackHandler target, int expectedSize, CompoundTag tag, HolderLookup.Provider registries) {
-        ItemStackHandler temporary = new ItemStackHandler();
+        ItemStackHandler temporary = new com.industrialcrops.machine.BulkStorageItemHandler(0);
         temporary.deserializeNBT(registries, tag);
         target.setSize(expectedSize);
         int slots = Math.min(expectedSize, temporary.getSlots());

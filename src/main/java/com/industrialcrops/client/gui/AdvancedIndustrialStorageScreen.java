@@ -5,14 +5,11 @@ import com.industrialcrops.network.payload.ResizeStorageMenuPayload;
 import com.industrialcrops.network.payload.StorageSearchPayload;
 import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.screen.AdvancedIndustrialStorageMenu;
-import java.util.HashSet;
-import java.util.Set;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -33,8 +30,6 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
     private boolean draggingScrollbar;
     private Button cellSlotsTab;
     private boolean cellSlotsOpen;
-    private final Set<Integer> gestureSlots = new HashSet<>();
-    private boolean extractingWithGesture;
 
     public AdvancedIndustrialStorageScreen(AdvancedIndustrialStorageMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -147,7 +142,7 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
     private void drawStorageCounts(GuiGraphics graphics) {
         for (int slot = 0; slot < menu.getVisibleSlotCount(); slot++) {
             int count = menu.getStoredCount(slot);
-            if (count <= 1) continue;
+            if (count <= 0) continue;
             String text = IndustrialContainerScreen.formatCount(count);
             int x = leftPos + AdvancedIndustrialStorageMenu.STORAGE_SLOTS_X + slot % 9 * 18;
             int y = topPos + AdvancedIndustrialStorageMenu.STORAGE_SLOTS_Y + slot / 9 * 18;
@@ -169,7 +164,7 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        if (!insideStorageArea(mouseX, mouseY) && !insideScrollbar(mouseX, mouseY)) {
+        if (!insideScrollbar(mouseX, mouseY)) {
             return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
         }
         int rows = hasControlDown() ? menu.getVisibleRows() : 1;
@@ -186,13 +181,6 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
             setOffsetFromMouse(mouseY);
             return true;
         }
-        int slot = storageSlotAt(mouseX, mouseY);
-        if (hasShiftDown() && (button == 0 || button == 1) && slot >= 0) {
-            extractingWithGesture = true;
-            gestureSlots.clear();
-            withdrawStack(slot, button);
-            return true;
-        }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
@@ -202,22 +190,13 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
             setOffsetFromMouse(mouseY);
             return true;
         }
-        if (extractingWithGesture && hasShiftDown() && (button == 0 || button == 1)) {
-            int slot = storageSlotAt(mouseX, mouseY);
-            if (slot >= 0) {
-                withdrawStack(slot, button);
-            }
-            return true;
-        }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        boolean handled = draggingScrollbar || extractingWithGesture;
+        boolean handled = draggingScrollbar;
         draggingScrollbar = false;
-        extractingWithGesture = false;
-        gestureSlots.clear();
         return handled || super.mouseReleased(mouseX, mouseY, button);
     }
 
@@ -238,29 +217,11 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
                 && y >= topPos + SCROLL_Y && y < topPos + SCROLL_Y + scrollbarHeight();
     }
 
-    private boolean insideStorageArea(double x, double y) {
-        return x >= leftPos + 7 && x < leftPos + 169
-                && y >= topPos + 19 && y < topPos + 19 + menu.getVisibleRows() * 18;
-    }
 
-    private int storageSlotAt(double mouseX, double mouseY) {
-        int x = (int) mouseX - leftPos - AdvancedIndustrialStorageMenu.STORAGE_SLOTS_X;
-        int y = (int) mouseY - topPos - AdvancedIndustrialStorageMenu.STORAGE_SLOTS_Y;
-        if (x < 0 || y < 0 || x >= 9 * 18 || y >= menu.getVisibleRows() * 18) {
-            return -1;
-        }
-        if (x % 18 >= 16 || y % 18 >= 16) {
-            return -1;
-        }
-        return x / 18 + y / 18 * 9;
-    }
 
-    private void withdrawStack(int slot, int button) {
-        if (!gestureSlots.add(slot) || minecraft == null || minecraft.gameMode == null || minecraft.player == null) {
-            return;
-        }
-        minecraft.gameMode.handleInventoryMouseClick(menu.containerId, slot, button, ClickType.QUICK_MOVE, minecraft.player);
-    }
+
+
+
 
     private void setOffsetFromMouse(double mouseY) {
         int positions = Math.max(1, menu.getScrollPositions());

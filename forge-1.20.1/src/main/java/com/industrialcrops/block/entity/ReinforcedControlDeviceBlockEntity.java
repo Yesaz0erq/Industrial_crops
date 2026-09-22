@@ -50,6 +50,17 @@ public final class ReinforcedControlDeviceBlockEntity extends AdvancedIndustrial
     }
 
     @Override
+    public void setStorageStack(int slot, ItemStack stack) {
+        List<ReinforcedIndustrialStorageArrayBlockEntity> components = connectedComponents();
+        if (components.isEmpty()) {
+            super.setStorageStack(slot, stack);
+        } else if (slot >= 0 && slot < components.size() * ReinforcedIndustrialStorageArrayBlockEntity.SLOT_COUNT) {
+            components.get(slot / ReinforcedIndustrialStorageArrayBlockEntity.SLOT_COUNT)
+                    .setStackInSlot(slot % ReinforcedIndustrialStorageArrayBlockEntity.SLOT_COUNT, stack.copy());
+        }
+    }
+
+    @Override
     public ItemStack extractFromStorageSlot(int slot, int amount) {
         List<ReinforcedIndustrialStorageArrayBlockEntity> components = connectedComponents();
         if (components.isEmpty()) return super.extractFromStorageSlot(slot, amount);
