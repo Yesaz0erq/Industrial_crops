@@ -21,9 +21,11 @@
     "client.CreativeItemPickerMenuSectionsMixin",
     "client.CreativeSectionSlotMixin",
     "client.SimpleSorterControllerMixin",
-    "client.IpnControllerMixin"
+    "client.IpnControllerMixin",
+    "client.SimpleSorterStaticControllerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "plugin": "com.industrialcrops.compat.ControllerMixinPlugin"
 }

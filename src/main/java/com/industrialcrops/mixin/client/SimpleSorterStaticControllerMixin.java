@@ -9,9 +9,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Pseudo
 @Mixin(targets = "simplesorter.mc.InventoryScanner", remap = false)
-public abstract class SimpleSorterControllerMixin {
+public abstract class SimpleSorterStaticControllerMixin {
     @Inject(method = "requestSort()V", at = @At("HEAD"), cancellable = true, require = 1)
-    private void industrialcrops$sortStorage(CallbackInfo ci) {
+    private static void industrialcrops$sortStorage(CallbackInfo ci) {
         if (ControllerSortingCompat.requestFromSimpleSorter()) ci.cancel();
     }
 }
