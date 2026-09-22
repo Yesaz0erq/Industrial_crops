@@ -20,7 +20,10 @@
     "client.CreativeModeTabSectionsMixin",
     "client.CreativeInventorySectionsMixin",
     "client.CreativeItemPickerMenuSectionsMixin",
-    "client.CreativeSectionSlotMixin"
+    "client.CreativeSectionSlotMixin",
+    "client.ControllerSlotCountMixin",
+    "client.SimpleSorterControllerMixin",
+    "client.IpnControllerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
