@@ -21,8 +21,10 @@ public final class ControllerSortingCompat {
                 || minecraft.player.containerMenu instanceof AdvancedIndustrialStorageMenu)) return false;
         try {
             Class<?> manager = Class.forName("simplesorter.mc.LockManager");
-            Object locks = manager.getMethod("getContainerLockedSlots", int.class)
-                    .invoke(manager.getField("INSTANCE").get(null), minecraft.player.containerMenu.containerId);
+            var method = manager.getMethod("getContainerLockedSlots", int.class);
+            Object receiver = java.lang.reflect.Modifier.isStatic(method.getModifiers())
+                    ? null : manager.getField("INSTANCE").get(null);
+            Object locks = method.invoke(receiver, minecraft.player.containerMenu.containerId);
             if (!(locks instanceof java.util.Set<?> locked)) throw new ReflectiveOperationException("Unknown slot lock format");
             return request(false, true, locked);
         } catch (ReflectiveOperationException ex) {

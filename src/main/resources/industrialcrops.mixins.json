@@ -23,10 +23,12 @@
     "client.CreativeSectionSlotMixin",
     "client.ControllerSlotCountMixin",
     "client.SimpleSorterControllerMixin",
-    "client.IpnControllerMixin"
+    "client.IpnControllerMixin",
+    "client.SimpleSorterStaticControllerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
-  "refmap": "industrialcrops.refmap.json"
+  "refmap": "industrialcrops.refmap.json",
+  "plugin": "com.industrialcrops.compat.ControllerMixinPlugin"
 }
