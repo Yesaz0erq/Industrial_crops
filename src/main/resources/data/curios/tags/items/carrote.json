@@ -22,6 +22,9 @@
     "carrote_curios:unbreakable_carrote",
     "carrote_curios:resistance_carrote",
     "carrote_curios:thief_carrote",
-    "carrote_curios:ultimate_carrote"
+    "carrote_curios:ultimate_carrote",
+    "carrote_curios:ammo_carrote",
+    "carrote_curios:breach_carrote",
+    "carrote_curios:armor_piercing_carrote"
   ]
 }

@@ -1,5 +1,6 @@
 package com.industrialcrops.curios;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -24,19 +25,55 @@ public final class CarroteCuriosEffects {
         return count(entity, item) > 0;
     }
 
-    public static ItemStack activeHelmet(LivingEntity entity) {
-        if (entity == null) return ItemStack.EMPTY;
-        var worn = entity.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD);
-        if (worn.is(CarroteCuriosItems.HELMET.get())) return worn;
-        if (entity instanceof Player player && ultimateActive(entity)) {
-            return player.getInventory().items.stream().filter(s -> s.is(CarroteCuriosItems.HELMET.get())).findFirst().orElse(ItemStack.EMPTY);
-        }
-        return ItemStack.EMPTY;
+    private record AccessoryRef(ItemStack stack, java.util.function.Consumer<ItemStack> save) {
+        private void commit() { save.accept(stack); }
     }
 
+    private static AccessoryRef direct(ItemStack stack) { return new AccessoryRef(stack, ignored -> {}); }
+
+    private static java.util.List<ItemStack> activeBags(LivingEntity entity) {
+        var bags = new java.util.ArrayList<ItemStack>();
+        if (entity == null) return bags;
+        if (entity.getOffhandItem().is(CarroteCuriosItems.ULTIMATE.get())) bags.add(entity.getOffhandItem());
+        if (curiosLoaded()) for (var stack : CuriosIntegration.stacks(entity, false)) {
+            if (stack.is(CarroteCuriosItems.ULTIMATE.get()) && !bags.contains(stack)) bags.add(stack);
+        }
+        return bags;
+    }
+
+    private static void addContents(java.util.List<AccessoryRef> result, ItemStack bag, LivingEntity entity) {
+        var contents = UltimateCarroteStorage.contents(bag, entity.level().registryAccess());
+        for (int i = 0; i < contents.size(); i++) {
+            ItemStack stack = contents.get(i);
+            if (!UltimateCarroteStorage.accepts(stack)) continue;
+            int index = i;
+            result.add(new AccessoryRef(stack, changed -> UltimateCarroteStorage.replace(bag, index, changed, entity.level().registryAccess())));
+        }
+    }
+
+    private static java.util.List<AccessoryRef> ultimateSources(LivingEntity entity) {
+        var result = new java.util.ArrayList<AccessoryRef>();
+        var bags = activeBags(entity);
+        if (bags.isEmpty()) return result;
+        for (var bag : bags) addContents(result, bag, entity);
+        if (entity instanceof Player player) for (var stack : player.getInventory().items) {
+            if (UltimateCarroteStorage.accepts(stack)) result.add(direct(stack));
+        }
+        return result;
+    }
+
+    private static AccessoryRef helmetRef(LivingEntity entity) {
+        if (entity == null) return direct(ItemStack.EMPTY);
+        var worn = entity.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD);
+        if (worn.is(CarroteCuriosItems.HELMET.get())) return direct(worn);
+        return ultimateSources(entity).stream().filter(ref -> ref.stack().is(CarroteCuriosItems.HELMET.get()))
+                .findFirst().orElse(direct(ItemStack.EMPTY));
+    }
+
+    public static ItemStack activeHelmet(LivingEntity entity) { return helmetRef(entity).stack(); }
+
     public static ItemStack copiedCarrote(LivingEntity entity) {
-        if (activeHelmet(entity).isEmpty())
-            return ItemStack.EMPTY;
+        if (activeHelmet(entity).isEmpty()) return ItemStack.EMPTY;
         if (curiosLoaded()) {
             for (var stack : CuriosIntegration.stacks(entity, true)) {
                 if (copyable(stack)) return effectiveCopy(stack);
@@ -44,15 +81,12 @@ public final class CarroteCuriosEffects {
         }
         var offhand = effectiveCopy(entity.getOffhandItem());
         if (!offhand.isEmpty() || !ultimateActive(entity)) return offhand;
-        if (entity instanceof Player player) {
-            return player.getInventory().items.stream().map(CarroteCuriosEffects::effectiveCopy)
-                    .filter(s -> !s.isEmpty()).findFirst().orElse(ItemStack.EMPTY);
-        }
-        return ItemStack.EMPTY;
+        return ultimateSources(entity).stream().map(ref -> effectiveCopy(ref.stack()))
+                .filter(s -> !s.isEmpty()).findFirst().orElse(ItemStack.EMPTY);
     }
 
     private static boolean copyable(ItemStack stack) {
-        return CarroteCuriosItems.isAccessory(stack) && !stack.is(CarroteCuriosItems.HELMET.get());
+        return UltimateCarroteStorage.accepts(stack) && !stack.is(CarroteCuriosItems.HELMET.get());
     }
 
     /** Only abilities with an additional numeric effect or independent charge can be copied.
@@ -71,13 +105,11 @@ public final class CarroteCuriosEffects {
         return (normallyEquipped(entity, item.get()) ? 1 : 0) + (copiedCarrote(entity).is(item.get()) ? 1 : 0);
     }
 
-    public static boolean ultimateActive(LivingEntity entity) {
-        return directlyEquipped(entity, CarroteCuriosItems.ULTIMATE.get());
-    }
+    public static boolean ultimateActive(LivingEntity entity) { return !activeBags(entity).isEmpty(); }
 
     private static boolean normallyEquipped(LivingEntity entity, Item accessory) {
-        return directlyEquipped(entity, accessory) || (entity instanceof Player player && ultimateActive(entity)
-                && player.getInventory().items.stream().anyMatch(stack -> stack.is(accessory)));
+        if (accessory == CarroteCuriosItems.ULTIMATE.get()) return ultimateActive(entity);
+        return directlyEquipped(entity, accessory) || ultimateSources(entity).stream().anyMatch(ref -> ref.stack().is(accessory));
     }
 
     private static boolean directlyEquipped(LivingEntity entity, Item accessory) {
@@ -110,17 +142,33 @@ public final class CarroteCuriosEffects {
         return false;
     }
 
+    private static java.util.List<AccessoryRef> activeRefs(LivingEntity entity) {
+        var refs = new java.util.ArrayList<AccessoryRef>();
+        if (entity == null) return refs;
+        refs.add(direct(entity.getOffhandItem()));
+        refs.add(direct(entity.getMainHandItem()));
+        if (curiosLoaded()) for (var stack : CuriosIntegration.stacks(entity, false)) refs.add(direct(stack));
+        refs.addAll(ultimateSources(entity));
+        return refs;
+    }
+
     public static java.util.List<ItemStack> activeStacks(LivingEntity entity) {
-        var stacks = new java.util.ArrayList<ItemStack>();
-        stacks.add(entity.getOffhandItem());
-        stacks.add(entity.getMainHandItem());
-        if (curiosLoaded()) stacks.addAll(CuriosIntegration.stacks(entity, false));
-        if (entity instanceof Player player && ultimateActive(entity)) {
-            for (var stack : player.getInventory().items) {
-                if (CarroteCuriosItems.isAccessory(stack) && !stacks.contains(stack)) stacks.add(stack);
-            }
+        return activeRefs(entity).stream().map(AccessoryRef::stack).toList();
+    }
+
+    private static java.util.List<AccessoryRef> carriedRefs(Player player) {
+        var refs = new java.util.ArrayList<>(activeRefs(player));
+        var bags = new java.util.ArrayList<ItemStack>();
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            ItemStack stack = player.getInventory().getItem(i);
+            refs.add(direct(stack));
+            if (stack.is(CarroteCuriosItems.ULTIMATE.get())) bags.add(stack);
         }
-        return stacks;
+        if (curiosLoaded()) for (var stack : CuriosIntegration.stacks(player, false)) {
+            if (stack.is(CarroteCuriosItems.ULTIMATE.get()) && !bags.contains(stack)) bags.add(stack);
+        }
+        for (var bag : bags) addContents(refs, bag, player);
+        return refs;
     }
 
     public static boolean isSpent(ItemStack stack) {
@@ -136,12 +184,15 @@ public final class CarroteCuriosEffects {
     public static boolean saveFromDeath(Player player) {
         if (player.level().isClientSide) return false;
         // A same-kind accessory is one source; the helmet has its own independent charge.
-        ItemStack original = activeStacks(player).stream().filter(s -> s.is(CarroteCuriosItems.SUBSTITUTE.get())).findFirst().orElse(ItemStack.EMPTY);
-        ItemStack helmet = activeHelmet(player);
-        ItemStack charge = !original.isEmpty() && !isSpent(original) ? original
-                : copiedCarrote(player).is(CarroteCuriosItems.SUBSTITUTE.get()) && !isSpent(helmet) ? helmet : ItemStack.EMPTY;
-        if (charge.isEmpty()) return false;
-        spent(charge, true);
+        AccessoryRef original = activeRefs(player).stream().filter(ref -> ref.stack().is(CarroteCuriosItems.SUBSTITUTE.get()))
+                .findFirst().orElse(direct(ItemStack.EMPTY));
+        AccessoryRef helmet = helmetRef(player);
+        AccessoryRef charge = !original.stack().isEmpty() && !isSpent(original.stack()) ? original
+                : copiedCarrote(player).is(CarroteCuriosItems.SUBSTITUTE.get()) && !isSpent(helmet.stack()) ? helmet : direct(ItemStack.EMPTY);
+        if (charge.stack().isEmpty()) return false;
+        spent(charge.stack(), true);
+        charge.commit();
+        player.getInventory().setChanged();
         player.setHealth(player.getMaxHealth());
         player.clearFire();
         player.fallDistance = 0;
@@ -151,19 +202,21 @@ public final class CarroteCuriosEffects {
     }
 
     public static void resetCarriedCharges(Player player) {
-        var carried = new java.util.ArrayList<>(activeStacks(player));
-        for (int i = 0; i < player.getInventory().getContainerSize(); i++) carried.add(player.getInventory().getItem(i));
-        for (var stack : carried) {
-            if ((stack.is(CarroteCuriosItems.SUBSTITUTE.get()) || stack.is(CarroteCuriosItems.HELMET.get())) && isSpent(stack)) spent(stack, false);
+        for (var ref : carriedRefs(player)) {
+            ItemStack stack = ref.stack();
+            if ((stack.is(CarroteCuriosItems.SUBSTITUTE.get()) || stack.is(CarroteCuriosItems.HELMET.get())) && isSpent(stack)) {
+                spent(stack, false);
+                ref.commit();
+            }
         }
+        player.getInventory().setChanged();
         player.getCooldowns().removeCooldown(CarroteCuriosItems.SUBSTITUTE.get());
         player.getCooldowns().removeCooldown(CarroteCuriosItems.HELMET.get());
     }
 
     /** Keep the vanilla pearl-style overlay full while the carried item's persistent charge is spent. */
     public static void updateSubstituteCooldowns(Player player) {
-        var carried = new java.util.ArrayList<>(activeStacks(player));
-        for (int i = 0; i < player.getInventory().getContainerSize(); i++) carried.add(player.getInventory().getItem(i));
+        var carried = carriedRefs(player).stream().map(AccessoryRef::stack).toList();
         for (var item : java.util.List.of(CarroteCuriosItems.SUBSTITUTE.get(), CarroteCuriosItems.HELMET.get())) {
             boolean spent = carried.stream().anyMatch(s -> s.is(item) && isSpent(s));
             if (spent) {
