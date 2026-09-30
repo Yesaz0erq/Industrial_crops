@@ -69,64 +69,108 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
         return menu.kind() == BioEnergyMachineBlockEntity.Kind.GENERATOR;
     }
 
+    private boolean crystalPalette() {
+        return menu.isReactor();
+    }
+
+    private int textColor() {
+        return crystalPalette() ? CrystalGuiStyle.TEXT : IndustrialGuiStyle.TEXT;
+    }
+
+    private int mutedTextColor() {
+        return crystalPalette() ? CrystalGuiStyle.MUTED_TEXT : IndustrialGuiStyle.MUTED_TEXT;
+    }
+
+    private void drawContainer(GuiGraphics graphics) {
+        if (crystalPalette()) CrystalGuiStyle.drawContainer(graphics, leftPos, topPos, imageWidth, imageHeight);
+        else IndustrialGuiStyle.drawContainer(graphics, leftPos, topPos, imageWidth, imageHeight);
+    }
+
+    private void drawPlayerInventory(GuiGraphics graphics) {
+        if (crystalPalette()) CrystalGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8, 84, 142);
+        else IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8, 84, 142);
+    }
+
+    private void drawWorkPanel(GuiGraphics graphics, int x, int y, int width, int height) {
+        if (crystalPalette()) CrystalGuiStyle.drawWorkPanel(graphics, x, y, width, height);
+        else IndustrialGuiStyle.drawWorkPanel(graphics, x, y, width, height);
+    }
+
+    private void drawInsetPanel(GuiGraphics graphics, int x, int y, int width, int height) {
+        if (crystalPalette()) CrystalGuiStyle.drawInsetPanel(graphics, x, y, width, height);
+        else IndustrialGuiStyle.drawInsetPanel(graphics, x, y, width, height);
+    }
+
+    private void drawMachineWell(GuiGraphics graphics, int x, int y) {
+        if (crystalPalette()) CrystalGuiStyle.drawMachineWell(graphics, x, y);
+        else IndustrialGuiStyle.drawMachineWell(graphics, x, y);
+    }
+
+    private void drawCommonPanel(GuiGraphics graphics, int x, int y, int width, int height) {
+        if (crystalPalette()) CrystalGuiStyle.drawCommonPanel(graphics, x, y, width, height);
+        else IndustrialGuiStyle.drawCommonPanel(graphics, x, y, width, height);
+    }
+
     @Override protected void renderBg(GuiGraphics graphics, float tick, int mouseX, int mouseY) {
-        IndustrialGuiStyle.drawContainer(graphics, leftPos, topPos, imageWidth, imageHeight);
-        IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8, 84, 142);
+        drawContainer(graphics);
+        drawPlayerInventory(graphics);
         if (menu.kind() != BioEnergyMachineBlockEntity.Kind.BATTERY) {
-            IndustrialGuiStyle.drawMachineWell(graphics, leftPos + 17, topPos + 34);
+            drawMachineWell(graphics, leftPos + 17, topPos + 34);
         }
-        IndustrialGuiStyle.drawWorkPanel(graphics, leftPos + 44, topPos + 21, 88, 42);
-        IndustrialGuiStyle.drawInsetPanel(graphics, leftPos + 48, topPos + 25, 80, 34);
-        if (configPanelOpen) IndustrialGuiStyle.drawCommonPanel(graphics, leftPos - 80, topPos + 19,
+        drawWorkPanel(graphics, leftPos + 44, topPos + 21, 88, 42);
+        drawInsetPanel(graphics, leftPos + 48, topPos + 25, 80, 34);
+        if (configPanelOpen) drawCommonPanel(graphics, leftPos - 80, topPos + 19,
                 CONFIG_PANEL_WIDTH, CONFIG_PANEL_HEIGHT);
         int firstMeterX = leftPos + imageWidth + 2;
         int secondMeterX = firstMeterX + IndustrialGuiStyle.VERTICAL_METER_WIDTH + 2;
-        IndustrialGuiStyle.drawCommonPanel(graphics, firstMeterX - 2, topPos + 10,
+        drawCommonPanel(graphics, firstMeterX - 2, topPos + 10,
                 menu.kind() == BioEnergyMachineBlockEntity.Kind.BATTERY ? 22 : 42, 62);
+        int energyColor = crystalPalette() ? CrystalGuiStyle.ENERGY_BLUE : IndustrialGuiStyle.ENERGY_RED;
+        int residueColor = crystalPalette() ? CrystalGuiStyle.RESIDUE_BLUE : IndustrialGuiStyle.RESIDUE_BROWN;
         if (menu.kind() == BioEnergyMachineBlockEntity.Kind.GENERATOR) {
             IndustrialGuiStyle.drawVerticalMeter(graphics, firstMeterX, topPos + 12, 58,
-                    menu.energy(), menu.energyCapacity(), IndustrialGuiStyle.ENERGY_RED, false);
+                    menu.energy(), menu.energyCapacity(), energyColor, false);
             IndustrialGuiStyle.drawVerticalMeter(graphics, secondMeterX, topPos + 12, 58,
-                    menu.residue(), menu.residueCapacity(), IndustrialGuiStyle.RESIDUE_BROWN, false);
+                    menu.residue(), menu.residueCapacity(), residueColor, false);
             IndustrialGuiStyle.drawMekanismSmallRight(graphics, leftPos + 74, topPos + 64, menu.scaledProgress(28));
             drawUpgradeDrawer(graphics, BioEnergyMenu.UPGRADE_X, BioEnergyMenu.UPGRADE_Y);
         } else if (menu.kind() == BioEnergyMachineBlockEntity.Kind.BATTERY) {
             IndustrialGuiStyle.drawVerticalMeter(graphics, firstMeterX, topPos + 12, 58,
-                    menu.energy(), menu.energyCapacity(), IndustrialGuiStyle.ENERGY_RED, false);
+                    menu.energy(), menu.energyCapacity(), energyColor, false);
         } else {
             IndustrialGuiStyle.drawVerticalMeter(graphics, firstMeterX, topPos + 12, 58,
                     menu.burnTime(), menu.burnTimeTotal(), 0xFFFFFFFF, true);
             IndustrialGuiStyle.drawVerticalMeter(graphics, secondMeterX, topPos + 12, 58,
-                    menu.residue(), menu.residueCapacity(), IndustrialGuiStyle.RESIDUE_BROWN, false);
+                    menu.residue(), menu.residueCapacity(), residueColor, false);
         }
     }
 
     @Override protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         IndustrialGuiStyle.drawFittedString(graphics, font, title.getString(), 8, titleLabelY,
-                imageWidth - 16, IndustrialGuiStyle.TEXT, true);
-        graphics.drawString(font, playerInventoryTitle, 8, inventoryLabelY, IndustrialGuiStyle.MUTED_TEXT, false);
+                imageWidth - 16, textColor(), true);
+        graphics.drawString(font, playerInventoryTitle, 8, inventoryLabelY, mutedTextColor(), false);
         if (menu.kind() == BioEnergyMachineBlockEntity.Kind.GENERATOR) {
             IndustrialGuiStyle.drawFittedString(graphics, font,
                     Component.translatable("gui.industrialcrops.bio_generator.output", menu.currentYield()).getString(),
-                    51, 29, 74, IndustrialGuiStyle.TEXT, false);
+                    51, 29, 74, textColor(), false);
             IndustrialGuiStyle.drawFittedString(graphics, font,
                     Component.translatable("gui.industrialcrops.bio_generator.residue",
                             percent(menu.residue(), menu.residueCapacity())).getString(),
-                    51, 44, 74, IndustrialGuiStyle.TEXT, false);
+                    51, 44, 74, textColor(), false);
         } else if (menu.kind() == BioEnergyMachineBlockEntity.Kind.BATTERY) {
             IndustrialGuiStyle.drawFittedString(graphics, font, menu.energy() + " FE", 51, 29, 74,
-                    IndustrialGuiStyle.TEXT, false);
+                    textColor(), false);
             IndustrialGuiStyle.drawFittedString(graphics, font, "/ " + menu.energyCapacity() + " FE", 51, 44, 74,
-                    IndustrialGuiStyle.TEXT, false);
+                    textColor(), false);
         } else {
             Component burning = Component.translatable(menu.burnTime() > 0
                     ? "gui.industrialcrops.incinerator.burning"
                     : "gui.industrialcrops.incinerator.waiting");
             IndustrialGuiStyle.drawFittedString(graphics, font, burning.getString(), 51, 29, 74,
-                    IndustrialGuiStyle.TEXT, false);
+                    textColor(), false);
             IndustrialGuiStyle.drawFittedString(graphics, font,
                     Component.translatable("gui.industrialcrops.incinerator.fuel", menu.burnTime()).getString(),
-                    51, 44, 74, IndustrialGuiStyle.TEXT, false);
+                    51, 44, 74, textColor(), false);
         }
     }
 

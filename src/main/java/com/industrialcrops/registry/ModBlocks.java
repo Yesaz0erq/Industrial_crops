@@ -30,6 +30,7 @@ import com.industrialcrops.block.DigitizedItemCopierBlock;
 import com.industrialcrops.block.MatterReconstructorBlock;
 import com.industrialcrops.block.ItemNetworkTerminalBlock;
 import com.industrialcrops.block.BioEnergyGeneratorBlock;
+import com.industrialcrops.block.BioEnergyReactorBlock;
 import com.industrialcrops.block.EnergyBatteryBlock;
 import com.industrialcrops.block.ResidueIncineratorBlock;
 import com.industrialcrops.block.ElectricFurnaceBlock;
@@ -64,12 +65,17 @@ import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import com.industrialcrops.block.IndustrialFruitBlock;
 
 public final class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(IndustrialCrops.MOD_ID);
+    static {
+        BLOCKS.addAlias(ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "infinite_logistics_transfer_device"),
+                ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "wireless_logistics_transfer_device"));
+    }
 
     public static final DeferredBlock<Block> INDUSTRIAL_CARROT_BLOCK = registerCompressBlock("industrial_carrot_block", MapColor.COLOR_ORANGE);
     public static final DeferredBlock<Block> INDUSTRIAL_POTATO_BLOCK = registerCompressBlock("industrial_potato_block", MapColor.COLOR_YELLOW);
@@ -133,6 +139,8 @@ public final class ModBlocks {
             () -> new ItemNetworkTerminalBlock(machineProperties().mapColor(MapColor.GOLD)));
     public static final DeferredBlock<Block> BIO_ENERGY_GENERATOR = BLOCKS.register("bio_energy_generation_device",
             () -> new BioEnergyGeneratorBlock(machineProperties().mapColor(MapColor.GOLD)));
+    public static final DeferredBlock<Block> BIO_ENERGY_REACTOR = BLOCKS.register("bio_energy_reaction_device",
+            () -> new BioEnergyReactorBlock(machineProperties().mapColor(MapColor.COLOR_PURPLE)));
     public static final DeferredBlock<Block> ENERGY_BATTERY = BLOCKS.register("gold_energy_storage_cabinet",
             () -> new EnergyBatteryBlock(machineProperties().mapColor(MapColor.GOLD)));
     public static final DeferredBlock<Block> RESIDUE_INCINERATOR = BLOCKS.register("incinerator",
@@ -301,7 +309,7 @@ public final class ModBlocks {
             () -> new com.industrialcrops.block.WirelessEnergyTransmitterBlock(machineProperties()
                     .mapColor(MapColor.COLOR_PURPLE).noOcclusion()));
 
-    public static final DeferredBlock<Block> CRYSTAL_LOGISTICS = BLOCKS.register("infinite_logistics_transfer_device",
+    public static final DeferredBlock<Block> CRYSTAL_LOGISTICS = BLOCKS.register("wireless_logistics_transfer_device",
             () -> new com.industrialcrops.block.CrystalLogisticsBlock(machineProperties().mapColor(MapColor.COLOR_BLUE).noOcclusion()));
 
     public static final DeferredBlock<Block> CRAFTING_PROCESSOR = BLOCKS.register("crafting_processing_device",

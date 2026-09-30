@@ -7,7 +7,9 @@ import com.industrialcrops.recipe.MixerRecipes;
 import com.industrialcrops.recipe.ManipulatorRecipes;
 import com.industrialcrops.recipe.RootOreExtractorRecipes;
 import com.industrialcrops.recipe.ProcessorProgrammingRecipes;
+import com.industrialcrops.block.entity.BioEnergyMachineBlockEntity;
 import com.industrialcrops.registry.ModBlocks;
+import com.industrialcrops.registry.ModItems;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
@@ -50,6 +52,7 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
                 new GourdModificationRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
                 new MixerRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
                 new ProcessorProgrammingRecipeCategory(registration.getJeiHelpers().getGuiHelper())
+                , new BioEnergyRecipeCategory(registration.getJeiHelpers().getGuiHelper())
         );
     }
 
@@ -64,6 +67,7 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
         registration.addRecipes(GourdModificationRecipeCategory.TYPE, GourdModificationRecipes.all());
         registration.addRecipes(MixerRecipeCategory.TYPE, MixerRecipes.all());
         registration.addRecipes(ProcessorProgrammingRecipeCategory.TYPE, ProcessorProgrammingRecipes.all());
+        registration.addRecipes(BioEnergyRecipeCategory.TYPE, bioEnergyRecipes());
     }
 
     @Override
@@ -78,6 +82,41 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.GOURD_MODIFICATION_DEVICE.asItem()), GourdModificationRecipeCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.MIXER.asItem()), MixerRecipeCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.PROCESSOR_PROGRAMMER.asItem()), ProcessorProgrammingRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.BIO_ENERGY_GENERATOR.asItem()), BioEnergyRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.BIO_ENERGY_REACTOR.asItem()), BioEnergyRecipeCategory.TYPE);
+    }
+
+    private static java.util.List<BioEnergyRecipeCategory.Recipe> bioEnergyRecipes() {
+        java.util.List<ItemStack> fuels = java.util.List.of(
+                new ItemStack(net.minecraft.world.item.Items.WHEAT),
+                new ItemStack(net.minecraft.world.item.Items.CARROT),
+                new ItemStack(net.minecraft.world.item.Items.POTATO),
+                new ItemStack(net.minecraft.world.item.Items.BEETROOT),
+                new ItemStack(net.minecraft.world.item.Items.WHEAT_SEEDS),
+                new ItemStack(ModItems.INDUSTRIAL_CARROT.get()),
+                new ItemStack(ModItems.INDUSTRIAL_POTATO.get()),
+                new ItemStack(ModItems.INDUSTRIAL_WHEAT.get()),
+                new ItemStack(ModItems.INDUSTRIAL_MELON.get()),
+                new ItemStack(ModItems.INDUSTRIAL_PUMPKIN.get()),
+                new ItemStack(ModItems.PRISM_POD_SEEDS.get()),
+                new ItemStack(ModItems.PRISM_POD.get()),
+                new ItemStack(ModItems.EMBERCOIL_SEEDS.get()),
+                new ItemStack(ModItems.EMBERCOIL.get()),
+                new ItemStack(ModItems.STARBLOOM_SEEDS.get()),
+                new ItemStack(ModItems.STARBLOOM.get()),
+                new ItemStack(ModItems.NEONBULB_SEEDS.get()),
+                new ItemStack(ModItems.NEONBULB.get()),
+                new ItemStack(ModItems.FLUXSTALK_SEEDS.get()),
+                new ItemStack(ModItems.FLUXSTALK.get()),
+                new ItemStack(ModItems.INDUSTRIAL_CARROT_BLOCK.get()),
+                new ItemStack(ModItems.INDUSTRIAL_POTATO_BLOCK.get()),
+                new ItemStack(ModItems.INDUSTRIAL_WHEAT_BLOCK.get()),
+                new ItemStack(ModItems.INDUSTRIAL_MELON_BLOCK.get()),
+                new ItemStack(ModItems.INDUSTRIAL_PUMPKIN_BLOCK.get()));
+        return fuels.stream().map(stack -> {
+            var tier = BioEnergyMachineBlockEntity.classifyFuel(stack);
+            return new BioEnergyRecipeCategory.Recipe(stack, tier.energy(), tier.residue());
+        }).toList();
     }
 
     @Override

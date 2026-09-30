@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:block",
+  "pools": [{
+    "bonus_rolls": 0.0,
+    "conditions": [{ "condition": "minecraft:survives_explosion" }],
+    "entries": [{ "type": "minecraft:item", "name": "industrialcrops:bio_energy_reaction_device" }],
+    "rolls": 1.0
+  }]
+}

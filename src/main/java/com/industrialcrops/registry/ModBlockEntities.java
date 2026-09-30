@@ -20,6 +20,7 @@ import com.industrialcrops.block.entity.DigitizedItemCopierBlockEntity;
 import com.industrialcrops.block.entity.MatterReconstructorBlockEntity;
 import com.industrialcrops.block.entity.ItemNetworkTerminalBlockEntity;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -40,6 +41,10 @@ import com.industrialcrops.block.entity.BasicControlDeviceBlockEntity;
 public final class ModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, IndustrialCrops.MOD_ID);
+    static {
+        BLOCK_ENTITIES.addAlias(ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "infinite_logistics_transfer_device"),
+                ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "wireless_logistics_transfer_device"));
+    }
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RootOreExtractorBlockEntity>> ROOT_ORE_EXTRACTOR =
             BLOCK_ENTITIES.register("basic_crop_conversion_device", () -> BlockEntityType.Builder
@@ -156,7 +161,8 @@ public final class ModBlockEntities {
                     .of(ItemNetworkTerminalBlockEntity::new, ModBlocks.ITEM_NETWORK_TERMINAL.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BioEnergyGeneratorBlockEntity>> BIO_ENERGY_GENERATOR =
             BLOCK_ENTITIES.register("bio_energy_generation_device", () -> BlockEntityType.Builder
-                    .of(BioEnergyGeneratorBlockEntity::new, ModBlocks.BIO_ENERGY_GENERATOR.get()).build(null));
+                    .of(BioEnergyGeneratorBlockEntity::new,
+                            ModBlocks.BIO_ENERGY_GENERATOR.get(), ModBlocks.BIO_ENERGY_REACTOR.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnergyBatteryBlockEntity>> ENERGY_BATTERY =
             BLOCK_ENTITIES.register("gold_energy_storage_cabinet", () -> BlockEntityType.Builder
                     .of(EnergyBatteryBlockEntity::new, ModBlocks.ENERGY_BATTERY.get()).build(null));
@@ -195,7 +201,7 @@ public final class ModBlockEntities {
                     .of(com.industrialcrops.block.entity.WirelessEnergyTransmitterBlockEntity::new, ModBlocks.WIRELESS_ENERGY_TRANSMITTER.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.industrialcrops.block.entity.CrystalLogisticsBlockEntity>> CRYSTAL_LOGISTICS =
-            BLOCK_ENTITIES.register("infinite_logistics_transfer_device", () -> BlockEntityType.Builder.of(com.industrialcrops.block.entity.CrystalLogisticsBlockEntity::new, ModBlocks.CRYSTAL_LOGISTICS.get()).build(null));
+            BLOCK_ENTITIES.register("wireless_logistics_transfer_device", () -> BlockEntityType.Builder.of(com.industrialcrops.block.entity.CrystalLogisticsBlockEntity::new, ModBlocks.CRYSTAL_LOGISTICS.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.industrialcrops.block.entity.CraftingProcessorBlockEntity>> CRAFTING_PROCESSOR =
             BLOCK_ENTITIES.register("crafting_processing_device", () -> BlockEntityType.Builder.of(com.industrialcrops.block.entity.CraftingProcessorBlockEntity::new, ModBlocks.CRAFTING_PROCESSOR.get()).build(null));

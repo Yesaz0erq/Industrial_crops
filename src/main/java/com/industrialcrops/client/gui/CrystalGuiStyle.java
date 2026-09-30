@@ -4,6 +4,11 @@ import net.minecraft.client.gui.GuiGraphics;
 
 /** Blue crystal-steel chassis shared by the crystal machine screens. */
 final class CrystalGuiStyle {
+    static final int TEXT = 0xff283247;
+    static final int MUTED_TEXT = 0xff506078;
+    static final int ENERGY_BLUE = 0xff2f8fce;
+    static final int RESIDUE_BLUE = 0xff536bd1;
+
     private CrystalGuiStyle() {}
     private static void panel(GuiGraphics g,int x,int y,int w,int h,int color) {
         g.fill(x,y,x+w,y+h,color);
@@ -18,6 +23,16 @@ final class CrystalGuiStyle {
     }
     static void drawWorkPanel(GuiGraphics g,int x,int y,int w,int h) {
         panel(g,x,y,w,h,0xff97a1b6);panel(g,x+2,y+2,w-4,h-4,0xffb8beca);
+    }
+    static void drawMachineWell(GuiGraphics g,int x,int y) {
+        panel(g,x-3,y-3,24,24,0xff68768f);
+        drawSlot(g,x,y);
+        g.fill(x+2,y-3,x+16,y-2,0xff5f8fca);
+    }
+    static void drawCommonPanel(GuiGraphics g,int x,int y,int w,int h) {
+        g.fill(x,y,x+w,y+h,0xff252b38);
+        panel(g,x+1,y+1,w-2,h-2,0xff77869d);
+        panel(g,x+3,y+3,w-6,h-6,0xffc5c7cd);
     }
     static void drawInsetPanel(GuiGraphics g,int x,int y,int w,int h) {
         g.fill(x,y,x+w,y+h,0xff454953);g.fill(x+1,y+1,x+w,y+h,0xfff1f1f3);

@@ -71,6 +71,7 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
         int ordinal = Math.max(0, Math.min(BioEnergyMachineBlockEntity.Kind.values().length - 1, data.get(10)));
         return BioEnergyMachineBlockEntity.Kind.values()[ordinal];
     }
+    public boolean isReactor() { return blockEntity.isReactor(); }
     public int energy() { return (data.get(0) & 0xFFFF) | ((data.get(1) & 0xFFFF) << 16); }
     public int energyCapacity() { return (data.get(2) & 0xFFFF) | ((data.get(3) & 0xFFFF) << 16); }
     public int progress() { return data.get(4); }
@@ -120,7 +121,7 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
 
     @Override public boolean stillValid(Player player) {
         Block expected = switch (blockEntity.getKind()) {
-            case GENERATOR -> ModBlocks.BIO_ENERGY_GENERATOR.get();
+            case GENERATOR -> blockEntity.isReactor() ? ModBlocks.BIO_ENERGY_REACTOR.get() : ModBlocks.BIO_ENERGY_GENERATOR.get();
             case BATTERY -> ModBlocks.ENERGY_BATTERY.get();
             case INCINERATOR -> ModBlocks.RESIDUE_INCINERATOR.get();
         };

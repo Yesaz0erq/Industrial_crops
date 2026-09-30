@@ -21,6 +21,7 @@
     "industrialcrops:matter_reconstruction_device",
     "industrialcrops:item_network_management_terminal",
     "industrialcrops:bio_energy_generation_device",
+    "industrialcrops:bio_energy_reaction_device",
     "industrialcrops:gold_energy_storage_cabinet",
     "industrialcrops:incinerator",
     "industrialcrops:electric_furnace",
@@ -56,7 +57,7 @@
     "carrote:universal_replication_device",
     "industrialcrops:wireless_energy_transfer_device",
     "industrialcrops:crystal_steel_workbench",
-    "industrialcrops:infinite_logistics_transfer_device",
+    "industrialcrops:wireless_logistics_transfer_device",
     "industrialcrops:crafting_processing_device",
     "industrialcrops:terrain_processing_device",
     "industrialcrops:automatic_animal_breeder"

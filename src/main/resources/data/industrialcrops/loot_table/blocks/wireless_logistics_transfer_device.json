@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "industrialcrops:infinite_logistics_transfer_device"
+          "name": "industrialcrops:wireless_logistics_transfer_device"
         }
       ],
       "conditions": [

@@ -20,6 +20,7 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.SignItem;
 import net.minecraft.world.item.HangingSignItem;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -28,6 +29,10 @@ import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 
 public final class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(IndustrialCrops.MOD_ID);
+    static {
+        ITEMS.addAlias(ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "infinite_logistics_transfer_device"),
+                ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "wireless_logistics_transfer_device"));
+    }
 
     public static final DeferredItem<SeedBagItem> EMPTY_BAG = ITEMS.register("empty_bag",
             () -> new SeedBagItem(new Item.Properties()));
@@ -143,6 +148,8 @@ public final class ModItems {
             () -> new Item(new Item.Properties()));
     public static final DeferredItem<Item> GOLD_UPGRADE_KIT = ITEMS.register("gold_upgrade_kit",
             () -> new AdvancedManipulatorUpgradeItem(new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final DeferredItem<Item> CRYSTAL_STEEL_UPGRADE_KIT = ITEMS.register("crystal_steel_upgrade_kit",
+            () -> new Item(new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.EPIC)));
     public static final DeferredItem<Item> MINING_UPGRADE_COMPONENT = ITEMS.register("mining_upgrade_component",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.EPIC)));
     public static final DeferredItem<Item> SPEED_COMPONENT_1 = registerSpeedUpgrade("speed_component_1");
@@ -207,6 +214,7 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> MATTER_RECONSTRUCTOR = registerBlockItem("matter_reconstruction_device", ModBlocks.MATTER_RECONSTRUCTOR);
     public static final DeferredItem<BlockItem> ITEM_NETWORK_TERMINAL = registerBlockItem("item_network_management_terminal", ModBlocks.ITEM_NETWORK_TERMINAL);
     public static final DeferredItem<BlockItem> BIO_ENERGY_GENERATOR = registerBlockItem("bio_energy_generation_device", ModBlocks.BIO_ENERGY_GENERATOR);
+    public static final DeferredItem<BlockItem> BIO_ENERGY_REACTOR = registerBlockItem("bio_energy_reaction_device", ModBlocks.BIO_ENERGY_REACTOR);
     public static final DeferredItem<BlockItem> ENERGY_BATTERY = registerBlockItem("gold_energy_storage_cabinet", ModBlocks.ENERGY_BATTERY);
     public static final DeferredItem<BlockItem> RESIDUE_INCINERATOR = registerBlockItem("incinerator", ModBlocks.RESIDUE_INCINERATOR);
     public static final DeferredItem<BlockItem> ELECTRIC_FURNACE = registerBlockItem("electric_furnace", ModBlocks.ELECTRIC_FURNACE);
@@ -261,7 +269,7 @@ public final class ModItems {
 
     public static final DeferredItem<BlockItem> WIRELESS_ENERGY_TRANSMITTER = registerBlockItem("wireless_energy_transfer_device", ModBlocks.WIRELESS_ENERGY_TRANSMITTER);
 
-    public static final DeferredItem<BlockItem> CRYSTAL_LOGISTICS = registerBlockItem("infinite_logistics_transfer_device", ModBlocks.CRYSTAL_LOGISTICS);
+    public static final DeferredItem<BlockItem> CRYSTAL_LOGISTICS = registerBlockItem("wireless_logistics_transfer_device", ModBlocks.CRYSTAL_LOGISTICS);
 
     public static final DeferredItem<BlockItem> CRAFTING_PROCESSOR = registerBlockItem("crafting_processing_device", ModBlocks.CRAFTING_PROCESSOR);
     public static final DeferredItem<BlockItem> ANIMAL_BREEDER = registerBlockItem("automatic_animal_breeder", ModBlocks.ANIMAL_BREEDER);

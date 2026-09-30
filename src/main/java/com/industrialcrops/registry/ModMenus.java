@@ -24,6 +24,7 @@ import com.industrialcrops.screen.GoldPlasmaExtractorMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.IContainerFactory;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -31,6 +32,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public final class ModMenus {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, IndustrialCrops.MOD_ID);
+    static {
+        MENUS.addAlias(ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "infinite_logistics_transfer_device"),
+                ResourceLocation.fromNamespaceAndPath(IndustrialCrops.MOD_ID, "wireless_logistics_transfer_device"));
+    }
 
     public static final DeferredHolder<MenuType<?>, MenuType<com.industrialcrops.screen.CrystalSteelWorkbenchMenu>> CRYSTAL_STEEL_WORKBENCH =
             MENUS.register("crystal_steel_workbench", () -> new MenuType<>(
@@ -139,7 +144,7 @@ public final class ModMenus {
                     (IContainerFactory<com.industrialcrops.screen.WirelessEnergyTransmitterMenu>) com.industrialcrops.screen.WirelessEnergyTransmitterMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     public static final DeferredHolder<MenuType<?>, MenuType<com.industrialcrops.screen.CrystalLogisticsMenu>> CRYSTAL_LOGISTICS =
-            MENUS.register("infinite_logistics_transfer_device", () -> new MenuType<>((IContainerFactory<com.industrialcrops.screen.CrystalLogisticsMenu>) com.industrialcrops.screen.CrystalLogisticsMenu::new, FeatureFlags.DEFAULT_FLAGS));
+            MENUS.register("wireless_logistics_transfer_device", () -> new MenuType<>((IContainerFactory<com.industrialcrops.screen.CrystalLogisticsMenu>) com.industrialcrops.screen.CrystalLogisticsMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     public static final DeferredHolder<MenuType<?>, MenuType<com.industrialcrops.screen.CraftingProcessorMenu>> CRAFTING_PROCESSOR =
             MENUS.register("crafting_processing_device", () -> new MenuType<>((IContainerFactory<com.industrialcrops.screen.CraftingProcessorMenu>) com.industrialcrops.screen.CraftingProcessorMenu::new, FeatureFlags.DEFAULT_FLAGS));
