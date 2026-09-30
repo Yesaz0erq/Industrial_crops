@@ -9,13 +9,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = ItemStackHandler.class, remap = false)
 public abstract class ItemStackHandlerStackLimitMixin {
     @Inject(
-            method = "getSlotLimit",
-            at = @At("HEAD"),
+            method = "getSlotLimit(I)I",
+            at = @At("RETURN"),
             cancellable = true,
             remap = false,
             require = 1
     )
     private void industrialcrops$raiseItemHandlerStackLimit(int slot, CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(999);
+        cir.setReturnValue(Math.max(cir.getReturnValueI(), 999));
     }
 }

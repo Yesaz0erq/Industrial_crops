@@ -2,18 +2,19 @@ package com.industrialcrops.mixin;
 
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackCodecStackLimitMixin {
-    @ModifyConstant(
+    @ModifyArg(
             method = "lambda$static$3",
-            constant = @Constant(intValue = 99),
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/util/ExtraCodecs;intRange(II)Lcom/mojang/serialization/Codec;"),
+            index = 1,
             require = 1,
             remap = false
     )
     private static int industrialcrops$raiseSerializedStackLimit(int original) {
-        return 999;
+        return Math.max(original, 999);
     }
 }

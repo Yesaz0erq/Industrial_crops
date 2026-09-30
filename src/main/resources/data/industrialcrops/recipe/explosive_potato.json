@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "combat",
+  "category": "misc",
   "ingredients": [
     { "item": "industrialcrops:industrial_potato" },
     { "item": "minecraft:gunpowder" },
