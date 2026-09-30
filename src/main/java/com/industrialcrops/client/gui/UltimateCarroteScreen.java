@@ -3,9 +3,13 @@ package com.industrialcrops.client.gui;
 import com.industrialcrops.screen.UltimateCarroteMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public final class UltimateCarroteScreen extends IndustrialContainerScreen<UltimateCarroteMenu> {
+    private static final ResourceLocation GENERIC_CONTAINER =
+            ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/container/generic_54.png");
+
     public UltimateCarroteScreen(UltimateCarroteMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
         imageWidth = 176;
@@ -29,24 +33,26 @@ public final class UltimateCarroteScreen extends IndustrialContainerScreen<Ultim
     }
 
     @Override protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        IndustrialGuiStyle.drawParadoxContainer(graphics, leftPos, topPos, imageWidth, imageHeight);
-        for (var slot : menu.slots) {
-            if (slot.isActive()) IndustrialGuiStyle.drawParadoxSlot(graphics, leftPos + slot.x - 1, topPos + slot.y - 1);
-        }
+        int storageHeight = menu.visibleRows() * 18 + 17;
+        graphics.blit(GENERIC_CONTAINER, leftPos, topPos, 0, 0,
+                imageWidth, storageHeight, 256, 256);
+        graphics.blit(GENERIC_CONTAINER, leftPos, topPos + storageHeight, 0, 126,
+                imageWidth, 96, 256, 256);
+
         if (menu.rows() > menu.visibleRows()) {
             int y = topPos + 18;
             int available = menu.visibleRows() * 18;
-            graphics.fill(leftPos + 170, y, leftPos + 173, y + available, 0xFF403743);
+            graphics.fill(leftPos + 171, y, leftPos + 174, y + available, 0xFF8B8B8B);
             int thumb = Math.max(6, available * menu.visibleRows() / menu.rows());
             int offset = (available - thumb) * menu.scrollRow() / (menu.rows() - menu.visibleRows());
-            graphics.fill(leftPos + 170, y + offset, leftPos + 173, y + offset + thumb, 0xFFD0AE69);
+            graphics.fill(leftPos + 171, y + offset, leftPos + 174, y + offset + thumb, 0xFF555555);
         }
     }
 
     @Override protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         IndustrialGuiStyle.drawFittedString(graphics, font, title.getString(), 8, 6,
-                imageWidth - 16, 0xFFF4DDE2, true);
-        graphics.drawString(font, playerInventoryTitle, 8, inventoryLabelY, 0xFFC4A5B2, false);
+                imageWidth - 16, 0xFF404040, true);
+        graphics.drawString(font, playerInventoryTitle, 8, inventoryLabelY, 0xFF404040, false);
     }
 
     @Override public boolean mouseScrolled(double x, double y, double horizontal, double vertical) {
