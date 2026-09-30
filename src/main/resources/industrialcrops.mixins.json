@@ -11,7 +11,8 @@
     "ItemStackCodecStackLimitMixin",
     "ItemStackHandlerStackLimitMixin",
     "LevelUniversalReplicaMixin",
-    "ServerPlayerReplicaMenuMixin"
+    "ServerPlayerReplicaMenuMixin",
+    "CarroteProjectileAmmoMixin"
   ],
   "client": [
     "client.AdvancementTabBackgroundMixin",

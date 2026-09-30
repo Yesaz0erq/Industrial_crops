@@ -11,7 +11,16 @@
     "EnchantmentMenuMixin",
     "AnvilMenuMixin",
     "FinalArmorMixin",
-    "PulseKnockbackMixin", "PulseArrowMixin"
+    "PulseKnockbackMixin",
+    "PulseArrowMixin",
+    "CarroteCombatAccess",
+    "CarroteLivingDamageMixin",
+    "CarrotePlayerDamageMixin",
+    "CarroteBossDamageMixin",
+    "CarroteDeathMixin",
+    "CarroteServerPlayerAccess",
+    "CarroteServerPlayerDamageMixin",
+    "AvaritiaInfinityImmunityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

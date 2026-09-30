@@ -34,11 +34,15 @@ public final class CarroteCuriosItems {
     public static final DeferredItem<Item> UNBREAKABLE = register("unbreakable_carrote");
     public static final DeferredItem<Item> RESISTANCE = register("resistance_carrote");
     public static final DeferredItem<Item> THIEF = register("thief_carrote");
-    public static final DeferredItem<Item> ULTIMATE = register("ultimate_carrote");
+    public static final DeferredItem<Item> AMMO = register("ammo_carrote");
+    public static final DeferredItem<Item> BREACH = register("breach_carrote");
+    public static final DeferredItem<Item> ARMOR_PIERCING = register("armor_piercing_carrote");
+    public static final DeferredItem<Item> ULTIMATE = ITEMS.register("ultimate_carrote", UltimateAccessory::new);
 
     public static int defaultQuality(Item item) {
         if (item == ULTIMATE.get()) return 5;
-        if (item == THIEF.get()) return 4;
+        if (item == THIEF.get() || item == ARMOR_PIERCING.get()) return 4;
+        if (item == AMMO.get() || item == BREACH.get()) return 3;
         if (item == UNBREAKABLE.get() || item == RESISTANCE.get()) return 2;
         if (item == HELMET.get()) return 3;
         if (item == POWER.get() || item == BLAST.get() || item == FLIGHT.get() || item == GREED.get()) return 2;
@@ -93,7 +97,7 @@ public final class CarroteCuriosItems {
                 lines.add(Component.translatable("tooltip.carrote_curios.spent").withStyle(ChatFormatting.RED));
             }
             if (CarroteTooltip.isShiftDown()) {
-                lines.add(Component.translatable("tooltip.carrote_curios." + (this instanceof HelmetAccessory ? "helmet_usage" : "unique"))
+                lines.add(Component.translatable("tooltip.carrote_curios." + (this instanceof HelmetAccessory ? "helmet_usage" : this instanceof UltimateAccessory ? "ultimate_usage" : "unique"))
                         .withStyle(ChatFormatting.DARK_GRAY));
                 if (!CarroteCuriosEffects.curiosLoaded()) {
                     lines.add(Component.translatable("tooltip.carrote_curios.offhand").withStyle(ChatFormatting.YELLOW));
@@ -102,6 +106,25 @@ public final class CarroteCuriosItems {
                 lines.add(Component.translatable("tooltip.carrote_curios.shift").withStyle(ChatFormatting.DARK_GRAY));
             }
         }
+    }
+
+    private static final class UltimateAccessory extends Accessory {
+        private UltimateAccessory() { super("ultimate_carrote"); }
+
+        @Override
+        public net.minecraft.world.InteractionResultHolder<ItemStack> use(net.minecraft.world.level.Level level,
+                net.minecraft.world.entity.player.Player player, net.minecraft.world.InteractionHand hand) {
+            ItemStack stack = player.getItemInHand(hand);
+            int slot = hand == net.minecraft.world.InteractionHand.OFF_HAND ? 40 : player.getInventory().selected;
+            if (!level.isClientSide) {
+                player.openMenu(new net.minecraft.world.SimpleMenuProvider(
+                        (id, inventory, owner) -> new com.industrialcrops.screen.UltimateCarroteMenu(id, inventory, slot),
+                        stack.getHoverName()), data -> data.writeVarInt(slot));
+            }
+            return net.minecraft.world.InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+        }
+
+        @Override public boolean canFitInsideContainerItems() { return false; }
     }
 
     private static final class HelmetAccessory extends Accessory implements net.minecraft.world.item.Equipable {

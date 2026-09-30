@@ -12,7 +12,10 @@
     "ItemStackHandlerStackLimitMixin",
     "LevelUniversalReplicaMixin",
     "ServerPlayerReplicaMenuMixin",
-    "FriendlyByteBufStackLimitMixin"
+    "FriendlyByteBufStackLimitMixin",
+    "CarroteBowAmmoMixin",
+    "CarroteCrossbowAmmoMixin",
+    "CarroteTaczAmmoMixin"
   ],
   "client": [
     "client.AdvancementTabBackgroundMixin",

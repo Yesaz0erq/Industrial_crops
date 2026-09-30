@@ -52,5 +52,12 @@
   "item.carrote_curios.thief_carrote": "Thief Carrote",
   "tooltip.carrote_curios.thief_carrote": "Takes one random equipped item from a defeated target.",
   "item.carrote_curios.ultimate_carrote": "Ultimate Carrote",
-  "tooltip.carrote_curios.ultimate_carrote": "While equipped or held, activates all backpack carrotes. Same types do not stack."
+  "tooltip.carrote_curios.ultimate_carrote": "Stores Carrotes. Activates stored and backpack Carrotes while in your offhand or an accessory slot.",
+  "item.carrote_curios.ammo_carrote": "Ammo Carrote",
+  "tooltip.carrote_curios.ammo_carrote": "Vanilla and TaCZ ammunition is not consumed. At least one matching round is still required.",
+  "item.carrote_curios.breach_carrote": "Breach Carrote",
+  "tooltip.carrote_curios.breach_carrote": "Attacks bypass shields and special blocking abilities, dealing your attack damage.",
+  "item.carrote_curios.armor_piercing_carrote": "Armor Piercing Carrote",
+  "tooltip.carrote_curios.armor_piercing_carrote": "Your damage ignores 50% of armor and bypasses resistance.",
+  "tooltip.carrote_curios.ultimate_usage": "Right-click to open. Stores Carrotes, excluding Ultimate Carrotes. Always keeps one empty row; identical abilities do not stack."
 }

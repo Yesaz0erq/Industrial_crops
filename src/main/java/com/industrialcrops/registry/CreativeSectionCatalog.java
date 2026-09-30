@@ -218,7 +218,12 @@ public final class CreativeSectionCatalog {
                         item(CarroteCuriosItems.BLAST),
                         // Fine.
                         item(CarroteCuriosItems.HELMET),
+                        item(CarroteCuriosItems.AMMO),
+                        item(CarroteCuriosItems.BREACH),
+                        // Supreme.
+                        item(CarroteCuriosItems.ARMOR_PIERCING),
                         item(CarroteCuriosItems.THIEF),
+                        // Super.
                         item(CarroteCuriosItems.ULTIMATE))
 
         );
