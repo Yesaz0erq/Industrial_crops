@@ -27,7 +27,7 @@ public final class CrystalWorkbenchRecipes {
         var ingredients=new java.util.ArrayList<ItemStack>();
         for(char key:pattern.toCharArray()) ingredients.add(switch(key) {
             case 'C' -> new ItemStack(ModItems.COMET_FRUIT.get());
-            case 'E' -> new ItemStack(ModItems.ENERGY_CRYSTAL.get());
+            case 'E' -> new ItemStack(Items.ENDER_PEARL);
             case 'I' -> new ItemStack(ModItems.CRYSTAL_INGOT.get());
             case 'B' -> new ItemStack(Items.BEACON);
             case 'D' -> new ItemStack(ModItems.AUTOMATIC_COMPONENT.get());
@@ -37,30 +37,32 @@ public final class CrystalWorkbenchRecipes {
                 new FluidStack(ModFluids.CONCENTRATED_PLASMA_JUICE.get(),1000));
     }
     private static Recipe logistics() {
-        return dry("  E  " + " I I " + "T C T" + " IPI " + "  H  ", ModItems.CRYSTAL_LOGISTICS.get());
+        return dry("     " + " IEI " + " ECE " + " IEI " + "IIKII", ModItems.CRYSTAL_LOGISTICS.get());
     }
     private static Recipe breeder() {
-        return dry("  A  " + " I I " + "F C F" + " IPI " + "  T  ", ModItems.ANIMAL_BREEDER.get());
+        return dry(" III " + "ISSSI" + "IKOKI" + "IRGRI" + " III ", ModItems.ANIMAL_BREEDER.get());
     }
     private static Recipe terrain() {
-        return dry("  A  " + " IDI " + "H C H" + " IPI " + "  P  ", ModItems.TERRAIN_PROCESSOR.get());
+        return dry(" III " + "ISDSI" + "IRPRI" + "IKCKI" + " III ", ModItems.TERRAIN_PROCESSOR.get());
     }
     private static Recipe processor() {
-        return dry("  A  " + " IPI " + "W C W" + " I I " + "  P  ", ModItems.CRAFTING_PROCESSOR.get());
+        return dry("IIIII" + "IKWKI" + "IKHKI" + "IKCKI" + "IRSRI", ModItems.CRAFTING_PROCESSOR.get());
     }
     private static Recipe dry(String pattern, Item result) {
         var inputs=new java.util.ArrayList<ItemStack>();
         for(char key:pattern.toCharArray()) inputs.add(switch(key) {
             case 'I' -> new ItemStack(ModItems.CRYSTAL_INGOT.get());
             case 'C' -> new ItemStack(ModItems.CRYSTAL_STEEL_DEVICE_CASING.get());
-            case 'A' -> new ItemStack(ModItems.AUTOMATIC_COMPONENT.get());
+            case 'K' -> new ItemStack(ModItems.COMET_FRUIT.get());
             case 'P' -> new ItemStack(ModItems.COMPONENT_SUBSTRATE.get());
-            case 'F' -> new ItemStack(ModItems.FEED_BAG_BASIC.get());
-            case 'T' -> new ItemStack(ModItems.COPPER_FLUID_STORAGE_CABINET.get());
+            case 'G' -> new ItemStack(ModItems.GUIDANCE_COMPONENT.get());
             case 'D' -> new ItemStack(Items.DIAMOND_PICKAXE);
-            case 'W' -> new ItemStack(Items.CRAFTING_TABLE);
+            case 'W' -> new ItemStack(Items.CRAFTER);
             case 'E' -> new ItemStack(Items.ENDER_PEARL);
-            case 'H' -> new ItemStack(Items.CHEST);
+            case 'H' -> new ItemStack(Items.HOPPER);
+            case 'R' -> new ItemStack(Items.REPEATER);
+            case 'S' -> new ItemStack(Items.REDSTONE);
+            case 'O' -> new ItemStack(Items.DROPPER);
             default -> ItemStack.EMPTY;
         });
         return new Recipe(List.copyOf(inputs),new ItemStack(result),FluidStack.EMPTY);
