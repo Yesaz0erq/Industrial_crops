@@ -295,7 +295,7 @@ public final class ModBlocks {
             () -> new com.industrialcrops.block.WirelessEnergyTransmitterBlock(machineProperties()
                     .mapColor(MapColor.COLOR_PURPLE).noOcclusion()));
 
-    public static final RegistryObject<Block> CRYSTAL_LOGISTICS = BLOCKS.register("infinite_logistics_transfer_device",
+    public static final RegistryObject<Block> CRYSTAL_LOGISTICS = BLOCKS.register("wireless_logistics_transfer_device",
             () -> new com.industrialcrops.block.CrystalLogisticsBlock(machineProperties().mapColor(MapColor.COLOR_BLUE).noOcclusion()));
 
     public static final RegistryObject<Block> CRAFTING_PROCESSOR = BLOCKS.register("crafting_processing_device",

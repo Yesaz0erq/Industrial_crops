@@ -195,7 +195,7 @@ public final class ModBlockEntities {
                     .of(com.industrialcrops.block.entity.WirelessEnergyTransmitterBlockEntity::new, ModBlocks.WIRELESS_ENERGY_TRANSMITTER.get()).build(null));
 
     public static final RegistryObject<BlockEntityType<com.industrialcrops.block.entity.CrystalLogisticsBlockEntity>> CRYSTAL_LOGISTICS =
-            BLOCK_ENTITIES.register("infinite_logistics_transfer_device", () -> BlockEntityType.Builder.of(com.industrialcrops.block.entity.CrystalLogisticsBlockEntity::new, ModBlocks.CRYSTAL_LOGISTICS.get()).build(null));
+            BLOCK_ENTITIES.register("wireless_logistics_transfer_device", () -> BlockEntityType.Builder.of(com.industrialcrops.block.entity.CrystalLogisticsBlockEntity::new, ModBlocks.CRYSTAL_LOGISTICS.get()).build(null));
 
     public static final RegistryObject<BlockEntityType<com.industrialcrops.block.entity.CraftingProcessorBlockEntity>> CRAFTING_PROCESSOR =
             BLOCK_ENTITIES.register("crafting_processing_device", () -> BlockEntityType.Builder.of(com.industrialcrops.block.entity.CraftingProcessorBlockEntity::new, ModBlocks.CRAFTING_PROCESSOR.get()).build(null));

@@ -262,7 +262,7 @@ public final class ModItems {
 
     public static final RegistryObject<BlockItem> WIRELESS_ENERGY_TRANSMITTER = registerBlockItem("wireless_energy_transfer_device", ModBlocks.WIRELESS_ENERGY_TRANSMITTER);
 
-    public static final RegistryObject<BlockItem> CRYSTAL_LOGISTICS = ITEMS.register("infinite_logistics_transfer_device",
+    public static final RegistryObject<BlockItem> CRYSTAL_LOGISTICS = ITEMS.register("wireless_logistics_transfer_device",
             () -> new BlockItem(ModBlocks.CRYSTAL_LOGISTICS.get(), new Item.Properties()) {
                 @Override public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
                     consumer.accept(new net.minecraftforge.client.extensions.common.IClientItemExtensions() {

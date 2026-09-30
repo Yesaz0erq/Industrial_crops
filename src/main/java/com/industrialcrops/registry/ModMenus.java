@@ -139,7 +139,7 @@ public final class ModMenus {
                     (IContainerFactory<com.industrialcrops.screen.WirelessEnergyTransmitterMenu>) com.industrialcrops.screen.WirelessEnergyTransmitterMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     public static final RegistryObject<MenuType<com.industrialcrops.screen.CrystalLogisticsMenu>> CRYSTAL_LOGISTICS =
-            MENUS.register("infinite_logistics_transfer_device", () -> new MenuType<>((IContainerFactory<com.industrialcrops.screen.CrystalLogisticsMenu>) com.industrialcrops.screen.CrystalLogisticsMenu::new, FeatureFlags.DEFAULT_FLAGS));
+            MENUS.register("wireless_logistics_transfer_device", () -> new MenuType<>((IContainerFactory<com.industrialcrops.screen.CrystalLogisticsMenu>) com.industrialcrops.screen.CrystalLogisticsMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     public static final RegistryObject<MenuType<com.industrialcrops.screen.CraftingProcessorMenu>> CRAFTING_PROCESSOR =
             MENUS.register("crafting_processing_device", () -> new MenuType<>((IContainerFactory<com.industrialcrops.screen.CraftingProcessorMenu>) com.industrialcrops.screen.CraftingProcessorMenu::new, FeatureFlags.DEFAULT_FLAGS));

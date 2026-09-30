@@ -199,7 +199,7 @@ public final class CrystalLogisticsBlockEntity extends BlockEntity implements Me
     }
     @Override public CompoundTag getUpdateTag() { var tag = saveWithoutMetadata(); tag.putInt("Connections", connections); return tag; }
     @Override public ClientboundBlockEntityDataPacket getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
-    @Override public Component getDisplayName() { return Component.translatable("block.industrialcrops.infinite_logistics_transfer_device"); }
+    @Override public Component getDisplayName() { return Component.translatable("block.industrialcrops.wireless_logistics_transfer_device"); }
     @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) { return new CrystalLogisticsMenu(id, inventory, this); }
 
     private LazyOptional<net.minecraftforge.items.IItemHandler> forgeCapability0 = LazyOptional.of(this::itemCapability);
