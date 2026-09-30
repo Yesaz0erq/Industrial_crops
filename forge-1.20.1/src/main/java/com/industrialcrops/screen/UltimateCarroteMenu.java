@@ -24,7 +24,6 @@ public final class UltimateCarroteMenu extends AbstractContainerMenu {
     private List<ItemStack> stored = new ArrayList<>();
     private int totalRows = 2;
     private int layoutRows = -1;
-    private int scrollRow;
     private int visibleRowLimit = 6;
     private boolean loading;
 
@@ -46,18 +45,13 @@ public final class UltimateCarroteMenu extends AbstractContainerMenu {
         for (int col = 0; col < 9; col++) addSlot(playerSlot(col, col, 3));
         addDataSlot(new DataSlot() {
             @Override public int get() { return totalRows; }
-            @Override public void set(int value) { totalRows = Math.max(2, value); layoutRows = -1; }
-        });
-        addDataSlot(new DataSlot() {
-            @Override public int get() { return scrollRow; }
-            @Override public void set(int value) { scrollRow = Math.max(0, value); layoutRows = -1; }
+            @Override public void set(int value) { totalRows = Math.min(6, Math.max(2, value)); layoutRows = -1; }
         });
         layout();
     }
 
     public int rows() { return totalRows; }
     public int visibleRows() { return Math.min(visibleRowLimit, rows()); }
-    public int scrollRow() { return scrollRow; }
     public int inventoryY() { return 32 + visibleRows() * 18; }
     public int bagSlotCount() { return PAGE_SLOTS; }
 
@@ -86,9 +80,9 @@ public final class UltimateCarroteMenu extends AbstractContainerMenu {
         return new Slot(contents, index, 8 + index % 9 * 18, 18 + index / 9 * 18) {
             @Override public int getMaxStackSize() { return 1; }
             @Override public boolean mayPlace(ItemStack stack) {
-                return scrollRow + index / 9 < rows() && UltimateCarroteStorage.accepts(stack);
+                return index / 9 < rows() && UltimateCarroteStorage.accepts(stack);
             }
-            @Override public boolean isActive() { return index / 9 < visibleRows() && scrollRow + index / 9 < rows(); }
+            @Override public boolean isActive() { return index / 9 < visibleRows() && index / 9 < rows(); }
         };
     }
 
@@ -126,6 +120,7 @@ public final class UltimateCarroteMenu extends AbstractContainerMenu {
         } else {
             if (!UltimateCarroteStorage.accepts(stack)) return ItemStack.EMPTY;
             if (player.level().isClientSide) return ItemStack.EMPTY;
+            if (stored.size() >= PAGE_SLOTS) return ItemStack.EMPTY;
             stored.add(stack.split(1));
             persist();
             loadPage();
@@ -140,17 +135,11 @@ public final class UltimateCarroteMenu extends AbstractContainerMenu {
         if (!stillValid(player)) return false;
         if (button >= -6 && button <= -2) {
             visibleRowLimit(-button);
-            scrollRow = Math.min(scrollRow, Math.max(0, rows() - visibleRows()));
             reload();
             broadcastChanges();
             return true;
         }
-        if (button < 0) return false;
-        reload();
-        scrollRow = Math.min(button, Math.max(0, rows() - visibleRows()));
-        loadPage();
-        broadcastChanges();
-        return true;
+        return false;
     }
 
     @Override public void broadcastChanges() {
@@ -162,22 +151,19 @@ public final class UltimateCarroteMenu extends AbstractContainerMenu {
     private void reload() {
         stored = new ArrayList<>(UltimateCarroteStorage.contents(bag, inventory.player.level().registryAccess()));
         totalRows = UltimateCarroteStorage.rows(stored);
-        scrollRow = Math.min(scrollRow, Math.max(0, totalRows - visibleRows()));
         loadPage();
     }
 
     private void loadPage() {
         loading = true;
-        int start = scrollRow * 9;
         for (int i = 0; i < PAGE_SLOTS; i++) contents.setItem(i,
-                start + i < stored.size() ? stored.get(start + i).copy() : ItemStack.EMPTY);
+                i < stored.size() ? stored.get(i).copy() : ItemStack.EMPTY);
         loading = false;
     }
 
     private void compact() {
         stored.removeIf(ItemStack::isEmpty);
         persist();
-        scrollRow = Math.min(scrollRow, Math.max(0, totalRows - visibleRows()));
         loadPage();
     }
 
@@ -193,9 +179,8 @@ public final class UltimateCarroteMenu extends AbstractContainerMenu {
         @Override public void setChanged() {
             super.setChanged();
             if (!loading && !inventory.player.level().isClientSide && stillValid(inventory.player)) {
-                int start = scrollRow * 9;
                 for (int i = 0; i < PAGE_SLOTS; i++) {
-                    int index = start + i;
+                    int index = i;
                     ItemStack stack = getItem(i);
                     if (stack.isEmpty() && index >= stored.size()) continue;
                     while (stored.size() <= index) stored.add(ItemStack.EMPTY);
