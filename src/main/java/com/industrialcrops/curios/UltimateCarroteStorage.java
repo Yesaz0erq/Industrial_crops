@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 /** Complete item state is stored independently of the visible menu page. */
 public final class UltimateCarroteStorage {
     private static final String CONTENTS = "CarroteBagContents";
+    public static final int MAX_SLOTS = 54;
     private UltimateCarroteStorage() {}
 
     public static boolean accepts(ItemStack stack) {
@@ -23,7 +24,9 @@ public final class UltimateCarroteStorage {
         var data = bag.getOrCreateTag();
         var result = new ArrayList<ItemStack>();
         var list = data.getList(CONTENTS, Tag.TAG_COMPOUND);
-        for (int i = 0; i < list.size(); i++) result.add(ItemStack.of(list.getCompound(i)));
+        for (int i = 0; i < Math.min(MAX_SLOTS, list.size()); i++) {
+            result.add(ItemStack.of(list.getCompound(i)));
+        }
         return result;
     }
 
@@ -31,7 +34,7 @@ public final class UltimateCarroteStorage {
         var list = new ListTag();
         int last = contents.size() - 1;
         while (last >= 0 && contents.get(last).isEmpty()) last--;
-        for (int i = 0; i <= last; i++) list.add(contents.get(i).isEmpty() ? new CompoundTag() : contents.get(i).save(new CompoundTag()));
+        for (int i = 0; i <= last && i < MAX_SLOTS; i++) list.add(contents.get(i).isEmpty() ? new CompoundTag() : contents.get(i).save(new CompoundTag()));
         CompoundTag tag = bag.getOrCreateTag();
             if (list.isEmpty()) tag.remove(CONTENTS);
             else tag.put(CONTENTS, list);
@@ -47,6 +50,6 @@ public final class UltimateCarroteStorage {
 
     public static int rows(List<ItemStack> contents) {
         long count = contents.stream().filter(s -> !s.isEmpty()).count();
-        return Math.max(2, (int) (count / 9) + 2);
+        return Math.min(6, Math.max(2, (int) (Math.min(MAX_SLOTS, count) / 9) + 2));
     }
 }
