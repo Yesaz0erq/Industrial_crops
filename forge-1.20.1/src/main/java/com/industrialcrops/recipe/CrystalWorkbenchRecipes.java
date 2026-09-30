@@ -60,7 +60,7 @@ public final class CrystalWorkbenchRecipes {
             case 'W' -> new ItemStack(Items.CRAFTING_TABLE);
             case 'E' -> new ItemStack(Items.ENDER_PEARL);
             case 'H' -> new ItemStack(Items.HOPPER);
-            case 'R' -> new ItemStack(Items.REPEATER);
+            case 'R' -> new ItemStack(Items.COMPARATOR);
             case 'S' -> new ItemStack(Items.REDSTONE);
             case 'O' -> new ItemStack(Items.DROPPER);
             default -> ItemStack.EMPTY;
