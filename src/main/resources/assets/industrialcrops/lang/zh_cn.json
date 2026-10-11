@@ -200,7 +200,7 @@
   "gui.industrialcrops.incinerator.burning": "正在焚烧残渣",
   "gui.industrialcrops.incinerator.waiting": "等待残渣或燃料",
   "gui.industrialcrops.incinerator.fuel": "剩余燃烧：%s 刻",
-  "gui.industrialcrops.bio_generator.hint": "每个生物质转化耗时 8 秒；残渣满时停止工作",
+  "gui.industrialcrops.bio_generator.hint": "种子 25 FE；作物 50 FE；作物块 3,200 FE；每个转化耗时 8 秒",
   "gui.industrialcrops.gold_energy_storage_cabinet.hint": "兼容 FE 的金质能量储柜，容量 10,000,000 FE，可配置各面的能量输出",
   "gui.industrialcrops.incinerator.hint": "使用任意炉燃料销毁相邻或管道连接发电机的残渣",
   "block.industrialcrops.basic_energy_cable": "基础线缆",
@@ -614,5 +614,9 @@
   "gui.industrialcrops.breeder.status_7": "产物缓冲已满",
   "gui.industrialcrops.breeder.status_8": "范围内没有可处死的成年牲畜",
   "gui.industrialcrops.breeder.status_9": "处死被阻止 · 未消耗电浆",
-  "gui.industrialcrops.breeder.status_10": "处死完成 · 消耗 100 mB 电浆"
+  "gui.industrialcrops.breeder.status_10": "处死完成 · 消耗 100 mB 电浆",
+  "item.industrialcrops.crystal_steel_upgrade_kit": "水晶钢升级套件",
+  "block.industrialcrops.bio_energy_reaction_device": "生物能反应设备",
+  "tooltip.industrialcrops.function.bio_energy_reaction_device": "水晶钢强化的生物能设备。保留原有库存与能量，并将每份燃料产能提高为两倍。",
+  "tooltip.industrialcrops.function.crystal_steel_upgrade_kit": "右键生物能发电设备，将其升级为生物能反应设备。"
 }

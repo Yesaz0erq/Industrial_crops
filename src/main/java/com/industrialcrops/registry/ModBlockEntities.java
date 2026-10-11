@@ -156,7 +156,7 @@ public final class ModBlockEntities {
                     .of(ItemNetworkTerminalBlockEntity::new, ModBlocks.ITEM_NETWORK_TERMINAL.get()).build(null));
     public static final RegistryObject<BlockEntityType<BioEnergyGeneratorBlockEntity>> BIO_ENERGY_GENERATOR =
             BLOCK_ENTITIES.register("bio_energy_generation_device", () -> BlockEntityType.Builder
-                    .of(BioEnergyGeneratorBlockEntity::new, ModBlocks.BIO_ENERGY_GENERATOR.get()).build(null));
+                    .of(BioEnergyGeneratorBlockEntity::new, ModBlocks.BIO_ENERGY_GENERATOR.get(), ModBlocks.BIO_ENERGY_REACTOR.get()).build(null));
     public static final RegistryObject<BlockEntityType<EnergyBatteryBlockEntity>> ENERGY_BATTERY =
             BLOCK_ENTITIES.register("gold_energy_storage_cabinet", () -> BlockEntityType.Builder
                     .of(EnergyBatteryBlockEntity::new, ModBlocks.ENERGY_BATTERY.get()).build(null));

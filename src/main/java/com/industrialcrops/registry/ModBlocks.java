@@ -30,6 +30,7 @@ import com.industrialcrops.block.DigitizedItemCopierBlock;
 import com.industrialcrops.block.MatterReconstructorBlock;
 import com.industrialcrops.block.ItemNetworkTerminalBlock;
 import com.industrialcrops.block.BioEnergyGeneratorBlock;
+import com.industrialcrops.block.BioEnergyReactorBlock;
 import com.industrialcrops.block.EnergyBatteryBlock;
 import com.industrialcrops.block.ResidueIncineratorBlock;
 import com.industrialcrops.block.ElectricFurnaceBlock;
@@ -134,6 +135,8 @@ public final class ModBlocks {
             () -> new ItemNetworkTerminalBlock(machineProperties().mapColor(MapColor.GOLD)));
     public static final RegistryObject<Block> BIO_ENERGY_GENERATOR = BLOCKS.register("bio_energy_generation_device",
             () -> new BioEnergyGeneratorBlock(machineProperties().mapColor(MapColor.GOLD)));
+    public static final RegistryObject<Block> BIO_ENERGY_REACTOR = BLOCKS.register("bio_energy_reaction_device",
+            () -> new BioEnergyReactorBlock(machineProperties().mapColor(MapColor.COLOR_PURPLE)));
     public static final RegistryObject<Block> ENERGY_BATTERY = BLOCKS.register("gold_energy_storage_cabinet",
             () -> new EnergyBatteryBlock(machineProperties().mapColor(MapColor.GOLD)));
     public static final RegistryObject<Block> RESIDUE_INCINERATOR = BLOCKS.register("incinerator",

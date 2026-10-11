@@ -2,6 +2,7 @@ package com.industrialcrops.block.entity;
 
 import com.industrialcrops.basic_pipe.PipeTransferUtil;
 import com.industrialcrops.registry.ModItems;
+import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.screen.BioEnergyMenu;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
 import com.industrialcrops.machine.MachineInventoryHelper;
@@ -38,15 +39,18 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     public enum Kind { GENERATOR, BATTERY, INCINERATOR }
     public enum EnergySideMode { OUTPUT, INPUT, NONE }
     public enum FuelTier {
-        NONE(0, 0), SEED(10_000, 50), CROP(40_000, 100), BLOCK_CROP(160_000, 250);
+        NONE(0, 0), SEED(25, 50), CROP(50, 100), BLOCK_CROP(3_200, 250);
         final int energy;
         final int residue;
         FuelTier(int energy, int residue) { this.energy = energy; this.residue = residue; }
+        public int energy() { return energy; }
+        public int residue() { return residue; }
     }
 
     public static final int PROCESS_TICKS = 160;
     public static final int RESIDUE_CAPACITY = 1_000;
     public static final int GENERATOR_CAPACITY = 1_000_000;
+    public static final int REACTOR_CAPACITY = 4_000_000;
     public static final int BATTERY_CAPACITY = 10_000_000;
     private static final int TRANSFER_RATE = 50_000;
     private static final int ALL_SIDES = (1 << Direction.values().length) - 1;
@@ -79,7 +83,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
                 case 8 -> burnTime;
                 case 9 -> burnTimeTotal;
                 case 10 -> kind.ordinal();
-                case 11 -> currentTier().energy;
+                case 11 -> currentGenerationEnergy();
                 case 12 -> energyOutputSides;
                 case 13 -> energyInputSides;
                 default -> 0;
@@ -104,7 +108,9 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     protected BioEnergyMachineBlockEntity(BlockEntityType<?> type, Kind kind, BlockPos pos, BlockState state) {
         super(type, pos, state);
         this.kind = kind;
-        int capacity = kind == Kind.BATTERY ? BATTERY_CAPACITY : kind == Kind.GENERATOR ? GENERATOR_CAPACITY : 0;
+        int capacity = kind == Kind.BATTERY ? BATTERY_CAPACITY
+                : kind == Kind.GENERATOR && state.is(ModBlocks.BIO_ENERGY_REACTOR.get()) ? REACTOR_CAPACITY
+                : kind == Kind.GENERATOR ? GENERATOR_CAPACITY : 0;
         int receive = kind == Kind.BATTERY ? TRANSFER_RATE : 0;
         int extract = kind == Kind.INCINERATOR ? 0 : TRANSFER_RATE;
         energy = new TrackedEnergyStorage(capacity, receive, extract);
@@ -141,7 +147,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
         FuelTier tier = classifyFuel(input);
         boolean canRun = tier != FuelTier.NONE
                 && residue < RESIDUE_CAPACITY
-                && energy.getMaxEnergyStored() - energy.getEnergyStored() >= tier.energy;
+                && energy.getMaxEnergyStored() - energy.getEnergyStored() >= generationEnergy(tier);
         if (!canRun) {
             if (progress != 0) { progress = 0; setChanged(); }
             return;
@@ -150,7 +156,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
                 kind == Kind.GENERATOR ? UPGRADE_SLOT_COUNT : 0, PROCESS_TICKS);
         if (progress >= PROCESS_TICKS) {
             inventory.extractItem(0, 1, false);
-            energy.receiveInternal(tier.energy);
+            energy.receiveInternal(generationEnergy(tier));
             residue = Math.min(RESIDUE_CAPACITY, residue + tier.residue);
             progress = 0;
         }
@@ -218,7 +224,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     public static FuelTier classifyFuel(ItemStack stack) {
         if (stack.isEmpty()) return FuelTier.NONE;
         if (isBlockCrop(stack)) return FuelTier.BLOCK_CROP;
-        if (stack.is(ItemTags.VILLAGER_PLANTABLE_SEEDS)) return FuelTier.SEED;
+        if (stack.is(ItemTags.VILLAGER_PLANTABLE_SEEDS) || isModSeed(stack)) return FuelTier.SEED;
         if (isCrop(stack)) return FuelTier.CROP;
         return FuelTier.NONE;
     }
@@ -237,7 +243,9 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
 
     private static boolean isCrop(ItemStack stack) {
         if (stack.is(ModItems.INDUSTRIAL_CARROT.get()) || stack.is(ModItems.INDUSTRIAL_POTATO.get())
-                || stack.is(ModItems.INDUSTRIAL_WHEAT.get())) return true;
+                || stack.is(ModItems.INDUSTRIAL_WHEAT.get()) || stack.is(ModItems.PRISM_POD.get())
+                || stack.is(ModItems.EMBERCOIL.get()) || stack.is(ModItems.STARBLOOM.get())
+                || stack.is(ModItems.NEONBULB.get()) || stack.is(ModItems.FLUXSTALK.get())) return true;
         if (stack.getItem() instanceof BlockItem blockItem
                 && blockItem.getBlock().defaultBlockState().is(BlockTags.SAPLINGS)) return true;
         return stack.is(Items.WHEAT) || stack.is(Items.CARROT) || stack.is(Items.POTATO)
@@ -253,6 +261,38 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     private boolean isItemValid(ItemStack stack) {
         return kind == Kind.GENERATOR ? classifyFuel(stack) != FuelTier.NONE
                 : kind == Kind.INCINERATOR && burnTime(stack) > 0;
+    }
+
+    private static boolean isModSeed(ItemStack stack) {
+        return stack.is(ModItems.PRISM_POD_SEEDS.get()) || stack.is(ModItems.EMBERCOIL_SEEDS.get())
+                || stack.is(ModItems.STARBLOOM_SEEDS.get()) || stack.is(ModItems.NEONBULB_SEEDS.get())
+                || stack.is(ModItems.FLUXSTALK_SEEDS.get());
+    }
+
+    private int generationEnergy(FuelTier tier) {
+        return isReactor() ? Math.multiplyExact(tier.energy, 2) : tier.energy;
+    }
+
+    private int generationEnergyValue(FuelTier tier) {
+        return isReactor() ? Math.multiplyExact(tier.energy, 2) : tier.energy;
+    }
+
+    public boolean isReactor() {
+        return level != null && level.getBlockState(worldPosition).is(ModBlocks.BIO_ENERGY_REACTOR.get());
+    }
+
+    public void copyUpgradeStateTo(BioEnergyMachineBlockEntity target) {
+        for (int slot = 0; slot < inventory.getSlots() && slot < target.inventory.getSlots(); slot++) {
+            target.inventory.setStackInSlot(slot, inventory.getStackInSlot(slot).copy());
+        }
+        target.energy.setStored(energy.getEnergyStored());
+        target.progress = progress;
+        target.residue = residue;
+        target.burnTime = burnTime;
+        target.burnTimeTotal = burnTimeTotal;
+        target.energyOutputSides = energyOutputSides;
+        target.energyInputSides = energyInputSides;
+        target.setChanged();
     }
 
     private static int burnTime(ItemStack stack) {
@@ -273,6 +313,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     public ItemStackHandler getInventory() { return inventory; }
     public ContainerData getData() { return data; }
     public FuelTier currentTier() { return kind == Kind.GENERATOR ? classifyFuel(inventory.getStackInSlot(0)) : FuelTier.NONE; }
+    public int currentGenerationEnergy() { return generationEnergyValue(currentTier()); }
     public boolean toggleEnergyOutput(Direction direction) {
         energyOutputSides ^= 1 << direction.ordinal();
         setChanged();

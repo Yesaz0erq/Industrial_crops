@@ -200,7 +200,7 @@
   "gui.industrialcrops.incinerator.burning": "Incinerating residue",
   "gui.industrialcrops.incinerator.waiting": "Waiting for residue or fuel",
   "gui.industrialcrops.incinerator.fuel": "Burn time: %s ticks",
-  "gui.industrialcrops.bio_generator.hint": "Each biomass item takes 8 seconds; processing stops when residue is full",
+  "gui.industrialcrops.bio_generator.hint": "Seeds: 25 FE; crops: 50 FE; crop blocks: 3,200 FE; 8 seconds per conversion",
   "gui.industrialcrops.gold_energy_storage_cabinet.hint": "Gold FE storage cabinet with 10,000,000 FE capacity and configurable outputs",
   "gui.industrialcrops.incinerator.hint": "Burns residue from adjacent or pipe-connected generators using any furnace fuel",
   "block.industrialcrops.basic_energy_cable": "Basic Energy Cable",
@@ -614,5 +614,9 @@
   "gui.industrialcrops.breeder.status_7": "Output buffer full",
   "gui.industrialcrops.breeder.status_8": "No eligible adults to cull",
   "gui.industrialcrops.breeder.status_9": "Culling blocked: no plasma consumed",
-  "gui.industrialcrops.breeder.status_10": "Culled one adult: 100 mB plasma"
+  "gui.industrialcrops.breeder.status_10": "Culled one adult: 100 mB plasma",
+  "item.industrialcrops.crystal_steel_upgrade_kit": "Crystal Steel Upgrade Kit",
+  "block.industrialcrops.bio_energy_reaction_device": "Bio-Energy Reaction Device",
+  "tooltip.industrialcrops.function.bio_energy_reaction_device": "Crystal-steel bio-energy upgrade. Keeps inventory and stored energy, and doubles fuel output.",
+  "tooltip.industrialcrops.function.crystal_steel_upgrade_kit": "Right-click a Bio-Energy Generation Device to upgrade it to a Bio-Energy Reaction Device."
 }

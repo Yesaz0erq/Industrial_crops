@@ -144,6 +144,8 @@ public final class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> GOLD_UPGRADE_KIT = ITEMS.register("gold_upgrade_kit",
             () -> new AdvancedManipulatorUpgradeItem(new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.RARE)));
+    public static final RegistryObject<Item> CRYSTAL_STEEL_UPGRADE_KIT = ITEMS.register("crystal_steel_upgrade_kit",
+            () -> new Item(new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.EPIC)));
     public static final RegistryObject<Item> MINING_UPGRADE_COMPONENT = ITEMS.register("mining_upgrade_component",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.EPIC)));
     public static final RegistryObject<Item> SPEED_COMPONENT_1 = registerSpeedUpgrade("speed_component_1");
@@ -208,6 +210,7 @@ public final class ModItems {
     public static final RegistryObject<BlockItem> MATTER_RECONSTRUCTOR = registerBlockItem("matter_reconstruction_device", ModBlocks.MATTER_RECONSTRUCTOR);
     public static final RegistryObject<BlockItem> ITEM_NETWORK_TERMINAL = registerBlockItem("item_network_management_terminal", ModBlocks.ITEM_NETWORK_TERMINAL);
     public static final RegistryObject<BlockItem> BIO_ENERGY_GENERATOR = registerBlockItem("bio_energy_generation_device", ModBlocks.BIO_ENERGY_GENERATOR);
+    public static final RegistryObject<BlockItem> BIO_ENERGY_REACTOR = registerBlockItem("bio_energy_reaction_device", ModBlocks.BIO_ENERGY_REACTOR);
     public static final RegistryObject<BlockItem> ENERGY_BATTERY = registerBlockItem("gold_energy_storage_cabinet", ModBlocks.ENERGY_BATTERY);
     public static final RegistryObject<BlockItem> RESIDUE_INCINERATOR = registerBlockItem("incinerator", ModBlocks.RESIDUE_INCINERATOR);
     public static final RegistryObject<BlockItem> ELECTRIC_FURNACE = registerBlockItem("electric_furnace", ModBlocks.ELECTRIC_FURNACE);
