@@ -1,11 +1,15 @@
 package com.industrialcrops.block;
 
 import com.industrialcrops.block.entity.BioEnergyMachineBlockEntity;
+import com.industrialcrops.registry.ModBlocks;
+import com.industrialcrops.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -45,13 +49,28 @@ public abstract class BioEnergyMachineBlock extends BaseEntityBlock {
     }
     @Override public InteractionResult use(
             BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (state.is(ModBlocks.BIO_ENERGY_GENERATOR.get())
+                && player.getItemInHand(hand).is(ModItems.CRYSTAL_STEEL_UPGRADE_KIT.get())) {
+            if (!level.isClientSide() && level.getBlockEntity(pos) instanceof BioEnergyMachineBlockEntity oldMachine) {
+                BlockState upgraded = ModBlocks.BIO_ENERGY_REACTOR.get().defaultBlockState()
+                        .setValue(FACING, state.getValue(FACING));
+                level.setBlock(pos, upgraded, Block.UPDATE_ALL);
+                if (level.getBlockEntity(pos) instanceof BioEnergyMachineBlockEntity newMachine) {
+                    oldMachine.copyUpgradeStateTo(newMachine);
+                }
+                level.playSound(null, pos, SoundEvents.SMITHING_TABLE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                if (!player.getAbilities().instabuild) player.getItemInHand(hand).shrink(1);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide());
+        }
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof BioEnergyMachineBlockEntity machine) {
             net.minecraftforge.network.NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer) player,machine, buffer -> buffer.writeBlockPos(pos));
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     }
     @Override public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
-        if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof BioEnergyMachineBlockEntity machine) {
+        boolean upgrading = state.is(ModBlocks.BIO_ENERGY_GENERATOR.get()) && newState.is(ModBlocks.BIO_ENERGY_REACTOR.get());
+        if (!state.is(newState.getBlock()) && !upgrading && level.getBlockEntity(pos) instanceof BioEnergyMachineBlockEntity machine) {
             for (int slot = 0; slot < machine.getInventory().getSlots(); slot++) {
                 Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), machine.getInventory().getStackInSlot(slot));
             }

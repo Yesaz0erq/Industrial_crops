@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "industrialcrops:tycon_ingot"
+    }
+  },
+  "result": {
+    "id": "industrialcrops:tycon_block",
+    "count": 1
+  }
+}

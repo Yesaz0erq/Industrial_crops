@@ -1,0 +1,134 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "industrialcrops:block/launch_gantry_frame",
+    "side": "industrialcrops:block/launch_gantry_frame",
+    "top": "industrialcrops:block/launch_gantry_frame_top"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        16,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        14.5
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        1.5
+      ],
+      "to": [
+        1.5,
+        16,
+        14.5
+      ],
+      "faces": {
+        "west": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        14.5,
+        0,
+        1.5
+      ],
+      "to": [
+        15,
+        16,
+        14.5
+      ],
+      "faces": {
+        "west": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        15.5,
+        1
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "up": {
+          "texture": "#top",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#top"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        0.5,
+        15
+      ],
+      "faces": {
+        "down": {
+          "texture": "#top",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#top"
+        }
+      }
+    }
+  ]
+}

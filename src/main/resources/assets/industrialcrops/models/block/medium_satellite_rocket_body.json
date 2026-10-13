@@ -1,0 +1,127 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "industrialcrops:block/rocket_hull",
+    "hull": "industrialcrops:block/rocket_hull",
+    "engine": "industrialcrops:block/rocket_engine",
+    "nozzle": "industrialcrops:block/rocket_nozzle",
+    "fin": "industrialcrops:block/rocket_fin",
+    "band": "industrialcrops:block/rocket_band_medium",
+    "window": "industrialcrops:block/rocket_window",
+    "tip": "industrialcrops:block/rocket_tip",
+    "solar": "industrialcrops:block/rocket_solar"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hull"
+        },
+        "south": {
+          "texture": "#hull"
+        },
+        "east": {
+          "texture": "#hull"
+        },
+        "west": {
+          "texture": "#hull"
+        }
+      }
+    },
+    {
+      "from": [
+        4.75,
+        2,
+        4.75
+      ],
+      "to": [
+        11.25,
+        3.5,
+        11.25
+      ],
+      "faces": {
+        "north": {
+          "texture": "#band",
+          "uv": [
+            0,
+            4,
+            16,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#band",
+          "uv": [
+            0,
+            4,
+            16,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#band",
+          "uv": [
+            0,
+            4,
+            16,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#band",
+          "uv": [
+            0,
+            4,
+            16,
+            12
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        8,
+        4.8
+      ],
+      "to": [
+        9,
+        11,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#window"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        8,
+        11
+      ],
+      "to": [
+        9,
+        11,
+        11.2
+      ],
+      "faces": {
+        "south": {
+          "texture": "#window"
+        }
+      }
+    }
+  ]
+}

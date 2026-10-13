@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "I I",
+    " X ",
+    "I I"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "X": {
+      "item": "industrialcrops:crystal_ingot"
+    }
+  },
+  "result": {
+    "count": 4,
+    "item": "industrialcrops:launch_gantry_frame"
+  }
+}

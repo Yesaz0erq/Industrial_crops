@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialcrops:green_iron_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "industrialcrops:green_iron_ingot"
+  }
+}

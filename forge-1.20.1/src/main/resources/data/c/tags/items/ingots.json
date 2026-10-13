@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "industrialcrops:green_iron_ingot",
+    "industrialcrops:inv_ingot",
+    "industrialcrops:tycon_ingot",
+    "industrialcrops:tycon_pressurized_ingot"
+  ]
+}

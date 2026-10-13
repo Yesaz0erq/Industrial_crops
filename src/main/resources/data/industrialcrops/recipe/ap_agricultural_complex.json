@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "PCP",
+    "SAS",
+    "PFP"
+  ],
+  "key": {
+    "P": {
+      "item": "industrialcrops:ap_structural_steel_plate"
+    },
+    "C": {
+      "item": "industrialcrops:ap_steel_casing"
+    },
+    "S": {
+      "item": "industrialcrops:speed_component_2"
+    },
+    "A": {
+      "item": "industrialcrops:automatic_sowing_device"
+    },
+    "F": {
+      "item": "industrialcrops:rapid_growth_fertilizer_bag"
+    }
+  },
+  "result": {
+    "id": "industrialcrops:ap_agricultural_complex",
+    "count": 1
+  }
+}

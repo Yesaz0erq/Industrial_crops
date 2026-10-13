@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "industrialcrops:green_iron_ingot"
+    }
+  },
+  "result": {
+    "id": "industrialcrops:green_iron_block",
+    "count": 1
+  }
+}

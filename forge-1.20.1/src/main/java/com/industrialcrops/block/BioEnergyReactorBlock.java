@@ -1,0 +1,18 @@
+package com.industrialcrops.block;
+
+import com.industrialcrops.block.entity.BioEnergyGeneratorBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+
+/** Crystal-steel reactor upgrade of the bio-energy generation device. */
+public final class BioEnergyReactorBlock extends BioEnergyMachineBlock {
+    public BioEnergyReactorBlock(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new BioEnergyGeneratorBlockEntity(pos, state);
+    }
+}

@@ -1,5 +1,4 @@
 package com.industrialcrops;
-
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModCreativeTabs;
@@ -21,15 +20,14 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 @Mod(IndustrialCrops.MOD_ID)
 public final class IndustrialCrops {
     public static final String MOD_ID = "industrialcrops";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-
     public IndustrialCrops() {
         net.minecraft.world.item.crafting.ShapedRecipe.setCraftingSize(5, 5);
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        net.minecraftforge.fml.ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, IndustrialCropsConfig.SPEC);
         ModBlocks.BLOCKS.register(modEventBus);
         ModEntities.ENTITY_TYPES.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
@@ -45,23 +43,20 @@ public final class IndustrialCrops {
         modEventBus.addListener(EventPriority.LOWEST, this::registerCapabilities);
         modEventBus.addListener(this::registerEntityAttributes);
         modEventBus.addListener(this::commonSetup);
-
         LOGGER.info("Loaded Industrial Crops Forge 1.20.1 branch.");
     }
-
     private void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
+            com.industrialcrops.machine.DimensionUpgradeHelper.registerTicketValidation();
             com.industrialcrops.registry.ModPotions.brewing();
             com.industrialcrops.registry.ModCauldronInteractions.bootstrap();
             ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(
                     ModBlocks.COMET_SAPLING.getId(), ModBlocks.POTTED_COMET_SAPLING);
         });
     }
-
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
         com.industrialcrops.registry.ModCapabilities.register(event);
     }
-
     private void registerEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(
                 ModEntities.BROWN_CREATE_SLIME.get(),

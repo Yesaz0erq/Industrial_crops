@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "industrialcrops:ap_structural_steel_block",
+    "industrialcrops:inv_block",
+    "industrialcrops:tycon_block",
+    "industrialcrops:green_iron_block"
+  ]
+}

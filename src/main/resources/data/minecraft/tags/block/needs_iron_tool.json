@@ -6,6 +6,14 @@
     "industrialcrops:wireless_logistics_transfer_device",
     "industrialcrops:crafting_processing_device",
     "industrialcrops:terrain_processing_device",
-    "industrialcrops:automatic_animal_breeder"
+    "industrialcrops:automatic_animal_breeder",
+    "industrialcrops:ap_structural_steel_block",
+    "industrialcrops:inv_block",
+    "industrialcrops:tycon_block",
+    "industrialcrops:green_iron_block",
+    "industrialcrops:ap_steel_casing",
+    "industrialcrops:ap_steel_frame",
+    "industrialcrops:ap_agricultural_complex",
+    "industrialcrops:ap_livestock_ranch"
   ]
 }

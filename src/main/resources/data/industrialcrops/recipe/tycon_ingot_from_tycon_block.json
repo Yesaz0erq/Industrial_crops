@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialcrops:tycon_block"
+    }
+  ],
+  "result": {
+    "id": "industrialcrops:tycon_ingot",
+    "count": 9
+  }
+}

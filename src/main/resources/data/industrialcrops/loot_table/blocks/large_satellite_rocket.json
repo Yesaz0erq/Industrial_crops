@@ -1,0 +1,45 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "industrialcrops:large_satellite_rocket",
+          "functions": [
+            {
+              "function": "minecraft:copy_custom_data",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "source": "SatelliteDurability",
+                  "target": "SatelliteDurability",
+                  "op": "replace"
+                },
+                {
+                  "source": "SatelliteMaxDurability",
+                  "target": "SatelliteMaxDurability",
+                  "op": "replace"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "industrialcrops:large_satellite_rocket",
+          "properties": {
+            "part": "0"
+          }
+        },
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ],
+  "random_sequence": "industrialcrops:blocks/large_satellite_rocket"
+}

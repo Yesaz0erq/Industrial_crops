@@ -6,7 +6,7 @@
       "item": "industrialcrops:fusion_melon"
     },
     {
-      "item": "carrote:stable_matter_ingot"
+      "item": "minecraft:netherite_ingot"
     }
   ],
   "result": {
@@ -14,3 +14,4 @@
     "id": "industrialcrops:fusion_ingot"
   }
 }
+

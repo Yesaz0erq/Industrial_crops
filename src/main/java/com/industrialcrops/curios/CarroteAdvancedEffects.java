@@ -1,53 +1,97 @@
 package com.industrialcrops.curios;
 
+import java.util.ArrayList;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent.Post;
 
 public final class CarroteAdvancedEffects {
-    public static final String ABSORPTION_READY = "carrote_curios:absorption_ready";
+   public static final String ABSORPTION_READY = "carrote_curios:absorption_ready";
 
-    public static int armor(LivingEntity entity, int armor) {
-        long total = armor + (CarroteCuriosEffects.has(entity, CarroteCuriosItems.HARD) ? 4L : 0L);
-        if (CarroteCuriosEffects.has(entity, CarroteCuriosItems.UNBREAKABLE)) total *= 2L;
-        return (int)Math.min(Integer.MAX_VALUE, total);
-    }
+   public static int armor(LivingEntity var0, int var1) {
+      long var2 = (long)var1 + (CarroteCuriosEffects.has(var0, CarroteCuriosItems.HARD) ? 4L : 0L);
+      if (CarroteCuriosEffects.has(var0, CarroteCuriosItems.UNBREAKABLE)) {
+         var2 *= 2L;
+      }
 
-    @SubscribeEvent
-    public static void tick(PlayerTickEvent.Post event) {
-        if (!(event.getEntity() instanceof ServerPlayer player) || !player.isAlive()
-                || !CarroteCuriosEffects.has(player, CarroteCuriosItems.RESISTANCE)) return;
-        long now = player.level().getGameTime();
-        if (player.getPersistentData().getLong(ABSORPTION_READY) > now) return;
-        player.getPersistentData().putLong(ABSORPTION_READY, now + 600);
-        var current = player.getEffect(MobEffects.ABSORPTION);
-        // Absorption V grants 20 health points. Never overwrite a stronger potion.
-        if (current == null || current.getAmplifier() <= 4) {
-            player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 600, 4, true, false, true));
-            player.setAbsorptionAmount(Math.max(player.getAbsorptionAmount(), 20F));
-        }
-    }
+      return (int)Math.min(2147483647L, var2);
+   }
 
-    /** Called only after death cancellation/totem checks, before equipment drops are generated. */
-    public static void stealEquipment(LivingEntity victim, DamageSource source) {
-        if (!(source.getEntity() instanceof ServerPlayer killer) || killer == victim
-                || !CarroteCuriosEffects.has(killer, CarroteCuriosItems.THIEF)) return;
-        long now = victim.level().getGameTime();
-        if (victim.getPersistentData().contains("carrote_curios:stolen_at")
-                && victim.getPersistentData().getLong("carrote_curios:stolen_at") == now) return;
-        victim.getPersistentData().putLong("carrote_curios:stolen_at", now);
-        var slots = new java.util.ArrayList<EquipmentSlot>();
-        for (var slot : EquipmentSlot.values()) if (!victim.getItemBySlot(slot).isEmpty()) slots.add(slot);
-        if (slots.isEmpty()) return;
-        var slot = slots.get(killer.getRandom().nextInt(slots.size()));
-        var equipped = victim.getItemBySlot(slot);
-        var stolen = equipped.split(1);
-        victim.setItemSlot(slot, equipped);
-        if (!killer.getInventory().add(stolen)) killer.drop(stolen, false);
-    }
+   @SubscribeEvent
+   public static void tick(Post var0) {
+      if (var0.getEntity() instanceof ServerPlayer var1 && var1.isAlive() && CarroteCuriosEffects.has(var1, CarroteCuriosItems.RESISTANCE)) {
+         long var5 = var1.level().getGameTime();
+         if (var1.getPersistentData().getLong("carrote_curios:absorption_ready") > var5) {
+            return;
+         }
+
+         var1.getPersistentData().putLong("carrote_curios:absorption_ready", var5 + 600L);
+         MobEffectInstance var4 = var1.getEffect(MobEffects.ABSORPTION);
+         if (var4 == null || var4.getAmplifier() <= 4) {
+            var1.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 600, 4, true, false, true));
+            var1.setAbsorptionAmount(Math.max(var1.getAbsorptionAmount(), 20.0F));
+         }
+
+         return;
+      }
+   }
+
+   @SubscribeEvent
+   public static void expel(net.neoforged.neoforge.event.entity.living.LivingDamageEvent.Post var0) {
+      LivingEntity var1 = var0.getEntity();
+      if (!var1.level().isClientSide() && !(var0.getNewDamage() <= 0.0F) && !var1.getActiveEffects().isEmpty()) {
+         if (!(var0.getSource().getEntity() instanceof LivingEntity var2) || var2 == var1 || !CarroteCuriosEffects.has(var2, CarroteCuriosItems.EXPEL)) {
+            return;
+         }
+
+         if (var1.removeAllEffects()) {
+            if (var1.level() instanceof ServerLevel var5) {
+               var5.sendParticles(ParticleTypes.WAX_OFF, var1.getX(), var1.getY() + (double)var1.getBbHeight() * 0.6, var1.getZ(), 12, 0.35, 0.4, 0.35, 0.02);
+               var5.playSound(null, var1.blockPosition(), SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 0.6F, 1.6F);
+            }
+         }
+      }
+   }
+
+   public static void stealEquipment(LivingEntity var0, DamageSource var1) {
+      if (var1.getEntity() instanceof ServerPlayer var2 && var2 != var0 && CarroteCuriosEffects.has(var2, CarroteCuriosItems.THIEF)) {
+         long var10 = var0.level().getGameTime();
+         if (var0.getPersistentData().contains("carrote_curios:stolen_at") && var0.getPersistentData().getLong("carrote_curios:stolen_at") == var10) {
+            return;
+         }
+
+         var0.getPersistentData().putLong("carrote_curios:stolen_at", var10);
+         ArrayList var5 = new ArrayList();
+
+         for (EquipmentSlot var9 : EquipmentSlot.values()) {
+            if (!var0.getItemBySlot(var9).isEmpty()) {
+               var5.add(var9);
+            }
+         }
+
+         if (var5.isEmpty()) {
+            return;
+         }
+
+         EquipmentSlot var11 = (EquipmentSlot)var5.get(var2.getRandom().nextInt(var5.size()));
+         ItemStack var12 = var0.getItemBySlot(var11);
+         ItemStack var13 = var12.split(1);
+         var0.setItemSlot(var11, var12);
+         if (!var2.getInventory().add(var13)) {
+            var2.drop(var13, false);
+         }
+
+         return;
+      }
+   }
 }

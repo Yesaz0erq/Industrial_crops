@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialcrops:ap_structural_steel_block"
+    }
+  ],
+  "result": {
+    "id": "industrialcrops:tycon_pressurized_ingot",
+    "count": 9
+  }
+}

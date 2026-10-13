@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "industrialcrops:block/ap_agricultural_complex_front",
+    "side": "industrialcrops:block/ap_steel_casing",
+    "top": "industrialcrops:block/ap_structural_steel_block"
+  }
+}

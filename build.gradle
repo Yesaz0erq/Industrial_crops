@@ -19,24 +19,6 @@ def modDescription = project.mod_description
 def minecraftVersion = project.minecraft_version
 def neoForgeVersion = project.neoforge_version
 
-tasks.named('processResources').configure {
-    exclude(
-            'assets/industrialcrops/textures/entity/brown_create_slime.png',
-            'assets/industrialcrops/textures/entity/gray_gear_slime.png',
-            'assets/industrialcrops/textures/entity/gray_gear_slime/create_brass.png',
-            'assets/industrialcrops/textures/entity/gray_gear_slime/dark_iron.png',
-            'assets/industrialcrops/textures/entity/gray_gear_slime/dark_mechanism.png',
-            'assets/industrialcrops/textures/entity/gray_gear_slime/gray_highlight.png',
-            'assets/industrialcrops/textures/entity/gray_gear_slime/gray_slime.png',
-            'assets/industrialcrops/textures/entity/gray_gear_slime/slime_face.png',
-            'assets/industrialcrops/textures/entity/gray_gear_slime/slime_highlight.png',
-            'assets/industrialcrops/textures/entity/gray_gear_slime/slime_shell.png',
-            'assets/industrialcrops/textures/entity/gray_gear_slime/steel_gear.png',
-            'assets/industrialcrops/textures/entity/golden_redstone_lamp_slime/golden_gel.png',
-            'assets/industrialcrops/textures/entity/golden_redstone_lamp_slime/redstone_lamp.png'
-    )
-}
-
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(21)
     withSourcesJar()

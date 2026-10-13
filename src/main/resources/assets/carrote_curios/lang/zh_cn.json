@@ -59,5 +59,7 @@
   "tooltip.carrote_curios.breach_carrote": "攻击无视盾牌与功能性格挡，以自身攻击伤害击中目标。",
   "item.carrote_curios.armor_piercing_carrote": "穿甲罗贝",
   "tooltip.carrote_curios.armor_piercing_carrote": "造成伤害时忽略目标 50% 护甲，并穿透抗性。",
-  "tooltip.carrote_curios.ultimate_usage": "右键打开收纳袋。可收纳罗贝，不能放入终极胡罗贝；始终预留一排空格，同类能力不叠加。"
+  "tooltip.carrote_curios.ultimate_usage": "右键打开收纳袋。可收纳罗贝，不能放入终极胡罗贝；始终预留一排空格，同类能力不叠加。",
+  "item.carrote_curios.expel_carrote": "驱散罗贝",
+  "tooltip.carrote_curios.expel_carrote": "攻击时清除目标身上的所有药水效果，无论增益还是减益。"
 }

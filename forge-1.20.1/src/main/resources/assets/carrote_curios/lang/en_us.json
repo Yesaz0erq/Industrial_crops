@@ -59,5 +59,7 @@
   "tooltip.carrote_curios.breach_carrote": "Attacks bypass shields and special blocking abilities, dealing your attack damage.",
   "item.carrote_curios.armor_piercing_carrote": "Armor Piercing Carrote",
   "tooltip.carrote_curios.armor_piercing_carrote": "Your damage ignores 50% of armor and bypasses resistance.",
-  "tooltip.carrote_curios.ultimate_usage": "Right-click to open. Stores Carrotes, excluding Ultimate Carrotes. Always keeps one empty row; identical abilities do not stack."
+  "tooltip.carrote_curios.ultimate_usage": "Right-click to open. Stores Carrotes, excluding Ultimate Carrotes. Always keeps one empty row; identical abilities do not stack.",
+  "item.carrote_curios.expel_carrote": "Expel Carrote",
+  "tooltip.carrote_curios.expel_carrote": "Your attacks strip every potion effect from the target, good or bad."
 }

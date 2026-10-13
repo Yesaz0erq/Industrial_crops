@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "industrialcrops:tycon_pressurized_ingot"
+    }
+  },
+  "result": {
+    "id": "industrialcrops:ap_structural_steel_block",
+    "count": 1
+  }
+}

@@ -4,10 +4,15 @@
     {
       "bonus_rolls": 0.0,
       "conditions": [
-        { "condition": "minecraft:survives_explosion" }
+        {
+          "condition": "minecraft:survives_explosion"
+        }
       ],
       "entries": [
-        { "type": "minecraft:item", "name": "industrialcrops:slime_cultivation_device" }
+        {
+          "type": "minecraft:item",
+          "name": "industrialcrops:slime_cultivation_device"
+        }
       ],
       "rolls": 1.0
     }

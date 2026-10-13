@@ -1,72 +1,178 @@
 package com.industrialcrops.recipe;
-import com.industrialcrops.registry.ModItems;
+import com.industrialcrops.item.SatelliteRocketItem;
 import com.industrialcrops.registry.ModFluids;
-import net.minecraft.world.Container;
-import net.minecraft.world.item.*;
-import net.minecraftforge.fluids.FluidStack;
+import com.industrialcrops.registry.ModItems;
+import java.util.ArrayList;
 import java.util.List;
-
-/** Shared by server crafting and JEI so the displayed and consumed inputs stay identical. */
+import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 public final class CrystalWorkbenchRecipes {
-    public record Recipe(List<ItemStack> inputs, ItemStack output, FluidStack fluid) {
-        public boolean matchesItems(Container grid) {
-            if (grid.getContainerSize()!=25) return false;
-            for(int i=0;i<25;i++) {
-                ItemStack expected=inputs.get(i), actual=grid.getItem(i);
-                if(expected.isEmpty() ? !actual.isEmpty() : !actual.is(expected.getItem())) return false;
+   private static final List<CrystalWorkbenchRecipes.Recipe> RECIPES = List.of(
+      wireless(),
+      logistics(),
+      processor(),
+      terrain(),
+      breeder(),
+      satelliteReceiver(),
+      launchSite(),
+      smallRocket(),
+      mediumRocket(),
+      largeRocket(),
+      satelliteControl()
+   );
+   public static ItemStack assemble(CrystalWorkbenchRecipes.Recipe recipe, Container grid) {
+      ItemStack out = recipe.output().copy();
+      if (!(out.getItem() instanceof SatelliteRocketItem)) {
+         return out;
+      } else {
+         int durability = 0;
+         int max = 0;
+         for (int i = 0; i < grid.getContainerSize(); i++) {
+            ItemStack stack = grid.getItem(i);
+            if (!stack.isEmpty() && stack.isDamageableItem()) {
+               durability += stack.getMaxDamage() - stack.getDamageValue();
+               max += stack.getMaxDamage();
             }
-            return true;
-        }
-        public boolean hasFluid(FluidStack stored) {
-            return fluid.isEmpty() || stored.isFluidEqual(fluid) && stored.getAmount()>=fluid.getAmount();
-        }
-    }
-    private static final List<Recipe> RECIPES = List.of(wireless(), logistics(), processor(), terrain(), breeder());
-    private static Recipe wireless() {
-        String pattern=" C C " + "C E C" + " C C " + " IBI " + "IIDII";
-        var ingredients=new java.util.ArrayList<ItemStack>();
-        for(char key:pattern.toCharArray()) ingredients.add(switch(key) {
-            case 'C' -> new ItemStack(ModItems.COMET_FRUIT.get());
-            case 'E' -> new ItemStack(Items.ENDER_PEARL);
-            case 'I' -> new ItemStack(ModItems.CRYSTAL_INGOT.get());
+         }
+         if (max > 0) {
+            SatelliteRocketItem.setDurability(out, durability, max);
+         }
+         return out;
+      }
+   }
+   private static ItemStack spaceKey(char key) {
+      return switch (key) {
+         case 'B' -> new ItemStack(Items.IRON_BLOCK);
+         case 'C' -> new ItemStack((ItemLike)ModItems.CRYSTAL_STEEL_DEVICE_CASING.get());
+         default -> ItemStack.EMPTY;
+         case 'E' -> new ItemStack(Items.ENDER_PEARL);
+         case 'F' -> new ItemStack(Items.FIREWORK_ROCKET);
+         case 'G' -> new ItemStack((ItemLike)ModItems.GUIDANCE_COMPONENT.get());
+         case 'I' -> new ItemStack((ItemLike)ModItems.CRYSTAL_INGOT.get());
+         case 'K' -> new ItemStack((ItemLike)ModItems.COMET_FRUIT.get());
+         case 'L' -> new ItemStack(Items.DAYLIGHT_DETECTOR);
+         case 'M' -> new ItemStack((ItemLike)ModItems.MINING_UPGRADE_COMPONENT.get());
+         case 'N' -> new ItemStack(Items.NETHER_STAR);
+         case 'P' -> new ItemStack((ItemLike)ModItems.COMPONENT_SUBSTRATE.get());
+         case 'R' -> new ItemStack(Items.COMPARATOR);
+         case 'S' -> new ItemStack(Items.REDSTONE);
+         case 'T' -> new ItemStack(Items.BLAST_FURNACE);
+         case 'U' -> new ItemStack((ItemLike)ModItems.AUTOMATIC_COMPONENT.get());
+         case 'X' -> new ItemStack((ItemLike)ModItems.DIMENSION_UPGRADE_COMPONENT.get());
+         case 'Y' -> new ItemStack((ItemLike)ModItems.ENERGY_CRYSTAL.get());
+         case 'a' -> new ItemStack(Items.IRON_PICKAXE);
+         case 'd' -> new ItemStack(Items.DIAMOND_PICKAXE);
+         case 'f' -> new ItemStack((ItemLike)ModItems.FUSION_INGOT_PICKAXE.get());
+         case 'n' -> new ItemStack(Items.NETHERITE_PICKAXE);
+      };
+   }
+   private static CrystalWorkbenchRecipes.Recipe space(String pattern, Item result, FluidStack fluid) {
+      ArrayList<ItemStack> inputs = new ArrayList<>();
+      for (char key : pattern.toCharArray()) {
+         inputs.add(spaceKey(key));
+      }
+      return new CrystalWorkbenchRecipes.Recipe(List.copyOf(inputs), new ItemStack(result), fluid);
+   }
+   private static CrystalWorkbenchRecipes.Recipe satelliteReceiver() {
+      return space(" EYE I L I IPI ISCSIIIRII", (Item)ModItems.SATELLITE_RECEIVER.get(), FluidStack.EMPTY);
+   }
+   private static CrystalWorkbenchRecipes.Recipe launchSite() {
+      return space("IGKGIIRPRIISCSIIBUBIIITII", (Item)ModItems.LAUNCH_SITE.get(), FluidStack.EMPTY);
+   }
+   private static CrystalWorkbenchRecipes.Recipe smallRocket() {
+      return space("  I   ILI  IPI aIGIdF I F", (Item)ModItems.SMALL_SATELLITE_ROCKET.get(), FluidStack.EMPTY);
+   }
+   private static CrystalWorkbenchRecipes.Recipe mediumRocket() {
+      return space("  I   ILI LIPILdIGInFIYIF", (Item)ModItems.MEDIUM_SATELLITE_ROCKET.get(), FluidStack.EMPTY);
+   }
+   private static CrystalWorkbenchRecipes.Recipe largeRocket() {
+      return space(
+         " IYI LILILLIXILnIGIfFINIF", (Item)ModItems.LARGE_SATELLITE_ROCKET.get(), new FluidStack((Fluid)ModFluids.CONCENTRATED_PLASMA_JUICE.get(), 1000)
+      );
+   }
+   private static CrystalWorkbenchRecipes.Recipe satelliteControl() {
+      return space(" EYE IRLRIIMCMIIGPGIIIUII", (Item)ModItems.SATELLITE_CONTROL_DEVICE.get(), FluidStack.EMPTY);
+   }
+   private static CrystalWorkbenchRecipes.Recipe wireless() {
+      String pattern = " C C C E C C C  IBI IIDII";
+      ArrayList<ItemStack> ingredients = new ArrayList<>();
+      for (char key : pattern.toCharArray()) {
+         ingredients.add(switch (key) {
             case 'B' -> new ItemStack(Items.BEACON);
-            case 'D' -> new ItemStack(ModItems.AUTOMATIC_COMPONENT.get());
-            default -> ItemStack.EMPTY;
-        });
-        return new Recipe(List.copyOf(ingredients), new ItemStack(ModItems.WIRELESS_ENERGY_TRANSMITTER.get()),
-                new FluidStack(ModFluids.CONCENTRATED_PLASMA_JUICE.get(),1000));
-    }
-    private static Recipe logistics() {
-        return dry("     " + " IEI " + " ECE " + " IEI " + "IIKII", ModItems.CRYSTAL_LOGISTICS.get());
-    }
-    private static Recipe breeder() {
-        return dry(" III " + "ISSSI" + "IKOKI" + "IRGRI" + " III ", ModItems.ANIMAL_BREEDER.get());
-    }
-    private static Recipe terrain() {
-        return dry(" III " + "ISDSI" + "IRPRI" + "IKCKI" + " III ", ModItems.TERRAIN_PROCESSOR.get());
-    }
-    private static Recipe processor() {
-        return dry("IIIII" + "IKWKI" + "IKHKI" + "IKCKI" + "IRSRI", ModItems.CRAFTING_PROCESSOR.get());
-    }
-    private static Recipe dry(String pattern, Item result) {
-        var inputs=new java.util.ArrayList<ItemStack>();
-        for(char key:pattern.toCharArray()) inputs.add(switch(key) {
-            case 'I' -> new ItemStack(ModItems.CRYSTAL_INGOT.get());
-            case 'C' -> new ItemStack(ModItems.CRYSTAL_STEEL_DEVICE_CASING.get());
-            case 'K' -> new ItemStack(ModItems.COMET_FRUIT.get());
-            case 'P' -> new ItemStack(ModItems.COMPONENT_SUBSTRATE.get());
-            case 'G' -> new ItemStack(ModItems.GUIDANCE_COMPONENT.get());
-            case 'D' -> new ItemStack(Items.DIAMOND_PICKAXE);
-            case 'W' -> new ItemStack(Items.CRAFTING_TABLE);
+            case 'C' -> new ItemStack((ItemLike)ModItems.COMET_FRUIT.get());
+            case 'D' -> new ItemStack((ItemLike)ModItems.AUTOMATIC_COMPONENT.get());
             case 'E' -> new ItemStack(Items.ENDER_PEARL);
+            default -> ItemStack.EMPTY;
+            case 'I' -> new ItemStack((ItemLike)ModItems.CRYSTAL_INGOT.get());
+         });
+      }
+      return new CrystalWorkbenchRecipes.Recipe(
+         List.copyOf(ingredients),
+         new ItemStack((ItemLike)ModItems.WIRELESS_ENERGY_TRANSMITTER.get()),
+         new FluidStack((Fluid)ModFluids.CONCENTRATED_PLASMA_JUICE.get(), 1000)
+      );
+   }
+   private static CrystalWorkbenchRecipes.Recipe logistics() {
+      return dry("      IEI  ECE  IEI IIKII", (Item)ModItems.CRYSTAL_LOGISTICS.get());
+   }
+   private static CrystalWorkbenchRecipes.Recipe breeder() {
+      return dry(" III ISSSIIKOKIIRGRI III ", (Item)ModItems.ANIMAL_BREEDER.get());
+   }
+   private static CrystalWorkbenchRecipes.Recipe terrain() {
+      return dry(" III ISDSIIRPRIIKCKI III ", (Item)ModItems.TERRAIN_PROCESSOR.get());
+   }
+   private static CrystalWorkbenchRecipes.Recipe processor() {
+      return dry("IIIIIIKWKIIKHKIIKCKIIRSRI", (Item)ModItems.CRAFTING_PROCESSOR.get());
+   }
+   private static CrystalWorkbenchRecipes.Recipe dry(String pattern, Item result) {
+      ArrayList<ItemStack> inputs = new ArrayList<>();
+      for (char key : pattern.toCharArray()) {
+         inputs.add(switch (key) {
+            case 'C' -> new ItemStack((ItemLike)ModItems.CRYSTAL_STEEL_DEVICE_CASING.get());
+            case 'D' -> new ItemStack(Items.DIAMOND_PICKAXE);
+            case 'E' -> new ItemStack(Items.ENDER_PEARL);
+            default -> ItemStack.EMPTY;
+            case 'G' -> new ItemStack((ItemLike)ModItems.GUIDANCE_COMPONENT.get());
             case 'H' -> new ItemStack(Items.HOPPER);
+            case 'I' -> new ItemStack((ItemLike)ModItems.CRYSTAL_INGOT.get());
+            case 'K' -> new ItemStack((ItemLike)ModItems.COMET_FRUIT.get());
+            case 'O' -> new ItemStack(Items.DROPPER);
+            case 'P' -> new ItemStack((ItemLike)ModItems.COMPONENT_SUBSTRATE.get());
             case 'R' -> new ItemStack(Items.COMPARATOR);
             case 'S' -> new ItemStack(Items.REDSTONE);
-            case 'O' -> new ItemStack(Items.DROPPER);
-            default -> ItemStack.EMPTY;
-        });
-        return new Recipe(List.copyOf(inputs),new ItemStack(result),FluidStack.EMPTY);
-    }
-    public static List<Recipe> all() { return RECIPES; }
-    public static Recipe find(Container grid) { return RECIPES.stream().filter(r->r.matchesItems(grid)).findFirst().orElse(null); }
+            case 'W' -> new ItemStack(Items.CRAFTING_TABLE);
+         });
+      }
+      return new CrystalWorkbenchRecipes.Recipe(List.copyOf(inputs), new ItemStack(result), FluidStack.EMPTY);
+   }
+   public static List<CrystalWorkbenchRecipes.Recipe> all() {
+      return RECIPES;
+   }
+   public static CrystalWorkbenchRecipes.Recipe find(Container grid) {
+      return RECIPES.stream().filter(r -> r.matchesItems(grid)).findFirst().orElse(null);
+   }
+   public static record Recipe(List<ItemStack> inputs, ItemStack output, FluidStack fluid) {
+      public boolean matchesItems(Container grid) {
+         if (grid.getContainerSize() != 25) {
+            return false;
+         } else {
+            for (int i = 0; i < 25; i++) {
+               ItemStack expected = this.inputs.get(i);
+               ItemStack actual = grid.getItem(i);
+               if (expected.isEmpty() ? !actual.isEmpty() : !actual.is(expected.getItem())) {
+                  return false;
+               }
+            }
+            return true;
+         }
+      }
+      public boolean hasFluid(FluidStack stored) {
+         return this.fluid.isEmpty() || stored.isFluidEqual(this.fluid) && stored.getAmount() >= this.fluid.getAmount();
+      }
+   }
 }

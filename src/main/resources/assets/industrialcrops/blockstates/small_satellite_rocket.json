@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "part=0": {
+      "model": "industrialcrops:block/small_satellite_rocket_engine"
+    },
+    "part=1": {
+      "model": "industrialcrops:block/small_satellite_rocket_nose"
+    },
+    "part=2": {
+      "model": "industrialcrops:block/small_satellite_rocket_nose"
+    },
+    "part=3": {
+      "model": "industrialcrops:block/small_satellite_rocket_nose"
+    }
+  }
+}

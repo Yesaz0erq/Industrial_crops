@@ -1,0 +1,224 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "industrialcrops:block/rocket_hull",
+    "hull": "industrialcrops:block/rocket_hull",
+    "engine": "industrialcrops:block/rocket_engine",
+    "nozzle": "industrialcrops:block/rocket_nozzle",
+    "fin": "industrialcrops:block/rocket_fin",
+    "band": "industrialcrops:block/rocket_band_large",
+    "window": "industrialcrops:block/rocket_window",
+    "tip": "industrialcrops:block/rocket_tip",
+    "solar": "industrialcrops:block/rocket_solar"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hull"
+        },
+        "south": {
+          "texture": "#hull"
+        },
+        "east": {
+          "texture": "#hull"
+        },
+        "west": {
+          "texture": "#hull"
+        }
+      }
+    },
+    {
+      "from": [
+        3.75,
+        1,
+        3.75
+      ],
+      "to": [
+        12.25,
+        2.5,
+        12.25
+      ],
+      "faces": {
+        "north": {
+          "texture": "#band",
+          "uv": [
+            0,
+            4,
+            16,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#band",
+          "uv": [
+            0,
+            4,
+            16,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#band",
+          "uv": [
+            0,
+            4,
+            16,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#band",
+          "uv": [
+            0,
+            4,
+            16,
+            12
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        3.75,
+        14,
+        3.75
+      ],
+      "to": [
+        12.25,
+        15.5,
+        12.25
+      ],
+      "faces": {
+        "north": {
+          "texture": "#band",
+          "uv": [
+            0,
+            4,
+            16,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#band",
+          "uv": [
+            0,
+            4,
+            16,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#band",
+          "uv": [
+            0,
+            4,
+            16,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#band",
+          "uv": [
+            0,
+            4,
+            16,
+            12
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        5,
+        7.5
+      ],
+      "to": [
+        17,
+        13,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#solar"
+        },
+        "south": {
+          "texture": "#solar"
+        },
+        "east": {
+          "texture": "#solar"
+        },
+        "west": {
+          "texture": "#solar"
+        },
+        "up": {
+          "texture": "#solar"
+        },
+        "down": {
+          "texture": "#solar"
+        }
+      }
+    },
+    {
+      "from": [
+        -1,
+        5,
+        7.5
+      ],
+      "to": [
+        4,
+        13,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#solar"
+        },
+        "south": {
+          "texture": "#solar"
+        },
+        "east": {
+          "texture": "#solar"
+        },
+        "west": {
+          "texture": "#solar"
+        },
+        "up": {
+          "texture": "#solar"
+        },
+        "down": {
+          "texture": "#solar"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        6,
+        3.8
+      ],
+      "to": [
+        11,
+        11,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#window"
+        }
+      }
+    }
+  ]
+}

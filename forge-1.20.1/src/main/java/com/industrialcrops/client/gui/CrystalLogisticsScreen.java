@@ -36,7 +36,7 @@ public final class CrystalLogisticsScreen extends IndustrialContainerScreen<Crys
     }
     @Override protected void renderBg(GuiGraphics g,float partial,int mouseX,int mouseY) {
         int x=leftPos,y=topPos;
-        g.blit(IndustrialGuiStyle.containerTexture("infinite_logistics_transfer_device"),x,y,0,0,imageWidth,imageHeight,imageWidth,imageHeight);
+        g.blit(IndustrialGuiStyle.containerTexture("wireless_logistics_transfer_device"),x,y,0,0,imageWidth,imageHeight,imageWidth,imageHeight);
         g.fill(x+12,y+80,x+14,y+97, menu.machine().connections()>0 ? 0xff54aade : 0xff777b87);
         IndustrialGuiStyle.drawVerticalMeter(g,x+CrystalLogisticsLayout.METER_X,y+CrystalLogisticsLayout.METER_Y,CrystalLogisticsLayout.METER_HEIGHT,menu.machine().tank().getFluidAmount(),16000,0xff4c9ed0,false);
     }

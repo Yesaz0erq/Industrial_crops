@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PIP",
+    "IBI",
+    "PIP"
+  ],
+  "key": {
+    "P": {
+      "item": "industrialcrops:ap_structural_steel_plate"
+    },
+    "I": {
+      "item": "industrialcrops:tycon_pressurized_ingot"
+    },
+    "B": {
+      "item": "minecraft:iron_block"
+    }
+  },
+  "result": {
+    "count": 4,
+    "item": "industrialcrops:ap_steel_casing"
+  }
+}

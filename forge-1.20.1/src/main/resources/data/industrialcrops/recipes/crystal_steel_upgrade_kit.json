@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "C C",
+    " B ",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "industrialcrops:crystal_ingot"
+    },
+    "B": {
+      "item": "industrialcrops:upgrade_kit_substrate"
+    }
+  },
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:crystal_steel_upgrade_kit"
+  }
+}
