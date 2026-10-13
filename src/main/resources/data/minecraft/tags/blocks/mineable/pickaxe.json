@@ -21,6 +21,7 @@
     "industrialcrops:matter_reconstruction_device",
     "industrialcrops:item_network_management_terminal",
     "industrialcrops:bio_energy_generation_device",
+    "industrialcrops:bio_energy_reaction_device",
     "industrialcrops:gold_energy_storage_cabinet",
     "industrialcrops:incinerator",
     "industrialcrops:electric_furnace",
@@ -59,6 +60,22 @@
     "industrialcrops:wireless_logistics_transfer_device",
     "industrialcrops:crafting_processing_device",
     "industrialcrops:terrain_processing_device",
-    "industrialcrops:automatic_animal_breeder"
+    "industrialcrops:automatic_animal_breeder",
+    "industrialcrops:satellite_receiver",
+    "industrialcrops:rocket_launch_site",
+    "industrialcrops:launch_pad",
+    "industrialcrops:launch_gantry_frame",
+    "industrialcrops:small_satellite_rocket",
+    "industrialcrops:medium_satellite_rocket",
+    "industrialcrops:large_satellite_rocket",
+    "industrialcrops:satellite_control_device",
+    "industrialcrops:ap_structural_steel_block",
+    "industrialcrops:inv_block",
+    "industrialcrops:tycon_block",
+    "industrialcrops:green_iron_block",
+    "industrialcrops:ap_steel_casing",
+    "industrialcrops:ap_steel_frame",
+    "industrialcrops:ap_agricultural_complex",
+    "industrialcrops:ap_livestock_ranch"
   ]
 }

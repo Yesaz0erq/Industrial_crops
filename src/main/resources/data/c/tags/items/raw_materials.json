@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "industrialcrops:green_iron_ore",
+    "industrialcrops:inv_ore",
+    "industrialcrops:tycon_ore"
+  ]
+}

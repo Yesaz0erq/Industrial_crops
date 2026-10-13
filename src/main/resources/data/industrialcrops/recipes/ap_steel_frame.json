@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "P P",
+    " I ",
+    "P P"
+  ],
+  "key": {
+    "P": {
+      "item": "industrialcrops:ap_structural_steel_plate"
+    },
+    "I": {
+      "item": "industrialcrops:tycon_pressurized_ingot"
+    }
+  },
+  "result": {
+    "count": 4,
+    "item": "industrialcrops:ap_steel_frame"
+  }
+}

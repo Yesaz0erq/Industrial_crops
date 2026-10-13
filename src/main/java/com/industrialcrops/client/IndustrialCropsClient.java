@@ -1,5 +1,4 @@
 package com.industrialcrops.client;
-
 import com.industrialcrops.IndustrialCrops;
 import com.industrialcrops.client.gui.AdvancedIndustrialStorageScreen;
 import com.industrialcrops.client.gui.BasicControlDeviceScreen;
@@ -48,12 +47,10 @@ import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-
 @EventBusSubscriber(modid = IndustrialCrops.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class IndustrialCropsClient {
     private IndustrialCropsClient() {
     }
-
     @SubscribeEvent
     public static void registerScreens(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
@@ -83,10 +80,15 @@ public final class IndustrialCropsClient {
             MenuScreens.register(ModMenus.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestScreen::new);
             MenuScreens.register(ModMenus.PIPE_SORTER.get(), PipeSorterScreen::new);
             MenuScreens.register(ModMenus.GOLD_PLASMA_EXTRACTOR.get(), GoldPlasmaExtractorScreen::new);
+                        MenuScreens.register(ModMenus.SATELLITE_RECEIVER.get(), com.industrialcrops.client.gui.SatelliteReceiverScreen::new);
+            MenuScreens.register(ModMenus.LAUNCH_SITE.get(), com.industrialcrops.client.gui.LaunchSiteScreen::new);
+            MenuScreens.register(ModMenus.SATELLITE_CONTROL_DEVICE.get(), com.industrialcrops.client.gui.SatelliteControlScreen::new);
+            MenuScreens.register(ModMenus.TYCON_PRESSURIZED_FURNACE.get(), com.industrialcrops.client.gui.TyconPressurizedFurnaceScreen::new);
+            MenuScreens.register(ModMenus.AP_AGRICULTURE.get(), com.industrialcrops.client.gui.ApAgricultureScreen::new);
+            MenuScreens.register(ModMenus.AP_LIVESTOCK.get(), com.industrialcrops.client.gui.ApLivestockScreen::new);
             Sheets.addWoodType(ModWoodTypes.COMET);
         });
     }
-
     @SubscribeEvent
     public static void registerRenderTypes(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
@@ -103,6 +105,8 @@ public final class IndustrialCropsClient {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.ENERGY_BUSH.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.DIGITAL_MINIATURE_FOREST.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_SAPLING.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.AP_STEEL_FRAME.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.LAUNCH_GANTRY_FRAME.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.POTTED_COMET_SAPLING.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_LEAVES.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMET_DOOR.get(), RenderType.cutout());
@@ -110,7 +114,6 @@ public final class IndustrialCropsClient {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.COPPER_FLUID_STORAGE_CABINET.get(), RenderType.cutoutMipped());
         });
     }
-
     @SubscribeEvent
     public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
         event.register((state, level, pos, tintIndex) -> {
@@ -120,7 +123,6 @@ public final class IndustrialCropsClient {
             int blue = age * 4;
             return red << 16 | green << 8 | blue;
         }, ModBlocks.INDUSTRIAL_MELON_CROP.get(), ModBlocks.INDUSTRIAL_PUMPKIN_CROP.get());
-
         event.register((state, level, pos, tintIndex) -> {
             if (tintIndex == 0) {
                 return level != null && pos != null
@@ -135,7 +137,6 @@ public final class IndustrialCropsClient {
             return 0xFFFFFF;
         }, ModBlocks.DIGITAL_MINIATURE_FOREST.get());
     }
-
     @SubscribeEvent
     public static void registerItemColors(RegisterColorHandlersEvent.Item event) {
         event.register((stack, tintIndex) -> switch (tintIndex) {
@@ -144,7 +145,6 @@ public final class IndustrialCropsClient {
             default -> 0xFFFFFF;
         }, ModBlocks.DIGITAL_MINIATURE_FOREST.get());
     }
-
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BROWN_CREATE_SLIME.get(), BrownCreateSlimeRenderer::new);
@@ -165,12 +165,14 @@ public final class IndustrialCropsClient {
         event.registerBlockEntityRenderer(ModBlockEntities.COPPER_FLUID_STORAGE_CABINET.get(), CopperFluidStorageCabinetRenderer::new);
         event.registerEntityRenderer(ModEntities.GOLDEN_ROCKET.get(), GoldenRocketRenderer::new);
         event.registerEntityRenderer(ModEntities.TARGET_MARKER.get(), TargetMarkerRenderer::new);
+        event.registerEntityRenderer(ModEntities.SATELLITE_ROCKET.get(), com.industrialcrops.client.renderer.SatelliteRocketRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.SATELLITE_RECEIVER.get(), com.industrialcrops.client.renderer.SatelliteReceiverRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.AP_AGRICULTURE.get(), com.industrialcrops.client.renderer.ApHologramRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.AP_LIVESTOCK.get(), com.industrialcrops.client.renderer.ApHologramRenderer::new);
     }
-
     @SubscribeEvent
     public static void registerGuiLayers(RegisterGuiOverlaysEvent event) {
         event.registerAboveAll("glitch_border",
                 (gui, graphics, partialTick, width, height) -> GlitchGuiOverlay.render(graphics));
     }
-
 }

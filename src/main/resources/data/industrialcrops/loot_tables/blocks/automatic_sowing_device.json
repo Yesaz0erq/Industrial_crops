@@ -3,8 +3,17 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "conditions": [{ "condition": "minecraft:survives_explosion" }],
-      "entries": [{ "type": "minecraft:item", "name": "industrialcrops:automatic_sowing_device" }],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "industrialcrops:automatic_sowing_device"
+        }
+      ],
       "rolls": 1.0
     }
   ],

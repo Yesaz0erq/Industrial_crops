@@ -3,8 +3,17 @@
   "pools": [
     {
       "rolls": 1.0,
-      "conditions": [{ "condition": "minecraft:survives_explosion" }],
-      "entries": [{ "type": "minecraft:item", "name": "minecraft:dirt" }]
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:dirt"
+        }
+      ]
     }
   ],
   "random_sequence": "industrialcrops:blocks/fertile_soil"

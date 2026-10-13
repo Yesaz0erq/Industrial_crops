@@ -4,10 +4,15 @@
     {
       "bonus_rolls": 0.0,
       "conditions": [
-        { "condition": "minecraft:survives_explosion" }
+        {
+          "condition": "minecraft:survives_explosion"
+        }
       ],
       "entries": [
-        { "type": "minecraft:item", "name": "industrialcrops:mixer" }
+        {
+          "type": "minecraft:item",
+          "name": "industrialcrops:mixer"
+        }
       ],
       "rolls": 1.0
     }

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "PCP",
+    "FBF",
+    "PSP"
+  ],
+  "key": {
+    "P": {
+      "item": "industrialcrops:ap_structural_steel_plate"
+    },
+    "C": {
+      "item": "industrialcrops:ap_steel_casing"
+    },
+    "F": {
+      "item": "industrialcrops:normal_feed_bag"
+    },
+    "B": {
+      "item": "industrialcrops:automatic_animal_breeder"
+    },
+    "S": {
+      "item": "minecraft:shears"
+    }
+  },
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:ap_livestock_ranch"
+  }
+}
