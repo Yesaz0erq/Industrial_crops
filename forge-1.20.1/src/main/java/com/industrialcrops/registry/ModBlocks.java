@@ -53,7 +53,7 @@ import com.industrialcrops.block.SlimeIncubatorBlock;
 import com.industrialcrops.block.StrippableRotatedPillarBlock;
 import com.industrialcrops.block.TerrainProcessorBlock;
 import com.industrialcrops.block.TransportPipeBlock;
-import com.industrialcrops.block.TyconPressurizedFurnaceBlock;
+import com.industrialcrops.block.UltraHighPressureInvForgeBlock;
 import com.industrialcrops.block.WirelessEnergyTransmitterBlock;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -166,8 +166,8 @@ public final class ModBlocks {
    public static final RegistryObject<Block> ELECTRIC_FURNACE = BLOCKS.register(
       "electric_furnace", () -> new ElectricFurnaceBlock(machineProperties().mapColor(MapColor.GOLD))
    );
-   public static final RegistryObject<Block> TYCON_PRESSURIZED_FURNACE = BLOCKS.register(
-      "tycon_pressurized_furnace", () -> new TyconPressurizedFurnaceBlock(machineProperties().mapColor(MapColor.COLOR_ORANGE))
+   public static final RegistryObject<Block> ULTRA_HIGH_PRESSURE_INV_FORGE = BLOCKS.register(
+      "ultra_high_pressure_inv_forge", () -> new UltraHighPressureInvForgeBlock(machineProperties().mapColor(MapColor.COLOR_ORANGE))
    );
    public static final RegistryObject<Block> DIGITAL_MINIATURE_FOREST = BLOCKS.register(
       "digital_miniature_forest", () -> new DigitalMiniatureForestBlock(machineProperties().mapColor(MapColor.GOLD).noOcclusion().sound(SoundType.GLASS))

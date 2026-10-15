@@ -1,6 +1,12 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "all": "industrialcrops:block/ap_steel_casing"
+    "particle": "industrialcrops:block/ap_steel_casing",
+    "down": "industrialcrops:block/ap_steel_casing_bottom",
+    "up": "industrialcrops:block/ap_steel_casing_top",
+    "north": "industrialcrops:block/ap_steel_casing_front",
+    "south": "industrialcrops:block/ap_steel_casing",
+    "west": "industrialcrops:block/ap_steel_casing",
+    "east": "industrialcrops:block/ap_steel_casing"
   }
 }

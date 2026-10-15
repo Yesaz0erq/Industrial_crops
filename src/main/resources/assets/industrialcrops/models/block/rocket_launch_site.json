@@ -1,9 +1,9 @@
 {
-  "parent": "minecraft:block/orientable",
+  "parent": "minecraft:block/orientable_with_bottom",
   "textures": {
     "front": "industrialcrops:block/rocket_launch_site_front",
-    "side": "industrialcrops:block/c1_satellite_casing_side",
-    "top": "industrialcrops:block/c1_satellite_casing_top",
-    "bottom": "industrialcrops:block/c1_satellite_casing_bottom"
+    "side": "industrialcrops:block/crystal_steel_device_side",
+    "top": "industrialcrops:block/crystal_steel_device_top",
+    "bottom": "industrialcrops:block/crystal_steel_device_bottom"
   }
 }

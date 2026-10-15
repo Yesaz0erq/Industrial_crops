@@ -1,7 +1,14 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "all": "industrialcrops:block/ap_steel_frame"
+    "particle": "industrialcrops:block/ap_steel_frame",
+    "down": "industrialcrops:block/ap_steel_frame_hollow",
+    "up": "industrialcrops:block/ap_steel_frame_hollow",
+    "north": "industrialcrops:block/ap_steel_frame",
+    "south": "industrialcrops:block/ap_steel_frame",
+    "west": "industrialcrops:block/ap_steel_frame",
+    "east": "industrialcrops:block/ap_steel_frame"
   },
-  "render_type": "minecraft:cutout"
+  "render_type": "minecraft:cutout",
+  "ambientocclusion": false
 }

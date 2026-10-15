@@ -30,7 +30,7 @@ import com.industrialcrops.client.gui.SatelliteControlScreen;
 import com.industrialcrops.client.gui.SatelliteReceiverScreen;
 import com.industrialcrops.client.gui.SlimeIncubatorScreen;
 import com.industrialcrops.client.gui.TerrainProcessorScreen;
-import com.industrialcrops.client.gui.TyconPressurizedFurnaceScreen;
+import com.industrialcrops.client.gui.UltraHighPressureInvForgeScreen;
 import com.industrialcrops.client.gui.WirelessEnergyTransmitterScreen;
 import com.industrialcrops.client.renderer.ApHologramRenderer;
 import com.industrialcrops.client.renderer.BrownCreateSlimeRenderer;
@@ -118,7 +118,7 @@ public final class IndustrialCropsClient {
       var0.register((MenuType)ModMenus.ITEM_NETWORK_TERMINAL.get(), ItemNetworkTerminalScreen::new);
       var0.register((MenuType)ModMenus.BIO_ENERGY_MACHINE.get(), BioEnergyScreen::new);
       var0.register((MenuType)ModMenus.ELECTRIC_FURNACE.get(), ElectricFurnaceScreen::new);
-      var0.register((MenuType)ModMenus.TYCON_PRESSURIZED_FURNACE.get(), TyconPressurizedFurnaceScreen::new);
+      var0.register((MenuType)ModMenus.ULTRA_HIGH_PRESSURE_INV_FORGE.get(), UltraHighPressureInvForgeScreen::new);
       var0.register((MenuType)ModMenus.AP_AGRICULTURE.get(), ApAgricultureScreen::new);
       var0.register((MenuType)ModMenus.AP_LIVESTOCK.get(), ApLivestockScreen::new);
       var0.register((MenuType)ModMenus.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestScreen::new);

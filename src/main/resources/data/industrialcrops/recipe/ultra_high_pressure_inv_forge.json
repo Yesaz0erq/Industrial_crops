@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "ITG",
+    "TET",
+    "GIT"
+  ],
+  "key": {
+    "I": {"item": "industrialcrops:inv_ore"},
+    "T": {"item": "industrialcrops:tycon_ore"},
+    "G": {"item": "industrialcrops:green_iron_ore"},
+    "E": {"item": "industrialcrops:electric_furnace"}
+  },
+  "result": {
+    "id": "industrialcrops:ultra_high_pressure_inv_forge",
+    "count": 1
+  }
+}

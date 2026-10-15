@@ -232,7 +232,7 @@ final class IndustrialGuiStyle {
       }
    }
 
-   static void drawTyconButton(GuiGraphics graphics, int x, int y, int width, int height, boolean hovered) {
+   static void drawInvForgeButton(GuiGraphics graphics, int x, int y, int width, int height, boolean hovered) {
       int fill = hovered ? -9156960 : -11915672;
       graphics.fill(x, y, x + width, y + height, -15332060);
       graphics.fill(x + 1, y + 1, x + width - 1, y + height - 1, fill);

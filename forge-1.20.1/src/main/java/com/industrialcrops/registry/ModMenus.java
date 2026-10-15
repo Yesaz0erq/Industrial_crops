@@ -30,7 +30,7 @@ import com.industrialcrops.screen.SatelliteControlMenu;
 import com.industrialcrops.screen.SatelliteReceiverMenu;
 import com.industrialcrops.screen.SlimeIncubatorMenu;
 import com.industrialcrops.screen.TerrainProcessorMenu;
-import com.industrialcrops.screen.TyconPressurizedFurnaceMenu;
+import com.industrialcrops.screen.UltraHighPressureInvForgeMenu;
 import com.industrialcrops.screen.WirelessEnergyTransmitterMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -94,8 +94,8 @@ public final class ModMenus {
    public static final RegistryObject<MenuType<ElectricFurnaceMenu>> ELECTRIC_FURNACE = MENUS.register(
       "electric_furnace", () -> IForgeMenuType.create(ElectricFurnaceMenu::new)
    );
-   public static final RegistryObject<MenuType<TyconPressurizedFurnaceMenu>> TYCON_PRESSURIZED_FURNACE = MENUS.register(
-      "tycon_pressurized_furnace", () -> IForgeMenuType.create(TyconPressurizedFurnaceMenu::new)
+   public static final RegistryObject<MenuType<UltraHighPressureInvForgeMenu>> ULTRA_HIGH_PRESSURE_INV_FORGE = MENUS.register(
+      "ultra_high_pressure_inv_forge", () -> IForgeMenuType.create(UltraHighPressureInvForgeMenu::new)
    );
    public static final RegistryObject<MenuType<DigitalMiniatureForestMenu>> DIGITAL_MINIATURE_FOREST = MENUS.register(
       "digital_miniature_forest", () -> IForgeMenuType.create(DigitalMiniatureForestMenu::new)

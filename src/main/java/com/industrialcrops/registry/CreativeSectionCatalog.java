@@ -123,7 +123,7 @@ public final class CreativeSectionCatalog {
             item(ModItems.BIO_ENERGY_GENERATOR),
             item(ModItems.RESIDUE_INCINERATOR),
             item(ModItems.ELECTRIC_FURNACE),
-            item(ModItems.TYCON_PRESSURIZED_FURNACE),
+            item(ModItems.ULTRA_HIGH_PRESSURE_INV_FORGE),
             item(ModItems.ENERGY_BATTERY),
             item(ModItems.ADVANCED_ENERGY_CABLE),
             item(ModItems.GOLD_PLASMA_EXTRACTOR),

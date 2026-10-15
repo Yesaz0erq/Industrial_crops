@@ -3,7 +3,7 @@ package com.industrialcrops.block;
 import com.industrialcrops.block.entity.DigitalMiniatureForestBlockEntity;
 import com.industrialcrops.block.entity.ElectricFurnaceBlockEntity;
 import com.industrialcrops.block.entity.GoldPlasmaExtractorBlockEntity;
-import com.industrialcrops.block.entity.TyconPressurizedFurnaceBlockEntity;
+import com.industrialcrops.block.entity.UltraHighPressureInvForgeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
@@ -52,8 +52,8 @@ public abstract class GoldPoweredMachineBlock extends BaseEntityBlock {
       return (tickerLevel, pos, tickerState, entity) -> {
          if (entity instanceof ElectricFurnaceBlockEntity furnace) {
             ElectricFurnaceBlockEntity.tick(tickerLevel, pos, tickerState, furnace);
-         } else if (entity instanceof TyconPressurizedFurnaceBlockEntity furnace) {
-            TyconPressurizedFurnaceBlockEntity.tick(tickerLevel, pos, tickerState, furnace);
+         } else if (entity instanceof UltraHighPressureInvForgeBlockEntity furnace) {
+            UltraHighPressureInvForgeBlockEntity.tick(tickerLevel, pos, tickerState, furnace);
          } else if (entity instanceof DigitalMiniatureForestBlockEntity forest) {
             DigitalMiniatureForestBlockEntity.tick(tickerLevel, pos, tickerState, forest);
          } else if (entity instanceof GoldPlasmaExtractorBlockEntity extractor) {
@@ -75,7 +75,7 @@ public abstract class GoldPoweredMachineBlock extends BaseEntityBlock {
          ItemStackHandler inventory = null;
          if (level.getBlockEntity(pos) instanceof ElectricFurnaceBlockEntity furnace) {
             inventory = furnace.getInventory();
-         } else if (level.getBlockEntity(pos) instanceof TyconPressurizedFurnaceBlockEntity furnace) {
+         } else if (level.getBlockEntity(pos) instanceof UltraHighPressureInvForgeBlockEntity furnace) {
             inventory = furnace.getInventory();
          } else if (level.getBlockEntity(pos) instanceof DigitalMiniatureForestBlockEntity forest) {
             inventory = forest.getInventory();

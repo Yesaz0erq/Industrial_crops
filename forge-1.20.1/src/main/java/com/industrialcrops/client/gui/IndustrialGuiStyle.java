@@ -31,14 +31,14 @@ final class IndustrialGuiStyle {
    static final int WARNING = -5636096;
    static final int ENERGY_RED = -3785418;
    static final int RESIDUE_BROWN = -11916261;
-   static final int TYCON_PANEL = -14017731;
-   static final int TYCON_SURFACE = -11915672;
-   static final int TYCON_SHADOW = -15332060;
-   static final int TYCON_HIGHLIGHT = -5010727;
-   static final int TYCON_TEXT = -924161;
-   static final int TYCON_MUTED_TEXT = -3096603;
-   static final int TYCON_ACCENT = -4895489;
-   static final int TYCON_ENERGY = -3910145;
+   static final int INV_FORGE_PANEL = -14017731;
+   static final int INV_FORGE_SURFACE = -11915672;
+   static final int INV_FORGE_SHADOW = -15332060;
+   static final int INV_FORGE_HIGHLIGHT = -5010727;
+   static final int INV_FORGE_TEXT = -924161;
+   static final int INV_FORGE_MUTED_TEXT = -3096603;
+   static final int INV_FORGE_ACCENT = -4895489;
+   static final int INV_FORGE_ENERGY = -3910145;
    static final int VERTICAL_METER_WIDTH = 18;
    private IndustrialGuiStyle() {
    }
@@ -170,7 +170,7 @@ final class IndustrialGuiStyle {
       drawPanel(graphics, x + 6, y + 5, width - 12, 13, -4604740);
       graphics.fill(x + 12, y + 18, x + width - 12, y + 19, -5871035);
    }
-   static void drawTyconContainer(GuiGraphics graphics, int x, int y, int width, int height) {
+   static void drawInvForgeContainer(GuiGraphics graphics, int x, int y, int width, int height) {
       graphics.fill(x, y, x + width, y + height, -15332060);
       graphics.fill(x + 1, y + 1, x + width - 1, y + height - 1, -5010727);
       graphics.fill(x + 3, y + 3, x + width - 3, y + height - 3, -14017731);
@@ -179,7 +179,7 @@ final class IndustrialGuiStyle {
       graphics.fill(x + 12, y + 19, x + width - 12, y + 20, -4895489);
       graphics.fill(x + 4, y + height - 4, x + width - 4, y + height - 3, -15332060);
    }
-   static void drawTyconSlot(GuiGraphics graphics, int x, int y) {
+   static void drawInvForgeSlot(GuiGraphics graphics, int x, int y) {
       graphics.fill(x, y, x + 18, y + 18, -15332060);
       graphics.fill(x + 1, y + 1, x + 17, y + 17, -11915672);
       graphics.fill(x + 1, y + 1, x + 17, y + 2, -5010727);
@@ -187,19 +187,19 @@ final class IndustrialGuiStyle {
       graphics.fill(x + 1, y + 17, x + 18, y + 18, -15332060);
       graphics.fill(x + 17, y + 1, x + 18, y + 18, -15332060);
    }
-   static void drawTyconInventory(GuiGraphics graphics, int leftPos, int topPos, int x, int inventoryY, int hotbarY) {
+   static void drawInvForgeInventory(GuiGraphics graphics, int leftPos, int topPos, int x, int inventoryY, int hotbarY) {
       graphics.fill(leftPos + x - 3, topPos + inventoryY - 3, leftPos + x + 163, topPos + hotbarY + 19, -15332060);
       graphics.fill(leftPos + x - 1, topPos + inventoryY - 1, leftPos + x + 161, topPos + hotbarY + 17, -11915672);
       for (int row = 0; row < 3; row++) {
          for (int column = 0; column < 9; column++) {
-            drawTyconSlot(graphics, leftPos + x + column * 18 - 1, topPos + inventoryY + row * 18 - 1);
+            drawInvForgeSlot(graphics, leftPos + x + column * 18 - 1, topPos + inventoryY + row * 18 - 1);
          }
       }
       for (int column = 0; column < 9; column++) {
-         drawTyconSlot(graphics, leftPos + x + column * 18 - 1, topPos + hotbarY - 1);
+         drawInvForgeSlot(graphics, leftPos + x + column * 18 - 1, topPos + hotbarY - 1);
       }
    }
-   static void drawTyconButton(GuiGraphics graphics, int x, int y, int width, int height, boolean hovered) {
+   static void drawInvForgeButton(GuiGraphics graphics, int x, int y, int width, int height, boolean hovered) {
       int fill = hovered ? -9156960 : -11915672;
       graphics.fill(x, y, x + width, y + height, -15332060);
       graphics.fill(x + 1, y + 1, x + width - 1, y + height - 1, fill);

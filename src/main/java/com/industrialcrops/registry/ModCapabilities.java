@@ -62,9 +62,9 @@ public final class ModCapabilities {
       var0.registerBlockEntity(EnergyStorage.BLOCK, ModBlockEntities.AP_AGRICULTURE.get(), (var0x, var1) -> var0x.getEnergyStorage(var1));
       var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.AP_LIVESTOCK.get(), (var0x, var1) -> var0x.automation());
       var0.registerBlockEntity(EnergyStorage.BLOCK, ModBlockEntities.AP_LIVESTOCK.get(), (var0x, var1) -> var0x.getEnergyStorage(var1));
-      var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.TYCON_PRESSURIZED_FURNACE.get(), (var0x, var1) -> var0x.getInventory());
+      var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.ULTRA_HIGH_PRESSURE_INV_FORGE.get(), (var0x, var1) -> var0x.getInventory());
       var0.registerBlockEntity(
-         EnergyStorage.BLOCK, ModBlockEntities.TYCON_PRESSURIZED_FURNACE.get(), (var0x, var1) -> var0x.getEnergyStorage(var1)
+         EnergyStorage.BLOCK, ModBlockEntities.ULTRA_HIGH_PRESSURE_INV_FORGE.get(), (var0x, var1) -> var0x.getEnergyStorage(var1)
       );
       var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.DIGITAL_MINIATURE_FOREST.get(), (var0x, var1) -> var0x.getInventory());
       var0.registerBlockEntity(

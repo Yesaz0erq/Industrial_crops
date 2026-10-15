@@ -42,7 +42,7 @@ import com.industrialcrops.block.entity.SatelliteRocketBlockEntity;
 import com.industrialcrops.block.entity.SlimeIncubatorBlockEntity;
 import com.industrialcrops.block.entity.TerrainProcessorBlockEntity;
 import com.industrialcrops.block.entity.TransportPipeBlockEntity;
-import com.industrialcrops.block.entity.TyconPressurizedFurnaceBlockEntity;
+import com.industrialcrops.block.entity.UltraHighPressureInvForgeBlockEntity;
 import com.industrialcrops.block.entity.WirelessEnergyTransmitterBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -173,9 +173,9 @@ public final class ModBlockEntities {
    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE = BLOCK_ENTITIES.register(
       "electric_furnace", () -> Builder.of(ElectricFurnaceBlockEntity::new, new Block[]{(Block)ModBlocks.ELECTRIC_FURNACE.get()}).build(null)
    );
-   public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TyconPressurizedFurnaceBlockEntity>> TYCON_PRESSURIZED_FURNACE = BLOCK_ENTITIES.register(
-      "tycon_pressurized_furnace",
-      () -> Builder.of(TyconPressurizedFurnaceBlockEntity::new, new Block[]{(Block)ModBlocks.TYCON_PRESSURIZED_FURNACE.get()}).build(null)
+   public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<UltraHighPressureInvForgeBlockEntity>> ULTRA_HIGH_PRESSURE_INV_FORGE = BLOCK_ENTITIES.register(
+      "ultra_high_pressure_inv_forge",
+      () -> Builder.of(UltraHighPressureInvForgeBlockEntity::new, new Block[]{(Block)ModBlocks.ULTRA_HIGH_PRESSURE_INV_FORGE.get()}).build(null)
    );
    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DigitalMiniatureForestBlockEntity>> DIGITAL_MINIATURE_FOREST = BLOCK_ENTITIES.register(
       "digital_miniature_forest",

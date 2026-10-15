@@ -230,7 +230,7 @@ public final class ModItems {
    public static final DeferredItem<BlockItem> ENERGY_BATTERY = registerBlockItem("gold_energy_storage_cabinet", ModBlocks.ENERGY_BATTERY);
    public static final DeferredItem<BlockItem> RESIDUE_INCINERATOR = registerBlockItem("incinerator", ModBlocks.RESIDUE_INCINERATOR);
    public static final DeferredItem<BlockItem> ELECTRIC_FURNACE = registerBlockItem("electric_furnace", ModBlocks.ELECTRIC_FURNACE);
-   public static final DeferredItem<BlockItem> TYCON_PRESSURIZED_FURNACE = registerBlockItem("tycon_pressurized_furnace", ModBlocks.TYCON_PRESSURIZED_FURNACE);
+   public static final DeferredItem<BlockItem> ULTRA_HIGH_PRESSURE_INV_FORGE = registerBlockItem("ultra_high_pressure_inv_forge", ModBlocks.ULTRA_HIGH_PRESSURE_INV_FORGE);
    public static final DeferredItem<BlockItem> DIGITAL_MINIATURE_FOREST = registerBlockItem("digital_miniature_forest", ModBlocks.DIGITAL_MINIATURE_FOREST);
    public static final DeferredItem<BlockItem> BASIC_ENERGY_CABLE = registerBlockItem("basic_energy_cable", ModBlocks.BASIC_ENERGY_CABLE);
    public static final DeferredItem<BlockItem> ADVANCED_ENERGY_CABLE = registerBlockItem("advanced_energy_cable", ModBlocks.ADVANCED_ENERGY_CABLE);
