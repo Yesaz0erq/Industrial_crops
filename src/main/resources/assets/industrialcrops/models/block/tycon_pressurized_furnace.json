@@ -1,9 +1,0 @@
-{
-  "parent": "minecraft:block/orientable_with_bottom",
-  "textures": {
-    "bottom": "industrialcrops:block/tycon_pressurized_furnace_bottom",
-    "front": "industrialcrops:block/tycon_pressurized_furnace_front",
-    "side": "industrialcrops:block/tycon_pressurized_furnace_side",
-    "top": "industrialcrops:block/tycon_pressurized_furnace_top"
-  }
-}

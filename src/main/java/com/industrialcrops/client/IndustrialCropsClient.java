@@ -83,7 +83,7 @@ public final class IndustrialCropsClient {
                         MenuScreens.register(ModMenus.SATELLITE_RECEIVER.get(), com.industrialcrops.client.gui.SatelliteReceiverScreen::new);
             MenuScreens.register(ModMenus.LAUNCH_SITE.get(), com.industrialcrops.client.gui.LaunchSiteScreen::new);
             MenuScreens.register(ModMenus.SATELLITE_CONTROL_DEVICE.get(), com.industrialcrops.client.gui.SatelliteControlScreen::new);
-            MenuScreens.register(ModMenus.TYCON_PRESSURIZED_FURNACE.get(), com.industrialcrops.client.gui.TyconPressurizedFurnaceScreen::new);
+            MenuScreens.register(ModMenus.ULTRA_HIGH_PRESSURE_INV_FORGE.get(), com.industrialcrops.client.gui.UltraHighPressureInvForgeScreen::new);
             MenuScreens.register(ModMenus.AP_AGRICULTURE.get(), com.industrialcrops.client.gui.ApAgricultureScreen::new);
             MenuScreens.register(ModMenus.AP_LIVESTOCK.get(), com.industrialcrops.client.gui.ApLivestockScreen::new);
             Sheets.addWoodType(ModWoodTypes.COMET);

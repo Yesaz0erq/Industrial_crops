@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "industrialcrops:block/ultra_high_pressure_inv_forge_bottom",
+    "front": "industrialcrops:block/ultra_high_pressure_inv_forge_front",
+    "side": "industrialcrops:block/ultra_high_pressure_inv_forge_side",
+    "top": "industrialcrops:block/ultra_high_pressure_inv_forge_top"
+  }
+}
