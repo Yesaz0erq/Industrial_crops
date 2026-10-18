@@ -8,7 +8,7 @@
   "block.carrote.material_hardening_device": "Matter Hardening Device",
   "block.carrote.universal_replication_device": "Universal Replication Device",
   "message.carrote.universal_replication_device.no_source": "The block to the device's right is not a copyable functional block.",
-  "message.carrote.universal_replication_device.copied": "Created an independent proxy copy of %s inside the Carrote-steel shell.",
+  "message.carrote.universal_replication_device.copied": "Created an independent proxy copy of %s inside the Paradox Steel Device Casing.",
   "message.carrote.universal_replication_device.failed": "Copy failed. The device was preserved; right-click it to retry.",
   "message.carrote.universal_replication_device.retry_success": "Copy completed.",
   "block.carrote.stable_matter_block": "Stable Matter Block",
@@ -20,7 +20,7 @@
   "itemGroup.carrote.section.carrote_steel": "Carrote and Paradox Steel",
   "itemGroup.carrote.section.stable_matter": "Stable Matter",
   "itemGroup.carrote.section.devices": "Paradox Steel Devices",
-  "tooltip.carrote.function.paradox_steel_forge": "Forges Carrote steel. Put Carrote and netherite ingots into the forge.",
+  "tooltip.carrote.function.paradox_steel_forge": "Forges Paradox Steel. Put Carrote and netherite ingots into the forge.",
   "tooltip.carrote.function.material_hardening_device": "Makes items unbreakable. Insert the item to harden.",
   "tooltip.carrote.function.mimic_block": "Transforms into the block on its right. Place to the left of the target and wait five seconds.",
   "tooltip.carrote.function.universal_replication_device": "Replicates the energy device on its right. Place to the left of the target and wait for replication."

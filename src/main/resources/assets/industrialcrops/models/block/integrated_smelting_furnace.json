@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "industrialcrops:block/ap_steel_casing_bottom",
+    "front": "industrialcrops:block/integrated_smelting_furnace_front",
+    "side": "industrialcrops:block/ap_steel_casing",
+    "top": "industrialcrops:block/ap_steel_casing_top"
+  }
+}

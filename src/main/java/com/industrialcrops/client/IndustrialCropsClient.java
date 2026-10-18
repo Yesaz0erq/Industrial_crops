@@ -63,7 +63,7 @@ public final class IndustrialCropsClient {
             MenuScreens.register(ModMenus.ROOT_ORE_EXTRACTOR.get(), RootOreExtractorScreen::new);
             MenuScreens.register(ModMenus.CROP_COMPRESSOR.get(), CropCompressorScreen::new);
             MenuScreens.register(ModMenus.CROP_ANALYSIS_DEVICE.get(), CropAnalysisDeviceScreen::new);
-            MenuScreens.register(ModMenus.GOURD_MODIFICATION_DEVICE.get(), GourdModificationDeviceScreen::new);
+            MenuScreens.register(ModMenus.MELON_MODIFICATION_DEVICE.get(), GourdModificationDeviceScreen::new);
             MenuScreens.register(ModMenus.BASIC_CONTROL_DEVICE.get(), BasicControlDeviceScreen::new);
             MenuScreens.register(ModMenus.REINFORCED_CONTROL_DEVICE.get(), ReinforcedControlDeviceScreen::new);
             MenuScreens.register(ModMenus.BASIC_MANIPULATOR.get(), BasicManipulatorScreen::new);
@@ -86,6 +86,9 @@ public final class IndustrialCropsClient {
             MenuScreens.register(ModMenus.ULTRA_HIGH_PRESSURE_INV_FORGE.get(), com.industrialcrops.client.gui.UltraHighPressureInvForgeScreen::new);
             MenuScreens.register(ModMenus.AP_AGRICULTURE.get(), com.industrialcrops.client.gui.ApAgricultureScreen::new);
             MenuScreens.register(ModMenus.AP_LIVESTOCK.get(), com.industrialcrops.client.gui.ApLivestockScreen::new);
+            MenuScreens.register(ModMenus.SUPER_COMPRESSOR.get(), com.industrialcrops.client.gui.SuperCompressorScreen::new);
+            MenuScreens.register(ModMenus.INTEGRATED_SMELTING_FURNACE.get(), com.industrialcrops.client.gui.IntegratedSmeltingFurnaceScreen::new);
+            MenuScreens.register(ModMenus.SUPER_CROP_CULTIVATOR.get(), com.industrialcrops.client.gui.SuperCropCultivatorScreen::new);
             Sheets.addWoodType(ModWoodTypes.COMET);
         });
     }
@@ -93,6 +96,9 @@ public final class IndustrialCropsClient {
     public static void registerRenderTypes(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_CARROT_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BLACK_NEBULA_CARROT_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.PURPLE_DRAGON_CARROT_CROP.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.OMNI_CARROT_CROP.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_POTATO_CROP.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_WHEAT_CROP.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.INDUSTRIAL_MELON_CROP.get(), RenderType.cutout());

@@ -357,7 +357,7 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
                 return ItemStack.EMPTY;
             }
         } else if (slotIndex >= playerInventoryStart && slotIndex < playerHotbarEnd) {
-            if (AdvancedIndustrialStorageBlockEntity.isStorageCell(stack)
+            if (blockEntity.acceptsStorageCell(stack)
                     && moveItemStackTo(stack, cellSlotStart, cellSlotEnd, false)) {
                 // Prefer configuring storage cells before pushing cells into the virtual storage grid.
             } else {
@@ -402,6 +402,8 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
         access.execute((level, ignoredPos) -> clearContainer(player, craftingSlots));
     }
 
+    public ItemStack getCellTabIcon() { return blockEntity.getCellTabIcon(); }
+
     @Override
     public boolean stillValid(Player player) {
         if (remoteAccess) {
@@ -409,10 +411,12 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
             if (targetLevel == null || targetLevel.isClientSide()) return true;
             return targetLevel.hasChunkAt(pos)
                     && (targetLevel.getBlockState(pos).is(ModBlocks.REINFORCED_CONTROL_DEVICE.get())
-                        || targetLevel.getBlockState(pos).is(ModBlocks.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get()))
+                        || targetLevel.getBlockState(pos).is(ModBlocks.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get())
+                        || targetLevel.getBlockState(pos).is(ModBlocks.EXPANDABLE_STORAGE_DEVICE.get()))
                     && DimensionUpgradeHelper.canRemoteAccess(player, targetLevel, pos, blockEntity.getDimensionUpgrade());
         }
         return stillValid(access, player, ModBlocks.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get())
+                || stillValid(access, player, ModBlocks.EXPANDABLE_STORAGE_DEVICE.get())
                 || stillValid(access, player, ModBlocks.REINFORCED_CONTROL_DEVICE.get());
     }
 
@@ -421,7 +425,12 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
                 () -> player.level().isClientSide(),
                 slot -> blockEntity.getStorageStack(toAbsoluteStorageSlot(slot)),
                 (slot, stack) -> blockEntity.setStorageStack(toAbsoluteStorageSlot(slot), stack),
-                this::isStorageSlotUnlocked, blockEntity::setChanged);
+                this::isStorageSlotUnlocked, blockEntity::setChanged)
+                .withSlotLimit(blockEntity::getStorageSlotLimit)
+                .withPlacementRule((slot, stack) -> {
+                    int absolute = toAbsoluteStorageSlot(slot);
+                    return absolute >= 0 && blockEntity.canInsertIntoSlot(absolute, stack);
+                });
         for (int row = 0; row < visibleRows; row++) {
             for (int col = 0; col < 9; col++) {
                 int slot = col + row * 9;
@@ -438,7 +447,7 @@ public final class AdvancedIndustrialStorageMenu extends AbstractContainerMenu {
             addSlot(new SlotItemHandler(blockEntity.getCellInventory(), slot, x, y) {
                 @Override
                 public boolean mayPlace(ItemStack stack) {
-                    return AdvancedIndustrialStorageBlockEntity.isStorageCell(stack);
+                    return blockEntity.acceptsStorageCell(stack);
                 }
 
                 @Override

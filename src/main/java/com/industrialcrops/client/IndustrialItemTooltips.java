@@ -1,7 +1,9 @@
 package com.industrialcrops.client;
+
 import com.industrialcrops.crop.CropGenetics;
 import com.industrialcrops.crop.CropQuality;
 import com.industrialcrops.item.RemoteAccessDeviceItem;
+import com.industrialcrops.machine.UpgradeCompatibility;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -16,6 +18,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+
 @EventBusSubscriber(
    modid = "industrialcrops",
    value = {Dist.CLIENT}
@@ -23,6 +26,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 public final class IndustrialItemTooltips {
    private IndustrialItemTooltips() {
    }
+
    @SubscribeEvent
    public static void addFunctionalDescription(ItemTooltipEvent event) {
       addCropQuality(event);
@@ -32,12 +36,12 @@ public final class IndustrialItemTooltips {
             addRemoteBindingDetails(event);
          } else {
             boolean functionalBlock = event.getItemStack().getItem() instanceof BlockItem;
-            boolean goldUpgradeKit = id.getPath().equals("gold_upgrade_kit");
-            boolean crystalSteelUpgradeKit = id.getPath().equals("crystal_steel_upgrade_kit");
-            boolean automaticComponent = id.getPath().equals("automatic_component");
-            boolean dimensionComponent = id.getPath().equals("dimension_upgrade_component") || id.getPath().equals("infinite_dimension_upgrade_component");
             boolean fusionPickaxe = id.getPath().equals("fusion_ingot_pickaxe");
-            if (functionalBlock || goldUpgradeKit || crystalSteelUpgradeKit || automaticComponent || dimensionComponent || fusionPickaxe) {
+            boolean compressedPotato = id.getPath().equals("compressed_potato_10k") || id.getPath().equals("black_nebula_carrot")
+               || id.getPath().equals("purple_dragon_carrot")
+               || id.getPath().equals("omni_carrot") || id.getPath().equals("omni_potion") || id.getPath().equals("omni_bucket");
+            boolean component = UpgradeCompatibility.hasComponentInfo(event.getItemStack().getItem());
+            if (functionalBlock || fusionPickaxe || compressedPotato || component) {
                String key = "tooltip." + id.getNamespace() + ".function." + id.getPath();
                if (I18n.exists(key)) {
                   event.getToolTip().add(Component.empty());
@@ -55,6 +59,7 @@ public final class IndustrialItemTooltips {
          }
       }
    }
+
    private static void addCropQuality(ItemTooltipEvent event) {
       CropGenetics.Genes genes = CropGenetics.read(event.getItemStack());
       if (genes != null) {
@@ -68,17 +73,21 @@ public final class IndustrialItemTooltips {
          }
       }
    }
+
    private static MutableComponent rainbow(String text) {
       MutableComponent result = Component.empty();
       int[] characters = text.codePoints().toArray();
       float baseHue = (float)(System.currentTimeMillis() % 4000L) / 4000.0F;
+
       for (int index = 0; index < characters.length; index++) {
          float hue = (baseHue + (float)index * 0.11F) % 1.0F;
          int color = Mth.hsvToRgb(hue, 0.78F, 1.0F);
          result.append(Component.literal(new String(Character.toChars(characters[index]))).withStyle(style -> style.withColor(color)));
       }
+
       return result;
    }
+
    private static void addRemoteBindingDetails(ItemTooltipEvent event) {
       BlockPos bound = RemoteAccessDeviceItem.getBoundPosition(event.getItemStack());
       if (bound != null) {

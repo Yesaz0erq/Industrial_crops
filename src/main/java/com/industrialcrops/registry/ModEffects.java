@@ -5,8 +5,8 @@ import com.industrialcrops.effect.ElectrocutionMobEffect;
 import com.industrialcrops.effect.GlitchMobEffect;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 public final class ModEffects {
     public static final DeferredRegister<MobEffect> EFFECTS =
@@ -19,6 +19,7 @@ public final class ModEffects {
     public static final RegistryObject<MobEffect> FLAME = EFFECTS.register("flame", () -> new com.industrialcrops.effect.CropCombatEffect(0xF08027));
     public static final RegistryObject<MobEffect> REFRACTION = EFFECTS.register("refraction", () -> new com.industrialcrops.effect.CropCombatEffect(0x608EEB));
     public static final RegistryObject<MobEffect> PULSE = EFFECTS.register("pulse", () -> new com.industrialcrops.effect.CropCombatEffect(0x3ADACD));
+    public static final RegistryObject<MobEffect> DRAGON_BREATH = EFFECTS.register("dragon_breath", com.industrialcrops.effect.DragonBreathMobEffect::new);
 
     private ModEffects() { }
 }

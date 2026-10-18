@@ -23,13 +23,13 @@ public final class ApLivestockMenu extends AbstractContainerMenu implements ApMa
    public static final int ROW2_Y = 122;
    public static final int BUTTON_CAP = 4;
    public static final int UPGRADE_SLOT = 18;
-   public static final int MACHINE_SLOTS = 22;
+   public static final int MACHINE_SLOTS = 24;
    private final BlockPos pos;
    private final ContainerData data;
    private final IItemHandler upgrades;
    private boolean upgradesVisible;
    public ApLivestockMenu(int var1, Inventory var2, FriendlyByteBuf var3) {
-      this(var1, var2, var3.readBlockPos(), new ItemStackHandler(18), new ItemStackHandler(4), new SimpleContainerData(11));
+      this(var1, var2, var3.readBlockPos(), new ItemStackHandler(18), new ItemStackHandler(6), new SimpleContainerData(11));
    }
    public ApLivestockMenu(int var1, Inventory var2, ApLivestockBlockEntity var3) {
       this(var1, var2, var3.getBlockPos(), var3.getInventory(), var3.getUpgradeSlots(), var3.getData());
@@ -111,7 +111,7 @@ public final class ApLivestockMenu extends AbstractContainerMenu implements ApMa
       }
    }
    public ItemStack quickMoveStack(Player var1, int var2) {
-      return ApMenus.quickMove(this, var1, var2, 22, 0, 9, 18);
+      return ApMenus.quickMove(this, var1, var2, MACHINE_SLOTS, 0, 9, 18);
    }
    public boolean stillValid(Player var1) {
       return stillValid(ContainerLevelAccess.create(var1.level(), this.pos), var1, (Block)ModBlocks.AP_LIVESTOCK_CONTROLLER.get());

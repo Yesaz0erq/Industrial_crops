@@ -1,5 +1,5 @@
 package com.industrialcrops.registry;
-import net.minecraftforge.registries.RegistryObject;
+
 import com.industrialcrops.item.AdvancedManipulatorUpgradeItem;
 import com.industrialcrops.item.AnimalFeedBagItem;
 import com.industrialcrops.item.BaggedCropItem;
@@ -12,6 +12,7 @@ import com.industrialcrops.item.GeneticCropItem;
 import com.industrialcrops.item.GeneticCropProductBlockItem;
 import com.industrialcrops.item.IncubatorBlockItem;
 import com.industrialcrops.item.IndustrialStorageComponentItem;
+import com.industrialcrops.item.ExpandableStorageComponentItem;
 import com.industrialcrops.item.RemoteAccessDeviceItem;
 import com.industrialcrops.item.SatelliteRocketItem;
 import com.industrialcrops.item.SeedBagItem;
@@ -30,7 +31,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
+
 public final class ModItems {
    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(net.minecraft.core.registries.Registries.ITEM, "industrialcrops");
    public static final RegistryObject<SeedBagItem> EMPTY_BAG = ITEMS.register("empty_bag", () -> new SeedBagItem(new Properties()));
@@ -166,6 +170,15 @@ public final class ModItems {
    public static final RegistryObject<Item> INFINITE_DIMENSION_UPGRADE_COMPONENT = ITEMS.register(
       "infinite_dimension_upgrade_component", () -> new Item(new Properties().stacksTo(1).rarity(Rarity.EPIC))
    );
+   public static final RegistryObject<Item> AP_EXPANSION_COMPONENT_1 = ITEMS.register(
+      "ap_expansion_component_1", () -> new Item(new Properties().stacksTo(1).rarity(Rarity.RARE))
+   );
+   public static final RegistryObject<Item> AP_EXPANSION_COMPONENT_2 = ITEMS.register(
+      "ap_expansion_component_2", () -> new Item(new Properties().stacksTo(1).rarity(Rarity.RARE))
+   );
+   public static final RegistryObject<Item> AP_EXPANSION_COMPONENT_3 = ITEMS.register(
+      "ap_expansion_component_3", () -> new Item(new Properties().stacksTo(1).rarity(Rarity.RARE))
+   );
    public static final RegistryObject<Item> UPGRADE_KIT_SUBSTRATE = ITEMS.register("upgrade_kit_substrate", () -> new Item(new Properties()));
    public static final RegistryObject<Item> GOLD_UPGRADE_KIT = ITEMS.register(
       "gold_upgrade_kit", () -> new AdvancedManipulatorUpgradeItem(new Properties().stacksTo(16).rarity(Rarity.RARE))
@@ -208,7 +221,7 @@ public final class ModItems {
    public static final RegistryObject<BlockItem> ROOT_ORE_EXTRACTOR = registerBlockItem("basic_crop_conversion_device", ModBlocks.ROOT_ORE_EXTRACTOR);
    public static final RegistryObject<BlockItem> CROP_COMPRESSOR = registerBlockItem("crop_compressor", ModBlocks.CROP_COMPRESSOR);
    public static final RegistryObject<BlockItem> CROP_ANALYSIS_DEVICE = registerBlockItem("crop_analysis_device", ModBlocks.CROP_ANALYSIS_DEVICE);
-   public static final RegistryObject<BlockItem> GOURD_MODIFICATION_DEVICE = registerBlockItem("gourd_modification_device", ModBlocks.GOURD_MODIFICATION_DEVICE);
+   public static final RegistryObject<BlockItem> MELON_MODIFICATION_DEVICE = registerBlockItem("melon_modification_device", ModBlocks.MELON_MODIFICATION_DEVICE);
    public static final RegistryObject<BlockItem> MIXER = registerBlockItem("mixer", ModBlocks.MIXER);
    public static final RegistryObject<BlockItem> INDUSTRIAL_CROP_STORAGE_ARRAY = registerBlockItem(
       "basic_storage_component", ModBlocks.INDUSTRIAL_CROP_STORAGE_ARRAY
@@ -240,6 +253,45 @@ public final class ModItems {
    );
    public static final RegistryObject<BlockItem> ADVANCED_INDUSTRIAL_STORAGE_DEVICE = registerBlockItem(
       "advanced_industrial_storage_device", ModBlocks.ADVANCED_INDUSTRIAL_STORAGE_DEVICE
+   );
+   public static final RegistryObject<BlockItem> EXPANDABLE_STORAGE_DEVICE = registerBlockItem(
+      "expandable_storage_device", ModBlocks.EXPANDABLE_STORAGE_DEVICE
+   );
+   public static final RegistryObject<BlockItem> SUPER_COMPRESSOR = registerBlockItem("super_compressor", ModBlocks.SUPER_COMPRESSOR);
+   public static final RegistryObject<BlockItem> INTEGRATED_SMELTING_FURNACE = registerBlockItem("integrated_smelting_furnace", ModBlocks.INTEGRATED_SMELTING_FURNACE);
+   /** Compressed Industrial Potato: 10,000 Industrial Potatoes pressed by the Super Compressor. */
+   public static final RegistryObject<Item> COMPRESSED_POTATO_10K = ITEMS.register(
+      "compressed_potato_10k", () -> new ShimmeringItem(new Properties().rarity(Rarity.EPIC))
+   );
+   /** 10K Storage Component: 9,999 items per item type in the Expandable Storage Device, 54 item types each. */
+   public static final RegistryObject<ExpandableStorageComponentItem> STORAGE_COMPONENT_10K = ITEMS.register(
+      "storage_component_10k", () -> new ExpandableStorageComponentItem(new Properties().stacksTo(16).rarity(Rarity.EPIC), 54, 9_999)
+   );
+   public static final RegistryObject<BlockItem> SUPER_CROP_CULTIVATOR = registerBlockItem("super_crop_cultivator", ModBlocks.SUPER_CROP_CULTIVATOR);
+   /** Black Nebula Carrot: Super Industrial Carrot + Comet Essence + Prism Pod in the Super Crop Cultivator. Restores 16 hunger and 16 saturation. */
+   public static final RegistryObject<Item> BLACK_NEBULA_CARROT = ITEMS.register(
+      "black_nebula_carrot",
+      () -> new com.industrialcrops.item.ShimmeringCarrotBlockItem(ModBlocks.BLACK_NEBULA_CARROT_CROP.get(), new Properties().rarity(Rarity.EPIC).food(new Builder().nutrition(16).saturationMod(0.5F).build()))
+   );
+   /** Purple Dragon Carrot: Super Industrial Carrot + Dragon's Breath + Neon Bulb. 8 hunger, 8 saturation and 30 s of Dragon Breath. */
+   public static final RegistryObject<Item> PURPLE_DRAGON_CARROT = ITEMS.register(
+      "purple_dragon_carrot",
+      () -> new com.industrialcrops.item.ShimmeringCarrotBlockItem(ModBlocks.PURPLE_DRAGON_CARROT_CROP.get(), new Properties().rarity(Rarity.EPIC).food(new Builder().nutrition(8).saturationMod(0.5F).alwaysEat()
+         .effect(() -> new net.minecraft.world.effect.MobEffectInstance(ModEffects.DRAGON_BREATH.get(), 20 * 30, 0), 1.0F).build()))
+   );
+   /** Omni Bucket: crafted on the Crystal Steel Workbench; pours an endless cauldron of Omni Potion. */
+   public static final RegistryObject<Item> OMNI_BUCKET = ITEMS.register(
+      "omni_bucket", () -> new ShimmeringItem(new Properties().stacksTo(1).rarity(Rarity.EPIC))
+   );
+   /** Omni Potion: every beneficial vanilla effect for 3 minutes. */
+   public static final RegistryObject<Item> OMNI_POTION = ITEMS.register(
+      "omni_potion", () -> new com.industrialcrops.item.OmniPotionItem(new Properties().stacksTo(16).rarity(Rarity.EPIC)
+         .craftRemainder(net.minecraft.world.item.Items.GLASS_BOTTLE))
+   );
+   /** Omni Carrot: Super Industrial Carrot + Omni Potion; 12 hunger, 12 saturation and every beneficial vanilla effect for 5 minutes. */
+   public static final RegistryObject<Item> OMNI_CARROT = ITEMS.register(
+      "omni_carrot", () -> new com.industrialcrops.item.OmniCarrotItem(ModBlocks.OMNI_CARROT_CROP.get(), new Properties().rarity(Rarity.EPIC)
+         .food(new Builder().nutrition(12).saturationMod(0.5F).alwaysEat().build()))
    );
    public static final RegistryObject<IncubatorBlockItem> INCUBATOR = ITEMS.register(
       "slime_conversion_device", () -> new IncubatorBlockItem((Block)ModBlocks.INCUBATOR.get(), new Properties().stacksTo(1))
@@ -288,7 +340,18 @@ public final class ModItems {
       "wireless_energy_transfer_device", ModBlocks.WIRELESS_ENERGY_TRANSMITTER
    );
    public static final RegistryObject<BlockItem> SATELLITE_RECEIVER = registerBlockItem("satellite_receiver", ModBlocks.SATELLITE_RECEIVER);
-   public static final RegistryObject<BlockItem> CRYSTAL_LOGISTICS = registerBlockItem("wireless_logistics_transfer_device", ModBlocks.CRYSTAL_LOGISTICS);
+   public static final RegistryObject<BlockItem> CRYSTAL_LOGISTICS = ITEMS.register("wireless_logistics_transfer_device", () ->
+      new BlockItem(ModBlocks.CRYSTAL_LOGISTICS.get(), new Properties()) {
+         @Override public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
+            consumer.accept(new net.minecraftforge.client.extensions.common.IClientItemExtensions() {
+               private com.industrialcrops.client.renderer.CrystalLogisticsItemRenderer renderer;
+               @Override public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                  if (renderer == null) renderer = new com.industrialcrops.client.renderer.CrystalLogisticsItemRenderer();
+                  return renderer;
+               }
+            });
+         }
+      });
    public static final RegistryObject<BlockItem> CRAFTING_PROCESSOR = registerBlockItem("crafting_processing_device", ModBlocks.CRAFTING_PROCESSOR);
    public static final RegistryObject<BlockItem> ANIMAL_BREEDER = registerBlockItem("automatic_animal_breeder", ModBlocks.ANIMAL_BREEDER);
    public static final RegistryObject<BlockItem> TERRAIN_PROCESSOR = registerBlockItem("terrain_processing_device", ModBlocks.TERRAIN_PROCESSOR);
@@ -325,17 +388,22 @@ public final class ModItems {
    public static final RegistryObject<BlockItem> AP_STEEL_FRAME = registerBlockItem("ap_steel_frame", ModBlocks.AP_STEEL_FRAME);
    public static final RegistryObject<BlockItem> AP_AGRICULTURE_CONTROLLER = registerBlockItem("ap_agricultural_complex", ModBlocks.AP_AGRICULTURE_CONTROLLER);
    public static final RegistryObject<BlockItem> AP_LIVESTOCK_CONTROLLER = registerBlockItem("ap_livestock_ranch", ModBlocks.AP_LIVESTOCK_CONTROLLER);
+
    private ModItems() {
    }
+
    private static RegistryObject<BlockItem> registerBlockItem(String var0, RegistryObject<?> var1) {
       return ITEMS.register(var0, () -> new BlockItem((Block)var1.get(), new Properties()));
    }
+
    private static RegistryObject<Item> registerSpeedUpgrade(String var0) {
       return ITEMS.register(var0, () -> new Item(new Properties().stacksTo(1).rarity(Rarity.RARE)));
    }
+
    private static RegistryObject<AnimalFeedBagItem> registerFeedBag(String var0, AnimalFeedBagItem.Mode var1) {
       return ITEMS.register(var0, () -> new AnimalFeedBagItem(baggedProperties(), var1));
    }
+
    private static Properties baggedProperties() {
       return new Properties().craftRemainder((Item)EMPTY_BAG.get());
    }

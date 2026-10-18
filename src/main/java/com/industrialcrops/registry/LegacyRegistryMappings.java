@@ -18,11 +18,31 @@ public final class LegacyRegistryMappings {
         for (MissingMappingsEvent.Mapping<Block> mapping : event.getMappings(Registries.BLOCK, IndustrialCrops.MOD_ID)) {
             if (mapping.getKey().getPath().equals("infinite_logistics_transfer_device")) {
                 mapping.remap(ModBlocks.CRYSTAL_LOGISTICS.get());
+            } else if (mapping.getKey().getPath().equals("gourd_modification_device")) {
+                mapping.remap(ModBlocks.MELON_MODIFICATION_DEVICE.get());
             }
         }
         for (MissingMappingsEvent.Mapping<Item> mapping : event.getMappings(Registries.ITEM, IndustrialCrops.MOD_ID)) {
             if (mapping.getKey().getPath().equals("infinite_logistics_transfer_device")) {
                 mapping.remap(ModItems.CRYSTAL_LOGISTICS.get());
+            } else if (mapping.getKey().getPath().equals("gourd_modification_device")) {
+                mapping.remap(ModItems.MELON_MODIFICATION_DEVICE.get());
+            }
+        }
+        for (MissingMappingsEvent.Mapping<net.minecraft.world.level.block.entity.BlockEntityType<?>> mapping
+                : event.getMappings(Registries.BLOCK_ENTITY_TYPE, IndustrialCrops.MOD_ID)) {
+            if (mapping.getKey().getPath().equals("gourd_modification_device")) {
+                mapping.remap(ModBlockEntities.MELON_MODIFICATION_DEVICE.get());
+            } else if (mapping.getKey().getPath().equals("infinite_logistics_transfer_device")) {
+                mapping.remap(ModBlockEntities.CRYSTAL_LOGISTICS.get());
+            }
+        }
+        for (MissingMappingsEvent.Mapping<net.minecraft.world.inventory.MenuType<?>> mapping
+                : event.getMappings(Registries.MENU, IndustrialCrops.MOD_ID)) {
+            if (mapping.getKey().getPath().equals("gourd_modification_device")) {
+                mapping.remap(ModMenus.MELON_MODIFICATION_DEVICE.get());
+            } else if (mapping.getKey().getPath().equals("infinite_logistics_transfer_device")) {
+                mapping.remap(ModMenus.CRYSTAL_LOGISTICS.get());
             }
         }
     }

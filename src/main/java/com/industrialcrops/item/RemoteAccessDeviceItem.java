@@ -174,6 +174,7 @@ public final class RemoteAccessDeviceItem extends Item {
         if (state.is(ModBlocks.CARROT_CONTROL_DEVICE.get())) return BASIC_KIND;
         if (state.is(ModBlocks.REINFORCED_CONTROL_DEVICE.get())) return REINFORCED_KIND;
         if (state.is(ModBlocks.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get())) return REINFORCED_KIND;
+        if (state.is(ModBlocks.EXPANDABLE_STORAGE_DEVICE.get())) return REINFORCED_KIND;
         if (state.is(ModBlocks.ITEM_NETWORK_TERMINAL.get())) return "network";
         return null;
     }

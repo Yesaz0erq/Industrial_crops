@@ -1,4 +1,6 @@
 package com.industrialcrops.registry;
+import com.industrialcrops.block.SuperCompressorBlock;
+import com.industrialcrops.block.ExpandableStorageBlock;
 import net.minecraftforge.registries.RegistryObject;
 import com.industrialcrops.block.AdvancedIndustrialStorageBlock;
 import com.industrialcrops.block.AdvancedManipulatorBlock;
@@ -63,6 +65,7 @@ import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
@@ -112,8 +115,8 @@ public final class ModBlocks {
    public static final RegistryObject<Block> CROP_ANALYSIS_DEVICE = BLOCKS.register(
       "crop_analysis_device", () -> new CropAnalysisDeviceBlock(machineProperties())
    );
-   public static final RegistryObject<Block> GOURD_MODIFICATION_DEVICE = BLOCKS.register(
-      "gourd_modification_device", () -> new GourdModificationDeviceBlock(machineProperties())
+   public static final RegistryObject<Block> MELON_MODIFICATION_DEVICE = BLOCKS.register(
+      "melon_modification_device", () -> new GourdModificationDeviceBlock(machineProperties())
    );
    public static final RegistryObject<Block> MIXER = BLOCKS.register(
       "mixer", () -> new MixerBlock(machineProperties().mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER))
@@ -170,7 +173,7 @@ public final class ModBlocks {
       "ultra_high_pressure_inv_forge", () -> new UltraHighPressureInvForgeBlock(machineProperties().mapColor(MapColor.COLOR_ORANGE))
    );
    public static final RegistryObject<Block> DIGITAL_MINIATURE_FOREST = BLOCKS.register(
-      "digital_miniature_forest", () -> new DigitalMiniatureForestBlock(machineProperties().mapColor(MapColor.GOLD).noOcclusion().sound(SoundType.GLASS))
+      "digital_miniature_forest", () -> new DigitalMiniatureForestBlock(machineProperties().mapColor(MapColor.GOLD).noOcclusion().sound(SoundType.GLASS).isRedstoneConductor((state, level, pos) -> true))
    );
    public static final RegistryObject<Block> BASIC_ENERGY_CABLE = registerEnergyCable("basic_energy_cable", MapColor.COLOR_ORANGE);
    public static final RegistryObject<Block> ADVANCED_ENERGY_CABLE = registerEnergyCable("advanced_energy_cable", MapColor.GOLD);
@@ -211,6 +214,15 @@ public final class ModBlocks {
    );
    public static final RegistryObject<Block> INDUSTRIAL_CARROT_CROP = BLOCKS.register(
       "industrial_carrot_crop", () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_CARROT, ModItems.INDUSTRIAL_CARROT, 4, 2, true)
+   );
+   public static final RegistryObject<Block> BLACK_NEBULA_CARROT_CROP = BLOCKS.register(
+      "black_nebula_carrot_crop", () -> new com.industrialcrops.block.CultivatedCarrotCropBlock(cropProperties(), ModItems.BLACK_NEBULA_CARROT)
+   );
+   public static final RegistryObject<Block> PURPLE_DRAGON_CARROT_CROP = BLOCKS.register(
+      "purple_dragon_carrot_crop", () -> new com.industrialcrops.block.CultivatedCarrotCropBlock(cropProperties(), ModItems.PURPLE_DRAGON_CARROT)
+   );
+   public static final RegistryObject<Block> OMNI_CARROT_CROP = BLOCKS.register(
+      "omni_carrot_crop", () -> new com.industrialcrops.block.CultivatedCarrotCropBlock(cropProperties(), ModItems.OMNI_CARROT)
    );
    public static final RegistryObject<Block> INDUSTRIAL_POTATO_CROP = BLOCKS.register(
       "industrial_potato_crop", () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_POTATO, ModItems.INDUSTRIAL_POTATO, 4, 2, true)
@@ -413,7 +425,7 @@ public final class ModBlocks {
    public static final RegistryObject<Block> AP_STEEL_CASING = BLOCKS.register("ap_steel_casing", () -> new Block(metalBlock(MapColor.COLOR_GRAY)));
    public static final RegistryObject<Block> AP_STEEL_FRAME = BLOCKS.register(
       "ap_steel_frame",
-      () -> new Block(metalBlock(MapColor.COLOR_GRAY).noOcclusion().isViewBlocking((var0, var1, var2) -> false).isSuffocating((var0, var1, var2) -> false))
+      () -> new HalfTransparentBlock(metalBlock(MapColor.COLOR_GRAY).noOcclusion().isViewBlocking((var0, var1, var2) -> false).isSuffocating((var0, var1, var2) -> false))
    );
    public static final RegistryObject<Block> AP_AGRICULTURE_CONTROLLER = BLOCKS.register(
       "ap_agricultural_complex",
@@ -432,6 +444,36 @@ public final class ModBlocks {
    private static Properties metalBlock(MapColor var0) {
       return Properties.of().mapColor(var0).requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.METAL);
    }
+   public static final RegistryObject<Block> EXPANDABLE_STORAGE_DEVICE = BLOCKS.register(
+      "expandable_storage_device",
+      () -> new ExpandableStorageBlock(Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.5F, 6.0F).sound(SoundType.METAL))
+   );
+
+   public static final RegistryObject<Block> INTEGRATED_SMELTING_FURNACE = BLOCKS.register(
+      "integrated_smelting_furnace",
+      () -> new com.industrialcrops.block.IntegratedSmeltingFurnaceBlock(
+         Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.5F, 6.0F).sound(SoundType.METAL)
+            .lightLevel(state -> state.getValue(com.industrialcrops.block.IntegratedSmeltingFurnaceBlock.LIT) ? 13 : 0)
+      )
+   );
+
+   public static final RegistryObject<Block> SUPER_COMPRESSOR = BLOCKS.register(
+      "super_compressor",
+      () -> new SuperCompressorBlock(Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.5F, 6.0F).sound(SoundType.METAL))
+   );
+
+   public static final RegistryObject<Block> SUPER_CROP_CULTIVATOR = BLOCKS.register(
+      "super_crop_cultivator",
+      () -> new com.industrialcrops.block.SuperCropCultivatorBlock(
+         Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(3.5F, 6.0F).sound(SoundType.METAL)
+            .lightLevel(state -> state.getValue(com.industrialcrops.block.SuperCropCultivatorBlock.ACTIVE) ? 11 : 3)
+      )
+   );
+
+   public static final RegistryObject<com.industrialcrops.block.OmniPotionCauldronBlock> OMNI_POTION_CAULDRON = BLOCKS.register(
+      "omni_potion_cauldron", () -> new com.industrialcrops.block.OmniPotionCauldronBlock(Properties.copy(net.minecraft.world.level.block.Blocks.CAULDRON).lightLevel(state -> 6))
+   );
+
    private ModBlocks() {
    }
    private static RegistryObject<Block> registerCompressBlock(String var0, MapColor var1) {

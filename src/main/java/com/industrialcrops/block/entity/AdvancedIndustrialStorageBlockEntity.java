@@ -1,4 +1,5 @@
 package com.industrialcrops.block.entity;
+
 import com.industrialcrops.item.IndustrialStorageComponentItem;
 import com.industrialcrops.machine.BulkStorageItemHandler;
 import com.industrialcrops.machine.DimensionUpgradeHelper;
@@ -22,12 +23,15 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
+
 public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements MenuProvider {
    public static final int CELL_SLOT_COUNT = 6;
    public static final int SLOTS_PER_CELL = 54;
    public static final int MAX_CELL_MULTIPLIER = 16;
    public static final int STORAGE_SLOT_COUNT = 5184;
    public static final int FLUID_CAPACITY = 64000;
+   /** Gold-tier (Advanced Industrial Storage Device) per-slot item limit. */
+   public static final int SLOT_LIMIT = 999;
    private final FluidTank tank = new FluidTank(64000) {
       protected void onContentsChanged() {
          AdvancedIndustrialStorageBlockEntity.this.setChanged();
@@ -38,9 +42,11 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
       public int getSlotLimit(int slot) {
          return 1;
       }
+
       public boolean isItemValid(int slot, ItemStack stack) {
          return DimensionUpgradeHelper.isDimensionUpgrade(stack);
       }
+
       protected void onContentsChanged(int slot) {
          AdvancedIndustrialStorageBlockEntity.this.setChanged();
          AdvancedIndustrialStorageBlockEntity.this.refreshDimensionTicket();
@@ -50,26 +56,40 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
       public int getSlotLimit(int slot) {
          return 1;
       }
+
       public boolean isItemValid(int slot, ItemStack stack) {
-         return AdvancedIndustrialStorageBlockEntity.isStorageCell(stack);
+         return AdvancedIndustrialStorageBlockEntity.this.acceptsStorageCell(stack);
       }
+
       protected void onContentsChanged(int slot) {
          AdvancedIndustrialStorageBlockEntity.this.setChanged();
       }
    };
    private final ItemStackHandler storageInventory = new BulkStorageItemHandler(5184) {
       protected int getStackLimit(int slot, ItemStack stack) {
-         return Integer.MAX_VALUE;
+         return AdvancedIndustrialStorageBlockEntity.this.getStorageSlotLimit();
       }
+
+      public int getSlotLimit(int slot) {
+         return AdvancedIndustrialStorageBlockEntity.this.getStorageSlotLimit();
+      }
+
       public boolean isItemValid(int slot, ItemStack stack) {
-         return AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot);
+         return AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot)
+            && AdvancedIndustrialStorageBlockEntity.this.canInsertIntoSlot(slot, stack);
       }
+
       public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-         return !AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot) ? stack : super.insertItem(slot, stack, simulate);
+         return AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot)
+               && AdvancedIndustrialStorageBlockEntity.this.canInsertIntoSlot(slot, stack)
+            ? super.insertItem(slot, stack, simulate)
+            : stack;
       }
+
       public ItemStack extractItem(int slot, int amount, boolean simulate) {
          return !AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot) ? ItemStack.EMPTY : super.extractItem(slot, amount, simulate);
       }
+
       protected void onContentsChanged(int slot) {
          AdvancedIndustrialStorageBlockEntity.this.setChanged();
       }
@@ -78,52 +98,98 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
       public int getSlots() {
          return 5184;
       }
+
       public ItemStack getStackInSlot(int slot) {
          return AdvancedIndustrialStorageBlockEntity.isValidStorageSlot(slot)
             ? AdvancedIndustrialStorageBlockEntity.this.storageInventory.getStackInSlot(slot)
             : ItemStack.EMPTY;
       }
+
       public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
          return AdvancedIndustrialStorageBlockEntity.isValidStorageSlot(slot) && AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot)
             ? AdvancedIndustrialStorageBlockEntity.this.storageInventory.insertItem(slot, stack, simulate)
             : stack;
       }
+
       public ItemStack extractItem(int slot, int amount, boolean simulate) {
          return AdvancedIndustrialStorageBlockEntity.isValidStorageSlot(slot) && AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot)
             ? AdvancedIndustrialStorageBlockEntity.this.storageInventory.extractItem(slot, amount, simulate)
             : ItemStack.EMPTY;
       }
+
       public int getSlotLimit(int slot) {
-         return AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot) ? Integer.MAX_VALUE : 0;
+         return AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot) ? AdvancedIndustrialStorageBlockEntity.this.getStorageSlotLimit() : 0;
       }
+
       public boolean isItemValid(int slot, ItemStack stack) {
-         return AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot);
+         return AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot)
+            && AdvancedIndustrialStorageBlockEntity.this.canInsertIntoSlot(slot, stack);
       }
    };
+
    public boolean hasFluidStorage() {
       return this.getType() == ModBlockEntities.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get();
    }
+
    public FluidTank getTank() {
       return this.tank;
    }
+
    public AdvancedIndustrialStorageBlockEntity(BlockPos pos, BlockState state) {
       this((BlockEntityType<?>)ModBlockEntities.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get(), pos, state);
    }
+
    protected AdvancedIndustrialStorageBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
       super(type, pos, state);
    }
+
    public static boolean isStorageCell(ItemStack stack) {
       return stack.getItem() instanceof IndustrialStorageComponentItem;
    }
+
    public static int getStorageCellMultiplier(ItemStack stack) {
       return stack.getItem() instanceof IndustrialStorageComponentItem component ? component.capacityMultiplier() : 0;
    }
+
+   /** Whether this device accepts the stack as a storage cell. Subclasses may accept other cells. */
+   public boolean acceptsStorageCell(ItemStack stack) {
+      return isStorageCell(stack);
+   }
+
+   /** Storage capacity units provided by one installed cell (each unit unlocks {@link #SLOTS_PER_CELL} slots). */
+   protected int storageCellMultiplier(ItemStack stack) {
+      return getStorageCellMultiplier(stack);
+   }
+
+   /**
+    * Maximum number of items one storage slot may hold. Existing stacks loaded from older saves are
+    * kept as-is even if they exceed this, but no further items are accepted into them.
+    */
+   public int getStorageSlotLimit() {
+      return SLOT_LIMIT;
+   }
+
+   /**
+    * Extra placement rule for a storage slot (checked in addition to the slot being unlocked).
+    * The default allows any item; per-item-type devices restrict each item type to one slot.
+    */
+   public boolean canInsertIntoSlot(int slot, ItemStack stack) {
+      return true;
+   }
+
+   /** Icon shown on the storage screen's cell drawer tab. */
+   public ItemStack getCellTabIcon() {
+      return new ItemStack(com.industrialcrops.registry.ModItems.INDUSTRIAL_STORAGE_COMPONENT_1.get());
+   }
+
    public ItemStackHandler getCellInventory() {
       return this.cellInventory;
    }
+
    public ItemStack getDimensionUpgrade() {
       return this.dimensionUpgrade.getStackInSlot(0);
    }
+
    public boolean installDimensionUpgrade(ItemStack stack) {
       if (this.getDimensionUpgrade().isEmpty() && DimensionUpgradeHelper.isDimensionUpgrade(stack)) {
          this.dimensionUpgrade.setStackInSlot(0, stack.copyWithCount(1));
@@ -132,19 +198,23 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
          return false;
       }
    }
+
    public ItemStack removeDimensionUpgrade() {
       return this.dimensionUpgrade.extractItem(0, 1, false);
    }
+
    public void releaseDimensionTicket() {
       if (this.dimensionTicketRequested || !this.getDimensionUpgrade().isEmpty()) {
          DimensionUpgradeHelper.forceOwnerChunk(this, false);
          this.dimensionTicketRequested = false;
       }
    }
+
    public void onLoad() {
       super.onLoad();
       this.refreshDimensionTicket();
    }
+
    private void refreshDimensionTicket() {
       boolean shouldForce = !this.getDimensionUpgrade().isEmpty();
       if (this.level != null && shouldForce != this.dimensionTicketRequested) {
@@ -152,44 +222,56 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
          this.dimensionTicketRequested = shouldForce;
       }
    }
+
    public IItemHandler getPipeItemHandler() {
       return this.basic_pipeItemHandler;
    }
+
    public int getUnlockedStorageSlots() {
       int capacityUnits = 0;
+
       for (int slot = 0; slot < 6; slot++) {
-         capacityUnits += getStorageCellMultiplier(this.cellInventory.getStackInSlot(slot));
+         capacityUnits += this.storageCellMultiplier(this.cellInventory.getStackInSlot(slot));
       }
+
       return Math.min(5184, capacityUnits * 54);
    }
+
    public boolean isStorageSlotUnlocked(int slot) {
       return isValidStorageSlot(slot) && slot < this.getUnlockedStorageSlots();
    }
+
    public boolean canRemoveStorageCell(int cellSlot) {
       if (cellSlot >= 0 && cellSlot < 6) {
-         int removedSlots = getStorageCellMultiplier(this.cellInventory.getStackInSlot(cellSlot)) * 54;
+         int removedSlots = this.storageCellMultiplier(this.cellInventory.getStackInSlot(cellSlot)) * 54;
          int unlockedAfterRemove = Math.max(0, this.getUnlockedStorageSlots() - removedSlots);
+
          for (int slot = unlockedAfterRemove; slot < 5184; slot++) {
             if (!this.storageInventory.getStackInSlot(slot).isEmpty()) {
                return false;
             }
          }
+
          return true;
       } else {
          return false;
       }
    }
+
    public ItemStack getStorageStack(int slot) {
       return isValidStorageSlot(slot) ? this.storageInventory.getStackInSlot(slot) : ItemStack.EMPTY;
    }
+
    public void setStorageStack(int slot, ItemStack stack) {
       if (this.isStorageSlotUnlocked(slot)) {
          this.storageInventory.setStackInSlot(slot, stack.copy());
       }
    }
+
    public ItemStack extractFromStorageSlot(int slot, int amount) {
       return !this.isStorageSlotUnlocked(slot) ? ItemStack.EMPTY : this.storageInventory.extractItem(slot, amount, false);
    }
+
    public int insertIntoStorageSlot(int slot, ItemStack stack) {
       if (this.isStorageSlotUnlocked(slot) && !stack.isEmpty()) {
          int original = stack.getCount();
@@ -199,6 +281,7 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
          return 0;
       }
    }
+
    public int insertIntoStorage(ItemStack stack) {
       if (stack.isEmpty()) {
          return 0;
@@ -206,79 +289,107 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
          int original = stack.getCount();
          ItemStack remaining = stack.copy();
          int unlocked = this.getUnlockedStorageSlots();
+
+         // First top up slots that already hold this item, then fall back to empty slots.
          for (int slot = 0; slot < unlocked && !remaining.isEmpty(); slot++) {
-            remaining = this.storageInventory.insertItem(slot, remaining, false);
+            if (ItemStack.isSameItemSameTags(this.storageInventory.getStackInSlot(slot), remaining)) {
+               remaining = this.storageInventory.insertItem(slot, remaining, false);
+            }
          }
+
+         for (int slot = 0; slot < unlocked && !remaining.isEmpty(); slot++) {
+            if (this.storageInventory.getStackInSlot(slot).isEmpty()) {
+               remaining = this.storageInventory.insertItem(slot, remaining, false);
+            }
+         }
+
          return original - remaining.getCount();
       }
    }
+
    public ItemStack createDroppedStack(Block block) {
       ItemStack stack = new ItemStack(block.asItem());
       CompoundTag storageData = this.writeInventories();
       if (!storageData.isEmpty()) {
          com.industrialcrops.compat.LegacyItemData.set(stack, CustomData.of(storageData));
       }
+
       return stack;
    }
+
    public void readStorageFromStack(ItemStack stack) {
       CustomData customData = com.industrialcrops.compat.LegacyItemData.get(stack);
       if (customData != null && this.level != null) {
          this.readInventories(customData.copyTag());
       }
+
       this.setChanged();
    }
+
    protected void saveAdditional(CompoundTag tag) {
       super.saveAdditional(tag);
       tag.put("StorageData", this.writeInventories());
    }
+
    public void load(CompoundTag tag) {
       super.load(tag);
       if (tag.contains("StorageData")) {
          this.readInventories(tag.getCompound("StorageData"));
       }
    }
+
    public Component getDisplayName() {
       return Component.translatable(this.getBlockState().getBlock().getDescriptionId());
    }
+
    @Nullable
    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
       return new AdvancedIndustrialStorageMenu(containerId, inventory, this, this.worldPosition);
    }
+
    private CompoundTag writeInventories() {
       CompoundTag tag = new CompoundTag();
-      if (this.hasFluidStorage()) {
+      if (this.hasFluidStorage() ) {
          tag.put("Fluid", this.tank.writeToNBT( new CompoundTag()));
       }
+
       tag.put("Cells", this.cellInventory.serializeNBT());
       tag.put("Storage", this.storageInventory.serializeNBT());
       tag.put("DimensionUpgrade", this.dimensionUpgrade.serializeNBT());
       return tag;
    }
+
    private void readInventories(CompoundTag tag) {
       if (this.hasFluidStorage()) {
          this.tank.setFluid(FluidStack.EMPTY);
          if (tag.contains("Fluid")) {
             this.tank.readFromNBT( tag.getCompound("Fluid"));
          }
+
          if (this.tank.getFluidAmount() > 64000) {
             this.tank.getFluid().setAmount(64000);
          }
       }
+
       if (tag.contains("Cells")) {
          readFixedSizeInventory(this.cellInventory, 6, tag.getCompound("Cells"));
       }
+
       if (tag.contains("Storage")) {
          readFixedSizeInventory(this.storageInventory, 5184, tag.getCompound("Storage"));
       }
+
       if (tag.contains("DimensionUpgrade")) {
          readFixedSizeInventory(this.dimensionUpgrade, 1, tag.getCompound("DimensionUpgrade"));
       }
    }
+
    private static void readFixedSizeInventory(ItemStackHandler target, int expectedSize, CompoundTag tag) {
       ItemStackHandler temporary = new BulkStorageItemHandler(0);
       temporary.deserializeNBT(tag);
       target.setSize(expectedSize);
       int slots = Math.min(expectedSize, temporary.getSlots());
+
       for (int slot = 0; slot < slots; slot++) {
          ItemStack stack = temporary.getStackInSlot(slot);
          if (!stack.isEmpty()) {
@@ -286,6 +397,7 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
          }
       }
    }
+
    private static boolean isValidStorageSlot(int slot) {
       return slot >= 0 && slot < 5184;
    }
@@ -293,7 +405,7 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
    private net.minecraftforge.common.util.LazyOptional<net.minecraftforge.fluids.capability.IFluidHandler> forgeCap1 = net.minecraftforge.common.util.LazyOptional.of(() -> getTank());
    @Override public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.core.Direction side) {
       if (capability == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER) return forgeCap0.cast();
-      if (capability == net.minecraftforge.common.capabilities.ForgeCapabilities.FLUID_HANDLER) return forgeCap1.cast();
+      if (capability == net.minecraftforge.common.capabilities.ForgeCapabilities.FLUID_HANDLER && hasFluidStorage()) return forgeCap1.cast();
       return super.getCapability(capability, side);
    }
    @Override public void invalidateCaps() { super.invalidateCaps();
@@ -304,4 +416,5 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
       forgeCap0 = net.minecraftforge.common.util.LazyOptional.of(() -> getPipeItemHandler());
       forgeCap1 = net.minecraftforge.common.util.LazyOptional.of(() -> getTank());
    }
+
 }
