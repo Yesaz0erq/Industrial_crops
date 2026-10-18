@@ -32,6 +32,8 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
    public static final int MAX_CELL_MULTIPLIER = 16;
    public static final int STORAGE_SLOT_COUNT = 5184;
    public static final int FLUID_CAPACITY = 64000;
+   /** Gold-tier (Advanced Industrial Storage Device) per-slot item limit. */
+   public static final int SLOT_LIMIT = 999;
    private final FluidTank tank = new FluidTank(64000) {
       protected void onContentsChanged() {
          AdvancedIndustrialStorageBlockEntity.this.setChanged();
@@ -58,7 +60,7 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
       }
 
       public boolean isItemValid(int slot, ItemStack stack) {
-         return AdvancedIndustrialStorageBlockEntity.isStorageCell(stack);
+         return AdvancedIndustrialStorageBlockEntity.this.acceptsStorageCell(stack);
       }
 
       protected void onContentsChanged(int slot) {
@@ -67,15 +69,23 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
    };
    private final ItemStackHandler storageInventory = new BulkStorageItemHandler(5184) {
       protected int getStackLimit(int slot, ItemStack stack) {
-         return Integer.MAX_VALUE;
+         return AdvancedIndustrialStorageBlockEntity.this.getStorageSlotLimit();
+      }
+
+      public int getSlotLimit(int slot) {
+         return AdvancedIndustrialStorageBlockEntity.this.getStorageSlotLimit();
       }
 
       public boolean isItemValid(int slot, ItemStack stack) {
-         return AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot);
+         return AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot)
+            && AdvancedIndustrialStorageBlockEntity.this.canInsertIntoSlot(slot, stack);
       }
 
       public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-         return !AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot) ? stack : super.insertItem(slot, stack, simulate);
+         return AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot)
+               && AdvancedIndustrialStorageBlockEntity.this.canInsertIntoSlot(slot, stack)
+            ? super.insertItem(slot, stack, simulate)
+            : stack;
       }
 
       public ItemStack extractItem(int slot, int amount, boolean simulate) {
@@ -110,11 +120,12 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
       }
 
       public int getSlotLimit(int slot) {
-         return AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot) ? Integer.MAX_VALUE : 0;
+         return AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot) ? AdvancedIndustrialStorageBlockEntity.this.getStorageSlotLimit() : 0;
       }
 
       public boolean isItemValid(int slot, ItemStack stack) {
-         return AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot);
+         return AdvancedIndustrialStorageBlockEntity.this.isStorageSlotUnlocked(slot)
+            && AdvancedIndustrialStorageBlockEntity.this.canInsertIntoSlot(slot, stack);
       }
    };
 
@@ -140,6 +151,37 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
 
    public static int getStorageCellMultiplier(ItemStack stack) {
       return stack.getItem() instanceof IndustrialStorageComponentItem component ? component.capacityMultiplier() : 0;
+   }
+
+   /** Whether this device accepts the stack as a storage cell. Subclasses may accept other cells. */
+   public boolean acceptsStorageCell(ItemStack stack) {
+      return isStorageCell(stack);
+   }
+
+   /** Storage capacity units provided by one installed cell (each unit unlocks {@link #SLOTS_PER_CELL} slots). */
+   protected int storageCellMultiplier(ItemStack stack) {
+      return getStorageCellMultiplier(stack);
+   }
+
+   /**
+    * Maximum number of items one storage slot may hold. Existing stacks loaded from older saves are
+    * kept as-is even if they exceed this, but no further items are accepted into them.
+    */
+   public int getStorageSlotLimit() {
+      return SLOT_LIMIT;
+   }
+
+   /**
+    * Extra placement rule for a storage slot (checked in addition to the slot being unlocked).
+    * The default allows any item; per-item-type devices restrict each item type to one slot.
+    */
+   public boolean canInsertIntoSlot(int slot, ItemStack stack) {
+      return true;
+   }
+
+   /** Icon shown on the storage screen's cell drawer tab. */
+   public ItemStack getCellTabIcon() {
+      return new ItemStack(com.industrialcrops.registry.ModItems.INDUSTRIAL_STORAGE_COMPONENT_1.get());
    }
 
    public ItemStackHandler getCellInventory() {
@@ -191,7 +233,7 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
       int capacityUnits = 0;
 
       for (int slot = 0; slot < 6; slot++) {
-         capacityUnits += getStorageCellMultiplier(this.cellInventory.getStackInSlot(slot));
+         capacityUnits += this.storageCellMultiplier(this.cellInventory.getStackInSlot(slot));
       }
 
       return Math.min(5184, capacityUnits * 54);
@@ -203,7 +245,7 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
 
    public boolean canRemoveStorageCell(int cellSlot) {
       if (cellSlot >= 0 && cellSlot < 6) {
-         int removedSlots = getStorageCellMultiplier(this.cellInventory.getStackInSlot(cellSlot)) * 54;
+         int removedSlots = this.storageCellMultiplier(this.cellInventory.getStackInSlot(cellSlot)) * 54;
          int unlockedAfterRemove = Math.max(0, this.getUnlockedStorageSlots() - removedSlots);
 
          for (int slot = unlockedAfterRemove; slot < 5184; slot++) {
@@ -250,8 +292,17 @@ public class AdvancedIndustrialStorageBlockEntity extends BlockEntity implements
          ItemStack remaining = stack.copy();
          int unlocked = this.getUnlockedStorageSlots();
 
+         // First top up slots that already hold this item, then fall back to empty slots.
          for (int slot = 0; slot < unlocked && !remaining.isEmpty(); slot++) {
-            remaining = this.storageInventory.insertItem(slot, remaining, false);
+            if (ItemStack.isSameItemSameComponents(this.storageInventory.getStackInSlot(slot), remaining)) {
+               remaining = this.storageInventory.insertItem(slot, remaining, false);
+            }
+         }
+
+         for (int slot = 0; slot < unlocked && !remaining.isEmpty(); slot++) {
+            if (this.storageInventory.getStackInSlot(slot).isEmpty()) {
+               remaining = this.storageInventory.insertItem(slot, remaining, false);
+            }
          }
 
          return original - remaining.getCount();

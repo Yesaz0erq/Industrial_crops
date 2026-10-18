@@ -26,16 +26,40 @@
       ],
       "faces": {
         "north": {
-          "texture": "#hull"
+          "texture": "#hull",
+          "uv": [
+            5,
+            0,
+            11,
+            16
+          ]
         },
         "south": {
-          "texture": "#hull"
+          "texture": "#hull",
+          "uv": [
+            5,
+            0,
+            11,
+            16
+          ]
         },
         "east": {
-          "texture": "#hull"
+          "texture": "#hull",
+          "uv": [
+            5,
+            0,
+            11,
+            16
+          ]
         },
         "west": {
-          "texture": "#hull"
+          "texture": "#hull",
+          "uv": [
+            5,
+            0,
+            11,
+            16
+          ]
         }
       }
     },
@@ -47,44 +71,44 @@
       ],
       "to": [
         11.25,
-        3.5,
+        4,
         11.25
       ],
       "faces": {
         "north": {
           "texture": "#band",
           "uv": [
-            0,
-            4,
-            16,
-            12
+            4.75,
+            7,
+            11.25,
+            9
           ]
         },
         "south": {
           "texture": "#band",
           "uv": [
-            0,
-            4,
-            16,
-            12
+            4.75,
+            7,
+            11.25,
+            9
           ]
         },
         "east": {
           "texture": "#band",
           "uv": [
-            0,
-            4,
-            16,
-            12
+            4.75,
+            7,
+            11.25,
+            9
           ]
         },
         "west": {
           "texture": "#band",
           "uv": [
-            0,
-            4,
-            16,
-            12
+            4.75,
+            7,
+            11.25,
+            9
           ]
         }
       }
@@ -102,7 +126,13 @@
       ],
       "faces": {
         "north": {
-          "texture": "#window"
+          "texture": "#window",
+          "uv": [
+            7,
+            1,
+            9,
+            4
+          ]
         }
       }
     },
@@ -119,7 +149,13 @@
       ],
       "faces": {
         "south": {
-          "texture": "#window"
+          "texture": "#window",
+          "uv": [
+            7,
+            1,
+            9,
+            4
+          ]
         }
       }
     }

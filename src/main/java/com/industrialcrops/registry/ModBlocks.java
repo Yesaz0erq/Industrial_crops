@@ -1,6 +1,8 @@
 package com.industrialcrops.registry;
 
 import com.industrialcrops.block.AdvancedIndustrialStorageBlock;
+import com.industrialcrops.block.ExpandableStorageBlock;
+import com.industrialcrops.block.SuperCompressorBlock;
 import com.industrialcrops.block.AdvancedManipulatorBlock;
 import com.industrialcrops.block.AnimalBreederBlock;
 import com.industrialcrops.block.ApControllerBlock;
@@ -63,6 +65,7 @@ import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
@@ -115,8 +118,8 @@ public final class ModBlocks {
    public static final DeferredBlock<Block> CROP_ANALYSIS_DEVICE = BLOCKS.register(
       "crop_analysis_device", () -> new CropAnalysisDeviceBlock(machineProperties())
    );
-   public static final DeferredBlock<Block> GOURD_MODIFICATION_DEVICE = BLOCKS.register(
-      "gourd_modification_device", () -> new GourdModificationDeviceBlock(machineProperties())
+   public static final DeferredBlock<Block> MELON_MODIFICATION_DEVICE = BLOCKS.register(
+      "melon_modification_device", () -> new GourdModificationDeviceBlock(machineProperties())
    );
    public static final DeferredBlock<Block> MIXER = BLOCKS.register(
       "mixer", () -> new MixerBlock(machineProperties().mapColor(MapColor.COLOR_ORANGE).sound(SoundType.COPPER))
@@ -173,7 +176,7 @@ public final class ModBlocks {
       "ultra_high_pressure_inv_forge", () -> new UltraHighPressureInvForgeBlock(machineProperties().mapColor(MapColor.COLOR_ORANGE))
    );
    public static final DeferredBlock<Block> DIGITAL_MINIATURE_FOREST = BLOCKS.register(
-      "digital_miniature_forest", () -> new DigitalMiniatureForestBlock(machineProperties().mapColor(MapColor.GOLD).noOcclusion().sound(SoundType.GLASS))
+      "digital_miniature_forest", () -> new DigitalMiniatureForestBlock(machineProperties().mapColor(MapColor.GOLD).noOcclusion().sound(SoundType.GLASS).isRedstoneConductor((state, level, pos) -> true))
    );
    public static final DeferredBlock<Block> BASIC_ENERGY_CABLE = registerEnergyCable("basic_energy_cable", MapColor.COLOR_ORANGE);
    public static final DeferredBlock<Block> ADVANCED_ENERGY_CABLE = registerEnergyCable("advanced_energy_cable", MapColor.GOLD);
@@ -185,6 +188,30 @@ public final class ModBlocks {
    );
    public static final DeferredBlock<Block> ADVANCED_INDUSTRIAL_STORAGE_DEVICE = BLOCKS.register(
       "advanced_industrial_storage_device", () -> new AdvancedIndustrialStorageBlock(machineProperties())
+   );
+   // New AP-tier blocks drop through their own block code (contents preserved), so they do not
+   // need requiresCorrectToolForDrops; add them to minecraft:mineable/pickaxe for faster mining.
+   public static final DeferredBlock<Block> EXPANDABLE_STORAGE_DEVICE = BLOCKS.register(
+      "expandable_storage_device",
+      () -> new ExpandableStorageBlock(Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.5F, 6.0F).sound(SoundType.METAL))
+   );
+   public static final DeferredBlock<Block> INTEGRATED_SMELTING_FURNACE = BLOCKS.register(
+      "integrated_smelting_furnace",
+      () -> new com.industrialcrops.block.IntegratedSmeltingFurnaceBlock(
+         Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.5F, 6.0F).sound(SoundType.METAL)
+            .lightLevel(state -> state.getValue(com.industrialcrops.block.IntegratedSmeltingFurnaceBlock.LIT) ? 13 : 0)
+      )
+   );
+   public static final DeferredBlock<Block> SUPER_COMPRESSOR = BLOCKS.register(
+      "super_compressor",
+      () -> new SuperCompressorBlock(Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.5F, 6.0F).sound(SoundType.METAL))
+   );
+   public static final DeferredBlock<Block> SUPER_CROP_CULTIVATOR = BLOCKS.register(
+      "super_crop_cultivator",
+      () -> new com.industrialcrops.block.SuperCropCultivatorBlock(
+         Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(3.5F, 6.0F).sound(SoundType.METAL)
+            .lightLevel(state -> state.getValue(com.industrialcrops.block.SuperCropCultivatorBlock.ACTIVE) ? 11 : 3)
+      )
    );
    public static final DeferredBlock<Block> INCUBATOR = BLOCKS.register(
       "slime_conversion_device", () -> new IncubatorBlock(machineProperties().noOcclusion().noLootTable().pushReaction(PushReaction.BLOCK))
@@ -214,6 +241,15 @@ public final class ModBlocks {
    );
    public static final DeferredBlock<Block> INDUSTRIAL_CARROT_CROP = BLOCKS.register(
       "industrial_carrot_crop", () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_CARROT, ModItems.INDUSTRIAL_CARROT, 4, 2, true)
+   );
+   public static final DeferredBlock<Block> BLACK_NEBULA_CARROT_CROP = BLOCKS.register(
+      "black_nebula_carrot_crop", () -> new com.industrialcrops.block.CultivatedCarrotCropBlock(cropProperties(), ModItems.BLACK_NEBULA_CARROT)
+   );
+   public static final DeferredBlock<Block> PURPLE_DRAGON_CARROT_CROP = BLOCKS.register(
+      "purple_dragon_carrot_crop", () -> new com.industrialcrops.block.CultivatedCarrotCropBlock(cropProperties(), ModItems.PURPLE_DRAGON_CARROT)
+   );
+   public static final DeferredBlock<Block> OMNI_CARROT_CROP = BLOCKS.register(
+      "omni_carrot_crop", () -> new com.industrialcrops.block.CultivatedCarrotCropBlock(cropProperties(), ModItems.OMNI_CARROT)
    );
    public static final DeferredBlock<Block> INDUSTRIAL_POTATO_CROP = BLOCKS.register(
       "industrial_potato_crop", () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_POTATO, ModItems.INDUSTRIAL_POTATO, 4, 2, true)
@@ -272,6 +308,9 @@ public final class ModBlocks {
    );
    public static final DeferredBlock<PlasmaJuiceCauldronBlock> PLASMA_JUICE_CAULDRON = BLOCKS.register(
       "plasma_juice_cauldron", () -> new PlasmaJuiceCauldronBlock(Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.CAULDRON))
+   );
+   public static final DeferredBlock<com.industrialcrops.block.OmniPotionCauldronBlock> OMNI_POTION_CAULDRON = BLOCKS.register(
+      "omni_potion_cauldron", () -> new com.industrialcrops.block.OmniPotionCauldronBlock(Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.CAULDRON).lightLevel(state -> 6))
    );
    public static final DeferredBlock<Block> COMET_SOIL = BLOCKS.register(
       "comet_soil",
@@ -418,7 +457,7 @@ public final class ModBlocks {
    public static final DeferredBlock<Block> AP_STEEL_CASING = BLOCKS.register("ap_steel_casing", () -> new Block(metalBlock(MapColor.COLOR_GRAY)));
    public static final DeferredBlock<Block> AP_STEEL_FRAME = BLOCKS.register(
       "ap_steel_frame",
-      () -> new Block(metalBlock(MapColor.COLOR_GRAY).noOcclusion().isViewBlocking((var0, var1, var2) -> false).isSuffocating((var0, var1, var2) -> false))
+      () -> new HalfTransparentBlock(metalBlock(MapColor.COLOR_GRAY).noOcclusion().isViewBlocking((var0, var1, var2) -> false).isSuffocating((var0, var1, var2) -> false))
    );
    public static final DeferredBlock<Block> AP_AGRICULTURE_CONTROLLER = BLOCKS.register(
       "ap_agricultural_complex",
@@ -474,6 +513,11 @@ public final class ModBlocks {
       BLOCKS.addAlias(
          ResourceLocation.fromNamespaceAndPath("industrialcrops", "infinite_logistics_transfer_device"),
          ResourceLocation.fromNamespaceAndPath("industrialcrops", "wireless_logistics_transfer_device")
+      );
+      // Renamed: Gourd Modification Device -> Melon Modification Device; keeps existing worlds intact.
+      BLOCKS.addAlias(
+         ResourceLocation.fromNamespaceAndPath("industrialcrops", "gourd_modification_device"),
+         ResourceLocation.fromNamespaceAndPath("industrialcrops", "melon_modification_device")
       );
    }
 }

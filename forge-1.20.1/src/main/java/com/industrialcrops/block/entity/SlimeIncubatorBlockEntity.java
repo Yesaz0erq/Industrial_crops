@@ -91,7 +91,8 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
             return IncubatorBlockEntity.SLIME_NONE;
         }
         if (stack.is(ModItems.INCUBATOR.get())) {
-            return IncubatorBlockItem.getStoredType(stack);
+            int storedType = IncubatorBlockItem.getStoredType(stack);
+            return storedType == IncubatorBlockEntity.SLIME_DIAMOND ? IncubatorBlockEntity.SLIME_NONE : storedType;
         }
         if (stack.is(Items.SLIME_SPAWN_EGG)) {
             return IncubatorBlockEntity.SLIME_VANILLA;
@@ -105,9 +106,6 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
         if (stack.is(ModItems.GOLDEN_REDSTONE_LAMP_SLIME_SPAWN_EGG.get())) {
             return IncubatorBlockEntity.SLIME_GOLD;
         }
-        if (stack.is(ModItems.BLUE_COMPONENT_SUBSTRATE_SLIME_SPAWN_EGG.get())) {
-            return IncubatorBlockEntity.SLIME_DIAMOND;
-        }
         return IncubatorBlockEntity.SLIME_NONE;
     }
 
@@ -117,7 +115,6 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
             case IncubatorBlockEntity.SLIME_COPPER -> new ItemStack(Items.COPPER_INGOT);
             case IncubatorBlockEntity.SLIME_IRON -> new ItemStack(Items.IRON_INGOT);
             case IncubatorBlockEntity.SLIME_GOLD -> new ItemStack(Items.GOLD_INGOT);
-            case IncubatorBlockEntity.SLIME_DIAMOND -> new ItemStack(ModItems.COMPONENT_SUBSTRATE.get());
             default -> ItemStack.EMPTY;
         };
     }

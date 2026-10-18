@@ -44,6 +44,11 @@ public final class FieldGuideScreen extends Screen {
    private static final int HEIGHT = 230;
    private static final int TAB_WIDTH = 24;
    private static final int TAB_STEP = 19;
+   private static final int VISIBLE_TABS = 10;
+   private static final int TABS_TOP = 22;
+   private static final int TAB_BUTTON_SIZE = 12;
+   private static int rememberedTabScroll;
+   private int tabScroll;
    private static final int RIGHT_WIDTH = 68;
    private static final int LINE_HEIGHT = 9;
    private static final int SCREEN_EDGE = -14012623;
@@ -90,6 +95,45 @@ public final class FieldGuideScreen extends Screen {
       super(Component.translatable("item.industrialcrops.field_guide"));
       this.chapter = Mth.clamp(rememberedChapter, 0, FieldGuideContent.CHAPTERS.size() - 1);
       this.page = Mth.clamp(rememberedPage, 0, this.currentChapter().pages().size() - 1);
+      this.tabScroll = Mth.clamp(rememberedTabScroll, 0, maxTabScroll());
+      this.ensureChapterVisible();
+   }
+
+   private static int maxTabScroll() {
+      return Math.max(0, FieldGuideContent.CHAPTERS.size() - VISIBLE_TABS);
+   }
+
+   private void ensureChapterVisible() {
+      if (this.chapter < this.tabScroll) {
+         this.tabScroll = this.chapter;
+      } else if (this.chapter >= this.tabScroll + VISIBLE_TABS) {
+         this.tabScroll = this.chapter - VISIBLE_TABS + 1;
+      }
+      this.tabScroll = Mth.clamp(this.tabScroll, 0, maxTabScroll());
+   }
+
+   private int tabY(int index) {
+      return this.top + TABS_TOP + (index - this.tabScroll) * TAB_STEP;
+   }
+
+   private int tabButtonsY() {
+      return this.top + TABS_TOP + VISIBLE_TABS * TAB_STEP + 1;
+   }
+
+   private boolean canScrollTabsUp() {
+      return this.tabScroll > 0;
+   }
+
+   private boolean canScrollTabsDown() {
+      return this.tabScroll < maxTabScroll();
+   }
+
+   private void scrollTabs(int delta) {
+      int next = Mth.clamp(this.tabScroll + delta, 0, maxTabScroll());
+      if (next != this.tabScroll) {
+         this.tabScroll = next;
+         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+      }
    }
 
    protected void init() {
@@ -122,6 +166,7 @@ public final class FieldGuideScreen extends Screen {
    public void removed() {
       rememberedChapter = this.chapter;
       rememberedPage = this.page;
+      rememberedTabScroll = this.tabScroll;
       super.removed();
    }
 
@@ -180,6 +225,7 @@ public final class FieldGuideScreen extends Screen {
       if (newChapter != this.chapter || newPage != this.page) {
          this.chapter = newChapter;
          this.page = newPage;
+         this.ensureChapterVisible();
          this.loadPage();
          this.playPageSound();
       }
@@ -245,9 +291,10 @@ public final class FieldGuideScreen extends Screen {
    private void drawTabs(GuiGraphics graphics, int mouseX, int mouseY) {
       int x = this.left + 6;
 
-      for (int i = 0; i < FieldGuideContent.CHAPTERS.size(); i++) {
+      int lastTab = Math.min(FieldGuideContent.CHAPTERS.size(), this.tabScroll + VISIBLE_TABS);
+      for (int i = this.tabScroll; i < lastTab; i++) {
          FieldGuideContent.Chapter entry = FieldGuideContent.CHAPTERS.get(i);
-         int y = this.top + 24 + i * 19;
+         int y = this.tabY(i);
          boolean selected = i == this.chapter;
          boolean hovered = inside((double)mouseX, (double)mouseY, x, y, 24, 18);
          int width = selected ? 27 : 24;
@@ -273,6 +320,35 @@ public final class FieldGuideScreen extends Screen {
                Component.translatable(entry.titleKey())
             );
          }
+      }
+
+      if (maxTabScroll() > 0) {
+         int by = this.tabButtonsY();
+         drawVerticalArrowButton(graphics, x, by, TAB_BUTTON_SIZE, TAB_BUTTON_SIZE, true, this.canScrollTabsUp(), mouseX, mouseY);
+         drawVerticalArrowButton(graphics, x + TAB_BUTTON_SIZE, by, TAB_BUTTON_SIZE, TAB_BUTTON_SIZE, false, this.canScrollTabsDown(), mouseX, mouseY);
+         if (inside((double)mouseX, (double)mouseY, x, by, TAB_BUTTON_SIZE * 2, TAB_BUTTON_SIZE)) {
+            int first = this.tabScroll + 1;
+            int last = Math.min(FieldGuideContent.CHAPTERS.size(), this.tabScroll + VISIBLE_TABS);
+            this.hoveredText = List.of(
+               Component.translatable(inside((double)mouseX, (double)mouseY, x, by, TAB_BUTTON_SIZE, TAB_BUTTON_SIZE)
+                  ? "gui.industrialcrops.guide.tabs_up" : "gui.industrialcrops.guide.tabs_down"),
+               Component.translatable("gui.industrialcrops.guide.tabs_range", new Object[]{first, last, FieldGuideContent.CHAPTERS.size()})
+                  .withStyle(ChatFormatting.GRAY)
+            );
+         }
+      }
+   }
+
+   private static void drawVerticalArrowButton(GuiGraphics graphics, int x, int y, int w, int h, boolean up, boolean enabled, int mouseX, int mouseY) {
+      boolean hovered = enabled && inside((double)mouseX, (double)mouseY, x, y, w, h);
+      IndustrialGuiStyle.drawSmallButton(graphics, x, y, w, h, hovered);
+      int color = !enabled ? -9539986 : (hovered ? -5871035 : -790037);
+      int centerX = x + w / 2;
+      int centerY = y + h / 2;
+
+      for (int i = 0; i < 3; i++) {
+         int row = up ? centerY - 2 + i : centerY + 1 - i;
+         graphics.fill(centerX - i - 1, row, centerX + i + 1, row + 1, color);
       }
    }
 
@@ -521,9 +597,23 @@ public final class FieldGuideScreen extends Screen {
 
    public boolean mouseClicked(double mouseX, double mouseY, int button) {
       if (button == 0) {
-         for (int i = 0; i < FieldGuideContent.CHAPTERS.size(); i++) {
-            if (inside(mouseX, mouseY, this.left + 6, this.top + 24 + i * 19, 24, 18)) {
+         int lastTab = Math.min(FieldGuideContent.CHAPTERS.size(), this.tabScroll + VISIBLE_TABS);
+         for (int i = this.tabScroll; i < lastTab; i++) {
+            if (inside(mouseX, mouseY, this.left + 6, this.tabY(i), 24, 18)) {
                this.goTo(i, 0);
+               return true;
+            }
+         }
+
+         if (maxTabScroll() > 0) {
+            int by = this.tabButtonsY();
+            if (inside(mouseX, mouseY, this.left + 6, by, TAB_BUTTON_SIZE, TAB_BUTTON_SIZE)) {
+               this.scrollTabs(-VISIBLE_TABS);
+               return true;
+            }
+
+            if (inside(mouseX, mouseY, this.left + 6 + TAB_BUTTON_SIZE, by, TAB_BUTTON_SIZE, TAB_BUTTON_SIZE)) {
+               this.scrollTabs(VISIBLE_TABS);
                return true;
             }
          }
@@ -584,7 +674,7 @@ public final class FieldGuideScreen extends Screen {
       if (this.maxScroll > 0 && inside(mouseX, mouseY, this.screenX, this.screenY, this.screenW, this.screenH)) {
          this.scroll = Mth.clamp(this.scroll - scrollY * 9.0 * 2.0, 0.0, (double)this.maxScroll);
          return true;
-      } else if (inside(mouseX, mouseY, this.left + 6, this.top + 24, 24, FieldGuideContent.CHAPTERS.size() * 19)) {
+      } else if (inside(mouseX, mouseY, this.left + 6, this.top + TABS_TOP, 24, VISIBLE_TABS * TAB_STEP + TAB_BUTTON_SIZE + 1)) {
          this.goTo(this.chapter - (int)Math.signum(scrollY), 0);
          return true;
       } else {
@@ -681,22 +771,50 @@ public final class FieldGuideScreen extends Screen {
 
                for (CrystalWorkbenchRecipes.Recipe workbench : CrystalWorkbenchRecipes.all()) {
                   if (workbench.output().is(item)) {
-                     Map<Item, Integer> totals = new LinkedHashMap<>();
+                     // Group identical stacks, keeping data components so different potions stay separate.
+                     List<ItemStack> kinds = new ArrayList<>();
+                     List<Integer> counts = new ArrayList<>();
 
                      for (ItemStack input : workbench.inputs()) {
                         if (!input.isEmpty()) {
-                           totals.merge(input.getItem(), input.getCount(), Integer::sum);
+                           int at = -1;
+                           for (int k = 0; k < kinds.size(); k++) {
+                              if (ItemStack.isSameItemSameComponents(kinds.get(k), input)) at = k;
+                           }
+                           if (at < 0) {
+                              kinds.add(input.copyWithCount(1));
+                              counts.add(input.getCount());
+                           } else {
+                              counts.set(at, counts.get(at) + input.getCount());
+                           }
                         }
                      }
 
                      List<FieldGuideScreen.Entry> entries = new ArrayList<>();
-                     totals.forEach((inputx, count) -> entries.add(new FieldGuideScreen.Entry(List.of(new ItemStack(inputx)), count)));
+                     for (int k = 0; k < kinds.size(); k++) entries.add(new FieldGuideScreen.Entry(List.of(kinds.get(k)), counts.get(k)));
                      Component fluid = workbench.fluid().isEmpty()
                         ? null
                         : Component.translatable(
                            "gui.industrialcrops.guide.fluid", new Object[]{workbench.fluid().getAmount(), workbench.fluid().getHoverName()}
                         );
                      return new FieldGuideScreen.RecipeView(false, 3, 3, entries, workbench.output().copy(), station("crystal_steel_workbench"), fluid);
+                  }
+               }
+
+               for (com.industrialcrops.recipe.SuperCultivationRecipes.Recipe cultivation : com.industrialcrops.recipe.SuperCultivationRecipes.all()) {
+                  if (cultivation.resultStack().is(item)) {
+                     return new FieldGuideScreen.RecipeView(
+                        false,
+                        3,
+                        3,
+                        java.util.stream.Stream.concat(
+                           java.util.stream.Stream.of(single(cultivation.displayCrop())),
+                           cultivation.materialStacks().stream().map(FieldGuideScreen.RecipeView::single)
+                        ).toList(),
+                        cultivation.resultStack(),
+                        station("super_crop_cultivator"),
+                        null
+                     );
                   }
                }
 
@@ -708,7 +826,7 @@ public final class FieldGuideScreen extends Screen {
                         3,
                         List.of(single(displayxxxx.melon()), single(displayxxxx.pumpkin())),
                         displayxxxx.output().copy(),
-                        station("gourd_modification_device"),
+                        station("melon_modification_device"),
                         null
                      );
                   }

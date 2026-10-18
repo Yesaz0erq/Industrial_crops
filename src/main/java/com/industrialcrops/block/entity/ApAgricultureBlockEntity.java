@@ -1,6 +1,7 @@
 package com.industrialcrops.block.entity;
 
 import com.industrialcrops.block.ApControllerBlock;
+import com.industrialcrops.machine.ApStructure;
 import com.industrialcrops.machine.PoweredMachineSupport;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModBlocks;
@@ -27,10 +28,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
@@ -58,7 +59,6 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
    public static final int STATUS_ENERGY = 2;
    public static final int STATUS_NO_SEEDS = 3;
    public static final int STATUS_IDLE = 4;
-   private static final int SIDE = 25;
    private final ItemStackHandler inventory = new ItemStackHandler(18) {
       public boolean isItemValid(int var1, ItemStack var2) {
          return var1 >= 9 || ApAgricultureBlockEntity.isPlantableSeed(var2);
@@ -75,6 +75,7 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
    private int boost = 2;
    private int harvested;
    private int scanIndex;
+   private boolean scanNeeded = true;
    private int planted;
    private int status = 1;
    private long boosted;
@@ -109,6 +110,15 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
       super((BlockEntityType<?>)ModBlockEntities.AP_AGRICULTURE.get(), var1, var2);
    }
 
+   @Override public ApStructure.Type structureType() { return ApStructure.Type.FARM; }
+
+   @Override protected void onStructureChanged() {
+      this.crops.clear();
+      this.ripe.clear();
+      this.scanIndex = 0;
+      this.scanNeeded = true;
+   }
+
    public static boolean isPlantableSeed(ItemStack var0) {
       return !var0.isEmpty() && var0.getItem() instanceof BlockItem var1 && (var1.getBlock() instanceof CropBlock || var1.getBlock() instanceof StemBlock);
    }
@@ -128,7 +138,7 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
             var3.status = 1;
          } else {
             int var8 = var3.upgrades.speedTier();
-            if (var5 % 40L == 0L) {
+            if (var3.scanNeeded || var5 % 40L == 0L) {
                var3.scanCrops(var4);
             }
 
@@ -168,30 +178,18 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
       }
    }
 
-   private void scanCrops(ServerLevel var1) {
+   private void scanCrops(ServerLevel level) {
       this.crops.clear();
       this.ripe.clear();
-      BlockPos var2 = this.center();
-
-      for (int var3 = -12; var3 <= 12; var3++) {
-         for (int var4 = -12; var4 <= 12; var4++) {
-            int var5 = var2.getX() + var3;
-            int var6 = var2.getZ() + var4;
-            if (var1.hasChunk(var5 >> 4, var6 >> 4)) {
-               for (int var7 = -3; var7 <= 3; var7++) {
-                  BlockPos var8 = new BlockPos(var5, var2.getY() + var7, var6);
-                  BlockState var9 = var1.getBlockState(var8);
-                  if (var9.getBlock() instanceof CropBlock var10 && var10.isMaxAge(var9)) {
-                     this.ripe.add(var8);
-                     break;
-                  }
-
-                  if (var9.isRandomlyTicking() && isGrowable(var1, var8, var9)) {
-                     this.crops.add(var8);
-                     break;
-                  }
-               }
-            }
+      this.scanNeeded = false;
+      ApStructure.Layout area = this.layout();
+      for (int u = 1; u < area.width() - 1; u++) {
+         for (int v = 1; v < area.depth() - 1; v++) {
+            BlockPos pos = area.pos(u, 0, v);
+            if (!this.workPosLoaded(pos)) continue;
+            BlockState state = level.getBlockState(pos);
+            if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) this.ripe.add(pos);
+            else if (state.isRandomlyTicking() && isGrowable(level, pos, state)) this.crops.add(pos);
          }
       }
    }
@@ -222,6 +220,7 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
 
          for (int var6 = 0; var6 < var3 && this.energy.getEnergyStored() >= var4; var6++) {
             BlockPos var7 = this.crops.get(var1.random.nextInt(this.crops.size()));
+            if (!this.workPosLoaded(var7)) continue;
             BlockState var8 = var1.getBlockState(var7);
             if (var8.isRandomlyTicking() && isGrowable(var1, var7, var8)) {
                var8.randomTick(var1, var7, var1.random);
@@ -253,6 +252,7 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
 
          while (var2 > 0 && !this.ripe.isEmpty() && this.energy.getEnergyStored() >= var3) {
             BlockPos var5 = this.ripe.remove(this.ripe.size() - 1);
+            if (!this.workPosLoaded(var5)) continue;
             BlockState var6 = var1.getBlockState(var5);
             if (var6.getBlock() instanceof CropBlock var7 && var7.isMaxAge(var6)) {
                List<ItemStack> var12 = Block.getDrops(var6, var1, var5, null);
@@ -329,6 +329,8 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
 
    private boolean plantFromNeighbours(BlockPos var1) {
       for (Direction var5 : Direction.values()) {
+         BlockPos neighbour = this.worldPosition.relative(var5);
+         if (!this.level.hasChunk(neighbour.getX() >> 4, neighbour.getZ() >> 4)) continue;
          IItemHandler var6 = (IItemHandler)this.level.getCapability(ItemHandler.BLOCK, this.worldPosition.relative(var5), var5.getOpposite());
          if (var6 != null && this.plantFrom(var6, var1)) {
             return true;
@@ -340,24 +342,18 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
 
    @Nullable
    private BlockPos nextTarget() {
-      int var1 = this.scanIndex++;
-      if (this.scanIndex >= 625) {
-         this.scanIndex = 0;
-      }
-
-      BlockPos var2 = this.center();
-      int var3 = var2.getX() - 12 + var1 % 25;
-      int var4 = var2.getZ() - 12 + var1 / 25;
-      if (this.level != null && this.level.hasChunk(var3 >> 4, var4 >> 4)) {
-         int var5 = this.level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, var3, var4);
-         return Math.abs(var5 - var2.getY()) > 4 ? null : new BlockPos(var3, var5, var4);
-      } else {
-         return null;
-      }
+      ApStructure.Layout area = this.layout();
+      int interiorWidth = area.width() - 2;
+      int count = interiorWidth * (area.depth() - 2);
+      int index = Math.floorMod(this.scanIndex, count);
+      this.scanIndex = (index + 1) % count;
+      BlockPos pos = area.pos(1 + index % interiorWidth, 0, 1 + index / interiorWidth);
+      return this.workPosLoaded(pos) ? pos : null;
    }
 
-   private boolean isOpenSoil(BlockPos var1) {
-      return this.level.getBlockState(var1).isAir() && !this.level.getBlockState(var1.below()).isAir();
+   private boolean isOpenSoil(BlockPos pos) {
+      return this.workPosLoaded(pos) && this.level.getBlockState(pos).isAir()
+         && this.level.getBlockState(pos.below()).is(Blocks.FARMLAND);
    }
 
    private boolean plantFrom(IItemHandler var1, BlockPos var2) {
@@ -435,7 +431,8 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
 
       this.energy.set(var1.getInt("Energy"));
       this.boost = var1.contains("Boost") ? Math.max(0, Math.min(4, var1.getInt("Boost"))) : 2;
-      this.scanIndex = Math.floorMod(var1.getInt("ScanIndex"), 625);
+      this.scanIndex = Math.max(0, var1.getInt("ScanIndex"));
+      this.scanNeeded = true;
       this.planted = Math.max(0, var1.getInt("Planted"));
       this.boosted = Math.max(0L, var1.getLong("Boosted"));
       this.harvested = Math.max(0, var1.getInt("Harvested"));

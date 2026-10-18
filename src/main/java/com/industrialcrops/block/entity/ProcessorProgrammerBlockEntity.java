@@ -71,7 +71,8 @@ public final class ProcessorProgrammerBlockEntity extends BlockEntity implements
             return;
         }
         for (ManipulatorRecipeDisplay recipe : ProcessorProgrammingRecipes.all()) {
-            if (hasIngredients(recipe) && canAcceptOutput(recipe.output())) {
+            int[] consumption = ingredientConsumption(recipe);
+            if (consumption != null && canAcceptOutput(recipe.output())) {
                 progress += SpeedUpgradeHelper.progressStep(inventory, UPGRADE_SLOT_START, UPGRADE_SLOT_COUNT, MAX_PROGRESS);
                 if (progress < MAX_PROGRESS) {
                     setChangedAndSync();
@@ -79,7 +80,7 @@ public final class ProcessorProgrammerBlockEntity extends BlockEntity implements
                 }
                 crafting = true;
                 try {
-                    consumeIngredients(recipe);
+                    consumeIngredients(consumption);
                     ItemStack output = inventory.getStackInSlot(OUTPUT_SLOT);
                     if (output.isEmpty()) {
                         inventory.setStackInSlot(OUTPUT_SLOT, recipe.output().copy());
@@ -101,32 +102,35 @@ public final class ProcessorProgrammerBlockEntity extends BlockEntity implements
         }
     }
 
-    private boolean hasIngredients(ManipulatorRecipeDisplay recipe) {
-        for (ManipulatorIngredient ingredient : recipe.ingredients()) {
-            int found = 0;
-            for (int slot = 0; slot < INPUT_SLOT_COUNT; slot++) {
-                ItemStack stack = inventory.getStackInSlot(slot);
-                if (matches(stack, ingredient)) {
-                    found += stack.getCount();
-                }
-            }
-            if (found < ingredient.count()) {
-                return false;
-            }
+    /** Reserve each input once, then consume that exact successful allocation. */
+    private int[] ingredientConsumption(ManipulatorRecipeDisplay recipe) {
+        int[] available = new int[INPUT_SLOT_COUNT];
+        int[] consumption = new int[INPUT_SLOT_COUNT];
+        for (int slot = 0; slot < INPUT_SLOT_COUNT; slot++) {
+            available[slot] = inventory.getStackInSlot(slot).getCount();
         }
-        return true;
-    }
-
-    private void consumeIngredients(ManipulatorRecipeDisplay recipe) {
         for (ManipulatorIngredient ingredient : recipe.ingredients()) {
             int remaining = ingredient.count();
             for (int slot = 0; slot < INPUT_SLOT_COUNT && remaining > 0; slot++) {
                 ItemStack stack = inventory.getStackInSlot(slot);
                 if (matches(stack, ingredient)) {
-                    int removed = Math.min(remaining, stack.getCount());
-                    inventory.extractItem(slot, removed, false);
-                    remaining -= removed;
+                    int reserved = Math.min(remaining, available[slot]);
+                    available[slot] -= reserved;
+                    consumption[slot] += reserved;
+                    remaining -= reserved;
                 }
+            }
+            if (remaining > 0) {
+                return null;
+            }
+        }
+        return consumption;
+    }
+
+    private void consumeIngredients(int[] consumption) {
+        for (int slot = 0; slot < INPUT_SLOT_COUNT; slot++) {
+            if (consumption[slot] > 0) {
+                inventory.extractItem(slot, consumption[slot], false);
             }
         }
     }

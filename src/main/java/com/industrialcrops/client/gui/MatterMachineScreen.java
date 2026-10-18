@@ -142,7 +142,6 @@ public final class MatterMachineScreen extends IndustrialContainerScreen<MatterM
             for (int row = 0; row < 3; row++) {
                 IndustrialGuiStyle.drawRs2GridRow(graphics, leftPos + 7, topPos + 19 + row * 18);
             }
-            IndustrialGuiStyle.drawWorkPanel(graphics, leftPos + 7, topPos + 77, 162, 19);
             IndustrialGuiStyle.drawPlayerInventory(graphics, leftPos, topPos, 8, 109, 167);
         } else {
             drawTerminalMachineBackground(graphics);

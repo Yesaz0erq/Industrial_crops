@@ -27,7 +27,8 @@
     "client.ControllerSlotCountMixin",
     "client.SimpleSorterControllerMixin",
     "client.IpnControllerMixin",
-    "client.SimpleSorterStaticControllerMixin"
+    "client.SimpleSorterStaticControllerMixin",
+    "client.JeiModNameLocalizationMixin"
   ],
   "injectors": {
     "defaultRequire": 1

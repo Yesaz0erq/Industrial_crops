@@ -1,6 +1,7 @@
 package com.industrialcrops.registry;
 
 import com.industrialcrops.screen.AdvancedIndustrialStorageMenu;
+import com.industrialcrops.screen.SuperCompressorMenu;
 import com.industrialcrops.screen.AnimalBreederMenu;
 import com.industrialcrops.screen.ApAgricultureMenu;
 import com.industrialcrops.screen.ApLivestockMenu;
@@ -54,8 +55,8 @@ public final class ModMenus {
    public static final DeferredHolder<MenuType<?>, MenuType<CropAnalysisDeviceMenu>> CROP_ANALYSIS_DEVICE = MENUS.register(
       "crop_analysis_device", () -> IMenuTypeExtension.create(CropAnalysisDeviceMenu::new)
    );
-   public static final DeferredHolder<MenuType<?>, MenuType<GourdModificationDeviceMenu>> GOURD_MODIFICATION_DEVICE = MENUS.register(
-      "gourd_modification_device", () -> IMenuTypeExtension.create(GourdModificationDeviceMenu::new)
+   public static final DeferredHolder<MenuType<?>, MenuType<GourdModificationDeviceMenu>> MELON_MODIFICATION_DEVICE = MENUS.register(
+      "melon_modification_device", () -> IMenuTypeExtension.create(GourdModificationDeviceMenu::new)
    );
    public static final DeferredHolder<MenuType<?>, MenuType<BasicControlDeviceMenu>> BASIC_CONTROL_DEVICE = MENUS.register(
       "basic_control_device", () -> IMenuTypeExtension.create(BasicControlDeviceMenu::new)
@@ -95,6 +96,15 @@ public final class ModMenus {
    );
    public static final DeferredHolder<MenuType<?>, MenuType<ElectricFurnaceMenu>> ELECTRIC_FURNACE = MENUS.register(
       "electric_furnace", () -> IMenuTypeExtension.create(ElectricFurnaceMenu::new)
+   );
+   public static final DeferredHolder<MenuType<?>, MenuType<com.industrialcrops.screen.IntegratedSmeltingFurnaceMenu>> INTEGRATED_SMELTING_FURNACE = MENUS.register(
+      "integrated_smelting_furnace", () -> IMenuTypeExtension.create(com.industrialcrops.screen.IntegratedSmeltingFurnaceMenu::new)
+   );
+   public static final DeferredHolder<MenuType<?>, MenuType<SuperCompressorMenu>> SUPER_COMPRESSOR = MENUS.register(
+      "super_compressor", () -> IMenuTypeExtension.create(SuperCompressorMenu::new)
+   );
+   public static final DeferredHolder<MenuType<?>, MenuType<com.industrialcrops.screen.SuperCropCultivatorMenu>> SUPER_CROP_CULTIVATOR = MENUS.register(
+      "super_crop_cultivator", () -> IMenuTypeExtension.create(com.industrialcrops.screen.SuperCropCultivatorMenu::new)
    );
    public static final DeferredHolder<MenuType<?>, MenuType<UltraHighPressureInvForgeMenu>> ULTRA_HIGH_PRESSURE_INV_FORGE = MENUS.register(
       "ultra_high_pressure_inv_forge", () -> IMenuTypeExtension.create(UltraHighPressureInvForgeMenu::new)

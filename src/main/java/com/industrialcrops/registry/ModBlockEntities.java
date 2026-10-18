@@ -1,6 +1,8 @@
 package com.industrialcrops.registry;
 
 import com.industrialcrops.block.entity.AdvancedIndustrialStorageBlockEntity;
+import com.industrialcrops.block.entity.ExpandableStorageBlockEntity;
+import com.industrialcrops.block.entity.SuperCompressorBlockEntity;
 import com.industrialcrops.block.entity.AnimalBreederBlockEntity;
 import com.industrialcrops.block.entity.ApAgricultureBlockEntity;
 import com.industrialcrops.block.entity.ApLivestockBlockEntity;
@@ -63,9 +65,9 @@ public final class ModBlockEntities {
    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CropAnalysisDeviceBlockEntity>> CROP_ANALYSIS_DEVICE = BLOCK_ENTITIES.register(
       "crop_analysis_device", () -> Builder.of(CropAnalysisDeviceBlockEntity::new, new Block[]{(Block)ModBlocks.CROP_ANALYSIS_DEVICE.get()}).build(null)
    );
-   public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GourdModificationDeviceBlockEntity>> GOURD_MODIFICATION_DEVICE = BLOCK_ENTITIES.register(
-      "gourd_modification_device",
-      () -> Builder.of(GourdModificationDeviceBlockEntity::new, new Block[]{(Block)ModBlocks.GOURD_MODIFICATION_DEVICE.get()}).build(null)
+   public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GourdModificationDeviceBlockEntity>> MELON_MODIFICATION_DEVICE = BLOCK_ENTITIES.register(
+      "melon_modification_device",
+      () -> Builder.of(GourdModificationDeviceBlockEntity::new, new Block[]{(Block)ModBlocks.MELON_MODIFICATION_DEVICE.get()}).build(null)
    );
    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MixerBlockEntity>> MIXER = BLOCK_ENTITIES.register(
       "mixer", () -> Builder.of(MixerBlockEntity::new, new Block[]{(Block)ModBlocks.MIXER.get()}).build(null)
@@ -173,6 +175,22 @@ public final class ModBlockEntities {
    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE = BLOCK_ENTITIES.register(
       "electric_furnace", () -> Builder.of(ElectricFurnaceBlockEntity::new, new Block[]{(Block)ModBlocks.ELECTRIC_FURNACE.get()}).build(null)
    );
+   public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ExpandableStorageBlockEntity>> EXPANDABLE_STORAGE_DEVICE = BLOCK_ENTITIES.register(
+      "expandable_storage_device",
+      () -> Builder.of(ExpandableStorageBlockEntity::new, new Block[]{(Block)ModBlocks.EXPANDABLE_STORAGE_DEVICE.get()}).build(null)
+   );
+   public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.industrialcrops.block.entity.IntegratedSmeltingFurnaceBlockEntity>> INTEGRATED_SMELTING_FURNACE = BLOCK_ENTITIES.register(
+      "integrated_smelting_furnace",
+      () -> Builder.of(com.industrialcrops.block.entity.IntegratedSmeltingFurnaceBlockEntity::new, new Block[]{(Block)ModBlocks.INTEGRATED_SMELTING_FURNACE.get()}).build(null)
+   );
+   public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SuperCompressorBlockEntity>> SUPER_COMPRESSOR = BLOCK_ENTITIES.register(
+      "super_compressor",
+      () -> Builder.of(SuperCompressorBlockEntity::new, new Block[]{(Block)ModBlocks.SUPER_COMPRESSOR.get()}).build(null)
+   );
+   public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.industrialcrops.block.entity.SuperCropCultivatorBlockEntity>> SUPER_CROP_CULTIVATOR = BLOCK_ENTITIES.register(
+      "super_crop_cultivator",
+      () -> Builder.of(com.industrialcrops.block.entity.SuperCropCultivatorBlockEntity::new, new Block[]{(Block)ModBlocks.SUPER_CROP_CULTIVATOR.get()}).build(null)
+   );
    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<UltraHighPressureInvForgeBlockEntity>> ULTRA_HIGH_PRESSURE_INV_FORGE = BLOCK_ENTITIES.register(
       "ultra_high_pressure_inv_forge",
       () -> Builder.of(UltraHighPressureInvForgeBlockEntity::new, new Block[]{(Block)ModBlocks.ULTRA_HIGH_PRESSURE_INV_FORGE.get()}).build(null)
@@ -253,6 +271,11 @@ public final class ModBlockEntities {
       BLOCK_ENTITIES.addAlias(
          ResourceLocation.fromNamespaceAndPath("industrialcrops", "infinite_logistics_transfer_device"),
          ResourceLocation.fromNamespaceAndPath("industrialcrops", "wireless_logistics_transfer_device")
+      );
+      // Renamed: Gourd Modification Device -> Melon Modification Device; keeps existing worlds intact.
+      BLOCK_ENTITIES.addAlias(
+         ResourceLocation.fromNamespaceAndPath("industrialcrops", "gourd_modification_device"),
+         ResourceLocation.fromNamespaceAndPath("industrialcrops", "melon_modification_device")
       );
    }
 }

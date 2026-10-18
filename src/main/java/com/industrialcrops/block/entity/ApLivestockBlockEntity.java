@@ -128,17 +128,16 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
       return (Block)ModBlocks.ANIMAL_BREEDER.get();
    }
 
-   private AABB area() {
-      BlockPos var1 = ApStructure.center(this.worldPosition, this.facing());
-      return new AABB(
-         (double)(var1.getX() - 12),
-         (double)(var1.getY() - 3),
-         (double)(var1.getZ() - 12),
-         (double)(var1.getX() + 12 + 1),
-         (double)(var1.getY() + 6),
-         (double)(var1.getZ() + 12 + 1)
-      );
+   @Override public ApStructure.Type structureType() { return ApStructure.Type.RANCH; }
+
+   @Override protected void onStructureChanged() { this.animalCount = 0; }
+
+   private boolean inside(net.minecraft.world.entity.Entity entity) {
+      return this.layout().workBounds().contains(entity.position())
+         && this.workPosLoaded(entity.blockPosition());
    }
+
+   private AABB area() { return this.layout().workBounds(); }
 
    private static boolean livestock(Animal var0) {
       return var0.isAlive()
@@ -172,7 +171,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
    private void work(ServerLevel var1) {
       boolean var2 = this.cycles++ % 5 == 0;
       AABB var3 = this.area();
-      List<Animal> var4 = var1.getEntitiesOfClass(Animal.class, var3, ApLivestockBlockEntity::livestock);
+      List<Animal> var4 = var1.getEntitiesOfClass(Animal.class, var3, animal -> livestock(animal) && this.inside(animal));
       this.animalCount = var4.size();
       boolean var5 = this.collectDrops(var1, var3);
       if (var4.isEmpty()) {
@@ -244,8 +243,9 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
          Animal var3 = null;
 
          for (Animal var5 : var2) {
-            if (var5.getAge() == 0 && !var5.isInLove()) {
+            if (livestock(var5) && this.inside(var5) && var5.getAge() == 0 && !var5.isInLove()) {
                if (var3 != null) {
+                  if (!livestock(var3) || !this.inside(var3)) { var3 = var5; continue; }
                   int var6 = this.feedSlotFor(var3, -1);
                   if (var6 < 0) {
                      return false;
@@ -270,7 +270,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
                   if (!var8.isCanceled() && var9 != null) {
                      var9.setBaby(true);
                      var9.moveTo(var3.getX(), var3.getY(), var3.getZ(), 0.0F, 0.0F);
-                     if (!var1.addFreshEntity(var9)) {
+                     if (!this.inside(var9) || !var1.addFreshEntity(var9)) {
                         var3.resetLove();
                         var5.resetLove();
                         return false;
@@ -301,7 +301,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
       boolean var3 = false;
 
       for (Animal var5 : var2) {
-         if (var5 instanceof Sheep) {
+         if (livestock(var5) && this.inside(var5) && var5 instanceof Sheep) {
             Sheep var6 = (Sheep)var5;
             if (var6.readyForShearing()) {
                if (this.energy.getEnergyStored() < this.upgrades.cost(100)) {
@@ -324,7 +324,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
          return false;
       } else {
          FakePlayer var4 = FakePlayerFactory.get(var1, PROFILE);
-         BlockPos var5 = ApStructure.center(this.worldPosition, this.facing());
+         BlockPos var5 = this.center();
          var4.setPos((double)var5.getX() + 0.5, (double)(var5.getY() + 1), (double)var5.getZ() + 0.5);
          boolean var6 = false;
 
@@ -333,7 +333,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
                break;
             }
 
-            if (!var8.isBaby() && var8.isAlive()) {
+            if (livestock(var8) && this.inside(var8) && !var8.isBaby()) {
                var8.hurt(var1.damageSources().playerAttack(var4), Float.MAX_VALUE);
                if (!var8.isAlive()) {
                   this.energy.consume(this.upgrades.cost(300));
@@ -352,7 +352,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
       boolean var3 = false;
 
       for (Animal var5 : var2) {
-         if (var5.isBaby()) {
+         if (livestock(var5) && this.inside(var5) && var5.isBaby()) {
             if (this.energy.getEnergyStored() < this.upgrades.cost(40)) {
                break;
             }
@@ -372,7 +372,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
    private boolean collectDrops(ServerLevel var1, AABB var2) {
       boolean var3 = false;
 
-      for (ItemEntity var5 : var1.getEntitiesOfClass(ItemEntity.class, var2, var0 -> var0.isAlive() && var0.getAge() > 10)) {
+      for (ItemEntity var5 : var1.getEntitiesOfClass(ItemEntity.class, var2, drop -> drop.isAlive() && drop.getAge() > 10 && this.inside(drop))) {
          ItemStack var6 = this.insertOutput(var5.getItem().copy());
          if (var6.getCount() != var5.getItem().getCount()) {
             var3 = true;
@@ -401,8 +401,9 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
    private void output(ItemStack var1) {
       ItemStack var2 = this.insertOutput(var1);
       if (!var2.isEmpty() && this.level != null) {
+         BlockPos overflow = this.center();
          Containers.dropItemStack(
-            this.level, (double)this.worldPosition.getX() + 0.5, (double)(this.worldPosition.getY() + 1), (double)this.worldPosition.getZ() + 0.5, var2
+            this.level, (double)overflow.getX() + 0.5, (double)overflow.getY() + 0.5, (double)overflow.getZ() + 0.5, var2
          );
       }
    }

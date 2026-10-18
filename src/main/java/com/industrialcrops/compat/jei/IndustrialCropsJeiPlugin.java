@@ -50,6 +50,7 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
                 new ManipulatorRecipeCategory(registration.getJeiHelpers().getGuiHelper(), true),
                 new CropCompressorRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
                 new GourdModificationRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
+                new SuperCultivationRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
                 new MixerRecipeCategory(registration.getJeiHelpers().getGuiHelper()),
                 new ProcessorProgrammingRecipeCategory(registration.getJeiHelpers().getGuiHelper())
                 , new BioEnergyRecipeCategory(registration.getJeiHelpers().getGuiHelper())
@@ -65,9 +66,85 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
         registration.addRecipes(ManipulatorRecipeCategory.ADVANCED_TYPE, ManipulatorRecipes.forAdvanced(true).stream().filter(r -> !ManipulatorRecipes.forAdvanced(false).contains(r)).toList());
         registration.addRecipes(CropCompressorRecipeCategory.TYPE, CropCompressorRecipes.all());
         registration.addRecipes(GourdModificationRecipeCategory.TYPE, GourdModificationRecipes.all());
+        registration.addRecipes(SuperCultivationRecipeCategory.TYPE, com.industrialcrops.recipe.SuperCultivationRecipes.all());
         registration.addRecipes(MixerRecipeCategory.TYPE, MixerRecipes.all());
         registration.addRecipes(ProcessorProgrammingRecipeCategory.TYPE, ProcessorProgrammingRecipes.all());
         registration.addRecipes(BioEnergyRecipeCategory.TYPE, bioEnergyRecipes());
+        registration.addItemStackInfo(new ItemStack(com.industrialcrops.registry.ModItems.SUPER_COMPRESSOR.get()),
+                net.minecraft.network.chat.Component.translatable("jei.industrialcrops.info.super_compressor"));
+        registration.addItemStackInfo(new ItemStack(com.industrialcrops.registry.ModItems.COMPRESSED_POTATO_10K.get()),
+                net.minecraft.network.chat.Component.translatable("jei.industrialcrops.info.compressed_potato_10k"));
+        registration.addItemStackInfo(new ItemStack(com.industrialcrops.registry.ModItems.EXPANDABLE_STORAGE_DEVICE.get()),
+                net.minecraft.network.chat.Component.translatable("jei.industrialcrops.info.expandable_storage_device"));
+        registration.addItemStackInfo(new ItemStack(com.industrialcrops.registry.ModItems.INTEGRATED_SMELTING_FURNACE.get()),
+                net.minecraft.network.chat.Component.translatable("jei.industrialcrops.info.integrated_smelting_furnace"));
+        registerAcquisitionInfo(registration);
+        registerComponentInfo(registration);
+    }
+
+    private static ItemStack stack(String namespace, String path) {
+        net.minecraft.world.item.Item item = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(
+                net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(namespace, path));
+        return item == net.minecraft.world.item.Items.AIR ? ItemStack.EMPTY : new ItemStack(item);
+    }
+
+    private static void info(IRecipeRegistration registration, String key, ItemStack... stacks) {
+        java.util.List<ItemStack> list = java.util.Arrays.stream(stacks).filter(s -> !s.isEmpty()).toList();
+        if (!list.isEmpty()) {
+            registration.addItemStackInfo(list, net.minecraft.network.chat.Component.translatable("jei.industrialcrops.info." + key));
+        }
+    }
+
+    /** How to obtain items and blocks that have no crafting/machine recipe. */
+    private static void registerAcquisitionInfo(IRecipeRegistration registration) {
+        info(registration, "carrote", stack("carrote", "carrote"));
+        info(registration, "carrote_accessories", com.industrialcrops.curios.CarroteCuriosItems.ITEMS.getEntries().stream()
+                .map(entry -> new ItemStack(entry.get())).toArray(ItemStack[]::new));
+        info(registration, "paradox_steel_forge", stack("carrote", "paradox_steel_forge"));
+        info(registration, "paradox_steel_ingot", stack("carrote", "paradox_steel_ingot"));
+        info(registration, "stable_matter_ingot", stack("carrote", "stable_matter_ingot"));
+        info(registration, "exotic_seeds", new ItemStack(ModItems.PRISM_POD_SEEDS.get()),
+                new ItemStack(ModItems.EMBERCOIL_SEEDS.get()), new ItemStack(ModItems.STARBLOOM_SEEDS.get()));
+        info(registration, "space_ores", new ItemStack(ModItems.INV_ORE.get()),
+                new ItemStack(ModItems.GREEN_IRON_ORE.get()), new ItemStack(ModItems.TYCON_ORE.get()));
+        info(registration, "comet_soil", new ItemStack(ModBlocks.COMET_SOIL.asItem()));
+        info(registration, "comet_sapling", new ItemStack(ModBlocks.COMET_SAPLING.asItem()));
+        info(registration, "comet_essence", new ItemStack(ModItems.COMET_FRUIT.get()));
+        info(registration, "plasma_fruit", new ItemStack(ModItems.PLASMA_BERRY.get()));
+        info(registration, "omni_potion", new ItemStack(ModItems.OMNI_POTION.get()));
+        info(registration, "omni_bucket", new ItemStack(ModItems.OMNI_BUCKET.get()));
+    }
+
+    /** Component functions and device compatibility share the same data as item tooltips. */
+    private static void registerComponentInfo(IRecipeRegistration registration) {
+        for (String path : com.industrialcrops.machine.UpgradeCompatibility.componentPaths()) {
+            ItemStack component = com.industrialcrops.machine.UpgradeCompatibility.componentStack(path);
+            if (component.isEmpty()) continue;
+            java.util.List<net.minecraft.network.chat.Component> lines = new java.util.ArrayList<>();
+            lines.add(net.minecraft.network.chat.Component.translatable("tooltip.industrialcrops.function." + path));
+            java.util.List<ItemStack> machines = com.industrialcrops.machine.UpgradeCompatibility.compatibleMachines(component.getItem());
+            if (machines.isEmpty()) {
+                lines.add(net.minecraft.network.chat.Component.translatable("tooltip.industrialcrops.upgrade.no_devices"));
+            } else {
+                lines.add(net.minecraft.network.chat.Component.translatable("jei.industrialcrops.info.upgrade_machines"));
+                for (ItemStack machine : machines) {
+                    lines.add(net.minecraft.network.chat.Component.literal("\u2022 ").append(machine.getHoverName()));
+                }
+            }
+            registration.addItemStackInfo(component, lines.toArray(net.minecraft.network.chat.Component[]::new));
+        }
+    }
+
+    @Override
+    public void registerGuiHandlers(mezz.jei.api.registration.IGuiHandlerRegistration registration) {
+        registration.addGuiContainerHandler(com.industrialcrops.client.gui.IntegratedSmeltingFurnaceScreen.class,
+                new mezz.jei.api.gui.handlers.IGuiContainerHandler<com.industrialcrops.client.gui.IntegratedSmeltingFurnaceScreen>() {
+                    @Override
+                    public java.util.List<net.minecraft.client.renderer.Rect2i> getGuiExtraAreas(
+                            com.industrialcrops.client.gui.IntegratedSmeltingFurnaceScreen screen) {
+                        return screen.extraAreas();
+                    }
+                });
     }
 
     @Override
@@ -79,7 +156,9 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.BASIC_MANIPULATOR.asItem()), ManipulatorRecipeCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.ADVANCED_MANIPULATOR.asItem()), ManipulatorRecipeCategory.TYPE, ManipulatorRecipeCategory.ADVANCED_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.CROP_COMPRESSOR.asItem()), CropCompressorRecipeCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GOURD_MODIFICATION_DEVICE.asItem()), GourdModificationRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.MELON_MODIFICATION_DEVICE.asItem()), GourdModificationRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.SUPER_CROP_CULTIVATOR.asItem()), SuperCultivationRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.INTEGRATED_SMELTING_FURNACE.asItem()), RecipeTypes.SMELTING);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.MIXER.asItem()), MixerRecipeCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.PROCESSOR_PROGRAMMER.asItem()), ProcessorProgrammingRecipeCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.BIO_ENERGY_GENERATOR.asItem()), BioEnergyRecipeCategory.TYPE);

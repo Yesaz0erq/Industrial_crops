@@ -1,157 +1,171 @@
 package com.industrialcrops.machine;
 
 import com.industrialcrops.registry.ModItems;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import org.jetbrains.annotations.Nullable;
 
 public final class ApUpgrades {
-   public static final int SLOTS = 4;
+   public static final int SLOTS = 6;
    public static final int MAX_POWER = 3;
    private final ItemStackHandler items;
-   @Nullable
-   private Boolean chunksForced;
+   private final Set<Long> forcedChunks = new LinkedHashSet<>();
+   private boolean ticketsInitialized;
+   private boolean cleanLegacyTickets;
 
-   public ApUpgrades(final Runnable var1) {
-      this.items = new ItemStackHandler(4) {
-         public int getSlotLimit(int var1x) {
-            return 1;
-         }
-
-         public boolean isItemValid(int var1x, ItemStack var2) {
-            return ApUpgrades.isUpgrade(var2);
-         }
-
-         protected void onContentsChanged(int var1x) {
-            var1.run();
-         }
+   public ApUpgrades(final Runnable changed) {
+      this.items = new ItemStackHandler(SLOTS) {
+         @Override public int getSlotLimit(int slot) { return 1; }
+         @Override public boolean isItemValid(int slot, ItemStack stack) { return isUpgrade(stack); }
+         @Override protected void onContentsChanged(int slot) { changed.run(); }
       };
    }
 
-   public ItemStackHandler items() {
-      return this.items;
+   public ItemStackHandler items() { return this.items; }
+
+   public static boolean isUpgrade(ItemStack stack) {
+      return SpeedUpgradeHelper.isSpeedUpgrade(stack)
+         || stack.is(ModItems.POWER_COMPONENT.get())
+         || stack.is(ModItems.AUTOMATIC_COMPONENT.get())
+         || DimensionUpgradeHelper.isDimensionUpgrade(stack)
+         || stack.is(ModItems.AP_EXPANSION_COMPONENT_1.get())
+         || stack.is(ModItems.AP_EXPANSION_COMPONENT_2.get())
+         || stack.is(ModItems.AP_EXPANSION_COMPONENT_3.get());
    }
 
-   public static boolean isUpgrade(ItemStack var0) {
-      return SpeedUpgradeHelper.isSpeedUpgrade(var0)
-         || var0.is((Item)ModItems.POWER_COMPONENT.get())
-         || var0.is((Item)ModItems.AUTOMATIC_COMPONENT.get())
-         || DimensionUpgradeHelper.isDimensionUpgrade(var0);
-   }
-
-   public static int speedTier(IItemHandler var0) {
-      int var1 = 0;
-
-      for (int var2 = 0; var2 < var0.getSlots(); var2++) {
-         ItemStack var3 = var0.getStackInSlot(var2);
-         if (var3.is((Item)ModItems.SPEED_COMPONENT_4.get())) {
-            return 4;
-         }
-
-         if (var3.is((Item)ModItems.SPEED_COMPONENT_3.get())) {
-            var1 = Math.max(var1, 3);
-         } else if (var3.is((Item)ModItems.SPEED_COMPONENT_2.get())) {
-            var1 = Math.max(var1, 2);
-         } else if (var3.is((Item)ModItems.SPEED_COMPONENT_1.get())) {
-            var1 = Math.max(var1, 1);
-         }
+   public static int expansionTier(IItemHandler handler) {
+      int tier = 0;
+      for (int slot = 0; slot < handler.getSlots(); slot++) {
+         ItemStack stack = handler.getStackInSlot(slot);
+         if (stack.is(ModItems.AP_EXPANSION_COMPONENT_3.get())) return 3;
+         if (stack.is(ModItems.AP_EXPANSION_COMPONENT_2.get())) tier = Math.max(tier, 2);
+         else if (stack.is(ModItems.AP_EXPANSION_COMPONENT_1.get())) tier = Math.max(tier, 1);
       }
-
-      return var1;
+      return tier;
    }
 
-   public static int powerCount(IItemHandler var0) {
-      int var1 = 0;
-
-      for (int var2 = 0; var2 < var0.getSlots(); var2++) {
-         if (var0.getStackInSlot(var2).is((Item)ModItems.POWER_COMPONENT.get())) {
-            var1++;
-         }
+   public static int speedTier(IItemHandler handler) {
+      int tier = 0;
+      for (int slot = 0; slot < handler.getSlots(); slot++) {
+         ItemStack stack = handler.getStackInSlot(slot);
+         if (stack.is(ModItems.SPEED_COMPONENT_4.get())) return 4;
+         if (stack.is(ModItems.SPEED_COMPONENT_3.get())) tier = Math.max(tier, 3);
+         else if (stack.is(ModItems.SPEED_COMPONENT_2.get())) tier = Math.max(tier, 2);
+         else if (stack.is(ModItems.SPEED_COMPONENT_1.get())) tier = Math.max(tier, 1);
       }
-
-      return Math.min(3, var1);
+      return tier;
    }
 
-   public static boolean automatic(IItemHandler var0) {
-      for (int var1 = 0; var1 < var0.getSlots(); var1++) {
-         if (var0.getStackInSlot(var1).is((Item)ModItems.AUTOMATIC_COMPONENT.get())) {
-            return true;
-         }
+   public static int powerCount(IItemHandler handler) {
+      int count = 0;
+      for (int slot = 0; slot < handler.getSlots(); slot++) {
+         if (handler.getStackInSlot(slot).is(ModItems.POWER_COMPONENT.get())) count++;
       }
+      return Math.min(MAX_POWER, count);
+   }
 
+   public static boolean automatic(IItemHandler handler) {
+      for (int slot = 0; slot < handler.getSlots(); slot++) {
+         if (handler.getStackInSlot(slot).is(ModItems.AUTOMATIC_COMPONENT.get())) return true;
+      }
       return false;
    }
 
-   public static ItemStack dimension(IItemHandler var0) {
-      for (int var1 = 0; var1 < var0.getSlots(); var1++) {
-         ItemStack var2 = var0.getStackInSlot(var1);
-         if (DimensionUpgradeHelper.isDimensionUpgrade(var2)) {
-            return var2;
-         }
+   public static ItemStack dimension(IItemHandler handler) {
+      for (int slot = 0; slot < handler.getSlots(); slot++) {
+         ItemStack stack = handler.getStackInSlot(slot);
+         if (DimensionUpgradeHelper.isDimensionUpgrade(stack)) return stack;
       }
-
       return ItemStack.EMPTY;
    }
 
-   public static int savingPercent(IItemHandler var0) {
-      return powerCount(var0) * 25;
-   }
+   public static int savingPercent(IItemHandler handler) { return powerCount(handler) * 25; }
+   public int expansionTier() { return expansionTier(this.items); }
+   public int speedTier() { return speedTier(this.items); }
+   public boolean automatic() { return automatic(this.items); }
+   public ItemStack dimensionUpgrade() { return dimension(this.items); }
+   public int cost(int amount) { return Math.max(1, amount * (4 - powerCount(this.items)) / 4); }
 
-   public int speedTier() {
-      return speedTier(this.items);
-   }
-
-   public boolean automatic() {
-      return automatic(this.items);
-   }
-
-   public ItemStack dimensionUpgrade() {
-      return dimension(this.items);
-   }
-
-   public int cost(int var1) {
-      return Math.max(1, var1 * (4 - powerCount(this.items)) / 4);
-   }
-
-   public void updateChunks(ServerLevel var1, BlockEntity var2, BlockPos var3, int var4) {
-      boolean var5 = !this.dimensionUpgrade().isEmpty();
-      if (this.chunksForced == null || this.chunksForced != var5) {
-         forceArea(var2, var3, var4, var5);
-         this.chunksForced = var5;
+   /** The AABB is half open; an exact chunk edge must not request the next chunk. */
+   public static Set<Long> footprintChunks(AABB bounds) {
+      Set<Long> result = new LinkedHashSet<>();
+      int minX = ((int)Math.floor(bounds.minX)) >> 4;
+      int maxX = ((int)Math.ceil(bounds.maxX) - 1) >> 4;
+      int minZ = ((int)Math.floor(bounds.minZ)) >> 4;
+      int maxZ = ((int)Math.ceil(bounds.maxZ) - 1) >> 4;
+      for (int x = minX; x <= maxX; x++) {
+         for (int z = minZ; z <= maxZ; z++) result.add(ChunkPos.asLong(x, z));
       }
+      return result;
    }
 
-   public void release(BlockEntity var1, BlockPos var2, int var3) {
-      forceArea(var1, var2, var3, false);
-      this.chunksForced = false;
-   }
-
-   private static void forceArea(BlockEntity var0, BlockPos var1, int var2, boolean var3) {
-      for (int var4 = var1.getX() - var2 >> 4; var4 <= var1.getX() + var2 >> 4; var4++) {
-         for (int var5 = var1.getZ() - var2 >> 4; var5 <= var1.getZ() + var2 >> 4; var5++) {
-            DimensionUpgradeHelper.forceChunk(var0, var4, var5, var3);
-         }
+   public void updateChunks(ServerLevel level, BlockEntity owner, ApStructure.Layout layout) {
+      if (this.cleanLegacyTickets) this.clearLegacyTickets(owner, layout);
+      Set<Long> wanted = this.dimensionUpgrade().isEmpty() ? Set.of() : footprintChunks(layout.bounds());
+      boolean changed = !wanted.equals(this.forcedChunks);
+      for (long key : this.forcedChunks) {
+         if (!wanted.contains(key)) force(owner, key, false);
       }
-   }
-
-   public void save(CompoundTag var1, Provider var2) {
-      var1.put("Upgrades", this.items.serializeNBT(var2));
-   }
-
-   public void load(CompoundTag var1, Provider var2) {
-      if (var1.contains("Upgrades")) {
-         this.items.deserializeNBT(var2, var1.getCompound("Upgrades"));
+      for (long key : wanted) {
+         if (!this.ticketsInitialized || !this.forcedChunks.contains(key)) force(owner, key, true);
       }
+      this.forcedChunks.clear();
+      this.forcedChunks.addAll(wanted);
+      this.ticketsInitialized = true;
+      if (changed) owner.setChanged();
    }
 
-   public interface Holder {
-      ApUpgrades apUpgrades();
+   public void release(BlockEntity owner, ApStructure.Layout layout) {
+      if (!(owner.getLevel() instanceof ServerLevel)) return;
+      if (this.cleanLegacyTickets) this.clearLegacyTickets(owner, layout);
+      for (long key : this.forcedChunks) force(owner, key, false);
+      if (!this.forcedChunks.isEmpty()) owner.setChanged();
+      this.forcedChunks.clear();
+      this.ticketsInitialized = false;
    }
+
+   private static void force(BlockEntity owner, long key, boolean force) {
+      ChunkPos chunk = new ChunkPos(key);
+      DimensionUpgradeHelper.forceChunk(owner, chunk.x, chunk.z, force);
+   }
+
+   /** Only a migration cleanup for pre-rebuild saves, never an operation radius. */
+   private void clearLegacyTickets(BlockEntity owner, ApStructure.Layout layout) {
+      BlockPos oldCenter = owner.getBlockPos().relative(layout.facing().getOpposite());
+      AABB legacy = new AABB(oldCenter.getX() - 12, oldCenter.getY(), oldCenter.getZ() - 12,
+         oldCenter.getX() + 13, oldCenter.getY() + 1, oldCenter.getZ() + 13);
+      for (long key : footprintChunks(legacy)) force(owner, key, false);
+      this.cleanLegacyTickets = false;
+      owner.setChanged();
+   }
+
+   public void save(CompoundTag tag, Provider provider) {
+      tag.put("Upgrades", this.items.serializeNBT(provider));
+      tag.putInt("ApTicketVersion", this.cleanLegacyTickets ? 0 : 1);
+      tag.putLongArray("ApForcedChunks", this.forcedChunks.stream().mapToLong(Long::longValue).toArray());
+   }
+
+   public void load(CompoundTag tag, Provider provider) {
+      if (tag.contains("Upgrades")) {
+         CompoundTag saved = tag.getCompound("Upgrades").copy();
+         // ItemStackHandler otherwise restores the obsolete four-slot size from old saves.
+         saved.putInt("Size", SLOTS);
+         this.items.deserializeNBT(provider, saved);
+      }
+      this.forcedChunks.clear();
+      for (long key : tag.getLongArray("ApForcedChunks")) this.forcedChunks.add(key);
+      this.cleanLegacyTickets = tag.getInt("ApTicketVersion") < 1;
+      this.ticketsInitialized = false;
+   }
+
+   public interface Holder { ApUpgrades apUpgrades(); }
 }

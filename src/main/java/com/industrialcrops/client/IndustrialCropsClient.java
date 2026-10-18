@@ -104,7 +104,7 @@ public final class IndustrialCropsClient {
       var0.register((MenuType)ModMenus.ROOT_ORE_EXTRACTOR.get(), RootOreExtractorScreen::new);
       var0.register((MenuType)ModMenus.CROP_COMPRESSOR.get(), CropCompressorScreen::new);
       var0.register((MenuType)ModMenus.CROP_ANALYSIS_DEVICE.get(), CropAnalysisDeviceScreen::new);
-      var0.register((MenuType)ModMenus.GOURD_MODIFICATION_DEVICE.get(), GourdModificationDeviceScreen::new);
+      var0.register((MenuType)ModMenus.MELON_MODIFICATION_DEVICE.get(), GourdModificationDeviceScreen::new);
       var0.register((MenuType)ModMenus.BASIC_CONTROL_DEVICE.get(), BasicControlDeviceScreen::new);
       var0.register((MenuType)ModMenus.REINFORCED_CONTROL_DEVICE.get(), ReinforcedControlDeviceScreen::new);
       var0.register((MenuType)ModMenus.BASIC_MANIPULATOR.get(), BasicManipulatorScreen::new);
@@ -119,6 +119,9 @@ public final class IndustrialCropsClient {
       var0.register((MenuType)ModMenus.BIO_ENERGY_MACHINE.get(), BioEnergyScreen::new);
       var0.register((MenuType)ModMenus.ELECTRIC_FURNACE.get(), ElectricFurnaceScreen::new);
       var0.register((MenuType)ModMenus.ULTRA_HIGH_PRESSURE_INV_FORGE.get(), UltraHighPressureInvForgeScreen::new);
+      var0.register((MenuType)ModMenus.SUPER_COMPRESSOR.get(), com.industrialcrops.client.gui.SuperCompressorScreen::new);
+      var0.register((MenuType)ModMenus.INTEGRATED_SMELTING_FURNACE.get(), com.industrialcrops.client.gui.IntegratedSmeltingFurnaceScreen::new);
+      var0.register((MenuType)ModMenus.SUPER_CROP_CULTIVATOR.get(), com.industrialcrops.client.gui.SuperCropCultivatorScreen::new);
       var0.register((MenuType)ModMenus.AP_AGRICULTURE.get(), ApAgricultureScreen::new);
       var0.register((MenuType)ModMenus.AP_LIVESTOCK.get(), ApLivestockScreen::new);
       var0.register((MenuType)ModMenus.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestScreen::new);
@@ -134,6 +137,9 @@ public final class IndustrialCropsClient {
    @SubscribeEvent
    public static void registerRenderTypes(RegisterNamedRenderTypesEvent var0) {
       ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.INDUSTRIAL_CARROT_CROP.get(), RenderType.cutout());
+      ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.BLACK_NEBULA_CARROT_CROP.get(), RenderType.cutout());
+      ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.PURPLE_DRAGON_CARROT_CROP.get(), RenderType.cutout());
+      ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.OMNI_CARROT_CROP.get(), RenderType.cutout());
       ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.INDUSTRIAL_POTATO_CROP.get(), RenderType.cutout());
       ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.INDUSTRIAL_WHEAT_CROP.get(), RenderType.cutout());
       ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.INDUSTRIAL_MELON_CROP.get(), RenderType.cutout());

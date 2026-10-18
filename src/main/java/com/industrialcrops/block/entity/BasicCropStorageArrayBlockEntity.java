@@ -29,9 +29,15 @@ import org.jetbrains.annotations.Nullable;
 
 public final class BasicCropStorageArrayBlockEntity extends BlockEntity {
    public static final int SLOT_COUNT = 54;
+   /** Copper tier (Basic Storage Component) per-slot item limit. */
+   public static final int SLOT_LIMIT = 99;
    private final ItemStackHandler inventory = new BulkStorageItemHandler(54) {
       protected int getStackLimit(int slot, ItemStack stack) {
-         return Integer.MAX_VALUE;
+         return SLOT_LIMIT;
+      }
+
+      public int getSlotLimit(int slot) {
+         return SLOT_LIMIT;
       }
 
       protected void onContentsChanged(int slot) {

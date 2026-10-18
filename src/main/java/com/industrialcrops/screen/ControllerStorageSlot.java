@@ -12,8 +12,8 @@ public final class ControllerStorageSlot extends Slot {
 
     @Override public boolean mayPlace(ItemStack stack) { return container.canPlaceItem(getSlotIndex(), stack); }
     @Override public boolean mayPickup(Player player) { return ((ControllerStorageContainer) container).isAvailable(getSlotIndex()); }
-    @Override public int getMaxStackSize() { return Integer.MAX_VALUE; }
-    @Override public int getMaxStackSize(ItemStack stack) { return Integer.MAX_VALUE; }
+    @Override public int getMaxStackSize() { return ((ControllerStorageContainer) container).getSlotLimit(); }
+    @Override public int getMaxStackSize(ItemStack stack) { return ((ControllerStorageContainer) container).getSlotLimit(); }
     @Override public ItemStack remove(int amount) {
         return super.remove(Math.min(amount, getItem().getMaxStackSize()));
     }

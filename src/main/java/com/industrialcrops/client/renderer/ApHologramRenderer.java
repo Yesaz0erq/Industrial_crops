@@ -4,7 +4,13 @@ import com.industrialcrops.block.entity.ApControllerBlockEntity;
 import com.industrialcrops.machine.ApStructure;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -14,126 +20,126 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.model.data.ModelData;
 
+/** Incremental preview for large structures. Never loads chunks or draws every part at once. */
 public final class ApHologramRenderer<T extends ApControllerBlockEntity> implements BlockEntityRenderer<T> {
    private static final int FULL_BRIGHT = 15728880;
+   private static final int MAX_GHOSTS = 256;
+   private static final int CHECKS_PER_TICK = 256;
    private final BlockRenderDispatcher blocks;
+   private final Map<T, Preview> previews = new WeakHashMap<>();
 
-   public ApHologramRenderer(Context var1) {
-      this.blocks = var1.getBlockRenderDispatcher();
+   public ApHologramRenderer(Context context) {
+      this.blocks = context.getBlockRenderDispatcher();
    }
 
-   public void render(T var1, float var2, PoseStack var3, MultiBufferSource var4, int var5, int var6) {
-      Level var7 = var1.getLevel();
-      if (var7 != null && var1.projection()) {
-         BlockPos var8 = var1.getBlockPos();
-         Direction var9 = var1.facing();
-         List<ApStructure.Part> var10 = ApStructure.parts(var8, var9, var1.coreBlock());
-         float var11 = (float)var7.getGameTime() + var2;
-         float var12 = 0.5F + 0.5F * Mth.sin(var11 * 0.12F);
-         int var13 = (int)(95.0F + 60.0F * var12);
-         MultiBufferSource var14 = var2x -> new ApHologramRenderer.GhostConsumer(var4.getBuffer(Sheets.translucentCullBlockSheet()), var13);
-         boolean var15 = false;
+   @Override
+   public void render(T controller, float partialTick, PoseStack poses, MultiBufferSource buffers, int light, int overlay) {
+      Level level = controller.getLevel();
+      if (level == null || !controller.projection()) {
+         this.previews.remove(controller);
+         return;
+      }
+      ApStructure.Layout layout = controller.layout();
+      Vec3 camera = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+      Preview preview = this.previews.get(controller);
+      if (preview == null || preview.layout != layout) {
+         preview = new Preview(layout, camera);
+         this.previews.put(controller, preview);
+      }
+      preview.update(level, camera);
+      BlockPos origin = controller.getBlockPos();
+      float pulse = 0.5F + 0.5F * Mth.sin((level.getGameTime() + partialTick) * 0.12F);
+      int alpha = (int)(95.0F + 60.0F * pulse);
+      MultiBufferSource ghosts = ignored -> new GhostConsumer(buffers.getBuffer(Sheets.translucentCullBlockSheet()), alpha);
 
-         for (ApStructure.Part var17 : var10) {
-            BlockState var18 = var7.getBlockState(var17.pos());
-            if (!var18.is(var17.block())) {
-               var15 = true;
-               double var19 = (double)(var17.pos().getX() - var8.getX());
-               double var21 = (double)(var17.pos().getY() - var8.getY());
-               double var23 = (double)(var17.pos().getZ() - var8.getZ());
-               if (!var18.isAir() && !var18.canBeReplaced()) {
-                  LevelRenderer.renderLineBox(
-                     var3,
-                     var4.getBuffer(RenderType.lines()),
-                     var19 - 0.01,
-                     var21 - 0.01,
-                     var23 - 0.01,
-                     var19 + 1.01,
-                     var21 + 1.01,
-                     var23 + 1.01,
-                     1.0F,
-                     0.25F,
-                     0.25F,
-                     1.0F
-                  );
-               } else {
-                  BlockState var25 = var17.block().defaultBlockState();
-                  if (var25.hasProperty(HorizontalDirectionalBlock.FACING)) {
-                     var25 = (BlockState)var25.setValue(HorizontalDirectionalBlock.FACING, var9);
-                  }
-
-                  if (var25.getRenderShape() == RenderShape.MODEL) {
-                     var3.pushPose();
-                     var3.translate(var19 + 0.5, var21 + 0.5, var23 + 0.5);
-                     float var26 = 0.86F + 0.04F * var12;
-                     var3.scale(var26, var26, var26);
-                     var3.translate(-0.5, -0.5, -0.5);
-                     this.blocks.renderSingleBlock(var25, var3, var14, 15728880, OverlayTexture.NO_OVERLAY, ModelData.EMPTY, null);
-                     var3.popPose();
-                  }
-
-                  LevelRenderer.renderLineBox(
-                     var3,
-                     var4.getBuffer(RenderType.lines()),
-                     var19 + 0.04,
-                     var21 + 0.04,
-                     var23 + 0.04,
-                     var19 + 0.96,
-                     var21 + 0.96,
-                     var23 + 0.96,
-                     0.37F,
-                     0.89F,
-                     1.0F,
-                     0.55F + 0.35F * var12
-                  );
-               }
+      // Selection is cached and bounded. Recheck only visible entries, so newly placed blocks disappear immediately.
+      int drawn = 0;
+      for (ApStructure.Part part : preview.visible) {
+         if (drawn >= MAX_GHOSTS) break;
+         if (!level.hasChunkAt(part.pos()) || part.matches(level)) continue;
+         drawn++;
+         BlockState current = level.getBlockState(part.pos());
+         double x = part.pos().getX() - origin.getX();
+         double y = part.pos().getY() - origin.getY();
+         double z = part.pos().getZ() - origin.getZ();
+         boolean obstructed = part.category() == ApStructure.Category.CLEARANCE || (!current.isAir() && !current.canBeReplaced());
+         if (!obstructed) {
+            BlockState example = part.example();
+            if (example.getRenderShape() == RenderShape.MODEL) {
+               poses.pushPose();
+               poses.translate(x + 0.5, y + 0.5, z + 0.5);
+               float scale = 0.86F + 0.04F * pulse;
+               poses.scale(scale, scale, scale);
+               poses.translate(-0.5, -0.5, -0.5);
+               this.blocks.renderSingleBlock(example, poses, ghosts, FULL_BRIGHT, OverlayTexture.NO_OVERLAY, ModelData.EMPTY, null);
+               poses.popPose();
             }
          }
+         LevelRenderer.renderLineBox(poses, buffers.getBuffer(RenderType.lines()),
+            x + 0.02, y + 0.02, z + 0.02, x + 0.98, y + 0.98, z + 0.98,
+            obstructed ? 1.0F : 0.37F, obstructed ? 0.25F : 0.89F, obstructed ? 0.25F : 1.0F, 0.55F + 0.35F * pulse);
+      }
+      AABB bounds = layout.bounds().move(-origin.getX(), -origin.getY(), -origin.getZ()).inflate(0.02);
+      LevelRenderer.renderLineBox(poses, buffers.getBuffer(RenderType.lines()), bounds, 0.91F, 0.66F, 0.23F, 0.6F);
+   }
 
-         if (var15) {
-            BlockPos var27 = var1.center().subtract(var8);
-            LevelRenderer.renderLineBox(
-               var3,
-               var4.getBuffer(RenderType.lines()),
-               (double)var27.getX() - 1.02,
-               -0.02,
-               (double)var27.getZ() - 1.02,
-               (double)var27.getX() + 2.02,
-               3.02,
-               (double)var27.getZ() + 2.02,
-               0.91F,
-               0.66F,
-               0.23F,
-               0.6F
-            );
+   public AABB getRenderBoundingBox(T controller) {
+      return controller.layout().bounds().inflate(0.5);
+   }
+
+   @Override
+   public int getViewDistance() {
+      return 128;
+   }
+
+   private static double distance(ApStructure.Part part, Vec3 camera) {
+      return camera.distanceToSqr(part.pos().getX() + 0.5, part.pos().getY() + 0.5, part.pos().getZ() + 0.5);
+   }
+
+   private static final class Preview {
+      final ApStructure.Layout layout;
+      final List<ApStructure.Part> parts;
+      final Map<BlockPos, ApStructure.Part> missing = new HashMap<>();
+      List<ApStructure.Part> visible = List.of();
+      int cursor;
+      long lastScan = Long.MIN_VALUE;
+      long lastSelect = Long.MIN_VALUE;
+      Vec3 selectionCamera;
+
+      Preview(ApStructure.Layout layout, Vec3 camera) {
+         this.layout = layout;
+         ArrayList<ApStructure.Part> sorted = new ArrayList<>(layout.parts());
+         sorted.sort(Comparator.comparingDouble(part -> distance(part, camera)));
+         this.parts = List.copyOf(sorted);
+         this.selectionCamera = camera;
+      }
+
+      void update(Level level, Vec3 camera) {
+         long now = level.getGameTime();
+         if (this.lastScan != now) {
+            this.lastScan = now;
+            for (int n = 0; n < Math.min(CHECKS_PER_TICK, this.parts.size()); n++) {
+               ApStructure.Part part = this.parts.get(this.cursor++);
+               if (this.cursor >= this.parts.size()) this.cursor = 0;
+               if (!level.hasChunkAt(part.pos()) || part.matches(level)) this.missing.remove(part.pos());
+               else this.missing.put(part.pos(), part);
+            }
+         }
+         if (this.lastSelect == Long.MIN_VALUE || now - this.lastSelect >= 10 || camera.distanceToSqr(this.selectionCamera) >= 4.0) {
+            this.lastSelect = now;
+            this.selectionCamera = camera;
+            this.visible = this.missing.values().stream()
+               .sorted(Comparator.comparingDouble(part -> distance(part, camera))).limit(MAX_GHOSTS).toList();
          }
       }
-   }
-
-   public AABB getRenderBoundingBox(T var1) {
-      BlockPos var2 = var1.center();
-      return new AABB(
-            (double)(var2.getX() - 1),
-            (double)var2.getY(),
-            (double)(var2.getZ() - 1),
-            (double)(var2.getX() + 2),
-            (double)(var2.getY() + 3),
-            (double)(var2.getZ() + 2)
-         )
-         .inflate(0.5);
-   }
-
-   public int getViewDistance() {
-      return 96;
    }
 
    private static record GhostConsumer(VertexConsumer delegate, int alpha) implements VertexConsumer {

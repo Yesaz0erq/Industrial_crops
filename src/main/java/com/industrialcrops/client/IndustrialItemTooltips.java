@@ -3,6 +3,7 @@ package com.industrialcrops.client;
 import com.industrialcrops.crop.CropGenetics;
 import com.industrialcrops.crop.CropQuality;
 import com.industrialcrops.item.RemoteAccessDeviceItem;
+import com.industrialcrops.machine.UpgradeCompatibility;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -35,12 +36,12 @@ public final class IndustrialItemTooltips {
             addRemoteBindingDetails(event);
          } else {
             boolean functionalBlock = event.getItemStack().getItem() instanceof BlockItem;
-            boolean goldUpgradeKit = id.getPath().equals("gold_upgrade_kit");
-            boolean crystalSteelUpgradeKit = id.getPath().equals("crystal_steel_upgrade_kit");
-            boolean automaticComponent = id.getPath().equals("automatic_component");
-            boolean dimensionComponent = id.getPath().equals("dimension_upgrade_component") || id.getPath().equals("infinite_dimension_upgrade_component");
             boolean fusionPickaxe = id.getPath().equals("fusion_ingot_pickaxe");
-            if (functionalBlock || goldUpgradeKit || crystalSteelUpgradeKit || automaticComponent || dimensionComponent || fusionPickaxe) {
+            boolean compressedPotato = id.getPath().equals("compressed_potato_10k") || id.getPath().equals("black_nebula_carrot")
+               || id.getPath().equals("purple_dragon_carrot")
+               || id.getPath().equals("omni_carrot") || id.getPath().equals("omni_potion") || id.getPath().equals("omni_bucket");
+            boolean component = UpgradeCompatibility.hasComponentInfo(event.getItemStack().getItem());
+            if (functionalBlock || fusionPickaxe || compressedPotato || component) {
                String key = "tooltip." + id.getNamespace() + ".function." + id.getPath();
                if (I18n.exists(key)) {
                   event.getToolTip().add(Component.empty());

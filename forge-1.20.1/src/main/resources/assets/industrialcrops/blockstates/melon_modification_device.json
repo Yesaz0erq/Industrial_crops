@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "industrialcrops:block/melon_modification_device",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "industrialcrops:block/melon_modification_device"
+    },
+    "facing=south": {
+      "model": "industrialcrops:block/melon_modification_device",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "industrialcrops:block/melon_modification_device",
+      "y": 270
+    }
+  }
+}

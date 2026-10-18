@@ -56,7 +56,7 @@ public final class GourdModificationDeviceBlock extends BaseEntityBlock {
             BlockState state,
             BlockEntityType<T> type
     ) {
-        return type == ModBlockEntities.GOURD_MODIFICATION_DEVICE.get()
+        return type == ModBlockEntities.MELON_MODIFICATION_DEVICE.get()
                 ? (tickerLevel, tickerPos, tickerState, blockEntity) ->
                         GourdModificationDeviceBlockEntity.tick(
                                 tickerLevel,

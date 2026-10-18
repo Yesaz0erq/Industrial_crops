@@ -1,6 +1,7 @@
 package com.industrialcrops.registry;
-import net.minecraftforge.registries.RegistryObject;
+
 import com.industrialcrops.screen.AdvancedIndustrialStorageMenu;
+import com.industrialcrops.screen.SuperCompressorMenu;
 import com.industrialcrops.screen.AnimalBreederMenu;
 import com.industrialcrops.screen.ApAgricultureMenu;
 import com.industrialcrops.screen.ApLivestockMenu;
@@ -38,6 +39,8 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
+
 public final class ModMenus {
    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, "industrialcrops");
    public static final RegistryObject<MenuType<CrystalSteelWorkbenchMenu>> CRYSTAL_STEEL_WORKBENCH = MENUS.register(
@@ -52,8 +55,8 @@ public final class ModMenus {
    public static final RegistryObject<MenuType<CropAnalysisDeviceMenu>> CROP_ANALYSIS_DEVICE = MENUS.register(
       "crop_analysis_device", () -> IForgeMenuType.create(CropAnalysisDeviceMenu::new)
    );
-   public static final RegistryObject<MenuType<GourdModificationDeviceMenu>> GOURD_MODIFICATION_DEVICE = MENUS.register(
-      "gourd_modification_device", () -> IForgeMenuType.create(GourdModificationDeviceMenu::new)
+   public static final RegistryObject<MenuType<GourdModificationDeviceMenu>> MELON_MODIFICATION_DEVICE = MENUS.register(
+      "melon_modification_device", () -> IForgeMenuType.create(GourdModificationDeviceMenu::new)
    );
    public static final RegistryObject<MenuType<BasicControlDeviceMenu>> BASIC_CONTROL_DEVICE = MENUS.register(
       "basic_control_device", () -> IForgeMenuType.create(BasicControlDeviceMenu::new)
@@ -93,6 +96,15 @@ public final class ModMenus {
    );
    public static final RegistryObject<MenuType<ElectricFurnaceMenu>> ELECTRIC_FURNACE = MENUS.register(
       "electric_furnace", () -> IForgeMenuType.create(ElectricFurnaceMenu::new)
+   );
+   public static final RegistryObject<MenuType<com.industrialcrops.screen.IntegratedSmeltingFurnaceMenu>> INTEGRATED_SMELTING_FURNACE = MENUS.register(
+      "integrated_smelting_furnace", () -> IForgeMenuType.create(com.industrialcrops.screen.IntegratedSmeltingFurnaceMenu::new)
+   );
+   public static final RegistryObject<MenuType<SuperCompressorMenu>> SUPER_COMPRESSOR = MENUS.register(
+      "super_compressor", () -> IForgeMenuType.create(SuperCompressorMenu::new)
+   );
+   public static final RegistryObject<MenuType<com.industrialcrops.screen.SuperCropCultivatorMenu>> SUPER_CROP_CULTIVATOR = MENUS.register(
+      "super_crop_cultivator", () -> IForgeMenuType.create(com.industrialcrops.screen.SuperCropCultivatorMenu::new)
    );
    public static final RegistryObject<MenuType<UltraHighPressureInvForgeMenu>> ULTRA_HIGH_PRESSURE_INV_FORGE = MENUS.register(
       "ultra_high_pressure_inv_forge", () -> IForgeMenuType.create(UltraHighPressureInvForgeMenu::new)
@@ -136,6 +148,7 @@ public final class ModMenus {
    public static final RegistryObject<MenuType<ApLivestockMenu>> AP_LIVESTOCK = MENUS.register(
       "ap_livestock_ranch", () -> IForgeMenuType.create(ApLivestockMenu::new)
    );
+
    private ModMenus() {
    }
 }

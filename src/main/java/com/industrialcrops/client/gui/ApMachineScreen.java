@@ -26,7 +26,7 @@ abstract class ApMachineScreen<M extends AbstractContainerMenu & ApMachineMenu> 
    static final int PANEL_X = -112;
    static final int PANEL_W = 90;
    static final int PANEL_Y = 22;
-   static final int PANEL_H = 112;
+   static final int PANEL_H = 166;
    static final int HOLO = -10492929;
    static final int HOLO_DIM = -13926506;
    private static ApMachineScreen.Panel lastPanel = ApMachineScreen.Panel.NONE;
@@ -95,7 +95,7 @@ abstract class ApMachineScreen<M extends AbstractContainerMenu & ApMachineMenu> 
       } else {
          double var5 = var1 - (double)this.leftPos;
          double var7 = var3 - (double)this.topPos;
-         return var5 >= -112.0 && var5 < -22.0 && var7 >= 22.0 && var7 < 134.0;
+         return var5 >= -112.0 && var5 < -22.0 && var7 >= 22.0 && var7 < 188.0;
       }
    }
 
@@ -130,17 +130,17 @@ abstract class ApMachineScreen<M extends AbstractContainerMenu & ApMachineMenu> 
       tab(var1, var2 + -22, var3 + 50, this.panel == ApMachineScreen.Panel.HOLOGRAM);
       hologramIcon(var1, var2 + -22 + 4, var3 + 50 + 4, ((ApMachineMenu)this.menu).projection());
       if (this.panel != ApMachineScreen.Panel.NONE) {
-         ApGuiStyle.container(var1, var2 + -112, var3 + 22, 90, 112);
+         ApGuiStyle.container(var1, var2 + -112, var3 + 22, 90, PANEL_H);
          if (this.panel == ApMachineScreen.Panel.UPGRADES) {
-            ApGuiStyle.well(var1, var2 + -84 - 4, var3 + 48 - 4, 44, 44);
+            ApGuiStyle.well(var1, var2 + -84 - 4, var3 + 48 - 4, 44, 62);
 
-            for (int var4 = 0; var4 < 4; var4++) {
+            for (int var4 = 0; var4 < ApUpgrades.SLOTS; var4++) {
                ApGuiStyle.slot(var1, var2 + -84 - 1 + var4 % 2 * 18, var3 + 48 - 1 + var4 / 2 * 18);
             }
 
-            ApGuiStyle.well(var1, var2 + -112 + 5, var3 + 90, 80, 38);
+            ApGuiStyle.well(var1, var2 + -112 + 5, var3 + 108, 80, 74);
          } else {
-            ApGuiStyle.well(var1, var2 + -112 + 5, var3 + 22 + 42, 80, 65);
+            ApGuiStyle.well(var1, var2 + -112 + 5, var3 + 22 + 42, 80, 118);
          }
       }
    }
@@ -180,71 +180,35 @@ abstract class ApMachineScreen<M extends AbstractContainerMenu & ApMachineMenu> 
       var0.fill(var1 + var3 - 1, var2, var1 + var3, var2 + var4, var5);
    }
 
-   protected void renderSideLabels(GuiGraphics var1) {
-      if (this.panel != ApMachineScreen.Panel.NONE) {
-         byte var2 = -103;
-         byte var3 = 72;
-         if (this.panel == ApMachineScreen.Panel.UPGRADES) {
-            ApGuiStyle.text(var1, this.font, Component.translatable("gui.industrialcrops.ap.upgrades").getString(), var2, 30, var3, -920586);
-            IItemHandler var4 = ((ApMachineMenu)this.menu).upgrades();
-            int var5 = ApUpgrades.speedTier(var4);
-            int var6 = ApUpgrades.savingPercent(var4);
-            boolean var7 = ApUpgrades.automatic(var4);
-            boolean var8 = !ApUpgrades.dimension(var4).isEmpty();
-            byte var9 = -103;
-            byte var10 = 72;
-            this.effect(
-               var1, Component.translatable("gui.industrialcrops.ap.upgrade.speed", new Object[]{var5 == 0 ? "-" : roman(var5)}), var9, 93, var10, var5 > 0
-            );
-            this.effect(var1, Component.translatable("gui.industrialcrops.ap.upgrade.power", new Object[]{var6}), var9, 102, var10, var6 > 0);
-            Object var11 = this.automaticDetail();
-            this.effect(
-               var1,
-               var11 != null && var7
-                  ? Component.translatable("gui.industrialcrops." + this.machineKey() + ".upgrade.auto_count", new Object[]{var11})
-                  : Component.translatable("gui.industrialcrops." + this.machineKey() + ".upgrade.auto"),
-               var9,
-               111,
-               var10,
-               var7
-            );
-            this.effect(var1, Component.translatable("gui.industrialcrops.ap.upgrade.chunk"), var9, 120, var10, var8);
-         } else {
-            ApGuiStyle.text(var1, this.font, Component.translatable("gui.industrialcrops.ap.projection").getString(), var2, 30, var3, -920586);
-            ApStructure.Status var12 = ((ApMachineMenu)this.menu).structure();
-            byte var13 = -103;
-            byte var14 = 72;
-            byte var15 = 68;
-            if (var12.formed()) {
-               ApGuiStyle.text(
-                  var1, this.font, "✔ " + Component.translatable("gui.industrialcrops.ap.projection.complete").getString(), var13, var15, var14, -8396660
-               );
-            } else {
-               ApScreens.line(
-                  var1,
-                  this.font,
-                  Component.translatable("gui.industrialcrops.ap.casings", new Object[]{var12.casings(), 8}),
-                  var13,
-                  var15,
-                  var14,
-                  var12.casings() == 8
-               );
-               ApScreens.line(
-                  var1,
-                  this.font,
-                  Component.translatable("gui.industrialcrops.ap.frames", new Object[]{var12.frames(), 8}),
-                  var13,
-                  var15 + 9,
-                  var14,
-                  var12.frames() == 8
-               );
-               ApScreens.line(var1, this.font, Component.translatable("gui.industrialcrops.ap.core"), var13, var15 + 18, var14, var12.core());
-               ApScreens.line(var1, this.font, Component.translatable("gui.industrialcrops.ap.cap"), var13, var15 + 27, var14, var12.cap());
-            }
-
-            ApGuiStyle.text(var1, this.font, Component.translatable("gui.industrialcrops.ap.projection.ghost").getString(), var13, var15 + 39, var14, -10492929);
-            ApGuiStyle.text(var1, this.font, Component.translatable("gui.industrialcrops.ap.projection.wrong").getString(), var13, var15 + 49, var14, -38037);
-         }
+   protected void renderSideLabels(GuiGraphics graphics) {
+      if (this.panel == Panel.NONE) return;
+      int x = -103, width = 72;
+      ApStructure.Status status = ((ApMachineMenu)this.menu).structure();
+      if (this.panel == Panel.UPGRADES) {
+         ApGuiStyle.text(graphics, this.font, Component.translatable("gui.industrialcrops.ap.upgrades").getString(), x, 30, width, ApGuiStyle.TEXT);
+         IItemHandler upgrades = ((ApMachineMenu)this.menu).upgrades();
+         int speed = ApUpgrades.speedTier(upgrades);
+         int saving = ApUpgrades.savingPercent(upgrades);
+         boolean automatic = ApUpgrades.automatic(upgrades);
+         this.effect(graphics, Component.translatable("gui.industrialcrops.ap.upgrade.speed", speed == 0 ? "-" : roman(speed)), x, 112, width, speed > 0);
+         this.effect(graphics, Component.translatable("gui.industrialcrops.ap.upgrade.power", saving), x, 123, width, saving > 0);
+         Object detail = this.automaticDetail();
+         Component autoText = detail != null && automatic
+            ? Component.translatable("gui.industrialcrops." + this.machineKey() + ".upgrade.auto_count", detail)
+            : Component.translatable("gui.industrialcrops." + this.machineKey() + ".upgrade.auto");
+         this.effect(graphics, autoText, x, 134, width, automatic);
+         this.effect(graphics, Component.translatable("gui.industrialcrops.ap.upgrade.chunk"), x, 145, width, !ApUpgrades.dimension(upgrades).isEmpty());
+         this.effect(graphics, Component.translatable("gui.industrialcrops.ap.expansion", status.tier()), x, 156, width, status.tier() > 0);
+         ApGuiStyle.text(graphics, this.font, ApScreens.footprint(status).getString(), x, 168, width, ApGuiStyle.MUTED);
+      } else {
+         ApGuiStyle.text(graphics, this.font, Component.translatable("gui.industrialcrops.ap.projection").getString(), x, 30, width, ApGuiStyle.TEXT);
+         ApGuiStyle.text(graphics, this.font, ApScreens.footprint(status).getString(), x, 69, width, ApGuiStyle.TEXT);
+         ApGuiStyle.text(graphics, this.font, Component.translatable("gui.industrialcrops.ap.checks", status.completedCategories(), 9).getString(), x, 81, width, status.formed() ? ApGuiStyle.OK : ApGuiStyle.BAD);
+         ApGuiStyle.text(graphics, this.font, Component.translatable(status.loaded() ? "gui.industrialcrops.ap.details" : "gui.industrialcrops.ap.unloaded").getString(), x, 93, width, status.loaded() ? ApGuiStyle.MUTED : ApGuiStyle.BAD);
+         ApGuiStyle.text(graphics, this.font, Component.translatable("gui.industrialcrops.ap.projection.ghost").getString(), x, 112, width, HOLO);
+         ApGuiStyle.text(graphics, this.font, Component.translatable("gui.industrialcrops.ap.projection.wrong").getString(), x, 124, width, ApGuiStyle.BAD);
+         ApGuiStyle.text(graphics, this.font, Component.translatable("gui.industrialcrops.ap.projection.budget").getString(), x, 142, width, ApGuiStyle.MUTED);
+         ApGuiStyle.text(graphics, this.font, Component.translatable("gui.industrialcrops.ap.projection.move").getString(), x, 154, width, ApGuiStyle.MUTED);
       }
    }
 
@@ -275,16 +239,22 @@ abstract class ApMachineScreen<M extends AbstractContainerMenu & ApMachineMenu> 
          var1.renderComponentTooltip(this.font, var10, var2, var3);
          return true;
       } else {
+         if (this.panel == Panel.HOLOGRAM && this.overPanel((double)var2, (double)var3) && var3 >= this.topPos + 64) {
+            ArrayList<net.minecraft.util.FormattedCharSequence> lines = new ArrayList<>();
+            ApScreens.addStructureHelp(lines, this.font, ((ApMachineMenu)this.menu).structure());
+            var1.renderTooltip(this.font, lines, var2, var3);
+            return true;
+         }
          if (this.panel == ApMachineScreen.Panel.UPGRADES
             && this.overPanel((double)var2, (double)var3)
             && (this.hoveredSlot == null || !this.hoveredSlot.hasItem())) {
             int var4 = var3 - this.topPos;
-            if (var4 >= 90) {
+            if (var4 >= 108) {
                ArrayList var5 = new ArrayList();
                var5.add(Component.translatable("gui.industrialcrops.ap.upgrade.help").withStyle(ChatFormatting.GOLD).getVisualOrderText());
 
                for (String var9 : new String[]{
-                  this.machineKey() + ".upgrade.speed_help", "ap.upgrade.power_help", this.machineKey() + ".upgrade.auto_help", "ap.upgrade.chunk_help"
+                  this.machineKey() + ".upgrade.speed_help", "ap.upgrade.power_help", this.machineKey() + ".upgrade.auto_help", "ap.upgrade.chunk_help", "ap.upgrade.expansion_help"
                }) {
                   var5.addAll(this.font.split(Component.translatable("gui.industrialcrops." + var9).withStyle(ChatFormatting.GRAY), 200));
                }

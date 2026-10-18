@@ -28,7 +28,7 @@ final class ApMenus {
    }
 
    static void addUpgradeSlots(Consumer<Slot> var0, IItemHandler var1, final BooleanSupplier var2) {
-      for (int var3 = 0; var3 < 4; var3++) {
+      for (int var3 = 0; var3 < ApUpgrades.SLOTS; var3++) {
          var0.accept(new SlotItemHandler(var1, var3, -84 + var3 % 2 * 18, 48 + var3 / 2 * 18) {
             public boolean mayPlace(ItemStack var1) {
                return ApUpgrades.isUpgrade(var1);
@@ -61,7 +61,7 @@ final class ApMenus {
             if (var2 < var3) {
                var10 = move(var0, var8, var3, var0.slots.size(), true);
             } else {
-               var10 = ApUpgrades.isUpgrade(var8) && move(var0, var8, var6, var6 + 4, false);
+               var10 = ApUpgrades.isUpgrade(var8) && move(var0, var8, var6, var6 + ApUpgrades.SLOTS, false);
                if (!var8.isEmpty()) {
                   var10 |= move(var0, var8, var4, var5, false);
                }

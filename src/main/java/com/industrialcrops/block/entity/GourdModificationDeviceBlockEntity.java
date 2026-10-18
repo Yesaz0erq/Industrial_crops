@@ -45,7 +45,7 @@ public final class GourdModificationDeviceBlockEntity extends BlockEntity implem
     };
 
     public GourdModificationDeviceBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.GOURD_MODIFICATION_DEVICE.get(), pos, state);
+        super(ModBlockEntities.MELON_MODIFICATION_DEVICE.get(), pos, state);
     }
 
     public static void tick(
@@ -141,7 +141,7 @@ public final class GourdModificationDeviceBlockEntity extends BlockEntity implem
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.industrialcrops.gourd_modification_device");
+        return Component.translatable("block.industrialcrops.melon_modification_device");
     }
 
     @Override

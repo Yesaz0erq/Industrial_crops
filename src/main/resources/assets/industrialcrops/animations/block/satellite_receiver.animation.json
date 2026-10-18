@@ -1,9 +1,9 @@
 {
   "format_version": "1.8.0",
   "animations": {
-    "idle": {
+    "animation.satellite_receiver.idle": {
       "loop": true,
-      "animation_length": 240,
+      "animation_length": 12.0,
       "bones": {
         "azimuth": {
           "rotation": {
@@ -25,14 +25,14 @@
                 0
               ]
             },
-            "120.0": {
+            "6.0": {
               "vector": [
                 -6,
                 0,
                 0
               ]
             },
-            "240.0": {
+            "12.0": {
               "vector": [
                 6,
                 0,
@@ -43,9 +43,9 @@
         }
       }
     },
-    "working": {
+    "animation.satellite_receiver.working": {
       "loop": true,
-      "animation_length": 80,
+      "animation_length": 8.0,
       "bones": {
         "azimuth": {
           "rotation": {
@@ -56,14 +56,14 @@
                 0
               ]
             },
-            "40.0": {
+            "4.0": {
               "vector": [
                 0,
                 -180,
                 0
               ]
             },
-            "80.0": {
+            "8.0": {
               "vector": [
                 0,
                 -360,
@@ -81,14 +81,14 @@
                 0
               ]
             },
-            "40.0": {
+            "4.0": {
               "vector": [
                 0,
                 0.3,
                 0
               ]
             },
-            "80.0": {
+            "8.0": {
               "vector": [
                 0,
                 -0.3,

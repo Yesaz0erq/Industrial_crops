@@ -240,7 +240,8 @@ public final class ReinforcedControlDeviceMenu extends AbstractContainerMenu {
                 slot -> getCurrentDrive() == null ? ItemStack.EMPTY : getCurrentDrive().getStackInSlot(slot),
                 (slot, stack) -> { if (getCurrentDrive() != null) getCurrentDrive().setStackInSlot(slot, stack); },
                 slot -> controllerLevel.isClientSide() ? isConnected() : getCurrentDrive() != null,
-                () -> { if (getCurrentDrive() != null) getCurrentDrive().setChanged(); });
+                () -> { if (getCurrentDrive() != null) getCurrentDrive().setChanged(); })
+                .withSlotLimit(() -> com.industrialcrops.block.entity.ReinforcedIndustrialStorageArrayBlockEntity.SLOT_LIMIT);
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 9; col++) {
                 int slot = col + row * 9;

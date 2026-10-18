@@ -12,6 +12,7 @@ import com.industrialcrops.item.GeneticCropItem;
 import com.industrialcrops.item.GeneticCropProductBlockItem;
 import com.industrialcrops.item.IncubatorBlockItem;
 import com.industrialcrops.item.IndustrialStorageComponentItem;
+import com.industrialcrops.item.ExpandableStorageComponentItem;
 import com.industrialcrops.item.RemoteAccessDeviceItem;
 import com.industrialcrops.item.SatelliteRocketItem;
 import com.industrialcrops.item.SeedBagItem;
@@ -169,6 +170,15 @@ public final class ModItems {
    public static final DeferredItem<Item> INFINITE_DIMENSION_UPGRADE_COMPONENT = ITEMS.register(
       "infinite_dimension_upgrade_component", () -> new Item(new Properties().stacksTo(1).rarity(Rarity.EPIC))
    );
+   public static final DeferredItem<Item> AP_EXPANSION_COMPONENT_1 = ITEMS.register(
+      "ap_expansion_component_1", () -> new Item(new Properties().stacksTo(1).rarity(Rarity.RARE))
+   );
+   public static final DeferredItem<Item> AP_EXPANSION_COMPONENT_2 = ITEMS.register(
+      "ap_expansion_component_2", () -> new Item(new Properties().stacksTo(1).rarity(Rarity.RARE))
+   );
+   public static final DeferredItem<Item> AP_EXPANSION_COMPONENT_3 = ITEMS.register(
+      "ap_expansion_component_3", () -> new Item(new Properties().stacksTo(1).rarity(Rarity.RARE))
+   );
    public static final DeferredItem<Item> UPGRADE_KIT_SUBSTRATE = ITEMS.register("upgrade_kit_substrate", () -> new Item(new Properties()));
    public static final DeferredItem<Item> GOLD_UPGRADE_KIT = ITEMS.register(
       "gold_upgrade_kit", () -> new AdvancedManipulatorUpgradeItem(new Properties().stacksTo(16).rarity(Rarity.RARE))
@@ -211,7 +221,7 @@ public final class ModItems {
    public static final DeferredItem<BlockItem> ROOT_ORE_EXTRACTOR = registerBlockItem("basic_crop_conversion_device", ModBlocks.ROOT_ORE_EXTRACTOR);
    public static final DeferredItem<BlockItem> CROP_COMPRESSOR = registerBlockItem("crop_compressor", ModBlocks.CROP_COMPRESSOR);
    public static final DeferredItem<BlockItem> CROP_ANALYSIS_DEVICE = registerBlockItem("crop_analysis_device", ModBlocks.CROP_ANALYSIS_DEVICE);
-   public static final DeferredItem<BlockItem> GOURD_MODIFICATION_DEVICE = registerBlockItem("gourd_modification_device", ModBlocks.GOURD_MODIFICATION_DEVICE);
+   public static final DeferredItem<BlockItem> MELON_MODIFICATION_DEVICE = registerBlockItem("melon_modification_device", ModBlocks.MELON_MODIFICATION_DEVICE);
    public static final DeferredItem<BlockItem> MIXER = registerBlockItem("mixer", ModBlocks.MIXER);
    public static final DeferredItem<BlockItem> INDUSTRIAL_CROP_STORAGE_ARRAY = registerBlockItem(
       "basic_storage_component", ModBlocks.INDUSTRIAL_CROP_STORAGE_ARRAY
@@ -243,6 +253,45 @@ public final class ModItems {
    );
    public static final DeferredItem<BlockItem> ADVANCED_INDUSTRIAL_STORAGE_DEVICE = registerBlockItem(
       "advanced_industrial_storage_device", ModBlocks.ADVANCED_INDUSTRIAL_STORAGE_DEVICE
+   );
+   public static final DeferredItem<BlockItem> EXPANDABLE_STORAGE_DEVICE = registerBlockItem(
+      "expandable_storage_device", ModBlocks.EXPANDABLE_STORAGE_DEVICE
+   );
+   public static final DeferredItem<BlockItem> SUPER_COMPRESSOR = registerBlockItem("super_compressor", ModBlocks.SUPER_COMPRESSOR);
+   public static final DeferredItem<BlockItem> INTEGRATED_SMELTING_FURNACE = registerBlockItem("integrated_smelting_furnace", ModBlocks.INTEGRATED_SMELTING_FURNACE);
+   /** Compressed Industrial Potato: 10,000 Industrial Potatoes pressed by the Super Compressor. */
+   public static final DeferredItem<Item> COMPRESSED_POTATO_10K = ITEMS.register(
+      "compressed_potato_10k", () -> new ShimmeringItem(new Properties().rarity(Rarity.EPIC))
+   );
+   /** 10K Storage Component: 9,999 items per item type in the Expandable Storage Device, 54 item types each. */
+   public static final DeferredItem<ExpandableStorageComponentItem> STORAGE_COMPONENT_10K = ITEMS.register(
+      "storage_component_10k", () -> new ExpandableStorageComponentItem(new Properties().stacksTo(16).rarity(Rarity.EPIC), 54, 9_999)
+   );
+   public static final DeferredItem<BlockItem> SUPER_CROP_CULTIVATOR = registerBlockItem("super_crop_cultivator", ModBlocks.SUPER_CROP_CULTIVATOR);
+   /** Black Nebula Carrot: Super Industrial Carrot + Comet Essence + Prism Pod in the Super Crop Cultivator. Restores 16 hunger and 16 saturation. */
+   public static final DeferredItem<Item> BLACK_NEBULA_CARROT = ITEMS.register(
+      "black_nebula_carrot",
+      () -> new com.industrialcrops.item.ShimmeringCarrotBlockItem(ModBlocks.BLACK_NEBULA_CARROT_CROP.get(), new Properties().rarity(Rarity.EPIC).food(new Builder().nutrition(16).saturationModifier(0.5F).build()))
+   );
+   /** Purple Dragon Carrot: Super Industrial Carrot + Dragon's Breath + Neon Bulb. 8 hunger, 8 saturation and 30 s of Dragon Breath. */
+   public static final DeferredItem<Item> PURPLE_DRAGON_CARROT = ITEMS.register(
+      "purple_dragon_carrot",
+      () -> new com.industrialcrops.item.ShimmeringCarrotBlockItem(ModBlocks.PURPLE_DRAGON_CARROT_CROP.get(), new Properties().rarity(Rarity.EPIC).food(new Builder().nutrition(8).saturationModifier(0.5F).alwaysEdible()
+         .effect(() -> new net.minecraft.world.effect.MobEffectInstance(ModEffects.DRAGON_BREATH, 20 * 30, 0), 1.0F).build()))
+   );
+   /** Omni Bucket: crafted on the Crystal Steel Workbench; pours an endless cauldron of Omni Potion. */
+   public static final DeferredItem<Item> OMNI_BUCKET = ITEMS.register(
+      "omni_bucket", () -> new ShimmeringItem(new Properties().stacksTo(1).rarity(Rarity.EPIC))
+   );
+   /** Omni Potion: every beneficial vanilla effect for 3 minutes. */
+   public static final DeferredItem<Item> OMNI_POTION = ITEMS.register(
+      "omni_potion", () -> new com.industrialcrops.item.OmniPotionItem(new Properties().stacksTo(16).rarity(Rarity.EPIC)
+         .craftRemainder(net.minecraft.world.item.Items.GLASS_BOTTLE))
+   );
+   /** Omni Carrot: Super Industrial Carrot + Omni Potion; 12 hunger, 12 saturation and every beneficial vanilla effect for 5 minutes. */
+   public static final DeferredItem<Item> OMNI_CARROT = ITEMS.register(
+      "omni_carrot", () -> new com.industrialcrops.item.OmniCarrotItem(ModBlocks.OMNI_CARROT_CROP.get(), new Properties().rarity(Rarity.EPIC)
+         .food(new Builder().nutrition(12).saturationModifier(0.5F).alwaysEdible().build()))
    );
    public static final DeferredItem<IncubatorBlockItem> INCUBATOR = ITEMS.register(
       "slime_conversion_device", () -> new IncubatorBlockItem((Block)ModBlocks.INCUBATOR.get(), new Properties().stacksTo(1))
@@ -352,6 +401,11 @@ public final class ModItems {
       ITEMS.addAlias(
          ResourceLocation.fromNamespaceAndPath("industrialcrops", "infinite_logistics_transfer_device"),
          ResourceLocation.fromNamespaceAndPath("industrialcrops", "wireless_logistics_transfer_device")
+      );
+      // Renamed: Gourd Modification Device -> Melon Modification Device; keeps existing worlds intact.
+      ITEMS.addAlias(
+         ResourceLocation.fromNamespaceAndPath("industrialcrops", "gourd_modification_device"),
+         ResourceLocation.fromNamespaceAndPath("industrialcrops", "melon_modification_device")
       );
    }
 }

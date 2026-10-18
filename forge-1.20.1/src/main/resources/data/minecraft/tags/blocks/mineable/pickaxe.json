@@ -8,7 +8,7 @@
     "industrialcrops:basic_crop_conversion_device",
     "industrialcrops:crop_compressor",
     "industrialcrops:crop_analysis_device",
-    "industrialcrops:gourd_modification_device",
+    "industrialcrops:melon_modification_device",
     "industrialcrops:mixer",
     "industrialcrops:basic_storage_component",
     "industrialcrops:basic_control_device",
@@ -76,6 +76,7 @@
     "industrialcrops:ap_steel_casing",
     "industrialcrops:ap_steel_frame",
     "industrialcrops:ap_agricultural_complex",
-    "industrialcrops:ap_livestock_ranch"
+    "industrialcrops:ap_livestock_ranch",
+    "industrialcrops:super_crop_cultivator"
   ]
 }

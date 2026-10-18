@@ -26,7 +26,7 @@ public final class GourdModificationRecipeCategory
 
     public GourdModificationRecipeCategory(IGuiHelper guiHelper) {
         icon = guiHelper.createDrawableItemStack(
-                new ItemStack(ModBlocks.GOURD_MODIFICATION_DEVICE.asItem())
+                new ItemStack(ModBlocks.MELON_MODIFICATION_DEVICE.asItem())
         );
     }
 
@@ -37,7 +37,7 @@ public final class GourdModificationRecipeCategory
 
     @Override
     public Component getTitle() {
-        return Component.translatable("block.industrialcrops.gourd_modification_device");
+        return Component.translatable("block.industrialcrops.melon_modification_device");
     }
 
     @Override

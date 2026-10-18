@@ -34,6 +34,13 @@ public final class ControllerStorageSorting {
         if (!menu.getCarried().isEmpty() || !menu.stillValid(player)) return false;
         List<Slot> targets = new ArrayList<>();
         List<ItemStack> stacks = new ArrayList<>();
+        int limit = Integer.MAX_VALUE;
+        for (Slot slot : menu.slots) {
+            if (slot.container instanceof ControllerStorageContainer storage) {
+                limit = storage.getSlotLimit();
+                break;
+            }
+        }
         for (Slot slot : menu.slots) {
             if (!(slot instanceof ControllerStorageSlot) || !slot.mayPickup(player)) continue;
             if (((ControllerStorageContainer) slot.container).isSortingLocked(slot.getSlotIndex())) continue;
@@ -42,13 +49,17 @@ public final class ControllerStorageSorting {
             if (remaining.isEmpty()) continue;
             for (ItemStack existing : stacks) {
                 if (!ItemStack.isSameItemSameComponents(existing, remaining)) continue;
-                int moved = Math.min(Integer.MAX_VALUE - existing.getCount(), remaining.getCount());
+                int moved = Math.min(limit - existing.getCount(), remaining.getCount());
+                if (moved <= 0) continue;
                 existing.grow(moved);
                 remaining.shrink(moved);
                 if (remaining.isEmpty()) break;
             }
             if (!remaining.isEmpty()) stacks.add(remaining);
         }
+        // Older saves can hold stacks above the current per-slot limit; never sort them into fewer slots
+        // than they need, or items would be lost.
+        if (stacks.size() > targets.size()) return false;
         stacks.sort(Comparator.comparing((ItemStack stack) -> BuiltInRegistries.ITEM.getKey(stack.getItem()).toString())
                 .thenComparing(stack -> stack.getHoverName().getString())
                 .thenComparing(Comparator.comparingInt(ItemStack::getCount).reversed()));

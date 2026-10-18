@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -26,13 +25,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public final class GourdModificationDeviceBlock extends BaseEntityBlock {
+
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
     public GourdModificationDeviceBlock(Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
-@Override
+
+    @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
@@ -48,7 +49,7 @@ public final class GourdModificationDeviceBlock extends BaseEntityBlock {
             BlockState state,
             BlockEntityType<T> type
     ) {
-        return type == ModBlockEntities.GOURD_MODIFICATION_DEVICE.get()
+        return type == ModBlockEntities.MELON_MODIFICATION_DEVICE.get()
                 ? (tickerLevel, tickerPos, tickerState, blockEntity) ->
                         GourdModificationDeviceBlockEntity.tick(
                                 tickerLevel,
@@ -68,11 +69,13 @@ public final class GourdModificationDeviceBlock extends BaseEntityBlock {
             BlockState state,
             Level level,
             BlockPos pos,
-            Player player, InteractionHand hand, BlockHitResult hit
+            Player player,
+            net.minecraft.world.InteractionHand hand,
+            BlockHitResult hit
     ) {
         if (!level.isClientSide()
                 && level.getBlockEntity(pos) instanceof GourdModificationDeviceBlockEntity device) {
-            net.minecraftforge.network.NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer) player,device, buffer -> buffer.writeBlockPos(pos));
+            net.minecraftforge.network.NetworkHooks.openScreen((net.minecraft.server.level.ServerPlayer) player, device, buffer -> buffer.writeBlockPos(pos));
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     }

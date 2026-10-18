@@ -123,6 +123,11 @@ public final class ApLivestockScreen extends ApMachineScreen<ApLivestockMenu> {
             }
          }
 
+         if (this.cap.isHovered()) {
+            var1.renderTooltip(this.font, this.font.split(Component.translatable("gui.industrialcrops.ap_livestock.cap.tip"), 220), var2, var3);
+            return;
+         }
+
          if (!ApScreens.structureTooltip(
             var1, this.font, this.leftPos, this.topPos, var2, var3, ((ApLivestockMenu)this.menu).structure(), "automatic_animal_breeder"
          )) {

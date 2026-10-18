@@ -16,6 +16,8 @@ public final class ControllerStorageContainer extends SimpleContainer {
     private final Runnable changed;
     private final java.util.List<ItemStack> clientStacks;
     private final java.util.Set<Integer> sortingLocks = new java.util.HashSet<>();
+    private java.util.function.IntSupplier slotLimit = () -> Integer.MAX_VALUE;
+    private java.util.function.BiPredicate<Integer, ItemStack> placementRule = (slot, stack) -> true;
 
     public ControllerStorageContainer(int size, BooleanSupplier client, IntFunction<ItemStack> reader,
                                       BiConsumer<Integer, ItemStack> writer, IntPredicate available, Runnable changed) {
@@ -26,6 +28,22 @@ public final class ControllerStorageContainer extends SimpleContainer {
         this.available = available;
         this.changed = changed;
         this.clientStacks = new java.util.ArrayList<>(java.util.Collections.nCopies(size, ItemStack.EMPTY));
+    }
+
+    /** Per-slot item cap of the backing storage (99 / 99 / 999 / 9,999 depending on the device). */
+    public ControllerStorageContainer withSlotLimit(java.util.function.IntSupplier limit) {
+        this.slotLimit = limit;
+        return this;
+    }
+
+    /** Server-side placement rule, e.g. "one slot per item type" for the expandable storage device. */
+    public ControllerStorageContainer withPlacementRule(java.util.function.BiPredicate<Integer, ItemStack> rule) {
+        this.placementRule = rule;
+        return this;
+    }
+
+    public int getSlotLimit() {
+        return Math.max(1, slotLimit.getAsInt());
     }
 
     public boolean isAvailable(int slot) {
@@ -60,8 +78,11 @@ public final class ControllerStorageContainer extends SimpleContainer {
     }
 
     @Override public ItemStack removeItemNoUpdate(int slot) { return removeItem(slot, Integer.MAX_VALUE); }
-    @Override public int getMaxStackSize() { return Integer.MAX_VALUE; }
-    @Override public boolean canPlaceItem(int slot, ItemStack stack) { return isAvailable(slot); }
+    @Override public int getMaxStackSize() { return getSlotLimit(); }
+    @Override public boolean canPlaceItem(int slot, ItemStack stack) {
+        // The client cannot see the full storage, so the placement rule is enforced by the server only.
+        return isAvailable(slot) && (client.getAsBoolean() || placementRule.test(slot, stack));
+    }
     @Override public boolean isEmpty() {
         for (int i = 0; i < getContainerSize(); i++) if (!getItem(i).isEmpty()) return false;
         return true;

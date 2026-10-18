@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "PAP",
+    "CDC",
+    "PAP"
+  ],
+  "key": {
+    "P": {
+      "item": "industrialcrops:ap_structural_steel_plate"
+    },
+    "A": {
+      "item": "industrialcrops:ap_steel_casing"
+    },
+    "C": {
+      "item": "industrialcrops:crystal_ingot"
+    },
+    "D": {
+      "item": "industrialcrops:advanced_industrial_storage_device"
+    }
+  },
+  "result": {
+    "id": "industrialcrops:expandable_storage_device",
+    "count": 1
+  }
+}

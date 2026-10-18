@@ -65,37 +65,18 @@ final class ApGuiStyle {
    static void text(GuiGraphics var0, Font var1, String var2, int var3, int var4, int var5, int var6) {
       IndustrialGuiStyle.drawFittedString(var0, var1, var2, var3, var4, var5, var6, false);
    }
-   static void structureMap(GuiGraphics var0, int var1, int var2, ApStructure.Status var3) {
-      byte var4 = 10;
-      for (int var5 = 0; var5 < 3; var5++) {
-         for (int var6 = 0; var6 < 3; var6++) {
-            int var7 = var1 + var6 * (var4 + 2);
-            int var8 = var2 + var5 * (var4 + 2);
-            boolean var9 = var5 == 2 && var6 == 1;
-            boolean var10 = var5 != 1 && var6 != 1;
-            boolean var11 = var5 == 1 && var6 == 1;
-            int var12;
-            if (var9) {
-               var12 = -1529542;
-            } else if (var11) {
-               var12 = var3.core() && var3.cap() ? -8396660 : -38037;
-            } else if (var10) {
-               var12 = var3.casings() == 8 && var3.frames() == 8 ? -8396660 : (var3.frames() == 8 ? -2047904 : -38037);
-            } else {
-               var12 = var3.casings() == 8 ? -8396660 : -38037;
-            }
-            var0.fill(var7, var8, var7 + var4, var8 + var4, -15395045);
-            var0.fill(var7 + 1, var8 + 1, var7 + var4 - 1, var8 + var4 - 1, var12);
-            var0.fill(var7 + 1, var8 + 1, var7 + var4 - 1, var8 + 2, 1358954495);
-            if (var10) {
-               var0.fill(var7 + 3, var8 + 3, var7 + var4 - 3, var8 + var4 - 3, -13749704);
-            }
-            if (var11) {
-               var0.fill(var7 + 4, var8 + 2, var7 + 6, var8 + var4 - 2, -13749704);
-            }
-         }
+   static void structureMap(GuiGraphics graphics, int x, int y, ApStructure.Status status) {
+      ApStructure.Category[] categories = ApStructure.Category.values();
+      for (int index = 0; index < categories.length; index++) {
+         int px = x + index % 3 * 12;
+         int py = y + index / 3 * 12;
+         int color = status.complete(categories[index]) ? OK : BAD;
+         graphics.fill(px, py, px + 10, py + 10, SHADOW);
+         graphics.fill(px + 1, py + 1, px + 9, py + 9, color);
+         graphics.fill(px + 1, py + 1, px + 9, py + 2, 1358954495);
       }
    }
+
    static final class ApButton extends Button {
       private boolean lit;
       ApButton(int var1, int var2, int var3, int var4, Component var5, OnPress var6) {

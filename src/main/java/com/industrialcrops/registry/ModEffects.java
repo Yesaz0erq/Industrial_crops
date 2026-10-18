@@ -19,6 +19,7 @@ public final class ModEffects {
     public static final DeferredHolder<MobEffect, MobEffect> FLAME = EFFECTS.register("flame", () -> new com.industrialcrops.effect.CropCombatEffect(0xF08027));
     public static final DeferredHolder<MobEffect, MobEffect> REFRACTION = EFFECTS.register("refraction", () -> new com.industrialcrops.effect.CropCombatEffect(0x608EEB));
     public static final DeferredHolder<MobEffect, MobEffect> PULSE = EFFECTS.register("pulse", () -> new com.industrialcrops.effect.CropCombatEffect(0x3ADACD));
+    public static final DeferredHolder<MobEffect, MobEffect> DRAGON_BREATH = EFFECTS.register("dragon_breath", com.industrialcrops.effect.DragonBreathMobEffect::new);
 
     private ModEffects() { }
 }

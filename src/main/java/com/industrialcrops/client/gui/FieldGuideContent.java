@@ -122,8 +122,14 @@ final class FieldGuideContent {
             new FieldGuideContent.Page(
                "guide.industrialcrops.genetics.fusion.title",
                "guide.industrialcrops.genetics.fusion.body",
-               "industrialcrops:gourd_modification_device",
+               "industrialcrops:melon_modification_device",
                List.of("industrialcrops:fusion_melon", "industrialcrops:fusion_ingot", "industrialcrops:fusion_ingot_pickaxe")
+            ),
+            new FieldGuideContent.Page(
+               "guide.industrialcrops.genetics.cultivator.title",
+               "guide.industrialcrops.genetics.cultivator.body",
+               "industrialcrops:black_nebula_carrot",
+               List.of("industrialcrops:super_crop_cultivator", "industrialcrops:black_nebula_carrot", "industrialcrops:purple_dragon_carrot", "industrialcrops:omni_carrot", "industrialcrops:comet_essence", "industrialcrops:prism_pod", "minecraft:dragon_breath", "industrialcrops:neonbulb")
             )
          )
       ),
@@ -286,6 +292,12 @@ final class FieldGuideContent {
                List.of("industrialcrops:comet_essence", "industrialcrops:crystal_steel_casing", "industrialcrops:copper_fluid_storage_cabinet")
             ),
             new FieldGuideContent.Page(
+               "guide.industrialcrops.crystal.omni.title",
+               "guide.industrialcrops.crystal.omni.body",
+               "industrialcrops:omni_bucket",
+               List.of("industrialcrops:omni_bucket", "industrialcrops:omni_potion", "industrialcrops:omni_carrot", "minecraft:cauldron")
+            ),
+            new FieldGuideContent.Page(
                "guide.industrialcrops.crystal.crystal_machines.title",
                "guide.industrialcrops.crystal.crystal_machines.body",
                "industrialcrops:wireless_logistics_transfer_device",
@@ -394,6 +406,15 @@ final class FieldGuideContent {
                "industrialcrops:fusion_ingot",
                List.of("carrote:stable_matter_ingot", "carrote:paradox_steel_ingot", "industrialcrops:fusion_melon")
             )
+         )
+      ),
+      new FieldGuideContent.Chapter(
+         "ap", "guide.industrialcrops.chapter.ap", "industrialcrops:ap_agricultural_complex", -1529542,
+         List.of(
+            new FieldGuideContent.Page("guide.industrialcrops.ap.sizes.title", "guide.industrialcrops.ap.sizes.body", "industrialcrops:ap_expansion_component_1", List.of("industrialcrops:ap_expansion_component_1", "industrialcrops:ap_expansion_component_2", "industrialcrops:ap_expansion_component_3")),
+            new FieldGuideContent.Page("guide.industrialcrops.ap.farm.title", "guide.industrialcrops.ap.farm.body", "industrialcrops:ap_agricultural_complex", List.of("industrialcrops:ap_steel_casing", "industrialcrops:ap_steel_frame", "minecraft:glass", "minecraft:water_bucket", "minecraft:composter")),
+            new FieldGuideContent.Page("guide.industrialcrops.ap.ranch.title", "guide.industrialcrops.ap.ranch.body", "industrialcrops:ap_livestock_ranch", List.of("minecraft:oak_fence", "minecraft:oak_planks", "minecraft:oak_slab", "minecraft:hay_block", "minecraft:water_bucket")),
+            new FieldGuideContent.Page("guide.industrialcrops.ap.projection.title", "guide.industrialcrops.ap.projection.body", null, List.of("industrialcrops:field_guide", "industrialcrops:dimension_upgrade_component"))
          )
       ),
       new FieldGuideContent.Chapter(

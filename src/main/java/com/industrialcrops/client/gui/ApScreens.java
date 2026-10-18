@@ -6,42 +6,55 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.FormattedCharSequence;
 
+/** Shared structure summary; every detail comes from the server's packed status. */
 final class ApScreens {
-   private ApScreens() {
+   private ApScreens() {}
+
+   static int chunks(ApStructure.Status status) {
+      return status.width() * status.depth() / 256;
    }
 
-   static void structureText(GuiGraphics var0, Font var1, ApStructure.Status var2) {
-      ApGuiStyle.text(var0, var1, Component.translatable("gui.industrialcrops.ap.structure").getString(), 12, 28, 100, -920586);
-      byte var3 = 52;
-      byte var4 = 60;
-      line(var0, var1, Component.translatable("gui.industrialcrops.ap.casings", new Object[]{var2.casings(), 8}), var3, 40, var4, var2.casings() == 8);
-      line(var0, var1, Component.translatable("gui.industrialcrops.ap.frames", new Object[]{var2.frames(), 8}), var3, 49, var4, var2.frames() == 8);
-      line(var0, var1, Component.translatable("gui.industrialcrops.ap.core"), var3, 58, var4, var2.core());
-      line(var0, var1, Component.translatable("gui.industrialcrops.ap.cap"), var3, 67, var4, var2.cap());
+   static net.minecraft.network.chat.MutableComponent footprint(ApStructure.Status status) {
+      return Component.translatable("gui.industrialcrops.ap.footprint", status.width(), status.depth(), chunks(status));
    }
 
-   static void line(GuiGraphics var0, Font var1, Component var2, int var3, int var4, int var5, boolean var6) {
-      ApGuiStyle.text(var0, var1, (var6 ? "✔ " : "✖ ") + var2.getString(), var3, var4, var5, var6 ? -8396660 : -38037);
+   static Component category(ApStructure.Category category) {
+      return Component.translatable("gui.industrialcrops.ap.category." + category.name().toLowerCase(java.util.Locale.ROOT));
    }
 
-   static boolean structureTooltip(GuiGraphics var0, Font var1, int var2, int var3, int var4, int var5, ApStructure.Status var6, String var7) {
-      if (var4 >= var2 + 8 && var4 < var2 + 116 && var5 >= var3 + 24 && var5 < var3 + 80) {
-         ArrayList var8 = new ArrayList();
-         var8.add(Component.translatable("gui.industrialcrops.ap.help.title").withStyle(ChatFormatting.GOLD).getVisualOrderText());
+   static void structureText(GuiGraphics graphics, Font font, ApStructure.Status status) {
+      ApGuiStyle.text(graphics, font, Component.translatable("gui.industrialcrops.ap.structure").getString(), 12, 28, 100, ApGuiStyle.TEXT);
+      ApGuiStyle.text(graphics, font, footprint(status).getString(), 52, 40, 60, ApGuiStyle.TEXT);
+      ApGuiStyle.text(graphics, font, Component.translatable("gui.industrialcrops.ap.checks", status.completedCategories(), 9).getString(), 52, 50, 60, status.formed() ? ApGuiStyle.OK : ApGuiStyle.BAD);
+      ApGuiStyle.text(graphics, font, Component.translatable("gui.industrialcrops.ap.expansion", status.tier()).getString(), 52, 60, 60, ApGuiStyle.MUTED);
+      ApGuiStyle.text(graphics, font, Component.translatable(status.loaded() ? "gui.industrialcrops.ap.details" : "gui.industrialcrops.ap.unloaded").getString(), 52, 71, 60, status.loaded() ? ApGuiStyle.MUTED : ApGuiStyle.BAD);
+   }
 
-         for (int var9 = 1; var9 <= 4; var9++) {
-            MutableComponent var10 = var9 == 3
-               ? Component.translatable("gui.industrialcrops.ap.help.3", new Object[]{Component.translatable("block.industrialcrops." + var7)})
-               : Component.translatable("gui.industrialcrops.ap.help." + var9);
-            var8.addAll(var1.split(var10.copy().withStyle(ChatFormatting.GRAY), 220));
-         }
+   static void line(GuiGraphics graphics, Font font, Component text, int x, int y, int width, boolean complete) {
+      ApGuiStyle.text(graphics, font, (complete ? "✔ " : "✖ ") + text.getString(), x, y, width, complete ? ApGuiStyle.OK : ApGuiStyle.BAD);
+   }
 
-         var0.renderTooltip(var1, var8, var4, var5);
-         return true;
-      } else {
-         return false;
+   static void addStructureHelp(ArrayList<FormattedCharSequence> lines, Font font, ApStructure.Status status) {
+      lines.add(Component.translatable("gui.industrialcrops.ap.help.title").withStyle(ChatFormatting.GOLD).getVisualOrderText());
+      lines.add(footprint(status).withStyle(ChatFormatting.WHITE).getVisualOrderText());
+      if (!status.loaded()) lines.add(Component.translatable("gui.industrialcrops.ap.unloaded").withStyle(ChatFormatting.RED).getVisualOrderText());
+      for (ApStructure.Category category : ApStructure.Category.values()) {
+         boolean complete = status.complete(category);
+         lines.add(Component.literal(complete ? "✔ " : "✖ ").append(category(category)).withStyle(complete ? ChatFormatting.GREEN : ChatFormatting.RED).getVisualOrderText());
       }
+      String type = status.livestock() ? "ranch" : "farm";
+      for (String key : new String[]{"origin", type, "expansion", "projection"}) {
+         lines.addAll(font.split(Component.translatable("gui.industrialcrops.ap.help." + key).withStyle(ChatFormatting.GRAY), 240));
+      }
+   }
+
+   static boolean structureTooltip(GuiGraphics graphics, Font font, int left, int top, int mouseX, int mouseY, ApStructure.Status status, String unusedLegacyCore) {
+      if (mouseX < left + 8 || mouseX >= left + 116 || mouseY < top + 24 || mouseY >= top + 80) return false;
+      ArrayList<FormattedCharSequence> lines = new ArrayList<>();
+      addStructureHelp(lines, font, status);
+      graphics.renderTooltip(font, lines, mouseX, mouseY);
+      return true;
    }
 }

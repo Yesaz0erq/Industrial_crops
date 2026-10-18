@@ -42,7 +42,8 @@ final class ControllerMenuInteractions {
                     player.getInventory().setItem(button, taken);
                     slot.onTake(player, taken);
                 } else if (ItemStack.isSameItemSameComponents(stored, hotbar)) {
-                    int amount = Math.min(hotbar.getCount(), Integer.MAX_VALUE - stored.getCount());
+                    int room = Math.max(0, slot.getMaxStackSize(stored) - stored.getCount());
+                    int amount = Math.min(hotbar.getCount(), room);
                     stored.grow(amount);
                     hotbar.shrink(amount);
                     slot.setChanged();

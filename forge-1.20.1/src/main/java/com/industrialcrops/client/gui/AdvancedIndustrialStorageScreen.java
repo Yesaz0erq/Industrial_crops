@@ -108,7 +108,7 @@ public final class AdvancedIndustrialStorageScreen extends IndustrialContainerSc
         super.render(graphics, mouseX, mouseY, partialTick);
         drawStorageCounts(graphics);
         if (cellSlotsTab != null) {
-            graphics.renderItem(new ItemStack(ModItems.INDUSTRIAL_STORAGE_COMPONENT_1.get()),
+            graphics.renderItem(menu.getCellTabIcon(),
                     cellSlotsTab.getX() + 2, cellSlotsTab.getY() + 2);
             if (cellSlotsOpen) {
                 graphics.fill(cellSlotsTab.getX(), cellSlotsTab.getY(), cellSlotsTab.getX() + 20,

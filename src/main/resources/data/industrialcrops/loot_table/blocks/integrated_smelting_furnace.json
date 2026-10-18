@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [{"condition": "minecraft:survives_explosion"}],
+      "entries": [{"type": "minecraft:item", "name": "industrialcrops:integrated_smelting_furnace"}],
+      "rolls": 1.0
+    }
+  ]
+}

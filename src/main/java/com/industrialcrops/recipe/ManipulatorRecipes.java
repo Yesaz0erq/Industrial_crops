@@ -39,18 +39,6 @@ public final class ManipulatorRecipes {
         );
     }
 
-    public static ManipulatorRecipeDisplay reinforcedIndustrialStorageArray() {
-        return new ManipulatorRecipeDisplay(
-                List.of(
-                        ManipulatorIngredient.ofItem(ModBlocks.IRON_DEVICE_CASING.asItem(), 1),
-                        ManipulatorIngredient.ofItem(ModBlocks.INDUSTRIAL_CROP_STORAGE_ARRAY.asItem(), 1),
-                        ManipulatorIngredient.ofItem(Items.IRON_INGOT, 5),
-                        ManipulatorIngredient.ofOptions(getCopperChestOptions(), getCopperChestDisplayStack(), 3)
-                ),
-                new ItemStack(ModBlocks.REINFORCED_INDUSTRIAL_STORAGE_ARRAY.asItem())
-        );
-    }
-
     public static ManipulatorRecipeDisplay reinforcedControlDevice() {
         return new ManipulatorRecipeDisplay(
                 List.of(

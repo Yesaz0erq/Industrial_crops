@@ -47,7 +47,7 @@ public final class GourdModificationDeviceMenu extends AbstractContainerMenu {
             GourdModificationDeviceBlockEntity blockEntity,
             BlockPos pos
     ) {
-        super(ModMenus.GOURD_MODIFICATION_DEVICE.get(), containerId);
+        super(ModMenus.MELON_MODIFICATION_DEVICE.get(), containerId);
         this.pos = pos;
 
         addSlot(new SlotItemHandler(
@@ -152,7 +152,7 @@ public final class GourdModificationDeviceMenu extends AbstractContainerMenu {
         return stillValid(
                 ContainerLevelAccess.create(player.level(), pos),
                 player,
-                ModBlocks.GOURD_MODIFICATION_DEVICE.get()
+                ModBlocks.MELON_MODIFICATION_DEVICE.get()
         );
     }
 

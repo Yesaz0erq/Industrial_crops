@@ -36,6 +36,12 @@ public final class ReinforcedControlDeviceBlockEntity extends AdvancedIndustrial
         return components.get(componentIndex).getStackInSlot(componentSlot);
     }
 
+    /** Iron tier: the controller's internal fallback storage follows the reinforced component limit. */
+    @Override
+    public int getStorageSlotLimit() {
+        return ReinforcedIndustrialStorageArrayBlockEntity.SLOT_LIMIT;
+    }
+
     @Override
     public int getUnlockedStorageSlots() {
         List<ReinforcedIndustrialStorageArrayBlockEntity> components = connectedComponents();

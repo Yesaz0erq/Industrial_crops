@@ -26,7 +26,7 @@ public final class ModCapabilities {
       var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.ROOT_ORE_EXTRACTOR.get(), (var0x, var1) -> var0x.getInventory());
       var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.CROP_COMPRESSOR.get(), (var0x, var1) -> var0x.getInventory());
       var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.CROP_ANALYSIS_DEVICE.get(), (var0x, var1) -> var0x.getInventory());
-      var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.GOURD_MODIFICATION_DEVICE.get(), (var0x, var1) -> var0x.getInventory());
+      var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.MELON_MODIFICATION_DEVICE.get(), (var0x, var1) -> var0x.getInventory());
       var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.SLIME_INCUBATOR.get(), (var0x, var1) -> var0x.getInventory());
       var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.INCUBATOR.get(), (var0x, var1) -> var0x.getInventory());
       var0.registerBlockEntity(
@@ -63,6 +63,11 @@ public final class ModCapabilities {
       var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.AP_LIVESTOCK.get(), (var0x, var1) -> var0x.automation());
       var0.registerBlockEntity(EnergyStorage.BLOCK, ModBlockEntities.AP_LIVESTOCK.get(), (var0x, var1) -> var0x.getEnergyStorage(var1));
       var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.ULTRA_HIGH_PRESSURE_INV_FORGE.get(), (var0x, var1) -> var0x.getInventory());
+      var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.EXPANDABLE_STORAGE_DEVICE.get(), (var0x, var1) -> var0x.getPipeItemHandler());
+      var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.SUPER_COMPRESSOR.get(), (var0x, var1) -> var0x.getAutomationHandler());
+      var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.INTEGRATED_SMELTING_FURNACE.get(), (var0x, var1) -> var0x.getAutomationHandler());
+      var0.registerBlockEntity(EnergyStorage.BLOCK, ModBlockEntities.INTEGRATED_SMELTING_FURNACE.get(), (var0x, var1) -> var0x.getEnergyStorage(var1));
+      var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.SUPER_CROP_CULTIVATOR.get(), (var0x, var1) -> var0x.getAutomationHandler());
       var0.registerBlockEntity(
          EnergyStorage.BLOCK, ModBlockEntities.ULTRA_HIGH_PRESSURE_INV_FORGE.get(), (var0x, var1) -> var0x.getEnergyStorage(var1)
       );
