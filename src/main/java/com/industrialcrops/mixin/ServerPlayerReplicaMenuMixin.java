@@ -1,5 +1,7 @@
 package com.industrialcrops.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.industrialcrops.replication.UniversalReplicaData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -8,7 +10,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.OptionalInt;
@@ -31,25 +32,27 @@ public abstract class ServerPlayerReplicaMenuMixin {
         }
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;broadcastChanges()V"
             )
     )
-    private void industrialcrops$broadcastReplicaMenu(AbstractContainerMenu menu) {
-        UniversalReplicaData.broadcastMenuChanges(menu);
+    private void industrialcrops$broadcastReplicaMenu(AbstractContainerMenu menu, Operation<Void> original) {
+        UniversalReplicaData.broadcastMenuChanges(menu, () -> original.call(menu));
     }
 
-    @Redirect(
+    // Keep the invocation available to other mods' Redirects (e.g. Deeper and Darker).
+    @WrapOperation(
             method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;stillValid(Lnet/minecraft/world/entity/player/Player;)Z"
             )
     )
-    private boolean industrialcrops$validateReplicaMenu(AbstractContainerMenu menu, Player player) {
-        return UniversalReplicaData.checkMenuValidity(menu, player);
+    private boolean industrialcrops$validateReplicaMenu(AbstractContainerMenu menu, Player player,
+            Operation<Boolean> original) {
+        return UniversalReplicaData.checkMenuValidity(menu, player, () -> original.call(menu, player));
     }
 }

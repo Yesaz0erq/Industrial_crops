@@ -48,6 +48,7 @@ mixin {
 }
 
 repositories {
+    mavenCentral()
     maven { url = 'https://maven.theillusivec4.top/' }
     maven { url = 'https://maven.blamejared.com' }
     maven {
@@ -60,8 +61,14 @@ repositories {
     }
 }
 
+jarJar.enable()
+
 dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    compileOnly(annotationProcessor('io.github.llamalad7:mixinextras-common:0.5.0'))
+    implementation(jarJar('io.github.llamalad7:mixinextras-forge:0.5.0')) {
+        jarJar.ranged(it, '[0.5.0,)')
+    }
     compileOnly fg.deobf('top.theillusivec4.curios:curios-forge:5.14.1+1.20.1')
     if (!providers.gradleProperty('withoutCurios').map { it.toBoolean() }.getOrElse(false)) {
         runtimeOnly fg.deobf('top.theillusivec4.curios:curios-forge:5.14.1+1.20.1')

@@ -16,6 +16,7 @@ import java.util.Deque;
 import java.util.Map;
 import java.util.Optional;
 import java.util.WeakHashMap;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /** Persistent mirrored-state data and the short-lived virtual-world context. */
@@ -92,11 +93,17 @@ public final class UniversalReplicaData {
     }
 
     public static boolean checkMenuValidity(AbstractContainerMenu menu, Player player) {
+        return checkMenuValidity(menu, player, () -> menu.stillValid(player));
+    }
+
+    /** Preserves other mods' menu checks when no live replica owns this menu. */
+    public static boolean checkMenuValidity(AbstractContainerMenu menu, Player player,
+            BooleanSupplier original) {
         MenuFrame frame = REPLICA_MENUS.get(menu);
         if (frame == null || frame.entity.isRemoved()
                 || frame.level.getBlockEntity(frame.pos) != frame.entity) {
             REPLICA_MENUS.remove(menu);
-            return menu.stillValid(player);
+            return original.getAsBoolean();
         }
         boolean valid = player.level() == frame.level
                 && frame.level.getBlockState(frame.pos).is(com.industrialcrops.registry.CarroteBlocks.UNIVERSAL_REPLICATION_DEVICE.get())
@@ -112,15 +119,20 @@ public final class UniversalReplicaData {
     }
 
     public static void broadcastMenuChanges(AbstractContainerMenu menu) {
+        broadcastMenuChanges(menu, menu::broadcastChanges);
+    }
+
+    /** Runs the complete broadcast operation inside the replica's virtual state. */
+    public static void broadcastMenuChanges(AbstractContainerMenu menu, Runnable original) {
         MenuFrame frame = REPLICA_MENUS.get(menu);
         if (frame == null || frame.entity.isRemoved()
                 || frame.level.getBlockEntity(frame.pos) != frame.entity) {
             REPLICA_MENUS.remove(menu);
-            menu.broadcastChanges();
+            original.run();
             return;
         }
         getMirroredState(frame.level, frame.entity).ifPresentOrElse(
-                state -> run(frame.level, frame.pos, frame.entity, state, menu::broadcastChanges),
+                state -> run(frame.level, frame.pos, frame.entity, state, original),
                 () -> REPLICA_MENUS.remove(menu)
         );
     }
