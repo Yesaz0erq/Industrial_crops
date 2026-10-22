@@ -104,15 +104,15 @@ AP扩建组件 I在编程设备中使用AP结构钢板×4、AP钢框架×2、元
 
 ```sh
 # Linux / macOS
-./gradlew build
+./gradlew build jarJar
 ```
 
 ```powershell
 # Windows
-.\gradlew.bat build
+.\gradlew.bat build jarJar
 ```
 
-首次构建需要联网下载依赖。成品位于所选工程的 `build/libs/`。启动开发客户端使用 `runClient`；添加 `-PwithoutCurios=true` 可在不加载 Curios 的情况下运行。
+首次构建需要联网下载依赖。安装 `build/libs/industrial-crops-forge-1.0-C2-all.jar`，其中已内置菜单兼容修复所需的 MixinExtras；同目录不带 `-all` 的 JAR 未包含此依赖。启动开发客户端使用 `runClient`；添加 `-PwithoutCurios=true` 可在不加载 Curios 的情况下运行。
 
 ## 反馈与贡献
 
