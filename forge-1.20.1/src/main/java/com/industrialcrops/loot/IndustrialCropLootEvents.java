@@ -10,6 +10,7 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.common.BasicItemListing;
@@ -33,12 +34,22 @@ public final class IndustrialCropLootEvents {
             return;
         }
 
+        // Each crop has its own roll; several different crops can appear together.
+        addCropPool(event, "prism_pod_seeds", ModItems.PRISM_POD_SEEDS.get(), 0.25F);
+        addCropPool(event, "embercoil_seeds", ModItems.EMBERCOIL_SEEDS.get(), 0.25F);
+        addCropPool(event, "starbloom_seeds", ModItems.STARBLOOM_SEEDS.get(), 0.25F);
+        addCropPool(event, "neonbulb_seeds", ModItems.NEONBULB_SEEDS.get(), 0.25F);
+        addCropPool(event, "fluxstalk_seeds", ModItems.FLUXSTALK_SEEDS.get(), 0.25F);
+        addCropPool(event, "plasma_fruit", ModItems.PLASMA_BERRY.get(), 0.10F);
+    }
+
+    private static void addCropPool(LootTableLoadEvent event, String name,
+            net.minecraft.world.item.Item item, float chance) {
         event.getTable().addPool(LootPool.lootPool()
-                .name("industrialcrops_seed_discovery")
-                .when(LootItemRandomChanceCondition.randomChance(0.25F))
-                .add(seedEntry(ModItems.PRISM_POD_SEEDS.get()))
-                .add(seedEntry(ModItems.EMBERCOIL_SEEDS.get()))
-                .add(seedEntry(ModItems.STARBLOOM_SEEDS.get()))
+                .name("industrialcrops_crop_discovery_" + name)
+                .setRolls(ConstantValue.exactly(1.0F))
+                .when(LootItemRandomChanceCondition.randomChance(chance))
+                .add(seedEntry(item))
                 .build());
     }
 

@@ -104,7 +104,8 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
         info(registration, "paradox_steel_ingot", stack("carrote", "paradox_steel_ingot"));
         info(registration, "stable_matter_ingot", stack("carrote", "stable_matter_ingot"));
         info(registration, "exotic_seeds", new ItemStack(ModItems.PRISM_POD_SEEDS.get()),
-                new ItemStack(ModItems.EMBERCOIL_SEEDS.get()), new ItemStack(ModItems.STARBLOOM_SEEDS.get()));
+                new ItemStack(ModItems.EMBERCOIL_SEEDS.get()), new ItemStack(ModItems.STARBLOOM_SEEDS.get()),
+                new ItemStack(ModItems.NEONBULB_SEEDS.get()), new ItemStack(ModItems.FLUXSTALK_SEEDS.get()));
         info(registration, "space_ores", new ItemStack(ModItems.INV_ORE.get()),
                 new ItemStack(ModItems.GREEN_IRON_ORE.get()), new ItemStack(ModItems.TYCON_ORE.get()));
         info(registration, "comet_soil", new ItemStack(ModBlocks.COMET_SOIL.asItem()));
