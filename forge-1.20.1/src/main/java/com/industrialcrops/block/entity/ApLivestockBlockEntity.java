@@ -64,7 +64,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
    public static final int FLAG_CULL = 4;
    public static final int FLAG_GROW = 8;
    public static final int[] CYCLE_TICKS = new int[]{20, 15, 10, 7, 5};
-   public static final int BREED_EVERY = 5;
+   public static final int BREED_EVERY = 1;
    public static final int DATA_COUNT = 11;
    public static final int STATUS_RUNNING = 0;
    public static final int STATUS_STRUCTURE = 1;
@@ -82,7 +82,6 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
       }
    };
    private final ApLivestockBlockEntity.Energy energy = new ApLivestockBlockEntity.Energy();
-   private int cycles;
    private int flags = 11;
    private int capIndex = 1;
    private int status = 1;
@@ -143,8 +142,8 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
          var3.tickCommon(var4, var5);
          if (!var3.structure.formed()) {
             var3.status = 1;
-         } else if (var5 % (long)CYCLE_TICKS[var3.upgrades.speedTier()] == 0L) {
-            var3.work(var4);
+         } else {
+            var3.work(var4, var5 % (long)CYCLE_TICKS[var3.upgrades.speedTier()] == 0L);
          }
          if (var3.structure.formed() && var5 % 20L == 10L && var3.upgrades.automatic()) {
             var3.exportToNeighbours(var3.inventory, 9, 9);
@@ -155,49 +154,63 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
          }
       }
    }
-   private void work(ServerLevel var1) {
-      boolean var2 = this.cycles++ % 5 == 0;
-      AABB var3 = this.area();
-      List<Animal> var4 = var1.getEntitiesOfClass(Animal.class, var3, animal -> livestock(animal) && this.inside(animal));
-      this.animalCount = var4.size();
-      boolean var5 = this.collectDrops(var1, var3);
-      if (var4.isEmpty()) {
-         this.status = var5 ? 0 : 3;
-      } else if (this.energy.getEnergyStored() < this.upgrades.cost(ENERGY_PER_GROWTH)) {
-         this.status = 2;
-      } else {
-         HashMap<net.minecraft.world.entity.EntityType<?>, List<Animal>> var6 = new HashMap<>();
-         for (Animal var8 : var4) {
-            var6.computeIfAbsent(var8.getType(), var0 -> new ArrayList<>()).add(var8);
-         }
-         int var10 = CAPS[this.capIndex];
-         for (List<Animal> var9 : var6.values()) {
-            if ((this.flags & 4) != 0 && var9.size() > var10) {
-               var5 |= this.cull(var1, var9, var9.size() - var10);
+   private void work(ServerLevel level, boolean periodic) {
+      AABB bounds = this.area();
+      List<Animal> animals = level.getEntitiesOfClass(Animal.class, bounds,
+         animal -> livestock(animal) && this.inside(animal));
+      boolean worked = this.collectDrops(level, bounds);
+      if (animals.isEmpty()) {
+         this.animalCount = 0;
+         this.status = worked ? STATUS_RUNNING : STATUS_NO_ANIMALS;
+         return;
+      }
+
+      // Ready breeding/culling takes priority over optional periodic energy use.
+      worked |= this.breedAndCull(level, animals);
+      if (periodic && (this.flags & FLAG_SHEAR) != 0) worked |= this.shear(level, animals);
+      if (periodic && (this.flags & FLAG_GROW) != 0 && this.grow(level, animals)) {
+         worked = true;
+         // A baby that matures this tick must not wait for the next work interval.
+         worked |= this.breedAndCull(level, level.getEntitiesOfClass(Animal.class, bounds,
+            animal -> livestock(animal) && this.inside(animal)));
+      }
+      this.animalCount = level.getEntitiesOfClass(Animal.class, bounds,
+         animal -> livestock(animal) && this.inside(animal)).size();
+      this.status = worked ? STATUS_RUNNING
+         : this.energy.getEnergyStored() < this.upgrades.cost(ENERGY_PER_GROWTH) ? STATUS_ENERGY
+         : this.outputFull() ? STATUS_FULL : STATUS_IDLE;
+      if (worked) this.setChanged();
+   }
+
+   private boolean breedAndCull(ServerLevel level, List<Animal> animals) {
+      HashMap<net.minecraft.world.entity.EntityType<?>, List<Animal>> groups = new HashMap<>();
+      for (Animal animal : animals) {
+         if (livestock(animal) && this.inside(animal)) groups.computeIfAbsent(animal.getType(), key -> new ArrayList<>()).add(animal);
+      }
+      boolean worked = false;
+      int cap = CAPS[this.capIndex];
+      for (List<Animal> group : groups.values()) {
+         if ((this.flags & FLAG_CULL) != 0 && group.size() > cap) worked |= this.cull(level, group, group.size() - cap);
+         group.removeIf(animal -> !animal.isAlive());
+         if ((this.flags & FLAG_BREED) != 0) {
+            int vacancies = cap - group.size();
+            for (int attempt = 0; attempt < vacancies; attempt++) {
+               if (!this.breed(level, group)) break;
+               worked = true;
             }
-            if ((this.flags & 1) != 0 && var2 && var9.size() < var10) {
-               var5 |= this.breed(var1, var9);
-            }
-         }
-         if ((this.flags & 2) != 0) {
-            var5 |= this.shear(var1, var4);
-         }
-         if ((this.flags & 8) != 0) {
-            var5 |= this.grow(var1, var4);
-         }
-         this.status = var5 ? 0 : (this.outputFull() ? 4 : 5);
-         if (var5) {
-            this.setChanged();
          }
       }
+      return worked;
    }
+
    private boolean isFeedBag(ItemStack var1) {
       return var1.is((Item)ModItems.FEED_BAG_BASIC.get()) || var1.is((Item)ModItems.FEED_BAG_FAST_BREEDING.get());
    }
    private int feedSlotFor(Animal var1, int var2) {
       for (int var3 = 0; var3 < 9; var3++) {
          ItemStack var4 = this.inventory.getStackInSlot(var3);
-         if (!var4.isEmpty() && (var3 != var2 || var4.getCount() >= 2) && (var1.isFood(var4) || this.isFeedBag(var4))) {
+         if (!var4.isEmpty() && (var3 != var2 || var4.getCount() >= 2) && (var1.isFood(var4) || this.isFeedBag(var4))
+               && (var1.getAge() == 0 || var4.is(ModItems.FEED_BAG_FAST_BREEDING.get()))) {
             return var3;
          }
       }
@@ -211,58 +224,61 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
          this.output(var2.getCraftingRemainingItem());
       }
    }
-   private boolean breed(ServerLevel var1, List<Animal> var2) {
-      if (this.energy.getEnergyStored() < this.upgrades.cost(ENERGY_PER_BIRTH)) {
-         return false;
-      } else {
-         Animal var3 = null;
-         for (Animal var5 : var2) {
-            if (livestock(var5) && this.inside(var5) && var5.getAge() == 0 && !var5.isInLove()) {
-               if (var3 != null) {
-                  if (!livestock(var3) || !this.inside(var3)) { var3 = var5; continue; }
-                  int var6 = this.feedSlotFor(var3, -1);
-                  if (var6 < 0) {
-                     return false;
-                  }
-                  int var7 = this.feedSlotFor(var5, var6);
-                  if (var7 < 0) {
-                     return false;
-                  }
-                  var3.setInLove(null);
-                  var5.setInLove(null);
-                  if (!var3.canMate(var5)) {
-                     var3.resetLove();
-                     var5.resetLove();
-                     return false;
-                  }
-                  BabyEntitySpawnEvent var8 = new BabyEntitySpawnEvent(var3, var5, var3.getBreedOffspring(var1, var5));
-                  MinecraftForge.EVENT_BUS.post(var8);
-                  AgeableMob var9 = var8.getChild();
-                  if (!var8.isCanceled() && var9 != null) {
-                     var9.setBaby(true);
-                     var9.moveTo(var3.getX(), var3.getY(), var3.getZ(), 0.0F, 0.0F);
-                     if (!this.inside(var9) || !var1.addFreshEntity(var9)) {
-                        var3.resetLove();
-                        var5.resetLove();
-                        return false;
-                     }
-                     this.consumeFeed(var6);
-                     this.consumeFeed(var7);
-                     var3.finalizeSpawnChildFromBreeding(var1, var5, var9);
-                     this.energy.consume(this.upgrades.cost(ENERGY_PER_BIRTH));
-                     this.births++;
-                     return true;
-                  }
-                  var3.resetLove();
-                  var5.resetLove();
-                  return false;
-               }
-               var3 = var5;
+   private boolean breed(ServerLevel level, List<Animal> animals) {
+      if (this.energy.getEnergyStored() < this.upgrades.cost(ENERGY_PER_BIRTH)) return false;
+      for (int i = 0; i < animals.size(); i++) {
+         Animal first = animals.get(i);
+         if (!livestock(first) || !this.inside(first) || first.isBaby()) continue;
+         int firstSlot = first.isInLove() ? -1 : this.feedSlotFor(first, -1);
+         if (!first.isInLove() && firstSlot < 0) continue;
+         for (int j = i + 1; j < animals.size(); j++) {
+            Animal second = animals.get(j);
+            if (!livestock(second) || !this.inside(second) || second.isBaby()) continue;
+            int secondSlot = second.isInLove() ? -1 : this.feedSlotFor(second, firstSlot);
+            if (!second.isInLove() && secondSlot < 0) continue;
+            int firstAge = first.getAge(), secondAge = second.getAge();
+            int firstLove = first.getInLoveTime(), secondLove = second.getInLoveTime();
+            prepareForBreeding(first, firstSlot);
+            prepareForBreeding(second, secondSlot);
+            if (!first.canMate(second)) {
+               restoreBreedingState(first, firstAge, firstLove);
+               restoreBreedingState(second, secondAge, secondLove);
+               continue;
             }
+            BabyEntitySpawnEvent event = new BabyEntitySpawnEvent(first, second, first.getBreedOffspring(level, second));
+            MinecraftForge.EVENT_BUS.post(event);
+            AgeableMob child = event.getChild();
+            if (!event.isCanceled() && child != null) {
+               child.setBaby(true);
+               child.moveTo(first.getX(), first.getY(), first.getZ(), 0.0F, 0.0F);
+               if (this.inside(child) && level.addFreshEntity(child)) {
+                  if (firstSlot >= 0) this.consumeFeed(firstSlot);
+                  if (secondSlot >= 0) this.consumeFeed(secondSlot);
+                  first.finalizeSpawnChildFromBreeding(level, second, child);
+                  this.energy.consume(this.upgrades.cost(ENERGY_PER_BIRTH));
+                  this.births++;
+                  return true;
+               }
+            }
+            restoreBreedingState(first, firstAge, firstLove);
+            restoreBreedingState(second, secondAge, secondLove);
+            // Try other pairs rather than allowing one denied pair to block the whole herd.
          }
-         return false;
       }
+      return false;
    }
+
+   private void prepareForBreeding(Animal animal, int slot) {
+      if (slot < 0) return; // Already fed: preserve its love state and consume no second ration.
+      if (this.inventory.getStackInSlot(slot).is(ModItems.FEED_BAG_FAST_BREEDING.get())) animal.setAge(0);
+      animal.setInLove(null);
+   }
+
+   private static void restoreBreedingState(Animal animal, int age, int love) {
+      animal.setAge(age);
+      animal.setInLoveTime(love);
+   }
+
    private boolean shear(ServerLevel var1, List<Animal> var2) {
       boolean var3 = false;
       for (Animal var5 : var2) {
