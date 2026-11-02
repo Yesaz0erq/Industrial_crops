@@ -32,9 +32,10 @@ public final class ElectricFurnaceBlockEntity extends BlockEntity implements Men
     public static final int UPGRADE_START = 6;
     public static final int UPGRADE_COUNT = 4;
     public static final int PROCESS_TICKS = 100;
-    public static final int ENERGY_CAPACITY = 100_000;
-    private static final int ENERGY_PER_BASE_TICK = 20;
-    private static final int RECEIVE_RATE = 5_000;
+    public static final int ENERGY_CAPACITY = PoweredMachineSupport.GOLD_CAPACITY;
+    /** 5,000 FE per item: 1.25x the Integrated Smelting Furnace's 40 FE per lane-tick. */
+    public static final int ENERGY_PER_BASE_TICK = 50;
+    private static final int RECEIVE_RATE = PoweredMachineSupport.GOLD_INPUT;
 
     private final int[] progress = new int[CHANNELS];
     private final TrackedEnergyStorage energy = new TrackedEnergyStorage();

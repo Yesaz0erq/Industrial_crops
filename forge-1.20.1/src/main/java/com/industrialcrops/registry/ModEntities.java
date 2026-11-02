@@ -1,5 +1,6 @@
 package com.industrialcrops.registry;
 import net.minecraftforge.registries.RegistryObject;
+
 import com.industrialcrops.entity.BrownCreateSlime;
 import com.industrialcrops.entity.DiamondProcessorSlime;
 import com.industrialcrops.entity.GoldenRedstoneLampSlime;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.EntityType.Builder;
 import net.minecraftforge.registries.DeferredRegister;
+
 public final class ModEntities {
    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, "industrialcrops");
    public static final RegistryObject<EntityType<BrownCreateSlime>> BROWN_CREATE_SLIME = ENTITY_TYPES.register(
@@ -28,6 +30,10 @@ public final class ModEntities {
       "blue_processor_slime",
       () -> Builder.of(DiamondProcessorSlime::new, MobCategory.MONSTER).sized(1.0F, 1.0F).clientTrackingRange(8).build("blue_processor_slime")
    );
+   public static final RegistryObject<EntityType<com.industrialcrops.entity.FluxSlime>> FLUX_SLIME = ENTITY_TYPES.register(
+      "flux_slime",
+      () -> Builder.of(com.industrialcrops.entity.FluxSlime::new, MobCategory.MONSTER).sized(1.0F, 1.0F).clientTrackingRange(8).build("flux_slime")
+   );
    public static final RegistryObject<EntityType<GoldenRocketEntity>> GOLDEN_ROCKET = ENTITY_TYPES.register(
       "explosive_potato",
       () -> Builder.<GoldenRocketEntity>of(GoldenRocketEntity::new, MobCategory.MISC).sized(0.35F, 1.1F).clientTrackingRange(128).updateInterval(1).build("explosive_potato")
@@ -40,6 +46,7 @@ public final class ModEntities {
       "impact_target",
       () -> Builder.<TargetMarkerEntity>of(TargetMarkerEntity::new, MobCategory.MISC).sized(1.0F, 1.0F).clientTrackingRange(128).updateInterval(20).build("impact_target")
    );
+
    private ModEntities() {
    }
 }

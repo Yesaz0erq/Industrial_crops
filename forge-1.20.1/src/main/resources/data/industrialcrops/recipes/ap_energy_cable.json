@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "AAA",
+    "PKP",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "industrialcrops:advanced_energy_cable"
+    },
+    "P": {
+      "item": "industrialcrops:ap_structural_steel_plate"
+    },
+    "K": [
+      {
+        "item": "industrialcrops:compressed_potato_10k"
+      },
+      {
+        "item": "industrialcrops:compressed_carrot_10k"
+      },
+      {
+        "item": "industrialcrops:compressed_wheat_10k"
+      }
+    ]
+  },
+  "result": {
+    "count": 8,
+    "item": "industrialcrops:ap_energy_cable"
+  }
+}

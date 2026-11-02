@@ -7,6 +7,14 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public final class PoweredMachineSupport {
+    /**
+     * Gold-tier machine power, sized against crop energy (1 crop = 50 FE, 10K crop = 500,000 FE):
+     * every gold machine buffers half a 10K crop and accepts a full Basic Energy Cable.
+     * Per-operation costs sit at 1.25x the matching AP machine; AP buys throughput and efficiency.
+     */
+    public static final int GOLD_CAPACITY = 250_000;
+    public static final int GOLD_INPUT = 10_000;
+
     private PoweredMachineSupport() {
     }
 

@@ -31,9 +31,9 @@ import org.jetbrains.annotations.Nullable;
 public final class DigitalMiniatureForestBlockEntity extends BlockEntity implements MenuProvider {
     public static final int PROCESS_TICKS = 1_200;
     public static final int UPGRADE_COUNT = 4;
-    public static final int ENERGY_CAPACITY = 100_000;
+    public static final int ENERGY_CAPACITY = PoweredMachineSupport.GOLD_CAPACITY;
     private static final int ENERGY_PER_BASE_TICK = 10;
-    private static final int RECEIVE_RATE = 5_000;
+    private static final int RECEIVE_RATE = PoweredMachineSupport.GOLD_INPUT;
 
     private final ItemStackHandler inventory = new ItemStackHandler(UPGRADE_COUNT) {
         @Override public boolean isItemValid(int slot, ItemStack stack) { return SpeedUpgradeHelper.isSpeedUpgrade(stack); }

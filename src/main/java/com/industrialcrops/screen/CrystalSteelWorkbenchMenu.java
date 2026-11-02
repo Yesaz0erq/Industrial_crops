@@ -69,7 +69,7 @@ public final class CrystalSteelWorkbenchMenu extends AbstractContainerMenu {
 
                   for (int i = 0; i < 25; i++) {
                      if (!custom.inputs().get(i).isEmpty()) {
-                        CrystalSteelWorkbenchMenu.this.inputs.removeItem(i, 1);
+                        CrystalSteelWorkbenchMenu.this.inputs.removeItem(i, custom.inputs().get(i).getCount());
                      }
                   }
                } finally {

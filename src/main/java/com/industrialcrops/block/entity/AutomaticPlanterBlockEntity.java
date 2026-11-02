@@ -36,9 +36,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class AutomaticPlanterBlockEntity extends BlockEntity implements MenuProvider {
     public static final int SEED_SLOT_COUNT = 27;
-    public static final int ENERGY_CAPACITY = 100_000;
-    public static final int ENERGY_PER_PLANT = 10;
-    private static final int ENERGY_RECEIVE_RATE = 5_000;
+    public static final int ENERGY_CAPACITY = PoweredMachineSupport.GOLD_CAPACITY;
+    /** Farms stay cheap: 1.25x the AP Agriculture Center's 4 FE per planting. */
+    public static final int ENERGY_PER_PLANT = 5;
+    private static final int ENERGY_RECEIVE_RATE = PoweredMachineSupport.GOLD_INPUT;
     private static final int CHUNK_SIDE = 3;
     private static final int AREA_SIDE = CHUNK_SIDE * 16;
     private static final int AREA_SIZE = AREA_SIDE * AREA_SIDE;

@@ -50,9 +50,9 @@ public final class IntegratedSmeltingFurnaceBlockEntity extends BlockEntity impl
     public static final int STORAGE_UPGRADE_SLOT = 4;
     public static final int PROCESS_TICKS = 100;
     public static final int LANES = 9;
-    public static final int ENERGY_CAPACITY = 1_000_000;
-    public static final int RECEIVE_RATE = 20_000;
-    public static final int ENERGY_PER_LANE_TICK = 20;
+    public static final int ENERGY_CAPACITY = 2_000_000;
+    public static final int RECEIVE_RATE = 100_000;
+    public static final int ENERGY_PER_LANE_TICK = 40;
     private static final int[] TIER_ROWS = {3, 4, 5, 6, 6};
     private static final int[] TIER_LIMIT = {64, 64, 64, 99, 999};
 

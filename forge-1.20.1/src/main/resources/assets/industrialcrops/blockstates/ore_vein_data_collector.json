@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,lit=false": {
+      "model": "industrialcrops:block/ore_vein_data_collector"
+    },
+    "facing=north,lit=true": {
+      "model": "industrialcrops:block/ore_vein_data_collector_on"
+    },
+    "facing=east,lit=false": {
+      "model": "industrialcrops:block/ore_vein_data_collector",
+      "y": 90
+    },
+    "facing=east,lit=true": {
+      "model": "industrialcrops:block/ore_vein_data_collector_on",
+      "y": 90
+    },
+    "facing=south,lit=false": {
+      "model": "industrialcrops:block/ore_vein_data_collector",
+      "y": 180
+    },
+    "facing=south,lit=true": {
+      "model": "industrialcrops:block/ore_vein_data_collector_on",
+      "y": 180
+    },
+    "facing=west,lit=false": {
+      "model": "industrialcrops:block/ore_vein_data_collector",
+      "y": 270
+    },
+    "facing=west,lit=true": {
+      "model": "industrialcrops:block/ore_vein_data_collector_on",
+      "y": 270
+    }
+  }
+}

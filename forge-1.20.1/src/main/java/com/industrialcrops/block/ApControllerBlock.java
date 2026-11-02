@@ -2,6 +2,7 @@ package com.industrialcrops.block;
 import com.industrialcrops.block.entity.ApAgricultureBlockEntity;
 import com.industrialcrops.block.entity.ApControllerBlockEntity;
 import com.industrialcrops.block.entity.ApLivestockBlockEntity;
+import com.industrialcrops.block.entity.ApSlimeFarmBlockEntity;
 import com.industrialcrops.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -45,7 +46,11 @@ public final class ApControllerBlock extends BaseEntityBlock {
       return RenderShape.MODEL;
    }
    public BlockEntity newBlockEntity(BlockPos var1, BlockState var2) {
-      return (BlockEntity)(this.kind == ApControllerBlock.Kind.AGRICULTURE ? new ApAgricultureBlockEntity(var1, var2) : new ApLivestockBlockEntity(var1, var2));
+      return switch (this.kind) {
+         case AGRICULTURE -> new ApAgricultureBlockEntity(var1, var2);
+         case LIVESTOCK -> new ApLivestockBlockEntity(var1, var2);
+         case SLIME -> new ApSlimeFarmBlockEntity(var1, var2);
+      };
    }
    @Nullable
    public BlockState getStateForPlacement(BlockPlaceContext var1) {
@@ -56,9 +61,11 @@ public final class ApControllerBlock extends BaseEntityBlock {
       if (var1.isClientSide()) {
          return null;
       } else {
-         return this.kind == ApControllerBlock.Kind.AGRICULTURE
-            ? createTickerHelper(var3, (BlockEntityType)ModBlockEntities.AP_AGRICULTURE.get(), ApAgricultureBlockEntity::tick)
-            : createTickerHelper(var3, (BlockEntityType)ModBlockEntities.AP_LIVESTOCK.get(), ApLivestockBlockEntity::tick);
+         return switch (this.kind) {
+            case AGRICULTURE -> createTickerHelper(var3, (BlockEntityType)ModBlockEntities.AP_AGRICULTURE.get(), ApAgricultureBlockEntity::tick);
+            case LIVESTOCK -> createTickerHelper(var3, (BlockEntityType)ModBlockEntities.AP_LIVESTOCK.get(), ApLivestockBlockEntity::tick);
+            case SLIME -> createTickerHelper(var3, (BlockEntityType)ModBlockEntities.AP_SLIME_FARM.get(), ApSlimeFarmBlockEntity::tick);
+         };
       }
    }
    public InteractionResult use(BlockState var1, Level var2, BlockPos var3, Player var4, net.minecraft.world.InteractionHand hand, BlockHitResult var5) {
@@ -79,7 +86,8 @@ public final class ApControllerBlock extends BaseEntityBlock {
          }
          ItemStackHandler var10 = var6 instanceof ApAgricultureBlockEntity var13
             ? var13.getInventory()
-            : (var6 instanceof ApLivestockBlockEntity var11 ? var11.getInventory() : null);
+            : (var6 instanceof ApLivestockBlockEntity var11 ? var11.getInventory()
+               : (var6 instanceof ApSlimeFarmBlockEntity slimeFarm ? slimeFarm.getInventory() : null));
          if (var10 != null) {
             for (int var12 = 0; var12 < var10.getSlots(); var12++) {
                Containers.dropItemStack(var2, (double)var3.getX(), (double)var3.getY(), (double)var3.getZ(), var10.getStackInSlot(var12));
@@ -99,6 +107,7 @@ public final class ApControllerBlock extends BaseEntityBlock {
    }
    public static enum Kind {
       AGRICULTURE,
-      LIVESTOCK;
+      LIVESTOCK,
+      SLIME;
    }
 }

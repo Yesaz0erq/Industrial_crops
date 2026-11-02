@@ -64,7 +64,7 @@ public final class ApLivestockScreen extends ApMachineScreen<ApLivestockMenu> {
       ApGuiStyle.well(var1, var5 + 8, var6 + 24, 108, 68);
       ApGuiStyle.well(var1, var5 + 120, var6 + 24, 102, 68);
       ApGuiStyle.structureMap(var1, var5 + 14, var6 + 40, ((ApLivestockMenu)this.menu).structure());
-      ApGuiStyle.bar(var1, var5 + 125, var6 + 29, 92, 5, ((ApLivestockMenu)this.menu).energy(), 1000000, -1529542);
+      ApGuiStyle.bar(var1, var5 + 125, var6 + 29, 92, 5, ((ApLivestockMenu)this.menu).energy(), com.industrialcrops.block.entity.ApLivestockBlockEntity.ENERGY_CAPACITY, -1529542);
       ApGuiStyle.slots(var1, var5 + 34, var6 + 104, 9);
       ApGuiStyle.slots(var1, var5 + 34, var6 + 122, 9);
       var1.fill(var5 + 34 - 2, var6 + 122 - 1, var5 + 34 - 1, var6 + 122 + 17, -1529542);

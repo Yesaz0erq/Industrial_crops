@@ -87,6 +87,7 @@ public abstract class FriendlyIndustrialSlime extends Slime {
                 if (created instanceof FriendlyIndustrialSlime splitSlime) {
                     splitSlime.setSize(1, true);
                     splitSlime.splitCooldown = SPLIT_COOLDOWN_TICKS;
+                    splitSlime.inheritFrom(this);
                     splitSlime.moveTo(
                             getX() + (random.nextBoolean() ? 0.65D : -0.65D),
                             getY(),
@@ -146,6 +147,10 @@ public abstract class FriendlyIndustrialSlime extends Slime {
             setNoAi(true);
             setJumping(false);
         }
+    }
+
+    /** Called on a freshly split slime before it is added; subclasses copy their own data. */
+    protected void inheritFrom(FriendlyIndustrialSlime parent) {
     }
 
     public boolean isStaying() {

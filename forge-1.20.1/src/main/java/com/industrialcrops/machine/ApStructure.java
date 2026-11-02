@@ -51,7 +51,7 @@ public final class ApStructure {
 
    private static int clampTier(int tier) { return Math.max(0, Math.min(3, tier)); }
 
-   public enum Type { FARM, RANCH }
+   public enum Type { FARM, RANCH, SLIME }
    // Keep category ordinals stable for the existing menu/status packet. FOUNDATION and GROUND
    // remain complete without fixed below-ground materials; soil is checked per planting operation.
    public enum Category { FOUNDATION, FRAME, WALLS, ROOF, WATER, GROUND, ENTRANCE, FACILITIES, CLEARANCE }
@@ -112,10 +112,11 @@ public final class ApStructure {
          planeOrigin = type == Type.RANCH ? controller.below() : controller;
          right = facing.getClockWise(); back = facing.getOpposite();
          Builder builder = new Builder(this);
-         if (type == Type.FARM) builder.farm(); else builder.ranch();
+         if (type == Type.FARM) builder.farm(); else if (type == Type.RANCH) builder.ranch(); else builder.slimeFarm();
          parts = List.copyOf(builder.parts.values());
-         bounds = box(0, 0, 0, width - 1, type == Type.FARM ? 6 : 3, depth - 1);
-         workBounds = box(1, 0, 1, width - 2, type == Type.FARM ? 0 : 2, depth - 2);
+         bounds = type == Type.SLIME ? box(0, -1, 0, width - 1, 2, depth - 1)
+            : box(0, 0, 0, width - 1, type == Type.FARM ? 6 : 3, depth - 1);
+         workBounds = box(1, 0, 1, width - 2, type == Type.FARM ? 0 : (type == Type.SLIME ? 1 : 2), depth - 2);
       }
 
       public Type type() { return type; }
@@ -151,7 +152,7 @@ public final class ApStructure {
          for (int x = firstX; x <= lastX; x++) {
             for (int z = firstZ; z <= lastZ; z++) {
                if (!level.hasChunkAt(new BlockPos(x << 4, controller.getY(), z << 4)))
-                  return new Status(0, tier, false, type == Type.RANCH);
+                  return Status.empty(type, tier);
             }
          }
          int mask = ALL_CATEGORIES;
@@ -160,14 +161,15 @@ public final class ApStructure {
             // Stop reading a failed category until the next one-second controller check.
             if ((mask & bit) != 0 && !part.matches(level)) mask &= ~bit;
          }
-         if (!hasSourceWater(level)) mask &= ~(1 << Category.WATER.ordinal());
-         return new Status(mask, tier, true, type == Type.RANCH);
+         // The slime pen is a dry enclosure; only the farm and ranch need a water source.
+         if (type != Type.SLIME && !hasSourceWater(level)) mask &= ~(1 << Category.WATER.ordinal());
+         return new Status(mask, tier, true, type == Type.RANCH, type == Type.SLIME);
       }
 
       /** One source anywhere in the footprint, from natural soil level through the roof, is enough. */
       public boolean hasSourceWater(Level level) {
          BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
-         int top = type == Type.FARM ? 6 : 3;
+         int top = type == Type.FARM ? 6 : (type == Type.SLIME ? 2 : 3);
          for (int u = 0; u < width; u++) {
             for (int v = 0; v < depth; v++) {
                BlockPos column = pos(u, 0, v);
@@ -239,6 +241,43 @@ public final class ApStructure {
          }
       }
 
+      /**
+       * AP Slime Farm: a glass-walled pen two blocks high that small slimes cannot jump out of, AP steel
+       * columns every eight cells, a wooden door beside the controller and a sunken 3x3 slime-block pad.
+       */
+      private void slimeFarm() {
+         Block frame = ModBlocks.AP_STEEL_FRAME.get();
+         int door = w / 2;
+         for (int u = 0; u < w; u++) {
+            for (int v = 0; v < d; v++) {
+               if (!perimeter(u, v)) continue;
+               boolean front = v == 0;
+               boolean column = (u == 0 || u == w - 1) ? (v % 8 == 0 || v == d - 1)
+                  : (u % 8 == 0 && !(front && u == door));
+               if (column) {
+                  for (int h = 0; h <= 2; h++) exact(u, h, v, frame, Category.FRAME);
+               } else {
+                  for (int h = 0; h <= 1; h++)
+                     set(u, h, v, Blocks.GLASS.defaultBlockState(), Category.WALLS, Requirement.GLASS);
+               }
+            }
+         }
+         parts.remove(layout.controller());
+         set(door, 0, 0, Blocks.OAK_DOOR.defaultBlockState().setValue(DoorBlock.FACING, layout.facing())
+            .setValue(DoorBlock.HALF, DoubleBlockHalf.LOWER), Category.ENTRANCE, Requirement.DOOR_LOWER);
+         set(door, 1, 0, Blocks.OAK_DOOR.defaultBlockState().setValue(DoorBlock.FACING, layout.facing())
+            .setValue(DoorBlock.HALF, DoubleBlockHalf.UPPER), Category.ENTRANCE, Requirement.DOOR_UPPER);
+         // Bounce pad: sunken into the floor so it never blocks the pen.
+         for (int u = w / 2 - 1; u <= w / 2 + 1; u++) {
+            for (int v = d / 2 - 1; v <= d / 2 + 1; v++) exact(u, -1, v, Blocks.SLIME_BLOCK, Category.FACILITIES);
+         }
+         for (int u = 1; u < w - 1; u++) {
+            for (int v = 1; v < d - 1; v++) {
+               for (int h = 0; h <= 1; h++) fillClearance(u, h, v, false);
+            }
+         }
+      }
+
       private void ranch() {
          for (int u = 0; u < w; u++) {
             for (int v = 0; v < d; v++) {
@@ -284,17 +323,19 @@ public final class ApStructure {
       }
    }
 
-   public record Status(int mask, int tier, boolean loaded, boolean livestock) {
+   public record Status(int mask, int tier, boolean loaded, boolean livestock, boolean slime) {
       public Status { mask &= ALL_CATEGORIES; tier = clampTier(tier); }
+      public Status(int mask, int tier, boolean loaded, boolean livestock) { this(mask, tier, loaded, livestock, false); }
       public boolean formed() { return loaded && mask == ALL_CATEGORIES; }
       public boolean complete(Category category) { return (mask & (1 << category.ordinal())) != 0; }
       public int width() { return WIDTHS[tier]; }
       public int depth() { return DEPTHS[tier]; }
       public int completedCategories() { return Integer.bitCount(mask); }
-      public int pack() { return mask | tier << 9 | (loaded ? 1 << 11 : 0) | (livestock ? 1 << 12 : 0); }
+      public int pack() { return mask | tier << 9 | (loaded ? 1 << 11 : 0) | (livestock ? 1 << 12 : 0) | (slime ? 1 << 13 : 0); }
       public static Status unpack(int packed) {
-         return new Status(packed & ALL_CATEGORIES, (packed >>> 9) & 3, (packed & (1 << 11)) != 0, (packed & (1 << 12)) != 0);
+         return new Status(packed & ALL_CATEGORIES, (packed >>> 9) & 3, (packed & (1 << 11)) != 0,
+            (packed & (1 << 12)) != 0, (packed & (1 << 13)) != 0);
       }
-      public static Status empty(Type type, int tier) { return new Status(0, tier, false, type == Type.RANCH); }
+      public static Status empty(Type type, int tier) { return new Status(0, tier, false, type == Type.RANCH, type == Type.SLIME); }
    }
 }

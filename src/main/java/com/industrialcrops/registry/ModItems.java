@@ -205,6 +205,12 @@ public final class ModItems {
    public static final DeferredItem<DeferredSpawnEggItem> BLUE_COMPONENT_SUBSTRATE_SLIME_SPAWN_EGG = ITEMS.register(
       "blue_component_substrate_slime_spawn_egg", () -> new DeferredSpawnEggItem(ModEntities.DIAMOND_PROCESSOR_SLIME, 1526428, 7710719, new Properties())
    );
+   public static final DeferredItem<DeferredSpawnEggItem> FLUX_SLIME_SPAWN_EGG = ITEMS.register(
+      "flux_slime_spawn_egg", () -> new DeferredSpawnEggItem(ModEntities.FLUX_SLIME, 0x8A3FD6, 0x5FF3E0, new Properties())
+   );
+   public static final DeferredItem<com.industrialcrops.item.FluxOreGelItem> FLUX_ORE_GEL = ITEMS.register(
+      "flux_ore_gel", () -> new com.industrialcrops.item.FluxOreGelItem(new Properties().rarity(Rarity.UNCOMMON))
+   );
    public static final DeferredItem<BlockItem> INDUSTRIAL_CARROT_BLOCK = registerBlockItem("industrial_carrot_block", ModBlocks.INDUSTRIAL_CARROT_BLOCK);
    public static final DeferredItem<BlockItem> INDUSTRIAL_POTATO_BLOCK = registerBlockItem("industrial_potato_block", ModBlocks.INDUSTRIAL_POTATO_BLOCK);
    public static final DeferredItem<BlockItem> INDUSTRIAL_WHEAT_BLOCK = registerBlockItem("industrial_wheat_block", ModBlocks.INDUSTRIAL_WHEAT_BLOCK);
@@ -244,6 +250,7 @@ public final class ModItems {
    public static final DeferredItem<BlockItem> DIGITAL_MINIATURE_FOREST = registerBlockItem("digital_miniature_forest", ModBlocks.DIGITAL_MINIATURE_FOREST);
    public static final DeferredItem<BlockItem> BASIC_ENERGY_CABLE = registerBlockItem("basic_energy_cable", ModBlocks.BASIC_ENERGY_CABLE);
    public static final DeferredItem<BlockItem> ADVANCED_ENERGY_CABLE = registerBlockItem("advanced_energy_cable", ModBlocks.ADVANCED_ENERGY_CABLE);
+   public static final DeferredItem<BlockItem> AP_ENERGY_CABLE = registerBlockItem("ap_energy_cable", ModBlocks.AP_ENERGY_CABLE);
    public static final DeferredItem<BlockItem> REINFORCED_INDUSTRIAL_STORAGE_ARRAY = registerBlockItem(
       "reinforced_storage_component", ModBlocks.REINFORCED_INDUSTRIAL_STORAGE_ARRAY
    );
@@ -262,6 +269,14 @@ public final class ModItems {
    /** Compressed Industrial Potato: 10,000 Industrial Potatoes pressed by the Super Compressor. */
    public static final DeferredItem<Item> COMPRESSED_POTATO_10K = ITEMS.register(
       "compressed_potato_10k", () -> new ShimmeringItem(new Properties().rarity(Rarity.EPIC))
+   );
+   /** 10,000 Industrial Carrots pressed by the Super Compressor. */
+   public static final DeferredItem<Item> COMPRESSED_CARROT_10K = ITEMS.register(
+      "compressed_carrot_10k", () -> new ShimmeringItem(new Properties().rarity(Rarity.EPIC))
+   );
+   /** 10,000 Industrial Wheat pressed by the Super Compressor. */
+   public static final DeferredItem<Item> COMPRESSED_WHEAT_10K = ITEMS.register(
+      "compressed_wheat_10k", () -> new ShimmeringItem(new Properties().rarity(Rarity.EPIC))
    );
    /** 10K Storage Component: 9,999 items per item type in the Expandable Storage Device, 54 item types each. */
    public static final DeferredItem<ExpandableStorageComponentItem> STORAGE_COMPONENT_10K = ITEMS.register(
@@ -307,6 +322,9 @@ public final class ModItems {
    public static final DeferredItem<BlockItem> ADVANCED_PIPE = registerBlockItem("advanced_pipe", ModBlocks.ADVANCED_PIPE);
    public static final DeferredItem<BlockItem> ADVANCED_INPUT_PIPE = registerBlockItem("advanced_input_pipe", ModBlocks.ADVANCED_INPUT_PIPE);
    public static final DeferredItem<BlockItem> ADVANCED_OUTPUT_PIPE = registerBlockItem("advanced_output_pipe", ModBlocks.ADVANCED_OUTPUT_PIPE);
+   public static final DeferredItem<BlockItem> AP_CONDUIT = registerBlockItem("ap_conduit", ModBlocks.AP_CONDUIT);
+   public static final DeferredItem<BlockItem> AP_INPUT_CONDUIT = registerBlockItem("ap_input_conduit", ModBlocks.AP_INPUT_CONDUIT);
+   public static final DeferredItem<BlockItem> AP_OUTPUT_CONDUIT = registerBlockItem("ap_output_conduit", ModBlocks.AP_OUTPUT_CONDUIT);
    public static final DeferredItem<BlockItem> PIPE_SORTER = registerBlockItem("pipe_sorter", ModBlocks.PIPE_SORTER);
    public static final DeferredItem<BlockItem> GOLD_FLUID_PIPE = registerBlockItem("gold_fluid_pipe", ModBlocks.GOLD_FLUID_PIPE);
    public static final DeferredItem<BlockItem> GOLD_PLASMA_EXTRACTOR = registerBlockItem("extraction_device", ModBlocks.GOLD_PLASMA_EXTRACTOR);
@@ -377,6 +395,8 @@ public final class ModItems {
    public static final DeferredItem<BlockItem> AP_STEEL_FRAME = registerBlockItem("ap_steel_frame", ModBlocks.AP_STEEL_FRAME);
    public static final DeferredItem<BlockItem> AP_AGRICULTURE_CONTROLLER = registerBlockItem("ap_agricultural_complex", ModBlocks.AP_AGRICULTURE_CONTROLLER);
    public static final DeferredItem<BlockItem> AP_LIVESTOCK_CONTROLLER = registerBlockItem("ap_livestock_ranch", ModBlocks.AP_LIVESTOCK_CONTROLLER);
+   public static final DeferredItem<BlockItem> AP_SLIME_FARM = registerBlockItem("ap_slime_farm", ModBlocks.AP_SLIME_FARM);
+   public static final DeferredItem<BlockItem> ORE_VEIN_DATA_COLLECTOR = registerBlockItem("ore_vein_data_collector", ModBlocks.ORE_VEIN_DATA_COLLECTOR);
 
    private ModItems() {
    }

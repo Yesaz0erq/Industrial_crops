@@ -68,7 +68,7 @@ public final class SlimeIncubatorMenu extends AbstractContainerMenu implements U
     }
 
     public int getScaledProgress(int width) {
-        return Mth.clamp(progress * width / SlimeIncubatorBlockEntity.MAX_PROGRESS, 0, width);
+        return Mth.clamp(progress * width / SlimeIncubatorBlockEntity.requiredProgress(slimeType), 0, width);
     }
 
     public int getSlimeType() {

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "C",
+    "H",
+    "C"
+  ],
+  "key": {
+    "C": {
+      "item": "industrialcrops:ap_conduit"
+    },
+    "H": {
+      "item": "minecraft:hopper"
+    }
+  },
+  "result": {
+    "count": 2,
+    "item": "industrialcrops:ap_output_conduit"
+  }
+}

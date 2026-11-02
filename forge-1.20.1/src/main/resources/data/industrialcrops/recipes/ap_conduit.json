@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "AAA",
+    "APA",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "industrialcrops:advanced_pipe"
+    },
+    "P": {
+      "item": "industrialcrops:ap_structural_steel_plate"
+    }
+  },
+  "result": {
+    "count": 8,
+    "item": "industrialcrops:ap_conduit"
+  }
+}

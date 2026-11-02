@@ -3,6 +3,7 @@ package com.industrialcrops.block;
 import com.industrialcrops.block.entity.ApAgricultureBlockEntity;
 import com.industrialcrops.block.entity.ApControllerBlockEntity;
 import com.industrialcrops.block.entity.ApLivestockBlockEntity;
+import com.industrialcrops.block.entity.ApSlimeFarmBlockEntity;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -37,6 +38,7 @@ public final class ApControllerBlock extends BaseEntityBlock {
    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
    private static final MapCodec<ApControllerBlock> AGRI_CODEC = simpleCodec(var0 -> new ApControllerBlock(ApControllerBlock.Kind.AGRICULTURE, var0));
    private static final MapCodec<ApControllerBlock> LIVESTOCK_CODEC = simpleCodec(var0 -> new ApControllerBlock(ApControllerBlock.Kind.LIVESTOCK, var0));
+   private static final MapCodec<ApControllerBlock> SLIME_CODEC = simpleCodec(var0 -> new ApControllerBlock(ApControllerBlock.Kind.SLIME, var0));
    private final ApControllerBlock.Kind kind;
 
    public ApControllerBlock(ApControllerBlock.Kind var1, Properties var2) {
@@ -50,7 +52,11 @@ public final class ApControllerBlock extends BaseEntityBlock {
    }
 
    protected MapCodec<? extends BaseEntityBlock> codec() {
-      return this.kind == ApControllerBlock.Kind.AGRICULTURE ? AGRI_CODEC : LIVESTOCK_CODEC;
+      return switch (this.kind) {
+         case AGRICULTURE -> AGRI_CODEC;
+         case LIVESTOCK -> LIVESTOCK_CODEC;
+         case SLIME -> SLIME_CODEC;
+      };
    }
 
    protected RenderShape getRenderShape(BlockState var1) {
@@ -58,7 +64,11 @@ public final class ApControllerBlock extends BaseEntityBlock {
    }
 
    public BlockEntity newBlockEntity(BlockPos var1, BlockState var2) {
-      return (BlockEntity)(this.kind == ApControllerBlock.Kind.AGRICULTURE ? new ApAgricultureBlockEntity(var1, var2) : new ApLivestockBlockEntity(var1, var2));
+      return switch (this.kind) {
+         case AGRICULTURE -> new ApAgricultureBlockEntity(var1, var2);
+         case LIVESTOCK -> new ApLivestockBlockEntity(var1, var2);
+         case SLIME -> new ApSlimeFarmBlockEntity(var1, var2);
+      };
    }
 
    @Nullable
@@ -71,9 +81,11 @@ public final class ApControllerBlock extends BaseEntityBlock {
       if (var1.isClientSide()) {
          return null;
       } else {
-         return this.kind == ApControllerBlock.Kind.AGRICULTURE
-            ? createTickerHelper(var3, (BlockEntityType)ModBlockEntities.AP_AGRICULTURE.get(), ApAgricultureBlockEntity::tick)
-            : createTickerHelper(var3, (BlockEntityType)ModBlockEntities.AP_LIVESTOCK.get(), ApLivestockBlockEntity::tick);
+         return switch (this.kind) {
+            case AGRICULTURE -> createTickerHelper(var3, (BlockEntityType)ModBlockEntities.AP_AGRICULTURE.get(), ApAgricultureBlockEntity::tick);
+            case LIVESTOCK -> createTickerHelper(var3, (BlockEntityType)ModBlockEntities.AP_LIVESTOCK.get(), ApLivestockBlockEntity::tick);
+            case SLIME -> createTickerHelper(var3, (BlockEntityType)ModBlockEntities.AP_SLIME_FARM.get(), ApSlimeFarmBlockEntity::tick);
+         };
       }
    }
 
@@ -99,7 +111,8 @@ public final class ApControllerBlock extends BaseEntityBlock {
 
          ItemStackHandler var10 = var6 instanceof ApAgricultureBlockEntity var13
             ? var13.getInventory()
-            : (var6 instanceof ApLivestockBlockEntity var11 ? var11.getInventory() : null);
+            : (var6 instanceof ApLivestockBlockEntity var11 ? var11.getInventory()
+               : (var6 instanceof ApSlimeFarmBlockEntity slimeFarm ? slimeFarm.getInventory() : null));
          if (var10 != null) {
             for (int var12 = 0; var12 < var10.getSlots(); var12++) {
                Containers.dropItemStack(var2, (double)var3.getX(), (double)var3.getY(), (double)var3.getZ(), var10.getStackInSlot(var12));
@@ -124,6 +137,7 @@ public final class ApControllerBlock extends BaseEntityBlock {
 
    public static enum Kind {
       AGRICULTURE,
-      LIVESTOCK;
+      LIVESTOCK,
+      SLIME;
    }
 }

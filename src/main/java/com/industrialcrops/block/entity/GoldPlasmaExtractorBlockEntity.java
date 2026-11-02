@@ -28,11 +28,12 @@ import org.jetbrains.annotations.Nullable;
 
 public final class GoldPlasmaExtractorBlockEntity extends BlockEntity implements MenuProvider {
     public static final int PROCESS_TICKS = 160;
-    public static final int ENERGY_CAPACITY = 100_000;
+    public static final int ENERGY_CAPACITY = PoweredMachineSupport.GOLD_CAPACITY;
     public static final int FLUID_CAPACITY = 8_000;
-    public static final int ENERGY_PER_TICK = 40;
+    /** 8,000 FE per 1,000 mB batch. */
+    public static final int ENERGY_PER_TICK = 50;
     public static final int OUTPUT_AMOUNT = 1_000;
-    private static final int RECEIVE_RATE = 5_000;
+    private static final int RECEIVE_RATE = PoweredMachineSupport.GOLD_INPUT;
     private int progress;
     private int syncedFluidAmount;
     private final TrackedEnergyStorage energy = new TrackedEnergyStorage();

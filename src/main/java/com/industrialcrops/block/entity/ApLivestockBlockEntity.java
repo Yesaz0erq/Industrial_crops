@@ -53,13 +53,14 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
    public static final int FEED_SLOTS = 9;
    public static final int OUTPUT_SLOTS = 9;
    public static final int SLOTS = 18;
-   public static final int ENERGY_CAPACITY = 1000000;
-   public static final int INPUT_RATE = 20000;
+   /** Ranches run cheap: one 10K crop of energy (500,000 FE) of buffer. */
+   public static final int ENERGY_CAPACITY = 500_000;
+   public static final int INPUT_RATE = 25_000;
    public static final int[] CAPS = new int[]{8, 16, 32, 64};
-   public static final int ENERGY_PER_BIRTH = 400;
-   public static final int ENERGY_PER_SHEAR = 100;
-   public static final int ENERGY_PER_CULL = 300;
-   public static final int ENERGY_PER_GROWTH = 40;
+   public static final int ENERGY_PER_BIRTH = 80;
+   public static final int ENERGY_PER_SHEAR = 20;
+   public static final int ENERGY_PER_CULL = 60;
+   public static final int ENERGY_PER_GROWTH = 8;
    public static final int GROWTH_STEP = 600;
    public static final int FLAG_BREED = 1;
    public static final int FLAG_SHEAR = 2;
@@ -148,7 +149,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
 
    public static void tick(Level var0, BlockPos var1, BlockState var2, ApLivestockBlockEntity var3) {
       if (var0 instanceof ServerLevel var4) {
-         PoweredMachineSupport.pullEnergy(var0, var1, var3.energy, 20000);
+         PoweredMachineSupport.pullEnergy(var0, var1, var3.energy, INPUT_RATE);
          long var5 = var0.getGameTime();
          var3.tickCommon(var4, var5);
          if (!var3.structure.formed()) {
@@ -176,7 +177,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
       boolean var5 = this.collectDrops(var1, var3);
       if (var4.isEmpty()) {
          this.status = var5 ? 0 : 3;
-      } else if (this.energy.getEnergyStored() < this.upgrades.cost(40)) {
+      } else if (this.energy.getEnergyStored() < this.upgrades.cost(ENERGY_PER_GROWTH)) {
          this.status = 2;
       } else {
          HashMap<net.minecraft.world.entity.EntityType<?>, List<Animal>> var6 = new HashMap<>();
@@ -237,7 +238,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
    }
 
    private boolean breed(ServerLevel var1, List<Animal> var2) {
-      if (this.energy.getEnergyStored() < this.upgrades.cost(400)) {
+      if (this.energy.getEnergyStored() < this.upgrades.cost(ENERGY_PER_BIRTH)) {
          return false;
       } else {
          Animal var3 = null;
@@ -279,7 +280,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
                      this.consumeFeed(var6);
                      this.consumeFeed(var7);
                      var3.finalizeSpawnChildFromBreeding(var1, var5, var9);
-                     this.energy.consume(this.upgrades.cost(400));
+                     this.energy.consume(this.upgrades.cost(ENERGY_PER_BIRTH));
                      this.births++;
                      return true;
                   }
@@ -304,12 +305,12 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
          if (livestock(var5) && this.inside(var5) && var5 instanceof Sheep) {
             Sheep var6 = (Sheep)var5;
             if (var6.readyForShearing()) {
-               if (this.energy.getEnergyStored() < this.upgrades.cost(100)) {
+               if (this.energy.getEnergyStored() < this.upgrades.cost(ENERGY_PER_SHEAR)) {
                   break;
                }
 
                var6.shear(SoundSource.BLOCKS);
-               this.energy.consume(this.upgrades.cost(100));
+               this.energy.consume(this.upgrades.cost(ENERGY_PER_SHEAR));
                this.shorn++;
                var3 = true;
             }
@@ -329,14 +330,14 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
          boolean var6 = false;
 
          for (Animal var8 : var2) {
-            if (var3 <= 0 || this.energy.getEnergyStored() < this.upgrades.cost(300)) {
+            if (var3 <= 0 || this.energy.getEnergyStored() < this.upgrades.cost(ENERGY_PER_CULL)) {
                break;
             }
 
             if (livestock(var8) && this.inside(var8) && !var8.isBaby()) {
                var8.hurt(var1.damageSources().playerAttack(var4), Float.MAX_VALUE);
                if (!var8.isAlive()) {
-                  this.energy.consume(this.upgrades.cost(300));
+                  this.energy.consume(this.upgrades.cost(ENERGY_PER_CULL));
                   this.culled++;
                   var3--;
                   var6 = true;
@@ -353,12 +354,12 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
 
       for (Animal var5 : var2) {
          if (livestock(var5) && this.inside(var5) && var5.isBaby()) {
-            if (this.energy.getEnergyStored() < this.upgrades.cost(40)) {
+            if (this.energy.getEnergyStored() < this.upgrades.cost(ENERGY_PER_GROWTH)) {
                break;
             }
 
             var5.ageUp(30, false);
-            this.energy.consume(this.upgrades.cost(40));
+            this.energy.consume(this.upgrades.cost(ENERGY_PER_GROWTH));
             var3 = true;
             if (var1.random.nextInt(6) == 0) {
                var1.sendParticles(ParticleTypes.HAPPY_VILLAGER, var5.getX(), var5.getY() + (double)var5.getBbHeight(), var5.getZ(), 2, 0.2, 0.2, 0.2, 0.0);
@@ -491,7 +492,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
 
    private final class Energy extends EnergyStorage {
       Energy() {
-         super(1000000, 20000, 0);
+         super(ENERGY_CAPACITY, INPUT_RATE, 0);
       }
 
       void set(int var1) {

@@ -77,6 +77,13 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
                 net.minecraft.network.chat.Component.translatable("jei.industrialcrops.info.expandable_storage_device"));
         registration.addItemStackInfo(new ItemStack(com.industrialcrops.registry.ModItems.INTEGRATED_SMELTING_FURNACE.get()),
                 net.minecraft.network.chat.Component.translatable("jei.industrialcrops.info.integrated_smelting_furnace"));
+        for (String path : new String[]{"ore_vein_data_collector", "flux_ore_gel", "flux_slime_spawn_egg", "ap_slime_farm",
+                "compressed_carrot_10k", "compressed_wheat_10k"}) {
+            ItemStack info = stack("industrialcrops", path);
+            if (!info.isEmpty()) {
+                registration.addItemStackInfo(info, net.minecraft.network.chat.Component.translatable("jei.industrialcrops.info." + path));
+            }
+        }
         registerAcquisitionInfo(registration);
         registerComponentInfo(registration);
     }
@@ -191,10 +198,13 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
                 new ItemStack(ModItems.INDUSTRIAL_POTATO_BLOCK.get()),
                 new ItemStack(ModItems.INDUSTRIAL_WHEAT_BLOCK.get()),
                 new ItemStack(ModItems.INDUSTRIAL_MELON_BLOCK.get()),
-                new ItemStack(ModItems.INDUSTRIAL_PUMPKIN_BLOCK.get()));
+                new ItemStack(ModItems.INDUSTRIAL_PUMPKIN_BLOCK.get()),
+                new ItemStack(ModItems.COMPRESSED_POTATO_10K.get()),
+                new ItemStack(ModItems.COMPRESSED_CARROT_10K.get()),
+                new ItemStack(ModItems.COMPRESSED_WHEAT_10K.get()));
         return fuels.stream().map(stack -> {
             var tier = BioEnergyMachineBlockEntity.classifyFuel(stack);
-            return new BioEnergyRecipeCategory.Recipe(stack, tier.energy(), tier.residue());
+            return new BioEnergyRecipeCategory.Recipe(stack, tier.energy(), tier.residue(), tier.ticks());
         }).toList();
     }
 

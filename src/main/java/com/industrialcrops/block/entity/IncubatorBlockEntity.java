@@ -36,6 +36,8 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
     public static final int SLIME_IRON = 3;
     public static final int SLIME_GOLD = 4;
     public static final int SLIME_DIAMOND = 5;
+    /** Flux Slime: carries the ore data it was imprinted with. */
+    public static final int SLIME_FLUX = 6;
     public static final int MAX_PROGRESS = 160;
     public static final int UPGRADE_SLOT_START = 1, UPGRADE_SLOT_COUNT = 4;
 
@@ -52,6 +54,7 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
     };
     private int slimeType;
     private int slimeSize = 1;
+    private final java.util.Set<net.minecraft.resources.ResourceLocation> fluxOres = new java.util.LinkedHashSet<>();
     private int progress;
 
     public IncubatorBlockEntity(BlockPos pos, BlockState state) {
@@ -73,6 +76,7 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
             slime_conversion_device.inventory.extractItem(0, 1, false);
             slime_conversion_device.slimeType = targetType;
             slime_conversion_device.slimeSize = 1;
+            slime_conversion_device.fluxOres.clear();
             slime_conversion_device.progress = 0;
             slime_conversion_device.sync();
         } else {
@@ -91,6 +95,9 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
         }
 
         slime.setSize(Math.max(1, slimeSize), true);
+        if (slime instanceof com.industrialcrops.entity.FluxSlime flux) {
+            flux.learn(fluxOres);
+        }
         Direction facing = getBlockState().getValue(IncubatorBlock.FACING);
         double x = worldPosition.getX() + 0.5D + facing.getStepX() * 1.15D;
         double y = worldPosition.getY() + 0.2D;
@@ -103,6 +110,7 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
 
         slimeType = SLIME_NONE;
         slimeSize = 1;
+        fluxOres.clear();
         progress = 0;
         sync();
         return true;
@@ -115,19 +123,26 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
             case SLIME_IRON -> ModEntities.GRAY_GEAR_SLIME.get();
             case SLIME_GOLD -> ModEntities.GOLDEN_REDSTONE_LAMP_SLIME.get();
             case SLIME_DIAMOND -> ModEntities.DIAMOND_PROCESSOR_SLIME.get();
+            case SLIME_FLUX -> ModEntities.FLUX_SLIME.get();
             default -> EntityType.SLIME;
         };
     }
 
     public void setStoredSlime(int type, int size) {
-        slimeType = Math.max(SLIME_NONE, Math.min(SLIME_DIAMOND, type));
+        setStoredSlime(type, size, java.util.Set.of());
+    }
+
+    public void setStoredSlime(int type, int size, java.util.Collection<net.minecraft.resources.ResourceLocation> ores) {
+        slimeType = Math.max(SLIME_NONE, Math.min(SLIME_FLUX, type));
         slimeSize = Math.max(1, size);
+        fluxOres.clear();
+        if (slimeType == SLIME_FLUX) fluxOres.addAll(ores);
         progress = 0;
         sync();
     }
 
     public void writeStoredSlime(ItemStack stack) {
-        IncubatorBlockItem.setStoredSlime(stack, slimeType, slimeSize);
+        IncubatorBlockItem.setStoredSlime(stack, slimeType, slimeSize, fluxOres);
     }
 
     public boolean hasSlime() {
@@ -168,6 +183,7 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
             case SLIME_IRON -> Component.translatable("entity.industrialcrops.gray_gear_slime");
             case SLIME_GOLD -> Component.translatable("entity.industrialcrops.golden_redstone_lamp_slime");
             case SLIME_DIAMOND -> Component.translatable("entity.industrialcrops.blue_processor_slime");
+            case SLIME_FLUX -> Component.translatable("entity.industrialcrops.flux_slime");
             default -> Component.translatable("gui.industrialcrops.slime_conversion_device.empty");
         };
     }
@@ -179,6 +195,7 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
         tag.putInt("SlimeType", slimeType);
         tag.putInt("SlimeSize", slimeSize);
         tag.putInt("Progress", progress);
+        if (!fluxOres.isEmpty()) tag.put(com.industrialcrops.machine.FluxOreIndex.TAG_ORES, com.industrialcrops.machine.FluxOreIndex.writeIds(fluxOres));
     }
 
     @Override
@@ -191,6 +208,8 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
         slimeType = tag.getInt("SlimeType");
         slimeSize = Math.max(1, tag.getInt("SlimeSize"));
         progress = tag.getInt("Progress");
+        fluxOres.clear();
+        fluxOres.addAll(com.industrialcrops.machine.FluxOreIndex.readIds(tag));
     }
 
     @Override

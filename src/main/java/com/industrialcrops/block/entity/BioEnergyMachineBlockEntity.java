@@ -6,6 +6,7 @@ import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.screen.BioEnergyMenu;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
 import com.industrialcrops.machine.MachineInventoryHelper;
+import com.industrialcrops.machine.BulkStorageItemHandler;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,34 +38,58 @@ import org.jetbrains.annotations.Nullable;
 public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements MenuProvider {
     public enum Kind { GENERATOR, BATTERY, INCINERATOR }
     public enum EnergySideMode { OUTPUT, INPUT, NONE }
+    /**
+     * Biomass fuel. Total energy scales with the crops an item represents (one crop = 50 FE), so a 10K
+     * compressed crop is worth exactly 10,000 crops. Denser fuel also burns at a higher FE/t and leaves
+     * proportionally less residue. Rates are per lane at base speed in the Generation Device.
+     */
     public enum FuelTier {
-        NONE(0, 0),
-        /** Balanced against the roughly 100 FE total value of one Mekanism coal. */
-        SEED(25, 50),
-        CROP(50, 100),
-        BLOCK_CROP(3_200, 250);
+        NONE(0, 1, 0),
+        SEED(25, 5, 1),
+        CROP(50, 5, 1),
+        BLOCK_CROP(3_200, 80, 32),
+        COMPRESSED_10K(500_000, 1_000, 500);
         final int energy;
+        final int ticks;
         final int residue;
-        FuelTier(int energy, int residue) { this.energy = energy; this.residue = residue; }
+        FuelTier(int energy, int ticks, int residue) { this.energy = energy; this.ticks = ticks; this.residue = residue; }
         public int energy() { return energy; }
         public int residue() { return residue; }
+        public int ticks() { return ticks; }
+        /** FE per tick while one item of this fuel burns at base speed. */
+        public int rate() { return energy / ticks; }
     }
 
-    public static final int PROCESS_TICKS = 160;
-    public static final int RESIDUE_CAPACITY = 1_000;
+    /** Energy of one 10K compressed crop in the Generation Device: the unit AP cables are rated in. */
+    public static final int TEN_K_ENERGY = 500_000;
+    public static final int RESIDUE_CAPACITY = 10_000;
     public static final int GENERATOR_CAPACITY = 1_000_000;
-    public static final int REACTOR_CAPACITY = 4_000_000;
-    public static final int BATTERY_CAPACITY = 10_000_000;
-    private static final int TRANSFER_RATE = 50_000;
+    public static final int REACTOR_CAPACITY = 10_000_000;
+    public static final int BATTERY_CAPACITY = 20_000_000;
+    public static final int GENERATOR_TRANSFER = 50_000;
+    public static final int REACTOR_TRANSFER = 500_000;
+    public static final int BATTERY_TRANSFER = 100_000;
+    /** The reactor turns the same biomass into three times the energy and half the residue. */
+    public static final int REACTOR_EFFICIENCY = 3;
+    /** Fuel lanes burning in parallel, each holding up to 999 items. */
+    public static final int REACTOR_LANES = 6;
+    public static final int REACTOR_SLOT_LIMIT = 999;
+    /** Residue an incinerator destroys per tick of burning fuel. */
+    public static final int INCINERATOR_RATE = 10;
     private static final int ALL_SIDES = (1 << Direction.values().length) - 1;
     private static final int MAX_NETWORK_NODES = 512;
     public static final int GENERATOR_UPGRADE_START = 1;
     public static final int UPGRADE_SLOT_COUNT = 4;
+    public static final int DATA_COUNT = 16 + REACTOR_LANES;
 
     private final Kind kind;
+    private final boolean reactor;
     private final TrackedEnergyStorage energy;
     private final ItemStackHandler inventory;
-    private int progress;
+    private final int[] laneLeft;
+    private final int[] laneTotal;
+    private final int[] laneRate;
+    private int currentRate;
     private int residue;
     private int burnTime;
     private int burnTimeTotal;
@@ -73,22 +98,29 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     private final IEnergyStorage[] sidedEnergy = new IEnergyStorage[Direction.values().length];
     private final ContainerData data = new ContainerData() {
         @Override public int get(int index) {
+            if (index >= 16) {
+                int lane = index - 16;
+                return lane < laneLeft.length && laneTotal[lane] > 0
+                        ? (laneTotal[lane] - laneLeft[lane]) * 1000 / laneTotal[lane] : 0;
+            }
             return switch (index) {
                 case 0 -> energy.getEnergyStored() & 0xFFFF;
                 case 1 -> energy.getEnergyStored() >>> 16;
                 case 2 -> energy.getMaxEnergyStored() & 0xFFFF;
                 case 3 -> energy.getMaxEnergyStored() >>> 16;
-                case 4 -> progress;
-                case 5 -> PROCESS_TICKS;
+                case 4 -> laneTotal.length > 0 ? laneTotal[0] - laneLeft[0] : 0;
+                case 5 -> laneTotal.length > 0 ? laneTotal[0] : 0;
                 case 6 -> kind == Kind.INCINERATOR && level != null && !level.isClientSide()
                         ? displayResidue() : residue;
                 case 7 -> RESIDUE_CAPACITY;
                 case 8 -> burnTime;
                 case 9 -> burnTimeTotal;
                 case 10 -> kind.ordinal();
-                case 11 -> currentGenerationEnergy();
+                case 11 -> currentRate & 0xFFFF;
                 case 12 -> energyOutputSides;
                 case 13 -> energyInputSides;
+                case 14 -> currentRate >>> 16;
+                case 15 -> reactor ? 1 : 0;
                 default -> 0;
             };
         }
@@ -96,7 +128,6 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
             switch (index) {
                 case 0 -> energy.setStored((energy.getEnergyStored() & 0xFFFF0000) | (value & 0xFFFF));
                 case 1 -> energy.setStored((energy.getEnergyStored() & 0x0000FFFF) | ((value & 0xFFFF) << 16));
-                case 4 -> progress = value;
                 case 6 -> residue = value;
                 case 8 -> burnTime = value;
                 case 9 -> burnTimeTotal = value;
@@ -105,28 +136,58 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
                 default -> { }
             }
         }
-        @Override public int getCount() { return 14; }
+        @Override public int getCount() { return DATA_COUNT; }
     };
 
     protected BioEnergyMachineBlockEntity(BlockEntityType<?> type, Kind kind, BlockPos pos, BlockState state) {
         super(type, pos, state);
         this.kind = kind;
-        int capacity = kind == Kind.BATTERY ? BATTERY_CAPACITY : kind == Kind.GENERATOR ? generatorCapacity() : 0;
-        int receive = kind == Kind.BATTERY ? TRANSFER_RATE : 0;
-        int extract = kind == Kind.INCINERATOR ? 0 : TRANSFER_RATE;
+        this.reactor = kind == Kind.GENERATOR && state.is(ModBlocks.BIO_ENERGY_REACTOR.get());
+        int capacity = kind == Kind.BATTERY ? BATTERY_CAPACITY
+                : kind == Kind.GENERATOR ? (reactor ? REACTOR_CAPACITY : GENERATOR_CAPACITY) : 0;
+        int rate = kind == Kind.BATTERY ? BATTERY_TRANSFER : reactor ? REACTOR_TRANSFER : GENERATOR_TRANSFER;
+        int receive = kind == Kind.BATTERY ? rate : 0;
+        int extract = kind == Kind.INCINERATOR ? 0 : rate;
         energy = new TrackedEnergyStorage(capacity, receive, extract);
         for (Direction direction : Direction.values()) {
             sidedEnergy[direction.ordinal()] = new DirectionalEnergyStorage(direction);
         }
-        int slots = kind == Kind.BATTERY ? 0 : kind == Kind.GENERATOR ? 1 + UPGRADE_SLOT_COUNT : 1;
-        inventory = new ItemStackHandler(slots) {
+        int lanes = kind == Kind.GENERATOR ? (reactor ? REACTOR_LANES : 1) : 0;
+        laneLeft = new int[lanes];
+        laneTotal = new int[lanes];
+        laneRate = new int[lanes];
+        inventory = new BulkStorageItemHandler(slotCount()) {
             @Override public boolean isItemValid(int slot, ItemStack stack) {
-                return kind == Kind.GENERATOR && slot >= GENERATOR_UPGRADE_START
+                return kind == Kind.GENERATOR && slot >= upgradeStart()
                         ? SpeedUpgradeHelper.isSpeedUpgrade(stack)
                         : BioEnergyMachineBlockEntity.this.isItemValid(stack);
             }
+            @Override public int getSlotLimit(int slot) {
+                return reactor && slot < REACTOR_LANES ? REACTOR_SLOT_LIMIT : super.getSlotLimit(slot);
+            }
+            @Override protected int getStackLimit(int slot, ItemStack stack) {
+                if (reactor && slot < REACTOR_LANES && stack.getMaxStackSize() > 1) return REACTOR_SLOT_LIMIT;
+                return super.getStackLimit(slot, stack);
+            }
             @Override protected void onContentsChanged(int slot) { setChanged(); }
         };
+    }
+
+    private int slotCount() {
+        return switch (kind) {
+            case BATTERY -> 0;
+            case INCINERATOR -> 1;
+            case GENERATOR -> fuelSlots() + UPGRADE_SLOT_COUNT;
+        };
+    }
+
+    /** Fuel slots: one for the generation device, six parallel lanes for the reactor. */
+    public int fuelSlots() {
+        return kind == Kind.GENERATOR ? (reactor ? REACTOR_LANES : 1) : (kind == Kind.INCINERATOR ? 1 : 0);
+    }
+
+    public int upgradeStart() {
+        return fuelSlots();
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, BioEnergyMachineBlockEntity machine) {
@@ -142,33 +203,61 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
         }
     }
 
+    /** Speed components burn fuel 2/4/8/16 times faster; the FE per item stays the same. */
+    private int speedMultiplier() {
+        return switch (SpeedUpgradeHelper.tier(inventory, upgradeStart(), UPGRADE_SLOT_COUNT)) {
+            case 1 -> 2;
+            case 2 -> 4;
+            case 3 -> 8;
+            case 4 -> 16;
+            default -> 1;
+        };
+    }
+
+    private int residueFor(FuelTier tier) {
+        return reactor ? (tier.residue + 1) / 2 : tier.residue;
+    }
+
     private void tickGenerator() {
         pushEnergyToNeighbors();
-        ItemStack input = inventory.getStackInSlot(0);
-        FuelTier tier = classifyFuel(input);
-        boolean canRun = tier != FuelTier.NONE
-                && residue < RESIDUE_CAPACITY
-                && energy.getMaxEnergyStored() - energy.getEnergyStored() >= generationEnergy(tier);
-        if (!canRun) {
-            if (progress != 0) { progress = 0; setChanged(); }
-            return;
+        int multiplier = speedMultiplier();
+        int produced = 0;
+        boolean changed = false;
+        for (int lane = 0; lane < laneLeft.length; lane++) {
+            if (laneLeft[lane] <= 0) {
+                laneTotal[lane] = 0;
+                FuelTier tier = classifyFuel(inventory.getStackInSlot(lane));
+                if (tier == FuelTier.NONE) continue;
+                int waste = residueFor(tier);
+                if (residue + waste > RESIDUE_CAPACITY) continue;
+                inventory.extractItem(lane, 1, false);
+                residue += waste;
+                laneLeft[lane] = tier.ticks;
+                laneTotal[lane] = tier.ticks;
+                laneRate[lane] = tier.rate() * (reactor ? REACTOR_EFFICIENCY : 1);
+                changed = true;
+            }
+            int steps = Math.min(multiplier, laneLeft[lane]);
+            long gain = (long) laneRate[lane] * steps;
+            // Never waste fuel: a lane pauses while the buffer cannot take this tick's output.
+            if (gain > energy.getMaxEnergyStored() - energy.getEnergyStored()) continue;
+            energy.receiveInternal((int) gain);
+            laneLeft[lane] -= steps;
+            produced += (int) gain;
+            changed = true;
         }
-        progress += SpeedUpgradeHelper.progressStep(inventory, GENERATOR_UPGRADE_START,
-                kind == Kind.GENERATOR ? UPGRADE_SLOT_COUNT : 0, PROCESS_TICKS);
-        if (progress >= PROCESS_TICKS) {
-            inventory.extractItem(0, 1, false);
-            energy.receiveInternal(generationEnergy(tier));
-            residue = Math.min(RESIDUE_CAPACITY, residue + tier.residue);
-            progress = 0;
+        if (currentRate != produced) {
+            currentRate = produced;
+            changed = true;
         }
-        setChanged();
+        if (changed) setChanged();
     }
 
     private boolean tickIncinerator() {
         BioEnergyMachineBlockEntity generator = findGeneratorWithResidue();
         if (generator == null) return false;
         if (burnTime <= 0 && !consumeFuel()) return false;
-        if (generator.removeResidue(1) > 0) {
+        if (generator.removeResidue(INCINERATOR_RATE) > 0) {
             burnTime--;
             setChanged();
             return true;
@@ -196,7 +285,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
             IEnergyStorage target = level.getCapability(Capabilities.EnergyStorage.BLOCK,
                     worldPosition.relative(direction), direction.getOpposite());
             if (target == null || !target.canReceive()) continue;
-            int offered = Math.min(TRANSFER_RATE, energy.getEnergyStored());
+            int offered = Math.min(energy.maxExtractRate(), energy.getEnergyStored());
             int accepted = target.receiveEnergy(energy.extractEnergy(offered, true), false);
             if (accepted > 0) energy.extractEnergy(accepted, false);
             if (energy.getEnergyStored() <= 0) break;
@@ -225,6 +314,8 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
 
     public static FuelTier classifyFuel(ItemStack stack) {
         if (stack.isEmpty()) return FuelTier.NONE;
+        if (stack.is(ModItems.COMPRESSED_POTATO_10K.get()) || stack.is(ModItems.COMPRESSED_CARROT_10K.get())
+                || stack.is(ModItems.COMPRESSED_WHEAT_10K.get())) return FuelTier.COMPRESSED_10K;
         if (isBlockCrop(stack)) return FuelTier.BLOCK_CROP;
         if (stack.is(ItemTags.VILLAGER_PLANTABLE_SEEDS) || isModSeed(stack)) return FuelTier.SEED;
         if (isCrop(stack)) return FuelTier.CROP;
@@ -266,17 +357,13 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
                 || stack.is(ModItems.FLUXSTALK_SEEDS.get());
     }
 
-    private int generatorCapacity() {
-        return isReactor() ? REACTOR_CAPACITY : GENERATOR_CAPACITY;
-    }
-
-    private int generationEnergy(FuelTier tier) {
-        return isReactor() ? Math.multiplyExact(tier.energy, 2) : tier.energy;
+    /** Energy one item yields here: the fuel value, tripled in the reactor. */
+    public int generationEnergy(FuelTier tier) {
+        return reactor ? Math.multiplyExact(tier.energy, REACTOR_EFFICIENCY) : tier.energy;
     }
 
     public boolean isReactor() {
-        return (level == null ? getBlockState() : level.getBlockState(worldPosition))
-                .is(ModBlocks.BIO_ENERGY_REACTOR.get());
+        return reactor;
     }
 
     private boolean isItemValid(ItemStack stack) {
@@ -298,11 +385,22 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     public ItemStackHandler getInventory() { return inventory; }
     /** Transfers runtime state when the gold generator is upgraded in place. */
     public void copyUpgradeStateTo(BioEnergyMachineBlockEntity target) {
-        for (int slot = 0; slot < inventory.getSlots() && slot < target.inventory.getSlots(); slot++) {
+        // Fuel moves lane-to-lane; speed components move to the target's own upgrade slots.
+        for (int slot = 0; slot < fuelSlots() && slot < target.fuelSlots(); slot++) {
             target.inventory.setStackInSlot(slot, inventory.getStackInSlot(slot).copy());
         }
+        for (int slot = 0; slot < UPGRADE_SLOT_COUNT; slot++) {
+            int from = upgradeStart() + slot, to = target.upgradeStart() + slot;
+            if (from < inventory.getSlots() && to < target.inventory.getSlots()) {
+                target.inventory.setStackInSlot(to, inventory.getStackInSlot(from).copy());
+            }
+        }
         target.energy.setStored(energy.getEnergyStored());
-        target.progress = progress;
+        for (int lane = 0; lane < laneLeft.length && lane < target.laneLeft.length; lane++) {
+            target.laneLeft[lane] = laneLeft[lane];
+            target.laneTotal[lane] = laneTotal[lane];
+            target.laneRate[lane] = laneLeft[lane] > 0 ? laneRate[lane] * (target.reactor && !reactor ? REACTOR_EFFICIENCY : 1) : 0;
+        }
         target.residue = residue;
         target.burnTime = burnTime;
         target.burnTimeTotal = burnTimeTotal;
@@ -312,7 +410,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     }
     public ContainerData getData() { return data; }
     public FuelTier currentTier() { return kind == Kind.GENERATOR ? classifyFuel(inventory.getStackInSlot(0)) : FuelTier.NONE; }
-    public int currentGenerationEnergy() { return generationEnergy(currentTier()); }
+    public int currentRate() { return currentRate; }
     public boolean toggleEnergyOutput(Direction direction) {
         energyOutputSides ^= 1 << direction.ordinal();
         setChanged();
@@ -361,7 +459,9 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
         super.saveAdditional(tag, registries);
         tag.put("Inventory", inventory.serializeNBT(registries));
         tag.putInt("Energy", energy.getEnergyStored());
-        tag.putInt("Progress", progress);
+        tag.putIntArray("LaneLeft", laneLeft);
+        tag.putIntArray("LaneTotal", laneTotal);
+        tag.putIntArray("LaneRate", laneRate);
         tag.putInt("Residue", residue);
         tag.putInt("BurnTime", burnTime);
         tag.putInt("BurnTimeTotal", burnTimeTotal);
@@ -372,11 +472,23 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
         super.loadAdditional(tag, registries);
         if (tag.contains("Inventory")) {
             inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
-            int expected = kind == Kind.BATTERY ? 0 : kind == Kind.GENERATOR ? 1 + UPGRADE_SLOT_COUNT : 1;
-            MachineInventoryHelper.ensureSize(inventory, expected);
+            if (reactor && inventory.getSlots() == 1 + UPGRADE_SLOT_COUNT) {
+                // Reactors saved before the six-lane layout: fuel stays in lane 0, components move up.
+                ItemStack[] old = new ItemStack[inventory.getSlots()];
+                for (int slot = 0; slot < old.length; slot++) old[slot] = inventory.getStackInSlot(slot).copy();
+                inventory.setSize(slotCount());
+                inventory.setStackInSlot(0, old[0]);
+                for (int slot = 0; slot < UPGRADE_SLOT_COUNT; slot++) inventory.setStackInSlot(upgradeStart() + slot, old[1 + slot]);
+            }
+            MachineInventoryHelper.ensureSize(inventory, slotCount());
         }
         energy.setStored(tag.getInt("Energy"));
-        progress = tag.getInt("Progress");
+        int[] left = tag.getIntArray("LaneLeft"), total = tag.getIntArray("LaneTotal"), rate = tag.getIntArray("LaneRate");
+        for (int lane = 0; lane < laneLeft.length; lane++) {
+            laneLeft[lane] = lane < left.length ? Math.max(0, left[lane]) : 0;
+            laneTotal[lane] = lane < total.length ? Math.max(0, total[lane]) : 0;
+            laneRate[lane] = lane < rate.length ? Math.max(0, rate[lane]) : 0;
+        }
         residue = Math.max(0, Math.min(RESIDUE_CAPACITY, tag.getInt("Residue")));
         burnTime = Math.max(0, tag.getInt("BurnTime"));
         burnTimeTotal = Math.max(0, tag.getInt("BurnTimeTotal"));
@@ -392,6 +504,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
     private final class TrackedEnergyStorage extends EnergyStorage {
         private TrackedEnergyStorage(int capacity, int receive, int extract) { super(capacity, receive, extract); }
         private void setStored(int amount) { energy = Math.max(0, Math.min(capacity, amount)); }
+        private int maxExtractRate() { return Math.max(maxExtract, 1); }
         private void receiveInternal(int amount) { energy = Math.min(capacity, energy + Math.max(0, amount)); }
         @Override public int receiveEnergy(int amount, boolean simulate) {
             int received = super.receiveEnergy(amount, simulate);

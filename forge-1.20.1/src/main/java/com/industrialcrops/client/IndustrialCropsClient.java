@@ -89,6 +89,8 @@ public final class IndustrialCropsClient {
             MenuScreens.register(ModMenus.SUPER_COMPRESSOR.get(), com.industrialcrops.client.gui.SuperCompressorScreen::new);
             MenuScreens.register(ModMenus.INTEGRATED_SMELTING_FURNACE.get(), com.industrialcrops.client.gui.IntegratedSmeltingFurnaceScreen::new);
             MenuScreens.register(ModMenus.SUPER_CROP_CULTIVATOR.get(), com.industrialcrops.client.gui.SuperCropCultivatorScreen::new);
+            MenuScreens.register(ModMenus.AP_SLIME_FARM.get(), com.industrialcrops.client.gui.ApSlimeFarmScreen::new);
+            MenuScreens.register(ModMenus.ORE_VEIN_DATA_COLLECTOR.get(), com.industrialcrops.client.gui.OreVeinDataCollectorScreen::new);
             Sheets.addWoodType(ModWoodTypes.COMET);
         });
     }
@@ -153,6 +155,7 @@ public final class IndustrialCropsClient {
     }
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(ModEntities.FLUX_SLIME.get(), com.industrialcrops.client.renderer.FluxSlimeRenderer::new);
         event.registerEntityRenderer(ModEntities.BROWN_CREATE_SLIME.get(), BrownCreateSlimeRenderer::new);
         event.registerEntityRenderer(ModEntities.GRAY_GEAR_SLIME.get(), GrayGearSlimeRenderer::new);
         event.registerEntityRenderer(
@@ -175,6 +178,7 @@ public final class IndustrialCropsClient {
         event.registerBlockEntityRenderer(ModBlockEntities.SATELLITE_RECEIVER.get(), com.industrialcrops.client.renderer.SatelliteReceiverRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.AP_AGRICULTURE.get(), com.industrialcrops.client.renderer.ApHologramRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.AP_LIVESTOCK.get(), com.industrialcrops.client.renderer.ApHologramRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.AP_SLIME_FARM.get(), com.industrialcrops.client.renderer.ApHologramRenderer::new);
     }
     @SubscribeEvent
     public static void registerGuiLayers(RegisterGuiOverlaysEvent event) {

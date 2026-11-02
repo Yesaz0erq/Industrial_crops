@@ -24,6 +24,8 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
     public static final int INPUT_SLOT = 0;
     public static final int OUTPUT_SLOT = 1;
     public static final int MAX_PROGRESS = 160;
+    /** A Flux Slime buds one copy of its Flux Ore Gel every 30 seconds (before speed components). */
+    public static final int FLUX_PROGRESS = 600;
     public static final int UPGRADE_SLOT_START = 2, UPGRADE_SLOT_COUNT = 4;
 
     private final ItemStackHandler inventory = new ItemStackHandler(UPGRADE_SLOT_START + UPGRADE_SLOT_COUNT) {
@@ -69,17 +71,32 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
             slime_conversion_device.setChanged();
         }
 
-        ItemStack result = getSlimeDrop(slimeType);
+        ItemStack result = slimeType == IncubatorBlockEntity.SLIME_FLUX ? fluxGel(input) : getSlimeDrop(slimeType);
         if (result.isEmpty() || !canOutputAccept(slime_conversion_device.inventory.getStackInSlot(OUTPUT_SLOT), result)) {
             return;
         }
 
-        slime_conversion_device.progress += SpeedUpgradeHelper.progressStep(slime_conversion_device.inventory, UPGRADE_SLOT_START, UPGRADE_SLOT_COUNT, MAX_PROGRESS);
-        if (slime_conversion_device.progress >= MAX_PROGRESS) {
+        int required = requiredProgress(slimeType);
+        slime_conversion_device.progress += SpeedUpgradeHelper.progressStep(slime_conversion_device.inventory, UPGRADE_SLOT_START, UPGRADE_SLOT_COUNT, required);
+        if (slime_conversion_device.progress >= required) {
             slime_conversion_device.insertOutput(result);
             slime_conversion_device.progress = 0;
         }
         slime_conversion_device.setChanged();
+    }
+
+    public static int requiredProgress(int slimeType) {
+        return slimeType == IncubatorBlockEntity.SLIME_FLUX ? FLUX_PROGRESS : MAX_PROGRESS;
+    }
+
+    /** Flux Ore Gel carrying the ore data of the captured Flux Slime; empty when it knows no metals. */
+    public static ItemStack fluxGel(ItemStack input) {
+        java.util.Set<net.minecraft.resources.ResourceLocation> ores = IncubatorBlockItem.getStoredOres(input);
+        if (ores.isEmpty()) return ItemStack.EMPTY;
+        ItemStack gel = new ItemStack(ModItems.FLUX_ORE_GEL.get());
+        com.industrialcrops.util.ItemStackNbt.update(gel,
+                tag -> tag.put(com.industrialcrops.machine.FluxOreIndex.TAG_ORES, com.industrialcrops.machine.FluxOreIndex.writeIds(ores)));
+        return gel;
     }
 
     public static boolean isAcceptedSlimeInput(ItemStack stack) {

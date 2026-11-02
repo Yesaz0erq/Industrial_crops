@@ -62,6 +62,10 @@ public final class ModCapabilities {
       var0.registerBlockEntity(EnergyStorage.BLOCK, ModBlockEntities.AP_AGRICULTURE.get(), (var0x, var1) -> var0x.getEnergyStorage(var1));
       var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.AP_LIVESTOCK.get(), (var0x, var1) -> var0x.automation());
       var0.registerBlockEntity(EnergyStorage.BLOCK, ModBlockEntities.AP_LIVESTOCK.get(), (var0x, var1) -> var0x.getEnergyStorage(var1));
+      var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.AP_SLIME_FARM.get(), (var0x, var1) -> var0x.automation());
+      var0.registerBlockEntity(EnergyStorage.BLOCK, ModBlockEntities.AP_SLIME_FARM.get(), (var0x, var1) -> var0x.getEnergyStorage(var1));
+      var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.ORE_VEIN_DATA_COLLECTOR.get(), (var0x, var1) -> var0x.getAutomationHandler());
+      var0.registerBlockEntity(EnergyStorage.BLOCK, ModBlockEntities.ORE_VEIN_DATA_COLLECTOR.get(), (var0x, var1) -> var0x.getEnergyStorage(var1));
       var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.ULTRA_HIGH_PRESSURE_INV_FORGE.get(), (var0x, var1) -> var0x.getInventory());
       var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.EXPANDABLE_STORAGE_DEVICE.get(), (var0x, var1) -> var0x.getPipeItemHandler());
       var0.registerBlockEntity(ItemHandler.BLOCK, ModBlockEntities.SUPER_COMPRESSOR.get(), (var0x, var1) -> var0x.getAutomationHandler());

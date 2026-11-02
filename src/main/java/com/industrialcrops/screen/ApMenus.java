@@ -88,6 +88,7 @@ final class ApMenus {
       if (var0 instanceof ApAgricultureMenu var6) {
          return var6.move(var1, var2, var3, var4);
       } else {
+         if (var0 instanceof ApSlimeFarmMenu slimeFarm) return slimeFarm.move(var1, var2, var3, var4);
          return var0 instanceof ApLivestockMenu var5 ? var5.move(var1, var2, var3, var4) : false;
       }
    }

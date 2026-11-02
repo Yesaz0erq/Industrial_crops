@@ -22,11 +22,12 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Super Compressor: packs 10,000 Industrial Potatoes into one 10K Compressed Potato.
+ * Super Compressor: packs 10,000 Industrial Potatoes, Carrots or Wheat into one 10K compressed item.
  *
- * <p>Potatoes (1 each) and Industrial Potato Blocks (64 each) put into the input slot are drained
- * into an internal buffer every tick, so a pipe or a player can keep feeding normal stacks. Once the
- * buffer holds 10,000 potatoes the machine compresses them; speed components shorten the press time.
+ * <p>Crops (1 each) and their Industrial crop blocks (64 each) put into the input slot are drained
+ * into an internal buffer every tick, so a pipe or a player can keep feeding normal stacks. The buffer
+ * holds one crop at a time; once it holds 10,000 the machine compresses them into that crop's 10K item.
+ * Speed components shorten the press time.
  */
 public final class SuperCompressorBlockEntity extends BlockEntity implements MenuProvider {
     public static final int INPUT_SLOT = 0;
@@ -39,13 +40,17 @@ public final class SuperCompressorBlockEntity extends BlockEntity implements Men
     public static final int MAX_PROGRESS = 200;
     public static final int POTATO_BLOCK_VALUE = 64;
 
+    public static final int CROP_NONE = -1, CROP_POTATO = 0, CROP_CARROT = 1, CROP_WHEAT = 2;
+
     private int storedPotatoes;
+    /** Crop currently in the buffer; CROP_NONE once it is empty. */
+    private int storedCrop = CROP_NONE;
     private int progress;
 
     private final ItemStackHandler inventory = new ItemStackHandler(UPGRADE_SLOT_START + UPGRADE_SLOT_COUNT) {
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
-            return slot == INPUT_SLOT && potatoValue(stack) > 0
+            return slot == INPUT_SLOT && accepts(stack)
                     || slot >= UPGRADE_SLOT_START && SpeedUpgradeHelper.isSpeedUpgrade(stack);
         }
 
@@ -55,7 +60,7 @@ public final class SuperCompressorBlockEntity extends BlockEntity implements Men
         }
     };
 
-    /** Automation view: slot 0 accepts potatoes / potato blocks, slot 1 hands out 10K Compressed Potatoes. */
+    /** Automation view: slot 0 accepts crops / crop blocks, slot 1 hands out the 10K compressed items. */
     private final IItemHandler automationHandler = new IItemHandler() {
         @Override
         public int getSlots() {
@@ -84,7 +89,7 @@ public final class SuperCompressorBlockEntity extends BlockEntity implements Men
 
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
-            return slot == 0 && potatoValue(stack) > 0;
+            return slot == 0 && accepts(stack);
         }
     };
 
@@ -99,11 +104,56 @@ public final class SuperCompressorBlockEntity extends BlockEntity implements Men
         }
     }
 
-    /** Potatoes represented by one item: 1 for an Industrial Potato, 64 for an Industrial Potato Block. */
+    /** Crops represented by one item: 1 for an Industrial crop, 64 for its Industrial crop block. */
     public static int potatoValue(ItemStack stack) {
-        if (stack.is(ModItems.INDUSTRIAL_POTATO.get())) return 1;
-        if (stack.is(ModItems.INDUSTRIAL_POTATO_BLOCK.get())) return POTATO_BLOCK_VALUE;
+        if (stack.is(ModItems.INDUSTRIAL_POTATO.get()) || stack.is(ModItems.INDUSTRIAL_CARROT.get())
+                || stack.is(ModItems.INDUSTRIAL_WHEAT.get())) return 1;
+        if (stack.is(ModItems.INDUSTRIAL_POTATO_BLOCK.get()) || stack.is(ModItems.INDUSTRIAL_CARROT_BLOCK.get())
+                || stack.is(ModItems.INDUSTRIAL_WHEAT_BLOCK.get())) return POTATO_BLOCK_VALUE;
         return 0;
+    }
+
+    /** Which crop an item feeds, or CROP_NONE. */
+    public static int cropOf(ItemStack stack) {
+        if (stack.is(ModItems.INDUSTRIAL_POTATO.get()) || stack.is(ModItems.INDUSTRIAL_POTATO_BLOCK.get())) return CROP_POTATO;
+        if (stack.is(ModItems.INDUSTRIAL_CARROT.get()) || stack.is(ModItems.INDUSTRIAL_CARROT_BLOCK.get())) return CROP_CARROT;
+        if (stack.is(ModItems.INDUSTRIAL_WHEAT.get()) || stack.is(ModItems.INDUSTRIAL_WHEAT_BLOCK.get())) return CROP_WHEAT;
+        return CROP_NONE;
+    }
+
+    public static ItemStack product(int crop) {
+        return switch (crop) {
+            case CROP_POTATO -> new ItemStack(ModItems.COMPRESSED_POTATO_10K.get());
+            case CROP_CARROT -> new ItemStack(ModItems.COMPRESSED_CARROT_10K.get());
+            case CROP_WHEAT -> new ItemStack(ModItems.COMPRESSED_WHEAT_10K.get());
+            default -> ItemStack.EMPTY;
+        };
+    }
+
+    private static ItemStack loose(int crop, int count) {
+        return switch (crop) {
+            case CROP_CARROT -> new ItemStack(ModItems.INDUSTRIAL_CARROT.get(), count);
+            case CROP_WHEAT -> new ItemStack(ModItems.INDUSTRIAL_WHEAT.get(), count);
+            default -> new ItemStack(ModItems.INDUSTRIAL_POTATO.get(), count);
+        };
+    }
+
+    private static ItemStack block(int crop, int count) {
+        return switch (crop) {
+            case CROP_CARROT -> new ItemStack(ModItems.INDUSTRIAL_CARROT_BLOCK.get(), count);
+            case CROP_WHEAT -> new ItemStack(ModItems.INDUSTRIAL_WHEAT_BLOCK.get(), count);
+            default -> new ItemStack(ModItems.INDUSTRIAL_POTATO_BLOCK.get(), count);
+        };
+    }
+
+    /** A crop is accepted while the buffer is empty or already holds that same crop. */
+    public boolean accepts(ItemStack stack) {
+        int crop = cropOf(stack);
+        return crop != CROP_NONE && (storedPotatoes <= 0 || storedCrop == CROP_NONE || storedCrop == crop);
+    }
+
+    public int getStoredCrop() {
+        return storedPotatoes > 0 ? storedCrop : CROP_NONE;
     }
 
     public ItemStackHandler getInventory() {
@@ -126,6 +176,9 @@ public final class SuperCompressorBlockEntity extends BlockEntity implements Men
         ItemStack input = inventory.getStackInSlot(INPUT_SLOT);
         int value = potatoValue(input);
         if (value <= 0) return;
+        int crop = cropOf(input);
+        if (storedPotatoes > 0 && storedCrop != CROP_NONE && storedCrop != crop) return;
+        storedCrop = crop;
         int fits = (BUFFER_CAPACITY - storedPotatoes) / value;
         int taken = Math.min(fits, input.getCount());
         if (taken <= 0) return;
@@ -137,8 +190,9 @@ public final class SuperCompressorBlockEntity extends BlockEntity implements Men
     private boolean canCompress() {
         if (storedPotatoes < REQUIRED_POTATOES) return false;
         ItemStack output = inventory.getStackInSlot(OUTPUT_SLOT);
+        ItemStack product = product(storedCrop == CROP_NONE ? CROP_POTATO : storedCrop);
         return output.isEmpty()
-                || output.is(ModItems.COMPRESSED_POTATO_10K.get()) && output.getCount() < output.getMaxStackSize();
+                || output.is(product.getItem()) && output.getCount() < output.getMaxStackSize();
     }
 
     private void tryCompress() {
@@ -152,9 +206,11 @@ public final class SuperCompressorBlockEntity extends BlockEntity implements Men
         progress += SpeedUpgradeHelper.progressStep(inventory, UPGRADE_SLOT_START, UPGRADE_SLOT_COUNT, MAX_PROGRESS);
         if (progress >= MAX_PROGRESS) {
             storedPotatoes -= REQUIRED_POTATOES;
+            ItemStack product = product(storedCrop == CROP_NONE ? CROP_POTATO : storedCrop);
+            if (storedPotatoes <= 0) storedCrop = CROP_NONE;
             ItemStack output = inventory.getStackInSlot(OUTPUT_SLOT);
             if (output.isEmpty()) {
-                inventory.setStackInSlot(OUTPUT_SLOT, new ItemStack(ModItems.COMPRESSED_POTATO_10K.get()));
+                inventory.setStackInSlot(OUTPUT_SLOT, product);
             } else {
                 output.grow(1);
                 inventory.setStackInSlot(OUTPUT_SLOT, output);
@@ -176,12 +232,13 @@ public final class SuperCompressorBlockEntity extends BlockEntity implements Men
         }
         int blocks = storedPotatoes / POTATO_BLOCK_VALUE;
         int loose = storedPotatoes % POTATO_BLOCK_VALUE;
+        int crop = storedCrop == CROP_NONE ? CROP_POTATO : storedCrop;
         while (blocks > 0) {
             int count = Math.min(64, blocks);
-            drops.add(new ItemStack(ModItems.INDUSTRIAL_POTATO_BLOCK.get(), count));
+            drops.add(block(crop, count));
             blocks -= count;
         }
-        if (loose > 0) drops.add(new ItemStack(ModItems.INDUSTRIAL_POTATO.get(), loose));
+        if (loose > 0) drops.add(loose(crop, loose));
         return drops;
     }
 
@@ -190,6 +247,7 @@ public final class SuperCompressorBlockEntity extends BlockEntity implements Men
         super.saveAdditional(tag, registries);
         tag.put("Inventory", inventory.serializeNBT(registries));
         tag.putInt("StoredPotatoes", storedPotatoes);
+        tag.putInt("StoredCrop", storedCrop);
         tag.putInt("Progress", progress);
     }
 
@@ -201,6 +259,9 @@ public final class SuperCompressorBlockEntity extends BlockEntity implements Men
             MachineInventoryHelper.ensureSize(inventory, UPGRADE_SLOT_START + UPGRADE_SLOT_COUNT);
         }
         storedPotatoes = Math.max(0, Math.min(BUFFER_CAPACITY, tag.getInt("StoredPotatoes")));
+        // Older saves only ever buffered potatoes.
+        storedCrop = tag.contains("StoredCrop") ? Math.max(CROP_NONE, Math.min(CROP_WHEAT, tag.getInt("StoredCrop")))
+                : (storedPotatoes > 0 ? CROP_POTATO : CROP_NONE);
         progress = tag.getInt("Progress");
     }
 

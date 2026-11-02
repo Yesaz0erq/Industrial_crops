@@ -76,7 +76,8 @@ public final class IncubatorBlock extends BaseEntityBlock {
         if (level.getBlockEntity(pos) instanceof IncubatorBlockEntity slime_conversion_device) {
             slime_conversion_device.setStoredSlime(
                     IncubatorBlockItem.getStoredType(stack),
-                    IncubatorBlockItem.getStoredSize(stack)
+                    IncubatorBlockItem.getStoredSize(stack),
+                    IncubatorBlockItem.getStoredOres(stack)
             );
         }
     }

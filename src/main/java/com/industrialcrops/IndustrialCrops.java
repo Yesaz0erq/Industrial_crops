@@ -95,5 +95,6 @@ public final class IndustrialCrops {
       event.put((EntityType)ModEntities.GRAY_GEAR_SLIME.get(), Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 10.0).build());
       event.put((EntityType)ModEntities.GOLDEN_REDSTONE_LAMP_SLIME.get(), Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 10.0).build());
       event.put((EntityType)ModEntities.DIAMOND_PROCESSOR_SLIME.get(), Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 10.0).build());
+      event.put((EntityType)ModEntities.FLUX_SLIME.get(), Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 10.0).build());
    }
 }

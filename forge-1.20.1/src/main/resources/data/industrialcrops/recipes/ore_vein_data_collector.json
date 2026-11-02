@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "PSP",
+    "BCB",
+    "PAP"
+  ],
+  "key": {
+    "P": {
+      "item": "industrialcrops:ap_structural_steel_plate"
+    },
+    "S": {
+      "item": "minecraft:spyglass"
+    },
+    "B": {
+      "item": "minecraft:brush"
+    },
+    "C": {
+      "item": "industrialcrops:ap_steel_casing"
+    },
+    "A": {
+      "item": "industrialcrops:crop_analysis_device"
+    }
+  },
+  "result": {
+    "count": 1,
+    "item": "industrialcrops:ore_vein_data_collector"
+  }
+}

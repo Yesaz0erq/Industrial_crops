@@ -17,13 +17,13 @@ public final class UpgradeCompatibility {
       "slime_conversion_device", "slime_cultivation_device", "component_programming_device",
       "bio_energy_generation_device", "bio_energy_reaction_device", "digital_miniature_forest", "terrain_processing_device",
       "matter_digitization_device", "data_copying_device", "matter_reconstruction_device",
-      "ap_agricultural_complex", "ap_livestock_ranch", "integrated_smelting_furnace"
+      "ap_agricultural_complex", "ap_livestock_ranch", "ap_slime_farm", "integrated_smelting_furnace"
    };
-   private static final String[] AP = {"ap_agricultural_complex", "ap_livestock_ranch"};
+   private static final String[] AP = {"ap_agricultural_complex", "ap_livestock_ranch", "ap_slime_farm"};
    private static final String[] DIMENSION = {
       "basic_control_device", "reinforced_control_device", "advanced_industrial_storage_device",
       "expandable_storage_device", "wireless_logistics_transfer_device",
-      "ap_agricultural_complex", "ap_livestock_ranch"
+      "ap_agricultural_complex", "ap_livestock_ranch", "ap_slime_farm"
    };
    private static final Map<String, String[]> MACHINES = new LinkedHashMap<>();
 

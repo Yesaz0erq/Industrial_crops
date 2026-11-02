@@ -27,6 +27,10 @@ public final class PipeTransferUtil {
     }
 
     public static void tickOutputPipe(Level level, BlockPos basic_pipePos, BlockState basic_pipeState) {
+        if (isApPipe(basic_pipeState)) {
+            tickApOutput(level, basic_pipePos);
+            return;
+        }
         long phase = Math.floorMod(basic_pipePos.asLong(), TICK_INTERVAL);
         if (level.getGameTime() % TICK_INTERVAL != phase) {
             return;
@@ -69,21 +73,107 @@ public final class PipeTransferUtil {
         }
     }
 
+    // ---- AP conduits ------------------------------------------------------------------------------
+
+    private static final long AP_TICK_INTERVAL = 4L;
+    /** Safety valve only: far beyond any real inventory, so no item type is ever capped in practice. */
+    private static final int AP_CYCLE_BUDGET = 1 << 24;
+
+    /**
+     * AP output conduit: every 4 ticks, for each item type in the adjacent inventories, moves everything of
+     * that type it can. Targets that already hold the type are filled first, so goods gather by type.
+     */
+    private static void tickApOutput(Level level, BlockPos pos) {
+        if (level.getGameTime() % AP_TICK_INTERVAL != Math.floorMod(pos.asLong(), AP_TICK_INTERVAL)) return;
+        List<HandlerEndpoint> targets = collectInputEndpoints(level, pos);
+        if (targets.isEmpty()) return;
+        int budget = AP_CYCLE_BUDGET;
+        for (HandlerEndpoint source : getAdjacentEndpoints(level, pos)) {
+            List<ItemStack> types = new ArrayList<>();
+            List<List<Integer>> typeSlots = new ArrayList<>();
+            for (int slot = 0; slot < source.handler().getSlots(); slot++) {
+                ItemStack stack = source.handler().getStackInSlot(slot);
+                if (stack.isEmpty()) continue;
+                int index = -1;
+                for (int t = 0; t < types.size(); t++) {
+                    if (ItemStack.isSameItemSameComponents(types.get(t), stack)) { index = t; break; }
+                }
+                if (index < 0) {
+                    types.add(stack.copyWithCount(1));
+                    typeSlots.add(new ArrayList<>());
+                    index = types.size() - 1;
+                }
+                typeSlots.get(index).add(slot);
+            }
+            for (int t = 0; t < types.size() && budget > 0; t++) {
+                ItemStack type = types.get(t);
+                List<HandlerEndpoint> ordered = new ArrayList<>(targets.size());
+                for (HandlerEndpoint target : targets) {
+                    if (!target.pos().equals(source.pos()) && holds(target.handler(), type)) ordered.add(target);
+                }
+                for (HandlerEndpoint target : targets) {
+                    if (!target.pos().equals(source.pos()) && !ordered.contains(target)) ordered.add(target);
+                }
+                for (HandlerEndpoint target : ordered) {
+                    for (int slot : typeSlots.get(t)) {
+                        budget -= drainSlot(source.handler(), slot, target.handler(), budget);
+                        if (budget <= 0) return;
+                    }
+                }
+            }
+        }
+    }
+
+    private static boolean holds(IItemHandler handler, ItemStack type) {
+        for (int slot = 0; slot < handler.getSlots(); slot++) {
+            if (ItemStack.isSameItemSameComponents(handler.getStackInSlot(slot), type)) return true;
+        }
+        return false;
+    }
+
+    /** Moves as much of one source slot into the target as both allow; returns the number moved. */
+    private static int drainSlot(IItemHandler source, int slot, IItemHandler target, int limit) {
+        int moved = 0;
+        while (moved < limit) {
+            ItemStack offered = source.extractItem(slot, limit - moved, true);
+            if (offered.isEmpty()) break;
+            int accepted = getInsertableAmount(target, offered);
+            if (accepted <= 0) break;
+            ItemStack taken = source.extractItem(slot, accepted, false);
+            if (taken.isEmpty()) break;
+            int inserted = insert(target, taken.copy());
+            moved += inserted;
+            if (inserted < taken.getCount()) {
+                // Should not happen after the simulation; put any remainder straight back.
+                source.insertItem(slot, taken.copyWithCount(taken.getCount() - inserted), false);
+                break;
+            }
+        }
+        return moved;
+    }
+
+    public static boolean isApPipe(BlockState state) {
+        return state.is(ModBlocks.AP_CONDUIT.get()) || state.is(ModBlocks.AP_INPUT_CONDUIT.get())
+                || state.is(ModBlocks.AP_OUTPUT_CONDUIT.get());
+    }
+
     public static boolean isPipe(BlockState state) {
-        return isBasicPipe(state) || isReinforcedPipe(state) || isAdvancedPipe(state)
+        return isBasicPipe(state) || isReinforcedPipe(state) || isAdvancedPipe(state) || isApPipe(state)
                 || state.is(ModBlocks.PIPE_SORTER.get());
     }
 
     public static boolean isInputPipe(BlockState state) {
         return state.is(ModBlocks.INPUT_PIPE.get())
                 || state.is(ModBlocks.REINFORCED_INPUT_PIPE.get())
-                || state.is(ModBlocks.ADVANCED_INPUT_PIPE.get());
+                || state.is(ModBlocks.ADVANCED_INPUT_PIPE.get())
+                || state.is(ModBlocks.AP_INPUT_CONDUIT.get());
     }
 
     public static boolean isOutputPipe(BlockState state) {
         return state.is(ModBlocks.OUTPUT_PIPE.get())
                 || state.is(ModBlocks.REINFORCED_OUTPUT_PIPE.get())
-                || state.is(ModBlocks.ADVANCED_OUTPUT_PIPE.get());
+                || state.is(ModBlocks.ADVANCED_OUTPUT_PIPE.get())
+                || state.is(ModBlocks.AP_OUTPUT_CONDUIT.get());
     }
 
     public static boolean canConnectEndpoint(LevelAccessor level, BlockPos pos, @Nullable Direction side) {

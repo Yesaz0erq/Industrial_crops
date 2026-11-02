@@ -177,6 +177,8 @@ public final class ModBlocks {
    );
    public static final RegistryObject<Block> BASIC_ENERGY_CABLE = registerEnergyCable("basic_energy_cable", MapColor.COLOR_ORANGE);
    public static final RegistryObject<Block> ADVANCED_ENERGY_CABLE = registerEnergyCable("advanced_energy_cable", MapColor.GOLD);
+   /** AP Energy Cable: moves and stores one 10K crop of energy (500,000 FE) per segment per tick. */
+   public static final RegistryObject<Block> AP_ENERGY_CABLE = registerEnergyCable("ap_energy_cable", MapColor.COLOR_GRAY);
    public static final RegistryObject<Block> REINFORCED_INDUSTRIAL_STORAGE_ARRAY = BLOCKS.register(
       "reinforced_storage_component", () -> new ReinforcedIndustrialStorageArrayBlock(machineProperties())
    );
@@ -202,6 +204,10 @@ public final class ModBlocks {
    public static final RegistryObject<Block> ADVANCED_PIPE = registerPipeBlock("advanced_pipe");
    public static final RegistryObject<Block> ADVANCED_INPUT_PIPE = registerPipeBlock("advanced_input_pipe");
    public static final RegistryObject<Block> ADVANCED_OUTPUT_PIPE = registerPipeBlock("advanced_output_pipe");
+   /** AP conduits: move items type by type with no per-type limit. */
+   public static final RegistryObject<Block> AP_CONDUIT = registerPipeBlock("ap_conduit");
+   public static final RegistryObject<Block> AP_INPUT_CONDUIT = registerPipeBlock("ap_input_conduit");
+   public static final RegistryObject<Block> AP_OUTPUT_CONDUIT = registerPipeBlock("ap_output_conduit");
    public static final RegistryObject<Block> PIPE_SORTER = BLOCKS.register("pipe_sorter", () -> new PipeSorterBlock(machineProperties().mapColor(MapColor.GOLD)));
    public static final RegistryObject<Block> GOLD_FLUID_PIPE = BLOCKS.register(
       "gold_fluid_pipe", () -> new FluidPipeBlock(Properties.of().mapColor(MapColor.GOLD).strength(1.0F).sound(SoundType.COPPER))
@@ -441,6 +447,22 @@ public final class ModBlocks {
             machineProperties().mapColor(MapColor.COLOR_GRAY).lightLevel(var0 -> var0.getValue(ApControllerBlock.ACTIVE) ? 8 : 0)
          )
    );
+
+   public static final RegistryObject<Block> AP_SLIME_FARM = BLOCKS.register(
+      "ap_slime_farm",
+      () -> new ApControllerBlock(
+            ApControllerBlock.Kind.SLIME,
+            machineProperties().mapColor(MapColor.COLOR_GRAY).lightLevel(var0 -> var0.getValue(ApControllerBlock.ACTIVE) ? 8 : 0)
+         )
+   );
+   public static final RegistryObject<Block> ORE_VEIN_DATA_COLLECTOR = BLOCKS.register(
+      "ore_vein_data_collector",
+      () -> new com.industrialcrops.block.OreVeinDataCollectorBlock(
+         machineProperties().mapColor(MapColor.COLOR_GRAY)
+            .lightLevel(state -> state.getValue(com.industrialcrops.block.OreVeinDataCollectorBlock.LIT) ? 9 : 0)
+      )
+   );
+
    private static Properties metalBlock(MapColor var0) {
       return Properties.of().mapColor(var0).requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.METAL);
    }

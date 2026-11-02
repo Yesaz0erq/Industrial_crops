@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AbstractContainerMenuReplicaMixin",
+    "BlockEntityTypeReplicaMixin",
     "BlockFusionPickaxeLootMixin",
     "BlockStateFusionPickaxeMixin",
     "ContainerStackLimitMixin",
@@ -24,7 +25,8 @@
     "client.SimpleSorterControllerMixin",
     "client.IpnControllerMixin",
     "client.SimpleSorterStaticControllerMixin",
-    "client.JeiModNameLocalizationMixin"
+    "client.JeiModNameLocalizationMixin",
+    "client.GuiSelectedItemGlitchMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -37,7 +37,8 @@ public final class IndustrialItemTooltips {
          } else {
             boolean functionalBlock = event.getItemStack().getItem() instanceof BlockItem;
             boolean fusionPickaxe = id.getPath().equals("fusion_ingot_pickaxe");
-            boolean compressedPotato = id.getPath().equals("compressed_potato_10k") || id.getPath().equals("black_nebula_carrot")
+            boolean compressedPotato = id.getPath().equals("compressed_potato_10k") || id.getPath().equals("compressed_carrot_10k")
+               || id.getPath().equals("compressed_wheat_10k") || id.getPath().equals("black_nebula_carrot")
                || id.getPath().equals("purple_dragon_carrot")
                || id.getPath().equals("omni_carrot") || id.getPath().equals("omni_potion") || id.getPath().equals("omni_bucket");
             boolean component = UpgradeCompatibility.hasComponentInfo(event.getItemStack().getItem());

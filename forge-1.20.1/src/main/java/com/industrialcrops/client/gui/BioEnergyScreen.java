@@ -69,6 +69,33 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
         return menu.kind() == BioEnergyMachineBlockEntity.Kind.GENERATOR;
     }
 
+    private static final int REACTOR_PANEL_X = 70;
+    private static final int REACTOR_PANEL_Y = 22;
+    private static final int REACTOR_PANEL_W = 98;
+    private static final int REACTOR_PANEL_H = 46;
+    private static final int LANE_TRACK = 0xFF454953;
+    private static final int LANE_GLOW = 0x5578C8FF;
+
+    /** Six fuel lanes in a 3x2 grid; each slot has its own burn bar in the gap beneath it. */
+    private void drawReactorLanes(GuiGraphics graphics) {
+        for (int lane = 0; lane < menu.fuelSlots(); lane++) {
+            int sx = leftPos + BioEnergyMenu.laneX(lane);
+            int sy = topPos + BioEnergyMenu.laneY(lane);
+            CrystalGuiStyle.drawSlot(graphics, sx - 1, sy - 1);
+            int progress = menu.laneProgress(lane);
+            if (progress > 0) graphics.fill(sx, sy, sx + 16, sy + 16, LANE_GLOW);
+            graphics.fill(sx, sy + 18, sx + 16, sy + 20, LANE_TRACK);
+            int fill = Math.max(0, Math.min(16, (progress * 16 + 999) / 1000));
+            if (fill > 0) graphics.fill(sx, sy + 18, sx + fill, sy + 20, CrystalGuiStyle.ENERGY_BLUE);
+        }
+    }
+
+    private int activeLanes() {
+        int active = 0;
+        for (int lane = 0; lane < menu.fuelSlots(); lane++) if (menu.laneProgress(lane) > 0) active++;
+        return active;
+    }
+
     private boolean crystalPalette() {
         return menu.isReactor();
     }
@@ -114,11 +141,18 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
     @Override protected void renderBg(GuiGraphics graphics, float tick, int mouseX, int mouseY) {
         drawContainer(graphics);
         drawPlayerInventory(graphics);
-        if (menu.kind() != BioEnergyMachineBlockEntity.Kind.BATTERY) {
+        if (menu.kind() != BioEnergyMachineBlockEntity.Kind.BATTERY && !menu.isReactor()) {
             drawMachineWell(graphics, leftPos + 17, topPos + 34);
         }
-        drawWorkPanel(graphics, leftPos + 44, topPos + 21, 88, 42);
-        drawInsetPanel(graphics, leftPos + 48, topPos + 25, 80, 34);
+        if (menu.isReactor()) {
+            drawReactorLanes(graphics);
+            drawWorkPanel(graphics, leftPos + REACTOR_PANEL_X, topPos + REACTOR_PANEL_Y, REACTOR_PANEL_W, REACTOR_PANEL_H);
+            drawInsetPanel(graphics, leftPos + REACTOR_PANEL_X + 4, topPos + REACTOR_PANEL_Y + 4,
+                    REACTOR_PANEL_W - 8, REACTOR_PANEL_H - 8);
+        } else {
+            drawWorkPanel(graphics, leftPos + 44, topPos + 21, 88, 42);
+            drawInsetPanel(graphics, leftPos + 48, topPos + 25, 80, 34);
+        }
         if (configPanelOpen) drawCommonPanel(graphics, leftPos - 80, topPos + 19,
                 CONFIG_PANEL_WIDTH, CONFIG_PANEL_HEIGHT);
         int firstMeterX = leftPos + imageWidth + 2;
@@ -132,7 +166,9 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
                     menu.energy(), menu.energyCapacity(), energyColor, false);
             IndustrialGuiStyle.drawVerticalMeter(graphics, secondMeterX, topPos + 12, 58,
                     menu.residue(), menu.residueCapacity(), residueColor, false);
-            IndustrialGuiStyle.drawMekanismSmallRight(graphics, leftPos + 74, topPos + 64, menu.scaledProgress(28));
+            if (!menu.isReactor()) {
+                IndustrialGuiStyle.drawMekanismSmallRight(graphics, leftPos + 74, topPos + 64, menu.scaledProgress(28));
+            }
             drawUpgradeDrawer(graphics, BioEnergyMenu.UPGRADE_X, BioEnergyMenu.UPGRADE_Y);
         } else if (menu.kind() == BioEnergyMachineBlockEntity.Kind.BATTERY) {
             IndustrialGuiStyle.drawVerticalMeter(graphics, firstMeterX, topPos + 12, 58,
@@ -149,18 +185,31 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
         IndustrialGuiStyle.drawFittedString(graphics, font, title.getString(), 8, titleLabelY,
                 imageWidth - 16, textColor(), true);
         graphics.drawString(font, playerInventoryTitle, 8, inventoryLabelY, mutedTextColor(), false);
-        if (menu.kind() == BioEnergyMachineBlockEntity.Kind.GENERATOR) {
+        if (menu.isReactor()) {
+            int tx = REACTOR_PANEL_X + 7;
+            int tw = REACTOR_PANEL_W - 14;
             IndustrialGuiStyle.drawFittedString(graphics, font,
-                    Component.translatable("gui.industrialcrops.bio_generator.output", menu.currentYield()).getString(),
+                    Component.translatable("gui.industrialcrops.bio_generator.output", String.format("%,d", menu.currentYield())).getString(),
+                    tx, REACTOR_PANEL_Y + 8, tw, textColor(), false);
+            IndustrialGuiStyle.drawFittedString(graphics, font,
+                    Component.translatable("gui.industrialcrops.bio_generator.residue",
+                            percent(menu.residue(), menu.residueCapacity())).getString(),
+                    tx, REACTOR_PANEL_Y + 19, tw, textColor(), false);
+            IndustrialGuiStyle.drawFittedString(graphics, font,
+                    Component.translatable("gui.industrialcrops.bio_reactor.lanes", activeLanes(), menu.fuelSlots()).getString(),
+                    tx, REACTOR_PANEL_Y + 30, tw, mutedTextColor(), false);
+        } else if (menu.kind() == BioEnergyMachineBlockEntity.Kind.GENERATOR) {
+            IndustrialGuiStyle.drawFittedString(graphics, font,
+                    Component.translatable("gui.industrialcrops.bio_generator.output", String.format("%,d", menu.currentYield())).getString(),
                     51, 29, 74, textColor(), false);
             IndustrialGuiStyle.drawFittedString(graphics, font,
                     Component.translatable("gui.industrialcrops.bio_generator.residue",
                             percent(menu.residue(), menu.residueCapacity())).getString(),
                     51, 44, 74, textColor(), false);
         } else if (menu.kind() == BioEnergyMachineBlockEntity.Kind.BATTERY) {
-            IndustrialGuiStyle.drawFittedString(graphics, font, menu.energy() + " FE", 51, 29, 74,
+            IndustrialGuiStyle.drawFittedString(graphics, font, String.format("%,d FE", menu.energy()), 51, 29, 74,
                     textColor(), false);
-            IndustrialGuiStyle.drawFittedString(graphics, font, "/ " + menu.energyCapacity() + " FE", 51, 44, 74,
+            IndustrialGuiStyle.drawFittedString(graphics, font, String.format("/ %,d FE", menu.energyCapacity()), 51, 44, 74,
                     textColor(), false);
         } else {
             Component burning = Component.translatable(menu.burnTime() > 0
@@ -309,4 +358,3 @@ public final class BioEnergyScreen extends UpgradeableMachineScreen<BioEnergyMen
         return capacity <= 0 ? 0 : Math.max(0, Math.min(100, value * 100 / capacity));
     }
 }
-

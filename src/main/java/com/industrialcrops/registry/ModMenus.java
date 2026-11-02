@@ -148,6 +148,12 @@ public final class ModMenus {
    public static final DeferredHolder<MenuType<?>, MenuType<ApLivestockMenu>> AP_LIVESTOCK = MENUS.register(
       "ap_livestock_ranch", () -> IMenuTypeExtension.create(ApLivestockMenu::new)
    );
+   public static final DeferredHolder<MenuType<?>, MenuType<com.industrialcrops.screen.ApSlimeFarmMenu>> AP_SLIME_FARM = MENUS.register(
+      "ap_slime_farm", () -> IMenuTypeExtension.create(com.industrialcrops.screen.ApSlimeFarmMenu::new)
+   );
+   public static final DeferredHolder<MenuType<?>, MenuType<com.industrialcrops.screen.OreVeinDataCollectorMenu>> ORE_VEIN_DATA_COLLECTOR = MENUS.register(
+      "ore_vein_data_collector", () -> IMenuTypeExtension.create(com.industrialcrops.screen.OreVeinDataCollectorMenu::new)
+   );
 
    private ModMenus() {
    }

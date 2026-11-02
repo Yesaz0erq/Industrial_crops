@@ -23,11 +23,13 @@ public final class EnergyCableBlockEntity extends BlockEntity {
     private static final int MAX_NETWORK_SIZE = 1024;
     public static final int BASIC_RATE = 10_000;
     public static final int ADVANCED_RATE = 100_000;
+    /** One 10K compressed crop of energy (500,000 FE) moved per tick and stored per segment. */
+    public static final int AP_RATE = BioEnergyMachineBlockEntity.TEN_K_ENERGY;
     private final CableEnergyStorage energy;
 
     public EnergyCableBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.ENERGY_CABLE.get(), pos, state);
-        int rate = state.is(ModBlocks.ADVANCED_ENERGY_CABLE.get()) ? ADVANCED_RATE : BASIC_RATE;
+        int rate = rateFor(state);
         // One segment stores exactly its tier value: 10 kFE for copper and
         // 100 kFE for gold. Previously this was incorrectly multiplied by four.
         energy = new CableEnergyStorage(rate);
@@ -107,7 +109,12 @@ public final class EnergyCableBlockEntity extends BlockEntity {
         }
     }
 
-    private int transferRate() { return getBlockState().is(ModBlocks.ADVANCED_ENERGY_CABLE.get()) ? ADVANCED_RATE : BASIC_RATE; }
+    private int transferRate() { return rateFor(getBlockState()); }
+
+    public static int rateFor(BlockState state) {
+        if (state.is(ModBlocks.AP_ENERGY_CABLE.get())) return AP_RATE;
+        return state.is(ModBlocks.ADVANCED_ENERGY_CABLE.get()) ? ADVANCED_RATE : BASIC_RATE;
+    }
     public IEnergyStorage getEnergyStorage() { return energy; }
 
     @Override protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
@@ -143,7 +150,7 @@ public final class EnergyCableBlockEntity extends BlockEntity {
     }
 
     private final class CableEnergyStorage extends EnergyStorage {
-        CableEnergyStorage(int capacity) { super(capacity, ADVANCED_RATE, ADVANCED_RATE); }
+        CableEnergyStorage(int capacity) { super(capacity, Math.max(capacity, ADVANCED_RATE), Math.max(capacity, ADVANCED_RATE)); }
         int extractInternal(int amount) {
             int moved = super.extractEnergy(Math.max(0, amount), false);
             if (moved > 0) setChanged();

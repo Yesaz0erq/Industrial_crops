@@ -43,9 +43,13 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
     public static final int DIGITIZER_MAIN_SLOT_COUNT = 27;
     public static final int UPGRADE_SLOT_COUNT = 4;
     public static final int DIGITIZER_SLOT_COUNT = DIGITIZER_MAIN_SLOT_COUNT + UPGRADE_SLOT_COUNT;
-    public static final int ENERGY_CAPACITY = 10_000;
+    public static final int ENERGY_CAPACITY = com.industrialcrops.machine.PoweredMachineSupport.GOLD_CAPACITY;
+    /** Duplicating an item entry is the priciest gold-tier operation: a fifth of a 10K crop. */
+    public static final int COPY_ENERGY = 100_000;
+    /** Digitizing or reconstructing: 50 FE/t, 8,000 FE per 160-tick operation. */
+    public static final int ENERGY_PER_TICK = 50;
     public static final int DEFAULT_PROCESS_TICKS = 160;
-    private static final int MAX_RECEIVE = 10_000;
+    private static final int MAX_RECEIVE = com.industrialcrops.machine.PoweredMachineSupport.GOLD_INPUT;
     private static final int ALL_SIDES = (1 << Direction.values().length) - 1;
 
     private final Kind kind;
@@ -174,7 +178,7 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
         if (!canStartOperation()) return false;
         // Copying creates one additional data entry and deliberately drains a
         // fully charged copier up front. The other two machines pay per tick.
-        if (kind == Kind.COPIER && !consumeEnergyPreferExternal(ENERGY_CAPACITY)) return false;
+        if (kind == Kind.COPIER && !consumeEnergyPreferExternal(COPY_ENERGY)) return false;
         operationRequested = true;
         progress = 0;
         setChanged();
@@ -216,7 +220,7 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
         ItemNetworkTerminalBlockEntity terminal = findConnectedTerminal();
         return terminal != null && terminal.canOperateWith(this, selectedNetworkIndex)
                 && (kind == Kind.COPIER
-                    ? availableEnergy(ENERGY_CAPACITY) >= ENERGY_CAPACITY
+                    ? availableEnergy(COPY_ENERGY) >= COPY_ENERGY
                     : availableEnergy(energyPerTick()) >= energyPerTick());
     }
 
@@ -322,7 +326,7 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
 
     private int energyPerTick() {
         return switch (kind) {
-            case DIGITIZER, RECONSTRUCTOR -> 5;
+            case DIGITIZER, RECONSTRUCTOR -> ENERGY_PER_TICK;
             case COPIER -> 0;
         };
     }

@@ -414,6 +414,8 @@ final class FieldGuideContent {
             new FieldGuideContent.Page("guide.industrialcrops.ap.sizes.title", "guide.industrialcrops.ap.sizes.body", "industrialcrops:ap_expansion_component_1", List.of("industrialcrops:ap_expansion_component_1", "industrialcrops:ap_expansion_component_2", "industrialcrops:ap_expansion_component_3")),
             new FieldGuideContent.Page("guide.industrialcrops.ap.farm.title", "guide.industrialcrops.ap.farm.body", "industrialcrops:ap_agricultural_complex", List.of("industrialcrops:ap_steel_casing", "industrialcrops:ap_steel_frame", "minecraft:glass", "minecraft:water_bucket", "minecraft:composter")),
             new FieldGuideContent.Page("guide.industrialcrops.ap.ranch.title", "guide.industrialcrops.ap.ranch.body", "industrialcrops:ap_livestock_ranch", List.of("minecraft:oak_fence", "minecraft:oak_planks", "minecraft:oak_slab", "minecraft:hay_block", "minecraft:water_bucket")),
+            new FieldGuideContent.Page("guide.industrialcrops.ap.flux.title", "guide.industrialcrops.ap.flux.body", "industrialcrops:ore_vein_data_collector", List.of("minecraft:slime_ball", "industrialcrops:flux_ore_gel", "industrialcrops:flux_slime_spawn_egg")),
+            new FieldGuideContent.Page("guide.industrialcrops.ap.slime_farm.title", "guide.industrialcrops.ap.slime_farm.body", "industrialcrops:ap_slime_farm", List.of("industrialcrops:ap_steel_frame", "minecraft:glass", "minecraft:oak_door", "minecraft:slime_block", "minecraft:raw_iron")),
             new FieldGuideContent.Page("guide.industrialcrops.ap.projection.title", "guide.industrialcrops.ap.projection.body", null, List.of("industrialcrops:field_guide", "industrialcrops:dimension_upgrade_component"))
          )
       ),

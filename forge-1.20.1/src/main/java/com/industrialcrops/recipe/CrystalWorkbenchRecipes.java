@@ -34,7 +34,8 @@ public final class CrystalWorkbenchRecipes {
       superCompressor(),
       superCropCultivator(),
       omniBucket(),
-      integratedSmeltingFurnace()
+      integratedSmeltingFurnace(),
+      ultraHighPressureInvForge()
    );
 
    public static ItemStack assemble(CrystalWorkbenchRecipes.Recipe recipe, Container grid) {
@@ -229,6 +230,32 @@ public final class CrystalWorkbenchRecipes {
       return new CrystalWorkbenchRecipes.Recipe(List.copyOf(inputs), new ItemStack((ItemLike)ModItems.INTEGRATED_SMELTING_FURNACE.get()), FluidStack.EMPTY);
    }
 
+   /**
+    * Ultra-High Pressure Inv Forge: a heavy Inv ingot shell braced with Tycon around an Electric Furnace.
+    * <pre>
+    * I I I I I
+    * I T I T I     I = Inv Ingot (20)
+    * I I E I I     T = Tycon Ingot (4)
+    * I T I T I     E = Electric Furnace
+    * I I I I I
+    * </pre>
+    */
+   private static CrystalWorkbenchRecipes.Recipe ultraHighPressureInvForge() {
+      String pattern = "IIIIIITITIIIEIIITITIIIIII";
+      ArrayList<ItemStack> inputs = new ArrayList<>();
+
+      for (char key : pattern.toCharArray()) {
+         inputs.add(switch (key) {
+            case 'I' -> new ItemStack((ItemLike)ModItems.INV_INGOT.get());
+            case 'T' -> new ItemStack((ItemLike)ModItems.TYCON_INGOT.get());
+            case 'E' -> new ItemStack((ItemLike)ModItems.ELECTRIC_FURNACE.get());
+            default -> ItemStack.EMPTY;
+         });
+      }
+
+      return new CrystalWorkbenchRecipes.Recipe(List.copyOf(inputs), new ItemStack((ItemLike)ModItems.ULTRA_HIGH_PRESSURE_INV_FORGE.get()), FluidStack.EMPTY);
+   }
+
    private static ItemStack saturationStew() {
       ItemStack stew = new ItemStack(Items.SUSPICIOUS_STEW);
       SuspiciousStewItem.saveMobEffect(stew, MobEffects.SATURATION, 7);
@@ -344,6 +371,10 @@ public final class CrystalWorkbenchRecipes {
                ItemStack expected = this.inputs.get(i);
                ItemStack actual = grid.getItem(i);
                if (expected.isEmpty() ? !actual.isEmpty() : !CrystalWorkbenchRecipes.matchesStack(expected, actual)) {
+                  return false;
+               }
+               // Counted slots need at least that many items stacked in them.
+               if (!expected.isEmpty() && actual.getCount() < expected.getCount()) {
                   return false;
                }
             }

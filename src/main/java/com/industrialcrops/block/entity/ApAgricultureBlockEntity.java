@@ -45,14 +45,15 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
    public static final int SEED_SLOTS = 9;
    public static final int OUTPUT_SLOTS = 9;
    public static final int SLOTS = 18;
-   public static final int ENERGY_CAPACITY = 1000000;
-   public static final int INPUT_RATE = 20000;
+   /** Farms run cheap: one 10K crop of energy (500,000 FE) buffers a whole season. */
+   public static final int ENERGY_CAPACITY = 500_000;
+   public static final int INPUT_RATE = 25_000;
    public static final int MAX_BOOST = 4;
-   public static final int ENERGY_PER_PLANT = 20;
-   public static final int ENERGY_PER_BOOST = 30;
+   public static final int ENERGY_PER_PLANT = 4;
+   public static final int ENERGY_PER_BOOST = 6;
    public static final int BOOSTS_PER_LEVEL = 3;
    public static final int BOOSTS_PER_SPEED_TIER = 2;
-   public static final int ENERGY_PER_HARVEST = 40;
+   public static final int ENERGY_PER_HARVEST = 8;
    public static final int DATA_COUNT = 12;
    public static final int STATUS_RUNNING = 0;
    public static final int STATUS_STRUCTURE = 1;
@@ -130,7 +131,7 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
 
    public static void tick(Level var0, BlockPos var1, BlockState var2, ApAgricultureBlockEntity var3) {
       if (var0 instanceof ServerLevel var4) {
-         PoweredMachineSupport.pullEnergy(var0, var1, var3.energy, 20000);
+         PoweredMachineSupport.pullEnergy(var0, var1, var3.energy, INPUT_RATE);
          long var5 = var0.getGameTime();
          var3.tickCommon(var4, var5);
          boolean var7 = false;
@@ -215,7 +216,7 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
    private boolean accelerate(ServerLevel var1, int var2) {
       if (this.boost > 0 && !this.crops.isEmpty()) {
          int var3 = this.boost * ticksPerLevel(var2);
-         int var4 = this.upgrades.cost(30);
+         int var4 = this.upgrades.cost(ENERGY_PER_BOOST);
          boolean var5 = false;
 
          for (int var6 = 0; var6 < var3 && this.energy.getEnergyStored() >= var4; var6++) {
@@ -247,7 +248,7 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
 
    private boolean harvest(ServerLevel var1, int var2) {
       if (!this.ripe.isEmpty() && !this.slotsFull(this.inventory, 9, 9)) {
-         int var3 = this.upgrades.cost(40);
+         int var3 = this.upgrades.cost(ENERGY_PER_HARVEST);
          boolean var4 = false;
 
          while (var2 > 0 && !this.ripe.isEmpty() && this.energy.getEnergyStored() >= var3) {
@@ -305,7 +306,7 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
    }
 
    private boolean plantOnce() {
-      int var1 = this.upgrades.cost(20);
+      int var1 = this.upgrades.cost(ENERGY_PER_PLANT);
       if (this.level != null && this.energy.getEnergyStored() >= var1) {
          for (int var2 = 0; var2 < 48; var2++) {
             BlockPos var3 = this.nextTarget();
@@ -440,7 +441,7 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
 
    private final class Energy extends EnergyStorage {
       Energy() {
-         super(1000000, 20000, 0);
+         super(ENERGY_CAPACITY, INPUT_RATE, 0);
       }
 
       void set(int var1) {

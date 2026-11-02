@@ -124,6 +124,8 @@ public final class IndustrialCropsClient {
       var0.register((MenuType)ModMenus.SUPER_CROP_CULTIVATOR.get(), com.industrialcrops.client.gui.SuperCropCultivatorScreen::new);
       var0.register((MenuType)ModMenus.AP_AGRICULTURE.get(), ApAgricultureScreen::new);
       var0.register((MenuType)ModMenus.AP_LIVESTOCK.get(), ApLivestockScreen::new);
+      var0.register((MenuType)ModMenus.AP_SLIME_FARM.get(), com.industrialcrops.client.gui.ApSlimeFarmScreen::new);
+      var0.register((MenuType)ModMenus.ORE_VEIN_DATA_COLLECTOR.get(), com.industrialcrops.client.gui.OreVeinDataCollectorScreen::new);
       var0.register((MenuType)ModMenus.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestScreen::new);
       var0.register((MenuType)ModMenus.PIPE_SORTER.get(), PipeSorterScreen::new);
       var0.register((MenuType)ModMenus.ANIMAL_BREEDER.get(), AnimalBreederScreen::new);
@@ -231,10 +233,12 @@ public final class IndustrialCropsClient {
       var0.registerEntityRenderer((EntityType)ModEntities.GRAY_GEAR_SLIME.get(), GrayGearSlimeRenderer::new);
       var0.registerEntityRenderer((EntityType)ModEntities.GOLDEN_REDSTONE_LAMP_SLIME.get(), GoldenRedstoneLampSlimeRenderer::new);
       var0.registerEntityRenderer((EntityType)ModEntities.DIAMOND_PROCESSOR_SLIME.get(), DiamondProcessorSlimeRenderer::new);
+      var0.registerEntityRenderer((EntityType)ModEntities.FLUX_SLIME.get(), com.industrialcrops.client.renderer.FluxSlimeRenderer::new);
       var0.registerBlockEntityRenderer((BlockEntityType)ModBlockEntities.WIRELESS_ENERGY_TRANSMITTER.get(), WirelessEnergyTransmitterRenderer::new);
       var0.registerBlockEntityRenderer((BlockEntityType)ModBlockEntities.SATELLITE_RECEIVER.get(), SatelliteReceiverRenderer::new);
       var0.registerBlockEntityRenderer((BlockEntityType)ModBlockEntities.AP_AGRICULTURE.get(), ApHologramRenderer::new);
       var0.registerBlockEntityRenderer((BlockEntityType)ModBlockEntities.AP_LIVESTOCK.get(), ApHologramRenderer::new);
+      var0.registerBlockEntityRenderer((BlockEntityType)ModBlockEntities.AP_SLIME_FARM.get(), ApHologramRenderer::new);
       var0.registerBlockEntityRenderer((BlockEntityType)ModBlockEntities.INCUBATOR.get(), IncubatorBlockEntityRenderer::new);
       var0.registerBlockEntityRenderer((BlockEntityType)ModBlockEntities.DIGITAL_MINIATURE_FOREST.get(), DigitalMiniatureForestRenderer::new);
       var0.registerBlockEntityRenderer((BlockEntityType)ModBlockEntities.CRYSTAL_STEEL_WORKBENCH.get(), CrystalSteelWorkbenchRenderer::new);

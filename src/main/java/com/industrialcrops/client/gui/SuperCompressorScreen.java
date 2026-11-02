@@ -36,8 +36,13 @@ public final class SuperCompressorScreen extends UpgradeableMachineScreen<SuperC
         graphics.fill(x, y, x + BAR_W, y + BAR_H, 0xFF3B3B3B);
         int filled = menu.getScaledBuffer(BAR_W);
         if (filled > 0) {
-            graphics.fill(x, y, x + filled, y + BAR_H, 0xFFD9B44A);
-            graphics.fill(x, y, x + filled, y + 1, 0xFFF3DC8A);
+            int crop = menu.getStoredCrop();
+            int fill = crop == SuperCompressorBlockEntity.CROP_CARROT ? 0xFFE8802A
+                    : crop == SuperCompressorBlockEntity.CROP_WHEAT ? 0xFFCDB24E : 0xFFD9B44A;
+            int shine = crop == SuperCompressorBlockEntity.CROP_CARROT ? 0xFFFFB46A
+                    : crop == SuperCompressorBlockEntity.CROP_WHEAT ? 0xFFF1E39A : 0xFFF3DC8A;
+            graphics.fill(x, y, x + filled, y + BAR_H, fill);
+            graphics.fill(x, y, x + filled, y + 1, shine);
         }
 
         IndustrialGuiStyle.drawMekanismSmallRight(graphics, leftPos + 74, topPos + 40, menu.getScaledProgress(28));
@@ -59,9 +64,15 @@ public final class SuperCompressorScreen extends UpgradeableMachineScreen<SuperC
         renderUpgradeTab(graphics, mouseX, mouseY);
         int x = leftPos + BAR_X, y = topPos + BAR_Y;
         if (mouseX >= x - 1 && mouseX <= x + BAR_W && mouseY >= y - 1 && mouseY <= y + BAR_H) {
+            int crop = menu.getStoredCrop();
+            Component name = crop == SuperCompressorBlockEntity.CROP_NONE
+                    ? Component.translatable("gui.industrialcrops.super_compressor.any_crop")
+                    : (crop == SuperCompressorBlockEntity.CROP_CARROT ? com.industrialcrops.registry.ModItems.INDUSTRIAL_CARROT.get()
+                    : crop == SuperCompressorBlockEntity.CROP_WHEAT ? com.industrialcrops.registry.ModItems.INDUSTRIAL_WHEAT.get()
+                    : com.industrialcrops.registry.ModItems.INDUSTRIAL_POTATO.get()).getDescription();
             graphics.renderTooltip(font, Component.translatable("gui.industrialcrops.super_compressor.buffer",
                     String.format("%,d", menu.getStoredPotatoes()),
-                    String.format("%,d", SuperCompressorBlockEntity.BUFFER_CAPACITY)), mouseX, mouseY);
+                    String.format("%,d", SuperCompressorBlockEntity.BUFFER_CAPACITY), name), mouseX, mouseY);
         }
         renderTooltip(graphics, mouseX, mouseY);
     }

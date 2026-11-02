@@ -4,6 +4,7 @@ import net.minecraft.world.item.ItemStack;
 /** Forge 1.20.1 equivalent of the custom-data storage payload. */
 public final class LegacyItemData {
     private LegacyItemData() {}
+    public static CustomData getOrEmpty(ItemStack stack) { return CustomData.of(stack.getOrCreateTag()); }
     public static CustomData get(ItemStack stack) { return stack.hasTag() ? CustomData.of(stack.getTag()) : null; }
     public static void set(ItemStack stack, CustomData data) { stack.setTag(data.copyTag()); }
     public static void update(ItemStack stack, java.util.function.Consumer<CompoundTag> change) {

@@ -1,0 +1,7 @@
+{
+  "parent": "industrialcrops:block/basic_pipe/template/core",
+  "textures": {
+    "basic_pipe_type": "industrialcrops:block/ap_item_conduit",
+    "basic_pipe_structure": "industrialcrops:block/ap_conduit_structure"
+  }
+}

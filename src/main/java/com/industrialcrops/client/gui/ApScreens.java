@@ -44,7 +44,7 @@ final class ApScreens {
          boolean complete = status.complete(category);
          lines.add(Component.literal(complete ? "✔ " : "✖ ").append(category(category)).withStyle(complete ? ChatFormatting.GREEN : ChatFormatting.RED).getVisualOrderText());
       }
-      String type = status.livestock() ? "ranch" : "farm";
+      String type = status.slime() ? "slime_farm" : (status.livestock() ? "ranch" : "farm");
       for (String key : new String[]{"origin", type, "expansion", "projection"}) {
          lines.addAll(font.split(Component.translatable("gui.industrialcrops.ap.help." + key).withStyle(ChatFormatting.GRAY), 240));
       }

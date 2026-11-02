@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 
 /** Displays every crop and seed currently accepted by both bio-energy machines. */
 public final class BioEnergyRecipeCategory implements IRecipeCategory<BioEnergyRecipeCategory.Recipe> {
-    public record Recipe(ItemStack input, int energy, int residue) {}
+    public record Recipe(ItemStack input, int energy, int residue, int ticks) {}
     public static final RecipeType<Recipe> TYPE = RecipeType.create(
             IndustrialCrops.MOD_ID, "bio_energy_generation", Recipe.class);
     private final IDrawable icon;
@@ -49,7 +49,8 @@ public final class BioEnergyRecipeCategory implements IRecipeCategory<BioEnergyR
     public void draw(Recipe recipe, mezz.jei.api.gui.ingredient.IRecipeSlotsView slots,
             GuiGraphics graphics, double mouseX, double mouseY) {
         var font = Minecraft.getInstance().font;
-        graphics.drawString(font, recipe.energy() + " FE", 58, 2, 0xff444444, false);
+        graphics.drawString(font, String.format("%,d FE", recipe.energy()), 58, 2, 0xff444444, false);
+        graphics.drawString(font, String.format("%,d FE/t", recipe.energy() / Math.max(1, recipe.ticks())), 58, 32, 0xff444444, false);
         graphics.drawString(font, Component.translatable("gui.industrialcrops.bio_generator.residue",
                 recipe.residue()).getString(), 106, 17, 0xff6b4030, false);
     }

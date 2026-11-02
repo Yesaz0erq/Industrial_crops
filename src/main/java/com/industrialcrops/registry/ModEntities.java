@@ -30,6 +30,10 @@ public final class ModEntities {
       "blue_processor_slime",
       () -> Builder.of(DiamondProcessorSlime::new, MobCategory.MONSTER).sized(1.0F, 1.0F).clientTrackingRange(8).build("blue_processor_slime")
    );
+   public static final DeferredHolder<EntityType<?>, EntityType<com.industrialcrops.entity.FluxSlime>> FLUX_SLIME = ENTITY_TYPES.register(
+      "flux_slime",
+      () -> Builder.of(com.industrialcrops.entity.FluxSlime::new, MobCategory.MONSTER).sized(1.0F, 1.0F).clientTrackingRange(8).build("flux_slime")
+   );
    public static final DeferredHolder<EntityType<?>, EntityType<GoldenRocketEntity>> GOLDEN_ROCKET = ENTITY_TYPES.register(
       "explosive_potato",
       () -> Builder.<GoldenRocketEntity>of(GoldenRocketEntity::new, MobCategory.MISC).sized(0.35F, 1.1F).clientTrackingRange(128).updateInterval(1).build("explosive_potato")
