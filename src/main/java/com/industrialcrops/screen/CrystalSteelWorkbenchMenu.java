@@ -71,7 +71,7 @@ public final class CrystalSteelWorkbenchMenu extends AbstractContainerMenu {
         var recipe = player.level().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, player.level());
         if (custom != null) {
             result.setRecipeUsed(null);
-            if(custom.hasFluid(fluid())) output=custom.output().copy();
+            if(custom.hasFluid(fluid())) output=CrystalWorkbenchRecipes.assemble(custom, inputs);
         } else if (recipe.isPresent() && result.setRecipeUsed(player.level(), serverPlayer, recipe.get())) {
             ItemStack assembled = recipe.get().assemble(input, player.level().registryAccess());
             if (assembled.isItemEnabled(player.level().enabledFeatures())) output = assembled;

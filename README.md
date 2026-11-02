@@ -25,7 +25,7 @@
 
 ## C2 更新
 
-当前版本为 **1.0-C2**，同步提供 NeoForge 1.21.1 与 Forge 1.20.1 源码和成品。
+当前版本为 **1.0-C3**，同步提供 NeoForge 1.21.1 与 Forge 1.20.1 源码和成品。
 
 - 超高压因弗锻造炉采用 16px 材质与四帧炉火动画，侧面与底部使用相同的网罩样式；正面使用本次提供的新贴图。
 - 注册 ID 为 `industrialcrops:ultra_high_pressure_inv_forge`，旧炉 ID 及兼容映射已移除，旧炉不会自动迁移。
@@ -98,7 +98,7 @@ AP扩建组件 I在编程设备中使用AP结构钢板×4、AP钢框架×2、元
 
 ## 从源码构建
 
-本目录 `Industrial_crops-forge-1.20.1-C2` 是可独立构建的 Forge 1.20.1 C2 工程，使用 Java 17。其他加载器应使用其对应的独立 C2 工程；本工程仅包含完整源码、实际使用的运行资源、构建配置、Gradle Wrapper、说明与许可文件。
+本目录 `Industrial_crops-forge-1.20.1-C3` 是可独立构建的 Forge 1.20.1 C2 工程，使用 Java 17。其他加载器应使用其对应的独立 C2 工程；本工程仅包含完整源码、实际使用的运行资源、构建配置、Gradle Wrapper、说明与许可文件。
 
 进入目标工程，使用上表对应的 Java 版本执行：
 
@@ -112,10 +112,17 @@ AP扩建组件 I在编程设备中使用AP结构钢板×4、AP钢框架×2、元
 .\gradlew.bat build jarJar
 ```
 
-首次构建需要联网下载依赖。安装 `build/libs/industrial-crops-forge-1.0-C2-all.jar`，其中已内置菜单兼容修复所需的 MixinExtras；同目录不带 `-all` 的 JAR 未包含此依赖。启动开发客户端使用 `runClient`；添加 `-PwithoutCurios=true` 可在不加载 Curios 的情况下运行。
+首次构建需要联网下载依赖。安装 `build/libs/industrial-crops-forge-1.0-C3-all.jar`，其中已内置菜单兼容修复所需的 MixinExtras；同目录不带 `-all` 的 JAR 未包含此依赖。启动开发客户端使用 `runClient`；添加 `-PwithoutCurios=true` 可在不加载 Curios 的情况下运行。
 
 ## 反馈与贡献
 
 欢迎通过 [Issues](https://github.com/Yesaz0erq/Industrial_crops/issues) 报告问题或提出建议。报告问题时请提供 Minecraft 版本、加载器与模组版本、复现步骤，以及相关日志或崩溃报告。
 
 项目采用 [MIT 许可](LICENSE)。作者：OFFSET Inc.
+
+## 1.0-C3 更新
+
+- 新增 AP 史莱姆农场、矿脉数据采集器、通量矿凝胶与通量史莱姆，以及相关配方、模型、材质与界面。
+- 同步 AP 管道与能量线、生物能反应堆六路燃料及设备容量、能耗和界面调整。
+- 五种异种种子各自以 25%、电浆果实以 10% 概率从原版战利品箱获得。
+- 修复万能复制装置修改方块实体注册列表导致的气动工艺启动冲突，保留复制菜单兼容处理。

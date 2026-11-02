@@ -104,7 +104,10 @@ public final class ModBlockEntities {
                   (Block)ModBlocks.REINFORCED_OUTPUT_PIPE.get(),
                   (Block)ModBlocks.ADVANCED_PIPE.get(),
                   (Block)ModBlocks.ADVANCED_INPUT_PIPE.get(),
-                  (Block)ModBlocks.ADVANCED_OUTPUT_PIPE.get()
+                  (Block)ModBlocks.ADVANCED_OUTPUT_PIPE.get(),
+                  (Block)ModBlocks.AP_CONDUIT.get(),
+                  (Block)ModBlocks.AP_INPUT_CONDUIT.get(),
+                  (Block)ModBlocks.AP_OUTPUT_CONDUIT.get()
                }
             )
             .build(null)
@@ -169,7 +172,7 @@ public final class ModBlockEntities {
    );
    public static final RegistryObject<BlockEntityType<EnergyCableBlockEntity>> ENERGY_CABLE = BLOCK_ENTITIES.register(
       "energy_cable",
-      () -> Builder.of(EnergyCableBlockEntity::new, new Block[]{(Block)ModBlocks.BASIC_ENERGY_CABLE.get(), (Block)ModBlocks.ADVANCED_ENERGY_CABLE.get()})
+      () -> Builder.of(EnergyCableBlockEntity::new, new Block[]{(Block)ModBlocks.BASIC_ENERGY_CABLE.get(), (Block)ModBlocks.ADVANCED_ENERGY_CABLE.get(), (Block)ModBlocks.AP_ENERGY_CABLE.get()})
             .build(null)
    );
    public static final RegistryObject<BlockEntityType<ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE = BLOCK_ENTITIES.register(
@@ -262,6 +265,12 @@ public final class ModBlockEntities {
    );
    public static final RegistryObject<BlockEntityType<ApLivestockBlockEntity>> AP_LIVESTOCK = BLOCK_ENTITIES.register(
       "ap_livestock_ranch", () -> Builder.of(ApLivestockBlockEntity::new, new Block[]{(Block)ModBlocks.AP_LIVESTOCK_CONTROLLER.get()}).build(null)
+   );
+   public static final RegistryObject<BlockEntityType<com.industrialcrops.block.entity.ApSlimeFarmBlockEntity>> AP_SLIME_FARM = BLOCK_ENTITIES.register(
+      "ap_slime_farm", () -> Builder.of(com.industrialcrops.block.entity.ApSlimeFarmBlockEntity::new, new Block[]{(Block)ModBlocks.AP_SLIME_FARM.get()}).build(null)
+   );
+   public static final RegistryObject<BlockEntityType<com.industrialcrops.block.entity.OreVeinDataCollectorBlockEntity>> ORE_VEIN_DATA_COLLECTOR = BLOCK_ENTITIES.register(
+      "ore_vein_data_collector", () -> Builder.of(com.industrialcrops.block.entity.OreVeinDataCollectorBlockEntity::new, new Block[]{(Block)ModBlocks.ORE_VEIN_DATA_COLLECTOR.get()}).build(null)
    );
 
    private ModBlockEntities() {

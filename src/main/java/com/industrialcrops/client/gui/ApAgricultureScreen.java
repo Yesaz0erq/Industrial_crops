@@ -47,7 +47,8 @@ public final class ApAgricultureScreen extends ApMachineScreen<ApAgricultureMenu
       ApGuiStyle.well(var1, var5 + 8, var6 + 24, 108, 68);
       ApGuiStyle.well(var1, var5 + 120, var6 + 24, 102, 68);
       ApGuiStyle.structureMap(var1, var5 + 14, var6 + 40, ((ApAgricultureMenu)this.menu).structure());
-      ApGuiStyle.bar(var1, var5 + 125, var6 + 29, 92, 5, ((ApAgricultureMenu)this.menu).energy(), 1000000, -1529542);
+      ApGuiStyle.bar(var1, var5 + 125, var6 + 29, 92, 5, ((ApAgricultureMenu)this.menu).energy(), com.industrialcrops.block.entity.ApAgricultureBlockEntity.ENERGY_CAPACITY, -1529542);
+
       for (int var7 = 0; var7 < 4; var7++) {
          int var8 = var5 + 145 + var7 * 15;
          boolean var9 = var7 < ((ApAgricultureMenu)this.menu).boost();

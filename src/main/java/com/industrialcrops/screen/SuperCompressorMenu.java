@@ -29,6 +29,7 @@ public final class SuperCompressorMenu extends AbstractContainerMenu implements 
     private final BlockPos pos;
     private int progress;
     private int storedPotatoes;
+    private int storedCrop = SuperCompressorBlockEntity.CROP_NONE;
     private boolean upgradeSlotsVisible;
 
     public SuperCompressorMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buffer) {
@@ -46,7 +47,10 @@ public final class SuperCompressorMenu extends AbstractContainerMenu implements 
         addSlot(new SlotItemHandler(blockEntity.getInventory(), SuperCompressorBlockEntity.INPUT_SLOT, INPUT_X, INPUT_Y) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return SuperCompressorBlockEntity.potatoValue(stack) > 0;
+                // Server: the block entity decides. Client: the synced buffer crop mirrors it.
+                int crop = SuperCompressorBlockEntity.cropOf(stack);
+                return blockEntity.accepts(stack)
+                        && (storedCrop == SuperCompressorBlockEntity.CROP_NONE || storedCrop == crop);
             }
         });
         addSlot(new SlotItemHandler(blockEntity.getInventory(), SuperCompressorBlockEntity.OUTPUT_SLOT, OUTPUT_X, OUTPUT_Y) {
@@ -89,6 +93,14 @@ public final class SuperCompressorMenu extends AbstractContainerMenu implements 
             @Override public int get() { return blockEntity.getStoredPotatoes(); }
             @Override public void set(int value) { storedPotatoes = value & 0xFFFF; }
         });
+        addDataSlot(new DataSlot() {
+            @Override public int get() { return blockEntity.getStoredCrop(); }
+            @Override public void set(int value) { storedCrop = (short) value; }
+        });
+    }
+
+    public int getStoredCrop() {
+        return storedCrop;
     }
 
     public int getStoredPotatoes() {

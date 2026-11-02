@@ -58,6 +58,7 @@ public final class IndustrialCrops {
         com.industrialcrops.registry.ModCapabilities.register(event);
     }
     private void registerEntityAttributes(EntityAttributeCreationEvent event) {
+        event.put(ModEntities.FLUX_SLIME.get(), Monster.createMonsterAttributes().add(Attributes.MAX_HEALTH, 10.0D).build());
         event.put(
                 ModEntities.BROWN_CREATE_SLIME.get(),
                 Monster.createMonsterAttributes()

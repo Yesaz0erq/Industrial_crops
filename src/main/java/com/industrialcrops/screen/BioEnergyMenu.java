@@ -30,6 +30,13 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
    private final BlockPos pos;
    private final ContainerData data;
    private final int machineSlots;
+   private final int fuelSlots;
+   /** Reactor lanes: 3 columns x 2 rows below the title band, with a burn bar under every slot. */
+   public static final int REACTOR_LANE_X = 11;
+   public static final int REACTOR_LANE_Y = 24;
+   public static final int REACTOR_LANE_COLUMNS = 3;
+   public static final int REACTOR_LANE_PITCH_X = 18;
+   public static final int REACTOR_LANE_PITCH_Y = 22;
    private final int playerInventoryStart;
    private boolean upgradeSlotsVisible;
    public BioEnergyMenu(int id, Inventory inventory, FriendlyByteBuf buffer) {
@@ -43,13 +50,28 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
       this.blockEntity = entity;
       this.pos = pos;
       this.data = entity.getData();
-      this.machineSlots = entity.getKind() == BioEnergyMachineBlockEntity.Kind.BATTERY
-         ? 0
-         : (entity.getKind() == BioEnergyMachineBlockEntity.Kind.GENERATOR ? 5 : 1);
-      if (this.machineSlots > 0) {
-         this.addSlot(new SlotItemHandler(entity.getInventory(), 0, 18, 35) {
+      this.fuelSlots = entity.fuelSlots();
+      this.machineSlots = entity.getKind() == BioEnergyMachineBlockEntity.Kind.GENERATOR
+         ? this.fuelSlots + BioEnergyMachineBlockEntity.UPGRADE_SLOT_COUNT
+         : this.fuelSlots;
+      for (int lane = 0; lane < this.fuelSlots; lane++) {
+         int x = entity.isReactor() ? laneX(lane) : 18;
+         int y = entity.isReactor() ? laneY(lane) : 35;
+         this.addSlot(new SlotItemHandler(entity.getInventory(), lane, x, y) {
             public boolean mayPlace(ItemStack stack) {
-               return entity.getInventory().isItemValid(0, stack);
+               return entity.getInventory().isItemValid(this.getSlotIndex(), stack);
+            }
+
+            @Override
+            public int getMaxStackSize(ItemStack stack) {
+               return entity.isReactor() && stack.getMaxStackSize() > 1
+                  ? BioEnergyMachineBlockEntity.REACTOR_SLOT_LIMIT : super.getMaxStackSize(stack);
+            }
+
+            @Override
+            public ItemStack remove(int amount) {
+               // Bulk lanes hand out at most one normal stack per click.
+               return super.remove(Math.min(amount, this.getItem().getMaxStackSize()));
             }
          });
       }
@@ -57,7 +79,7 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
          for (int i = 0; i < 4; i++) {
             int x = -58 + i % 2 * 18;
             int y = 24 + i / 2 * 18;
-            this.addSlot(new SlotItemHandler(entity.getInventory(), 1 + i, x, y) {
+            this.addSlot(new SlotItemHandler(entity.getInventory(), this.fuelSlots + i, x, y) {
                public boolean mayPlace(ItemStack stack) {
                   return SpeedUpgradeHelper.isSpeedUpgrade(stack);
                }
@@ -78,6 +100,15 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
       }
       this.addDataSlots(this.data);
    }
+
+   public static int laneX(int lane) {
+      return REACTOR_LANE_X + lane % REACTOR_LANE_COLUMNS * REACTOR_LANE_PITCH_X;
+   }
+
+   public static int laneY(int lane) {
+      return REACTOR_LANE_Y + lane / REACTOR_LANE_COLUMNS * REACTOR_LANE_PITCH_Y;
+   }
+
    public BioEnergyMachineBlockEntity.Kind kind() {
       int ordinal = Math.max(0, Math.min(BioEnergyMachineBlockEntity.Kind.values().length - 1, this.data.get(10)));
       return BioEnergyMachineBlockEntity.Kind.values()[ordinal];
@@ -109,8 +140,19 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
    public int burnTimeTotal() {
       return this.data.get(9);
    }
+
+   /** Total FE generated per tick right now. */
    public int currentYield() {
-      return this.data.get(11);
+      return this.data.get(11) & 65535 | (this.data.get(14) & 65535) << 16;
+   }
+
+   public int fuelSlots() {
+      return this.fuelSlots;
+   }
+
+   /** Burn progress of one lane, 0..1000. */
+   public int laneProgress(int lane) {
+      return this.data.get(16 + lane);
    }
    public boolean isEnergySideEnabled(Direction direction) {
       return (this.data.get(12) & 1 << direction.ordinal()) != 0;
@@ -148,15 +190,26 @@ public final class BioEnergyMenu extends AbstractContainerMenu implements Upgrad
             int inventoryEnd = this.playerInventoryStart + 27;
             int hotbarEnd = inventoryEnd + 9;
             if (index < this.machineSlots) {
+               if (stack.getCount() > stack.getMaxStackSize()) {
+                  // Bulk reactor lane: hand out one normal stack at a time.
+                  ItemStack part = stack.copyWithCount(stack.getMaxStackSize());
+                  ItemStack before = part.copy();
+                  if (!this.moveItemStackTo(part, this.playerInventoryStart, hotbarEnd, true)) {
+                     return ItemStack.EMPTY;
+                  }
+                  stack.shrink(before.getCount() - part.getCount());
+                  slot.set(stack);
+                  return ItemStack.EMPTY;
+               }
                if (!this.moveItemStackTo(stack, this.playerInventoryStart, hotbarEnd, true)) {
                   return ItemStack.EMPTY;
                }
             } else if (this.blockEntity.getKind() == BioEnergyMachineBlockEntity.Kind.GENERATOR && SpeedUpgradeHelper.isSpeedUpgrade(stack)) {
-               if (!this.moveItemStackTo(stack, 1, 5, false)) {
+               if (!this.moveItemStackTo(stack, this.fuelSlots, this.fuelSlots + BioEnergyMachineBlockEntity.UPGRADE_SLOT_COUNT, false)) {
                   return ItemStack.EMPTY;
                }
-            } else if (this.machineSlots > 0 && this.blockEntity.getInventory().isItemValid(0, stack)) {
-               if (!this.moveItemStackTo(stack, 0, 1, false)) {
+            } else if (this.fuelSlots > 0 && this.blockEntity.getInventory().isItemValid(0, stack)) {
+               if (!this.moveItemStackTo(stack, 0, this.fuelSlots, false)) {
                   return ItemStack.EMPTY;
                }
             } else if (index < inventoryEnd) {

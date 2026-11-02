@@ -26,6 +26,10 @@ public final class ModCapabilities {
 
     @SubscribeEvent
     public static void attach(AttachCapabilitiesEvent<BlockEntity> event) {
+        add(event, ModBlockEntities.AP_SLIME_FARM.get(), ForgeCapabilities.ITEM_HANDLER, (machine, side) -> machine.automation());
+        add(event, ModBlockEntities.AP_SLIME_FARM.get(), ForgeCapabilities.ENERGY, (machine, side) -> machine.getEnergyStorage(side));
+        add(event, ModBlockEntities.ORE_VEIN_DATA_COLLECTOR.get(), ForgeCapabilities.ITEM_HANDLER, (machine, side) -> machine.getAutomationHandler());
+        add(event, ModBlockEntities.ORE_VEIN_DATA_COLLECTOR.get(), ForgeCapabilities.ENERGY, (machine, side) -> machine.getEnergyStorage(side));
         add(event, ModBlockEntities.ANIMAL_BREEDER.get(), ForgeCapabilities.ITEM_HANDLER, (machine, side) -> machine.itemCapability());
         add(event, ModBlockEntities.ANIMAL_BREEDER.get(), ForgeCapabilities.ENERGY, (machine, side) -> machine.energy());
         add(event, ModBlockEntities.ANIMAL_BREEDER.get(), ForgeCapabilities.FLUID_HANDLER, (machine, side) -> machine.tank());

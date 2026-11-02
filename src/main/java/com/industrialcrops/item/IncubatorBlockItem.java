@@ -46,7 +46,8 @@ public final class IncubatorBlockItem extends BlockItem {
 
         if (!player.level().isClientSide()) {
             int type = getSlimeType(slime);
-            setStoredSlime(stack, type, slime.getSize());
+            setStoredSlime(stack, type, slime.getSize(),
+                    slime instanceof com.industrialcrops.entity.FluxSlime flux ? flux.knownIngots() : java.util.Set.of());
             player.level().playSound(null, slime.blockPosition(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0F, 0.8F);
             slime.discard();
         }
@@ -70,14 +71,34 @@ public final class IncubatorBlockItem extends BlockItem {
                     IncubatorBlockEntity.getSlimeName(type),
                     getStoredSize(stack)
             ));
+            if (type == IncubatorBlockEntity.SLIME_FLUX) {
+                tooltip.add(Component.translatable("tooltip.industrialcrops.flux_ore_gel.count", getStoredOres(stack).size())
+                        .withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE));
+            }
         }
     }
 
     public static void setStoredSlime(ItemStack stack, int type, int size) {
+        setStoredSlime(stack, type, size, java.util.Set.of());
+    }
+
+    public static void setStoredSlime(ItemStack stack, int type, int size,
+            java.util.Collection<net.minecraft.resources.ResourceLocation> ores) {
         com.industrialcrops.util.ItemStackNbt.update(stack, tag -> {
             tag.putInt(SLIME_TYPE_TAG, type);
             tag.putInt(SLIME_SIZE_TAG, Math.max(1, size));
+            if (type == IncubatorBlockEntity.SLIME_FLUX) {
+                tag.put(com.industrialcrops.machine.FluxOreIndex.TAG_ORES, com.industrialcrops.machine.FluxOreIndex.writeIds(ores));
+            } else {
+                tag.remove(com.industrialcrops.machine.FluxOreIndex.TAG_ORES);
+            }
         });
+    }
+
+    /** Ore data of a captured Flux Slime. */
+    public static java.util.Set<net.minecraft.resources.ResourceLocation> getStoredOres(ItemStack stack) {
+        com.industrialcrops.compat.LegacyItemData.CustomData data = com.industrialcrops.compat.LegacyItemData.getOrEmpty(stack);
+        return com.industrialcrops.machine.FluxOreIndex.readIds(data.copyTag());
     }
 
     public static int getStoredType(ItemStack stack) {
@@ -102,6 +123,9 @@ public final class IncubatorBlockItem extends BlockItem {
         }
         if (slime instanceof DiamondProcessorSlime) {
             return IncubatorBlockEntity.SLIME_DIAMOND;
+        }
+        if (slime instanceof com.industrialcrops.entity.FluxSlime) {
+            return IncubatorBlockEntity.SLIME_FLUX;
         }
         return IncubatorBlockEntity.SLIME_VANILLA;
     }

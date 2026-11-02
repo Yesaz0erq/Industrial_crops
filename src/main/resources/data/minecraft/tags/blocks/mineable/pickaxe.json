@@ -77,6 +77,12 @@
     "industrialcrops:ap_steel_frame",
     "industrialcrops:ap_agricultural_complex",
     "industrialcrops:ap_livestock_ranch",
-    "industrialcrops:super_crop_cultivator"
+    "industrialcrops:super_crop_cultivator",
+    "industrialcrops:ap_slime_farm",
+    "industrialcrops:ore_vein_data_collector",
+    "industrialcrops:ap_conduit",
+    "industrialcrops:ap_input_conduit",
+    "industrialcrops:ap_output_conduit",
+    "industrialcrops:ap_energy_cable"
   ]
 }

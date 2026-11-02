@@ -1,24 +1,30 @@
 package com.industrialcrops.client.gui;
+
 import com.industrialcrops.screen.ApLivestockMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+
 public final class ApLivestockScreen extends ApMachineScreen<ApLivestockMenu> {
    private static final String[] TASKS = new String[]{"breed", "shear", "cull", "grow"};
    private final ApGuiStyle.ApButton[] toggles = new ApGuiStyle.ApButton[4];
    private ApGuiStyle.ApButton cap;
+
    public ApLivestockScreen(ApLivestockMenu var1, Inventory var2, Component var3) {
       super(var1, var2, var3);
       this.imageWidth = 230;
       this.imageHeight = 234;
    }
+
    @Override
    protected String machineKey() {
       return "ap_livestock";
    }
+
    @Override
    protected void init() {
       super.init();
+
       for (int var1 = 0; var1 < 4; var1++) {
          int var2 = var1;
          this.toggles[var1] = (ApGuiStyle.ApButton)this.addRenderableWidget(
@@ -32,19 +38,24 @@ public final class ApLivestockScreen extends ApMachineScreen<ApLivestockMenu> {
             )
          );
       }
+
       this.cap = (ApGuiStyle.ApButton)this.addRenderableWidget(
          new ApGuiStyle.ApButton(this.leftPos + 124, this.topPos + 74, 94, 14, Component.empty(), var1x -> this.click(4))
       );
    }
+
    @Override
    protected void containerTick() {
       super.containerTick();
+
       for (int var1 = 0; var1 < 4; var1++) {
          this.toggles[var1].setLit((((ApLivestockMenu)this.menu).flags() & 1 << var1) != 0);
       }
+
       this.cap.setMessage(Component.translatable("gui.industrialcrops.ap_livestock.cap", new Object[]{((ApLivestockMenu)this.menu).cap()}));
       this.cap.setLit(true);
    }
+
    protected void renderBg(GuiGraphics var1, float var2, int var3, int var4) {
       int var5 = this.leftPos;
       int var6 = this.topPos;
@@ -53,12 +64,13 @@ public final class ApLivestockScreen extends ApMachineScreen<ApLivestockMenu> {
       ApGuiStyle.well(var1, var5 + 8, var6 + 24, 108, 68);
       ApGuiStyle.well(var1, var5 + 120, var6 + 24, 102, 68);
       ApGuiStyle.structureMap(var1, var5 + 14, var6 + 40, ((ApLivestockMenu)this.menu).structure());
-      ApGuiStyle.bar(var1, var5 + 125, var6 + 29, 92, 5, ((ApLivestockMenu)this.menu).energy(), 1000000, -1529542);
+      ApGuiStyle.bar(var1, var5 + 125, var6 + 29, 92, 5, ((ApLivestockMenu)this.menu).energy(), com.industrialcrops.block.entity.ApLivestockBlockEntity.ENERGY_CAPACITY, -1529542);
       ApGuiStyle.slots(var1, var5 + 34, var6 + 104, 9);
       ApGuiStyle.slots(var1, var5 + 34, var6 + 122, 9);
       var1.fill(var5 + 34 - 2, var6 + 122 - 1, var5 + 34 - 1, var6 + 122 + 17, -1529542);
       ApGuiStyle.playerInventory(var1, var5 + 34, var6 + 152, var6 + 210);
    }
+
    @Override
    protected void renderLabels(GuiGraphics var1, int var2, int var3) {
       ApGuiStyle.text(var1, this.font, this.title.getString(), 9, 8, this.imageWidth - 18, -920586);
@@ -98,6 +110,7 @@ public final class ApLivestockScreen extends ApMachineScreen<ApLivestockMenu> {
       ApGuiStyle.text(var1, this.font, var5, 196 - var6, 94, var6, -4801081);
       var1.drawString(this.font, this.playerInventoryTitle, 34, 142, -4801081, false);
    }
+
    public void render(GuiGraphics var1, int var2, int var3, float var4) {
       super.render(var1, var2, var3, var4);
       if (!this.renderSideTooltips(var1, var2, var3)) {
@@ -109,6 +122,7 @@ public final class ApLivestockScreen extends ApMachineScreen<ApLivestockMenu> {
                return;
             }
          }
+
          if (this.cap.isHovered()) {
             var1.renderTooltip(this.font, this.font.split(Component.translatable("gui.industrialcrops.ap_livestock.cap.tip"), 220), var2, var3);
             return;
