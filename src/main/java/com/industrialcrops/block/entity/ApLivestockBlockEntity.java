@@ -67,7 +67,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
    public static final int FLAG_CULL = 4;
    public static final int FLAG_GROW = 8;
    public static final int[] CYCLE_TICKS = new int[]{20, 15, 10, 7, 5};
-   public static final int BREED_EVERY = 1;
+   public static final int CHECK_INTERVAL_TICKS = 60;
    public static final int DATA_COUNT = 11;
    public static final int STATUS_RUNNING = 0;
    public static final int STATUS_STRUCTURE = 1;
@@ -86,6 +86,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
       }
    };
    private final ApLivestockBlockEntity.Energy energy = new ApLivestockBlockEntity.Energy();
+   private int growthCycleRemainder;
    private int flags = 11;
    private int capIndex = 1;
    private int status = 1;
@@ -139,6 +140,14 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
 
    private AABB area() { return this.layout().workBounds(); }
 
+   private boolean inspectionDue(long time) {
+      return Math.floorMod(time + Math.floorMod(this.worldPosition.asLong(), CHECK_INTERVAL_TICKS), CHECK_INTERVAL_TICKS) == 0;
+   }
+
+   @Override
+   protected boolean shouldCheckStructure(long time) { return this.inspectionDue(time); }
+
+
    private static boolean livestock(Animal var0) {
       return var0.isAlive()
          && !var0.hasCustomName()
@@ -153,8 +162,13 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
          var3.tickCommon(var4, var5);
          if (!var3.structure.formed()) {
             var3.status = 1;
-         } else {
-            var3.work(var4, var5 % (long)CYCLE_TICKS[var3.upgrades.speedTier()] == 0L);
+         } else if (var3.inspectionDue(var5)) {
+            // Spread expensive entity scans across ticks for ranches at different positions.
+            int growthInterval = CYCLE_TICKS[var3.upgrades.speedTier()];
+            var3.growthCycleRemainder += CHECK_INTERVAL_TICKS;
+            int growthCycles = var3.growthCycleRemainder / growthInterval;
+            var3.growthCycleRemainder %= growthInterval;
+            var3.work(var4, growthCycles);
          }
 
          if (var3.structure.formed() && var5 % 20L == 10L && var3.upgrades.automatic()) {
@@ -168,7 +182,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
       }
    }
 
-   private void work(ServerLevel level, boolean periodic) {
+   private void work(ServerLevel level, int growthCycles) {
       AABB bounds = this.area();
       List<Animal> animals = level.getEntitiesOfClass(Animal.class, bounds,
          animal -> livestock(animal) && this.inside(animal));
@@ -181,10 +195,10 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
 
       // Ready breeding/culling takes priority over optional periodic energy use.
       worked |= this.breedAndCull(level, animals);
-      if (periodic && (this.flags & FLAG_SHEAR) != 0) worked |= this.shear(level, animals);
-      if (periodic && (this.flags & FLAG_GROW) != 0 && this.grow(level, animals)) {
+      if ((this.flags & FLAG_SHEAR) != 0) worked |= this.shear(level, animals);
+      if ((this.flags & FLAG_GROW) != 0 && this.grow(level, animals, growthCycles)) {
          worked = true;
-         // A baby that matures this tick must not wait for the next work interval.
+         // A baby that matures during this inspection can join its breeding pass.
          worked |= this.breedAndCull(level, level.getEntitiesOfClass(Animal.class, bounds,
             animal -> livestock(animal) && this.inside(animal)));
       }
@@ -348,7 +362,7 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
       }
    }
 
-   private boolean grow(ServerLevel var1, List<Animal> var2) {
+   private boolean grow(ServerLevel var1, List<Animal> var2, int growthCycles) {
       boolean var3 = false;
 
       for (Animal var5 : var2) {
@@ -357,8 +371,12 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
                break;
             }
 
-            var5.ageUp(30, false);
-            this.energy.consume(this.upgrades.cost(ENERGY_PER_GROWTH));
+            int cost = this.upgrades.cost(ENERGY_PER_GROWTH);
+            int steps = (int)Math.min(growthCycles,
+               Math.min((-(long)var5.getAge() + GROWTH_STEP - 1) / GROWTH_STEP, this.energy.getEnergyStored() / cost));
+            if (steps <= 0) continue;
+            var5.ageUp(30 * steps, false);
+            this.energy.consume(cost * steps);
             var3 = true;
             if (var1.random.nextInt(6) == 0) {
                var1.sendParticles(ParticleTypes.HAPPY_VILLAGER, var5.getX(), var5.getY() + (double)var5.getBbHeight(), var5.getZ(), 2, 0.2, 0.2, 0.2, 0.0);

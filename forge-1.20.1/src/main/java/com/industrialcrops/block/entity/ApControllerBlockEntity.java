@@ -99,9 +99,11 @@ public abstract class ApControllerBlockEntity extends BlockEntity implements Men
          && this.level.hasChunk(pos.getX() >> 4, pos.getZ() >> 4);
    }
 
+   protected boolean shouldCheckStructure(long time) { return time % 20L == 0L; }
+
    protected void tickCommon(ServerLevel level, long time) {
       ApStructure.Layout current = this.layout();
-      if (this.structureDirty || time % 20L == 0L) {
+      if (this.structureDirty || this.shouldCheckStructure(time)) {
          this.upgrades.updateChunks(level, this, current);
          this.checkStructure();
       }
