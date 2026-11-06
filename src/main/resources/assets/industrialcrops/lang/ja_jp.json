@@ -331,7 +331,7 @@
   "tooltip.industrialcrops.function.basic_energy_cable": "エネルギーを伝送します。電源と電力を使う機械をつなぎます。",
   "tooltip.industrialcrops.function.advanced_energy_cable": "より高速にエネルギーを伝送します。電源と電力を使う機械をつなぎます。",
   "tooltip.industrialcrops.function.slime_conversion_device": "工業スライムを捕獲・変換します。右クリックで捕獲し、設置してから対応する鉱石を入れると変換します。",
-  "tooltip.industrialcrops.function.slime_cultivation_device": "通常・銅・鉄・金・フラックススライムを培養します。通常とギアスライムはスライムボールか対応するインゴット、フラックススライムは30秒ごとにフラックス鉱石ジェルの複製を生み出します。捕獲済みの変換装置か対応するエッグを使用。青色基板スライムには対応しません。",
+  "tooltip.industrialcrops.function.slime_cultivation_device": "手に持って通常・銅・鉄・金・フラックススライムを右クリックすると捕獲できます。設置すると対応するスポーンエッグが左スロットに入り、培養を開始します。スライムボールや対応する金属インゴットを生産し、フラックススライムは鉱物データを保持したゲルを30秒ごとに生産します。変換装置やエッグの手動投入も可能です。青い基板スライムは対象外です。",
   "tooltip.industrialcrops.function.explosive_potato_launcher": "目標に向けて爆発ジャガイモを発射します。目標座標を設定し、爆発ジャガイモを装填して発射してください。",
   "tooltip.industrialcrops.function.basic_pipe": "アイテムを運びます。搬出パイプと搬入パイプをつなぎます。",
   "tooltip.industrialcrops.function.reinforced_pipe": "より高速にアイテムを運びます。搬出パイプと搬入パイプをつなぎます。",
@@ -758,7 +758,7 @@
   "guide.industrialcrops.matter.forest.title": "デジタルミニチュア森林",
   "guide.industrialcrops.matter.forest.body": "デジタルミニチュア森林をアイテムネットワークに接続し、データ化した苗木を選択します。仮想の木を育て、原木をデータとして直接ネットワークに追加します。バニラの木の種類ごとに産出量が異なります。\n\n加速部品 I〜IV を使うと、これを含む多くの機械が速く動きます。",
   "guide.industrialcrops.matter.slimes.title": "工業スライム",
-  "guide.industrialcrops.matter.slimes.body": "スライム変換装置でスライムを右クリックすると捕獲できます。装置を設置し、銅・鉄・金・ダイヤモンドを入れると中のスライムを変換します。\n\n培養装置は通常・銅・鉄・金スライム入り変換装置か対応エッグのみを受け入れ、スライムボールか各金属インゴットを生産します。青色基板スライムから基板を培養することはできません。自然ドロップは維持され、基板の製造には部品プログラミング装置を使います。",
+  "guide.industrialcrops.matter.slimes.body": "スライム変換装置を手に持ってスライムを右クリックすると捕獲できます。設置後に銅・鉄・金・ダイヤモンドを投入すると変換できます。\n\nスライム培養装置でも通常・銅・鉄・金・フラックススライムを捕獲できます。設置すると対応するスポーンエッグが左スロットに入り、スライムボールや銅・鉄・金インゴットを継続生産します。フラックススライムは学習した鉱物データを保持したゲルを30秒ごとに生産します。変換装置やエッグの手動投入も可能です。\n\n青い基板スライムは培養対象外ですが、自然ドロップは変更されません。基板はコンポーネントプログラミング装置で作成してください。",
   "guide.industrialcrops.chapter.carrote": "キャロッテとパラドックス鋼",
   "guide.industrialcrops.carrote.carrote.title": "奇妙なニンジン",
   "guide.industrialcrops.carrote.carrote.body": "データ化装置のツールチップはささやきます。「工業ニンジンを試してみて」と。準備ができてから試しましょう。\n\n工業ニンジンをアップロードすると物質データ化装置が過負荷になります。装置は爆発して壊れ、あなたの体力は1になって「グリッチ」効果を受け、ニンジンはすべてキャロッテに変わります。予備のデータ化装置を用意し、安全な場所で行いましょう。",
@@ -1111,5 +1111,8 @@
   "tooltip.industrialcrops.function.ap_input_conduit": "接したインベントリにアイテムを搬入します。同じ種類をすでに持つインベントリが優先されます。",
   "tooltip.industrialcrops.function.ap_output_conduit": "0.2秒ごとに、接したインベントリからアイテムを種類ごとにすべて取り出してネットワークへ送ります。1種類あたりの上限はなく、999個/スロットの保管にも対応。",
   "tooltip.industrialcrops.function.ap_energy_cable": "10K作物が基準：1区間ごとに10K圧縮作物1個分のエネルギー（500,000 FE）を毎tick輸送・蓄電します。",
-  "gui.industrialcrops.bio_reactor.lanes": "稼働レーン：%s/%s"
+  "gui.industrialcrops.bio_reactor.lanes": "稼働レーン：%s/%s",
+  "tooltip.industrialcrops.slime_cultivation_device.empty": "通常・銅・鉄・金・フラックススライムを右クリックして捕獲。設置すると対応するスポーンエッグが左スロットに入ります。",
+  "message.industrialcrops.slime_cultivation_device.occupied": "この培養装置にはすでにスライムが入っています",
+  "message.industrialcrops.slime_cultivation_device.unsupported": "このスライムは培養できません"
 }

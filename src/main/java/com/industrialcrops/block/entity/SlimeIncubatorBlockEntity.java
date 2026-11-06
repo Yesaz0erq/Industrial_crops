@@ -43,6 +43,10 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
 
         @Override
         protected void onContentsChanged(int slot) {
+            if (slot == INPUT_SLOT) {
+                activeSlimeType = getInputSlimeType(getStackInSlot(INPUT_SLOT));
+                progress = 0;
+            }
             setChanged();
         }
     };
@@ -86,6 +90,47 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
         slime_conversion_device.setChanged();
     }
 
+    /** Transfer the one captured slime into the visible left-hand input slot on placement. */
+    public boolean installCapturedSlime(ItemStack machine) {
+        if (!inventory.getStackInSlot(INPUT_SLOT).isEmpty()) return false;
+        ItemStack egg = capturedSlimeEgg(machine);
+        if (egg.isEmpty()) return false;
+        inventory.setStackInSlot(INPUT_SLOT, egg);
+        return true;
+    }
+
+    public static boolean isCultivatableType(int type) {
+        return type >= IncubatorBlockEntity.SLIME_VANILLA && type <= IncubatorBlockEntity.SLIME_GOLD
+                || type == IncubatorBlockEntity.SLIME_FLUX;
+    }
+
+    public static ItemStack capturedSlimeEgg(ItemStack captured) {
+        int type = IncubatorBlockItem.getStoredType(captured);
+        ItemStack egg = switch (type) {
+            case IncubatorBlockEntity.SLIME_VANILLA -> new ItemStack(Items.SLIME_SPAWN_EGG);
+            case IncubatorBlockEntity.SLIME_COPPER -> new ItemStack(ModItems.BROWN_CREATE_SLIME_SPAWN_EGG.get());
+            case IncubatorBlockEntity.SLIME_IRON -> new ItemStack(ModItems.GRAY_GEAR_SLIME_SPAWN_EGG.get());
+            case IncubatorBlockEntity.SLIME_GOLD -> new ItemStack(ModItems.GOLDEN_REDSTONE_LAMP_SLIME_SPAWN_EGG.get());
+            case IncubatorBlockEntity.SLIME_FLUX -> new ItemStack(ModItems.FLUX_SLIME_SPAWN_EGG.get());
+            default -> ItemStack.EMPTY;
+        };
+        if (egg.isEmpty()) return egg;
+        int size = IncubatorBlockItem.getStoredSize(captured);
+        var ores = IncubatorBlockItem.getStoredOres(captured);
+        IncubatorBlockItem.setStoredSlime(egg, type, size, ores);
+        CompoundTag entityData = new CompoundTag();
+        entityData.putString("id", net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
+                .getKey(IncubatorBlockEntity.getSlimeEntityType(type)).toString());
+        entityData.putInt("Size", size - 1);
+        if (type == IncubatorBlockEntity.SLIME_FLUX) {
+            entityData.put(com.industrialcrops.machine.FluxOreIndex.TAG_ORES,
+                    com.industrialcrops.machine.FluxOreIndex.writeIds(ores));
+        }
+        egg.set(net.minecraft.core.component.DataComponents.ENTITY_DATA,
+                net.minecraft.world.item.component.CustomData.of(entityData));
+        return egg;
+    }
+
     public static int requiredProgress(int slimeType) {
         return slimeType == IncubatorBlockEntity.SLIME_FLUX ? FLUX_PROGRESS : MAX_PROGRESS;
     }
@@ -110,7 +155,10 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
         }
         if (stack.is(ModItems.INCUBATOR.get())) {
             int storedType = IncubatorBlockItem.getStoredType(stack);
-            return storedType == IncubatorBlockEntity.SLIME_DIAMOND ? IncubatorBlockEntity.SLIME_NONE : storedType;
+            return isCultivatableType(storedType) ? storedType : IncubatorBlockEntity.SLIME_NONE;
+        }
+        if (stack.is(ModItems.FLUX_SLIME_SPAWN_EGG.get())) {
+            return IncubatorBlockEntity.SLIME_FLUX;
         }
         if (stack.is(Items.SLIME_SPAWN_EGG)) {
             return IncubatorBlockEntity.SLIME_VANILLA;

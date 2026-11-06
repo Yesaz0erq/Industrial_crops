@@ -336,7 +336,7 @@
   "tooltip.industrialcrops.function.basic_energy_cable": "传输能量。连接能源与用电设备。",
   "tooltip.industrialcrops.function.advanced_energy_cable": "高速传输能量。连接能源与用电设备。",
   "tooltip.industrialcrops.function.slime_conversion_device": "捕捉和转化工业史莱姆。右键捕捉，放置后放入对应矿石进行转化。",
-  "tooltip.industrialcrops.function.slime_cultivation_device": "培养普通、铜、铁、金或通量史莱姆。普通与齿轮史莱姆产出黏液球或对应金属锭；通量史莱姆每30秒分化出一份其通量矿凝胶。放入装有对应史莱姆的转化器或刷怪蛋；不接受蓝色基板史莱姆。",
+  "tooltip.industrialcrops.function.slime_cultivation_device": "手持设备右键普通、铜、铁、金或通量史莱姆进行捕捉。放置后，对应刷怪蛋自动进入左侧槽并开始培养。普通与齿轮史莱姆产出黏液球或对应金属锭；通量史莱姆每30秒分化出一份保留矿物数据的通量矿凝胶。也可手动放入转化器或刷怪蛋；不接受蓝色基板史莱姆。",
   "tooltip.industrialcrops.function.explosive_potato_launcher": "向目标发射爆炸土豆。设置目标坐标，装入爆炸土豆并发射。",
   "tooltip.industrialcrops.function.basic_pipe": "传输物品。连接输出管道与输入管道。",
   "tooltip.industrialcrops.function.reinforced_pipe": "高速传输物品。连接输出管道与输入管道。",
@@ -763,7 +763,7 @@
   "guide.industrialcrops.matter.forest.title": "数字微缩森林",
   "guide.industrialcrops.matter.forest.body": "把数字微缩森林连接到物品网络，并选择数字化的树苗数据。它会培育一棵虚拟树，并把原木直接作为数据加入网络。每种原版树木都有各自的产量。\n\n加速元件 I–IV 可以让包括它在内的许多机器运行得更快。",
   "guide.industrialcrops.matter.slimes.title": "工业史莱姆",
-  "guide.industrialcrops.matter.slimes.body": "手持史莱姆转化设备右键史莱姆即可捕捉。放置设备后放入铜、铁、金或钻石，可转化其中的史莱姆。\n\n史莱姆培养设备只接受普通、铜、铁和金史莱姆的转化器或刷怪蛋，持续产出黏液球、铜锭、铁锭或金锭。蓝色基板史莱姆不能在培养设备中生产元件基板；自然掉落保留。制作基板请使用元件编程设备。",
+  "guide.industrialcrops.matter.slimes.body": "手持史莱姆转化设备右键史莱姆即可捕捉。放置设备后放入铜、铁、金或钻石，可转化其中的史莱姆。\n\n史莱姆培养设备也可手持右键捕捉普通、铜、铁、金或通量史莱姆。放置后，对应刷怪蛋自动出现在左侧槽，持续产出黏液球、铜锭、铁锭、金锭；通量史莱姆每30秒产出一份保留其矿物数据的通量矿凝胶。左侧仍可手动放入装有对应史莱姆的转化器或刷怪蛋。\n\n蓝色基板史莱姆不能在培养设备中生产元件基板；自然掉落保留。制作基板请使用元件编程设备。",
   "guide.industrialcrops.chapter.carrote": "胡罗贝与悖钢",
   "guide.industrialcrops.carrote.carrote.title": "奇怪的胡萝卜",
   "guide.industrialcrops.carrote.carrote.body": "物质数据化设备的提示悄悄说：试试工业胡萝卜。请做好准备再尝试。\n\n上传工业胡萝卜会让物质数据化设备过载：设备爆炸损毁，你的生命值降到 1 点并获得“故障”效果，而每根胡萝卜都会变成一个胡罗贝。请先备好一台数据化设备，并站在安全的位置。",
@@ -1111,5 +1111,8 @@
   "tooltip.industrialcrops.function.ap_input_conduit": "把物品送入相邻容器。已存有某种物品的容器会优先收到同种物品。",
   "tooltip.industrialcrops.function.ap_output_conduit": "每0.2秒从相邻容器中按种类抽出全部物品送入网络，单一种类没有数量上限；可配合每格999的存储使用。",
   "tooltip.industrialcrops.function.ap_energy_cable": "以10K作物为标准：每段线缆每刻传输并储存一个10K压缩作物的能量，即500,000 FE。",
-  "gui.industrialcrops.bio_reactor.lanes": "运行通道：%s/%s"
+  "gui.industrialcrops.bio_reactor.lanes": "运行通道：%s/%s",
+  "tooltip.industrialcrops.slime_cultivation_device.empty": "右键普通、铜、铁、金或通量史莱姆捕捉；放置后自动将对应刷怪蛋装入左侧槽。",
+  "message.industrialcrops.slime_cultivation_device.occupied": "这个培养设备中已经有史莱姆",
+  "message.industrialcrops.slime_cultivation_device.unsupported": "培养设备不接受这种史莱姆"
 }

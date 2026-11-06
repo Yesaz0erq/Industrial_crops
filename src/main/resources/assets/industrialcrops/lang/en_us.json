@@ -336,7 +336,7 @@
   "tooltip.industrialcrops.function.basic_energy_cable": "Transfers energy. Connect a power source to powered machines.",
   "tooltip.industrialcrops.function.advanced_energy_cable": "Transfers energy at a higher rate. Connect a power source to powered machines.",
   "tooltip.industrialcrops.function.slime_conversion_device": "Captures and converts industrial slimes. Right-click to capture one, then place the block and insert the matching ore to convert it.",
-  "tooltip.industrialcrops.function.slime_cultivation_device": "Cultivates vanilla, copper, iron, gold or Flux slimes. Vanilla and gear slimes give slime balls or the matching ingots; a Flux Slime buds a copy of its Flux Ore Gel every 30 seconds. Insert the filled converter or matching egg. Blue substrate slimes are not accepted.",
+  "tooltip.industrialcrops.function.slime_cultivation_device": "Use the held device on a vanilla, copper, iron, gold or Flux slime to capture it. Placing it installs the matching spawn egg in the left slot and starts cultivation. Produces slime balls or matching ingots; Flux slimes bud a data-preserving Flux Ore Gel every 30 seconds. Filled converters and eggs may also be inserted manually. Blue substrate slimes are not accepted.",
   "tooltip.industrialcrops.function.explosive_potato_launcher": "Launches explosive potatoes at a target. Set the target coordinates, load explosive potatoes and fire.",
   "tooltip.industrialcrops.function.basic_pipe": "Transports items. Connect output pipes to input pipes.",
   "tooltip.industrialcrops.function.reinforced_pipe": "Transports items at a higher rate. Connect output pipes to input pipes.",
@@ -763,7 +763,7 @@
   "guide.industrialcrops.matter.forest.title": "Digital Miniature Forest",
   "guide.industrialcrops.matter.forest.body": "Connect a Digital Miniature Forest to your item network and select digitized sapling data. It grows a virtual tree and adds the logs straight to the network as data. Each vanilla tree type has its own yield.\n\nSpeed Components I–IV make many machines, including this one, work faster.",
   "guide.industrialcrops.matter.slimes.title": "Industrial Slimes",
-  "guide.industrialcrops.matter.slimes.body": "Right-click a slime with a Slime Conversion Device to capture it. Place the device and insert copper, iron, gold or diamond to convert the stored slime.\n\nThe Slime Cultivation Device accepts only vanilla, copper, iron and gold slime converters or eggs, producing slime balls or the corresponding ingots. It cannot cultivate blue substrate slimes into components. Natural blue-slime drops remain; manufacture substrates in the Component Programming Device.",
+  "guide.industrialcrops.matter.slimes.body": "Use a held Slime Conversion Device on a slime to capture it. Place it and insert copper, iron, gold or diamond to convert the slime.\n\nA held Slime Cultivation Device can also capture vanilla, copper, iron, gold or Flux slimes. When placed, it installs the matching spawn egg in its left slot and continuously produces slime balls or copper, iron or gold ingots. Flux slimes bud one Flux Ore Gel carrying their learned mineral data every 30 seconds. Filled converters and spawn eggs may still be inserted manually.\n\nBlue substrate slimes cannot produce component substrates in this machine; their natural drops remain. Use the Component Programming Device for substrates.",
   "guide.industrialcrops.chapter.carrote": "Carrote & Paradox Steel",
   "guide.industrialcrops.carrote.carrote.title": "A Strange Carrot",
   "guide.industrialcrops.carrote.carrote.body": "The digitizer's tooltip whispers: try an Industrial Carrot. Do it only when you are ready.\n\nUploading Industrial Carrots overloads the Matter Digitization Device: it explodes and is destroyed, you drop to 1 health with the Glitch effect, and every carrot becomes a Carrote. Build a spare digitizer first and stand somewhere safe.",
@@ -1111,5 +1111,8 @@
   "tooltip.industrialcrops.function.ap_input_conduit": "Delivers items into the inventories it touches. Inventories that already hold an item type are filled with that type first.",
   "tooltip.industrialcrops.function.ap_output_conduit": "Every 0.2 seconds pulls every item type out of the inventories it touches and sends all of each type into the network, with no per-type limit; works with 999-per-slot storage.",
   "tooltip.industrialcrops.function.ap_energy_cable": "Rated in 10K crops: each segment moves and stores one 10K compressed crop of energy, 500,000 FE per tick.",
-  "gui.industrialcrops.bio_reactor.lanes": "Active lanes: %s/%s"
+  "gui.industrialcrops.bio_reactor.lanes": "Active lanes: %s/%s",
+  "tooltip.industrialcrops.slime_cultivation_device.empty": "Use on a vanilla, copper, iron, gold or Flux slime. Placing the device installs its matching spawn egg in the left slot.",
+  "message.industrialcrops.slime_cultivation_device.occupied": "This cultivation device already contains a slime",
+  "message.industrialcrops.slime_cultivation_device.unsupported": "This slime cannot be cultivated"
 }

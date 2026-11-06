@@ -37,20 +37,36 @@ public final class IncubatorBlockItem extends BlockItem {
             LivingEntity target,
             InteractionHand hand
     ) {
-        if (!(target instanceof Slime slime)) {
+        if (!(target instanceof Slime slime) || !slime.isAlive()) {
             return InteractionResult.PASS;
+        }
+        boolean cultivation = getBlock() instanceof com.industrialcrops.block.SlimeIncubatorBlock;
+        int type = getSlimeType(slime);
+        if (cultivation && (!com.industrialcrops.block.entity.SlimeIncubatorBlockEntity.isCultivatableType(type)
+                || type == IncubatorBlockEntity.SLIME_VANILLA
+                && slime.getType() != net.minecraft.world.entity.EntityType.SLIME)) {
+            if (!player.level().isClientSide()) {
+                player.displayClientMessage(Component.translatable("message.industrialcrops.slime_cultivation_device.unsupported"), true);
+            }
+            return InteractionResult.FAIL;
         }
         if (getStoredType(stack) != IncubatorBlockEntity.SLIME_NONE) {
             if (!player.level().isClientSide()) {
-                player.displayClientMessage(Component.translatable("message.industrialcrops.slime_conversion_device.occupied"), true);
+                player.displayClientMessage(Component.translatable(cultivation ? "message.industrialcrops.slime_cultivation_device.occupied"
+                        : "message.industrialcrops.slime_conversion_device.occupied"), true);
             }
             return InteractionResult.FAIL;
         }
 
         if (!player.level().isClientSide()) {
-            int type = getSlimeType(slime);
-            setStoredSlime(stack, type, slime.getSize(),
+            // Old saves may still contain stacked machines. Capture into exactly one device.
+            ItemStack filled = stack.getCount() == 1 ? stack : stack.copyWithCount(1);
+            setStoredSlime(filled, type, slime.getSize(),
                     slime instanceof com.industrialcrops.entity.FluxSlime flux ? flux.knownIngots() : java.util.Set.of());
+            if (filled != stack) {
+                stack.shrink(1);
+                if (!player.getInventory().add(filled)) player.drop(filled, false);
+            }
             player.level().playSound(null, slime.blockPosition(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0F, 0.8F);
             slime.discard();
         }
@@ -67,7 +83,9 @@ public final class IncubatorBlockItem extends BlockItem {
         super.appendHoverText(stack, context, tooltip, flag);
         int type = getStoredType(stack);
         if (type == IncubatorBlockEntity.SLIME_NONE) {
-            tooltip.add(Component.translatable("tooltip.industrialcrops.slime_conversion_device.empty"));
+            tooltip.add(Component.translatable(getBlock() instanceof com.industrialcrops.block.SlimeIncubatorBlock
+                    ? "tooltip.industrialcrops.slime_cultivation_device.empty"
+                    : "tooltip.industrialcrops.slime_conversion_device.empty"));
         } else {
             tooltip.add(Component.translatable(
                     "tooltip.industrialcrops.slime_conversion_device.contains",

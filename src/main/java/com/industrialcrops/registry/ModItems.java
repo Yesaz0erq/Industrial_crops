@@ -309,7 +309,9 @@ public final class ModItems {
    public static final DeferredItem<IncubatorBlockItem> INCUBATOR = ITEMS.register(
       "slime_conversion_device", () -> new IncubatorBlockItem((Block)ModBlocks.INCUBATOR.get(), new Properties().stacksTo(1))
    );
-   public static final DeferredItem<BlockItem> SLIME_INCUBATOR = registerBlockItem("slime_cultivation_device", ModBlocks.SLIME_INCUBATOR);
+   public static final DeferredItem<IncubatorBlockItem> SLIME_INCUBATOR = ITEMS.register(
+      "slime_cultivation_device", () -> new IncubatorBlockItem((Block)ModBlocks.SLIME_INCUBATOR.get(), new Properties().stacksTo(1))
+   );
    public static final DeferredItem<BlockItem> GOLDEN_LAUNCH_SILO = registerBlockItem("explosive_potato_launcher", ModBlocks.GOLDEN_LAUNCH_SILO);
    public static final DeferredItem<BlockItem> PIPE = registerBlockItem("basic_pipe", ModBlocks.PIPE);
    public static final DeferredItem<BlockItem> INPUT_PIPE = registerBlockItem("basic_input_pipe", ModBlocks.INPUT_PIPE);
