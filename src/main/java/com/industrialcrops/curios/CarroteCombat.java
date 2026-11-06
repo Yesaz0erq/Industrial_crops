@@ -34,6 +34,11 @@ public final class CarroteCombat {
                 ? hurt(victim, source, amount) : target.hurt(source, amount);
     }
 
+    public static boolean breaches(Entity attacker, Entity victim) {
+        return attacker instanceof LivingEntity living && victim instanceof LivingEntity
+                && attacker != victim && CarroteCuriosEffects.has(living, CarroteCuriosItems.BREACH);
+    }
+
     public static boolean forcedDeath(LivingEntity victim) {
         return FORCED_DEATH.get() == victim;
     }
@@ -47,23 +52,24 @@ public final class CarroteCombat {
             if (attacker instanceof Player other && (!other.canHarmPlayer(player)
                     || !victim.getServer().isPvpAllowed())) return false;
         }
+        boolean breach = breaches(attacker, victim);
         if (victim instanceof ServerPlayer player && (player.isChangingDimension()
                 || (((CarroteServerPlayerAccess) player).carrote$spawnProtection() > 0
-                && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)))) return false;
+                && !breach && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)))) return false;
         boolean piercing = CarroteCuriosEffects.has(attacker, CarroteCuriosItems.ARMOR_PIERCING);
         var access = (CarroteCombatAccess) victim;
         float original = amount;
         if (!piercing) {
             if (source.is(DamageTypeTags.IS_FIRE) && victim.hasEffect(MobEffects.FIRE_RESISTANCE)) return false;
-            if (victim.invulnerableTime > 10 && !source.is(DamageTypeTags.BYPASSES_COOLDOWN)) {
+            if (!breach && victim.invulnerableTime > 10 && !source.is(DamageTypeTags.BYPASSES_COOLDOWN)) {
                 amount -= access.carrote$getLastHurt();
                 if (amount <= 0) return false;
             }
         }
 
-        if (!source.is(DamageTypeTags.BYPASSES_ARMOR)) {
+        if (!piercing && !source.is(DamageTypeTags.BYPASSES_ARMOR)) {
             access.carrote$hurtArmor(source, amount);
-            float armor = victim.getArmorValue() * (piercing ? 0.5F : 1.0F);
+            float armor = victim.getArmorValue();
             amount = CombatRules.getDamageAfterAbsorb(victim, amount, source, armor,
                     (float) victim.getAttributeValue(Attributes.ARMOR_TOUGHNESS));
         }
@@ -79,10 +85,12 @@ public final class CarroteCombat {
         }
         amount = CarroteCuriosEffects.finalDamage(attacker, amount);
         if (!Float.isFinite(amount) || amount <= 0) return false;
-        // Absorption remains a health pool rather than a resistance modifier.
-        float absorbed = Math.min(victim.getAbsorptionAmount(), amount);
-        victim.setAbsorptionAmount(victim.getAbsorptionAmount() - absorbed);
-        amount -= absorbed;
+        // Piercing damages health directly; absorption and mod shields cannot absorb this hit.
+        if (!piercing) {
+            float absorbed = Math.min(victim.getAbsorptionAmount(), amount);
+            victim.setAbsorptionAmount(victim.getAbsorptionAmount() - absorbed);
+            amount -= absorbed;
+        }
         access.carrote$setLastHurt(original);
         access.carrote$setLastDamageSource(source);
         access.carrote$setLastDamageStamp(victim.level().getGameTime());

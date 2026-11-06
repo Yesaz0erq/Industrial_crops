@@ -67,8 +67,6 @@ public final class CreativeSectionCatalog {
             item(ModItems.INDUSTRIAL_CARROT_BLOCK),
             item(ModItems.INDUSTRIAL_POTATO_BLOCK),
             item(ModItems.INDUSTRIAL_WHEAT_BLOCK),
-            item(ModItems.INDUSTRIAL_MELON_BLOCK),
-            item(ModItems.INDUSTRIAL_PUMPKIN_BLOCK),
             item(ModItems.EXPLOSIVE_POTATO),
             item(ModItems.BROWN_CREATE_SLIME_SPAWN_EGG),
             item(ModItems.GRAY_GEAR_SLIME_SPAWN_EGG),

@@ -134,7 +134,7 @@ public final class BasicManipulatorMenu extends AbstractContainerMenu {
             }
         }
         for (ItemStack acceptedStack : acceptedStacks) {
-            if (ItemStack.isSameItemSameComponents(stack, acceptedStack)) {
+            if (stack.is(acceptedStack.getItem())) {
                 return true;
             }
         }

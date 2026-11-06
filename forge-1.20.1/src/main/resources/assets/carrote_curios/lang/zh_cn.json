@@ -56,9 +56,9 @@
   "item.carrote_curios.ammo_carrote": "弹药罗贝",
   "tooltip.carrote_curios.ammo_carrote": "原版与 TaCZ 弹药不消耗；使用时仍需持有至少 1 个对应弹药。",
   "item.carrote_curios.breach_carrote": "破防罗贝",
-  "tooltip.carrote_curios.breach_carrote": "攻击无视盾牌与功能性格挡，以自身攻击伤害击中目标。",
+  "tooltip.carrote_curios.breach_carrote": "攻击无视装备、饰品与特殊效果带来的格挡、无敌、攻击取消及无法命中判定。",
   "item.carrote_curios.armor_piercing_carrote": "穿甲罗贝",
-  "tooltip.carrote_curios.armor_piercing_carrote": "造成伤害时忽略目标 50% 护甲，并穿透抗性。",
+  "tooltip.carrote_curios.armor_piercing_carrote": "造成伤害时无视护甲、抗性提升、减伤、限伤、免伤及护盾吸收，直接结算生命伤害。",
   "tooltip.carrote_curios.ultimate_usage": "右键打开收纳袋。可收纳罗贝，不能放入终极胡罗贝；始终预留一排空格，同类能力不叠加。",
   "item.carrote_curios.expel_carrote": "驱散罗贝",
   "tooltip.carrote_curios.expel_carrote": "攻击时清除目标身上的所有药水效果，无论增益还是减益。"

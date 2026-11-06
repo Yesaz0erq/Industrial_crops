@@ -197,8 +197,6 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
                 new ItemStack(ModItems.INDUSTRIAL_CARROT_BLOCK.get()),
                 new ItemStack(ModItems.INDUSTRIAL_POTATO_BLOCK.get()),
                 new ItemStack(ModItems.INDUSTRIAL_WHEAT_BLOCK.get()),
-                new ItemStack(ModItems.INDUSTRIAL_MELON_BLOCK.get()),
-                new ItemStack(ModItems.INDUSTRIAL_PUMPKIN_BLOCK.get()),
                 new ItemStack(ModItems.COMPRESSED_POTATO_10K.get()),
                 new ItemStack(ModItems.COMPRESSED_CARROT_10K.get()),
                 new ItemStack(ModItems.COMPRESSED_WHEAT_10K.get()));

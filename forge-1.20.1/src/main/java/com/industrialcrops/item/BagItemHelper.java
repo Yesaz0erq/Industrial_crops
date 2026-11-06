@@ -17,7 +17,14 @@ public final class BagItemHelper {
     }
 
     public static void giveEmptyBag(Player player) {
-        ItemStack emptyBag = new ItemStack(ModItems.EMPTY_BAG.get());
+        giveEmptyBags(player, 1);
+    }
+
+    public static void giveEmptyBags(Player player, int count) {
+        if (count <= 0) {
+            return;
+        }
+        ItemStack emptyBag = new ItemStack(ModItems.EMPTY_BAG.get(), count);
         if (!player.getInventory().add(emptyBag)) {
             player.drop(emptyBag, false);
         }

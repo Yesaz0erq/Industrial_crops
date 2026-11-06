@@ -3,8 +3,43 @@
   "pools": [
     {
       "rolls": 1.0,
-      "conditions": [{ "condition": "minecraft:survives_explosion" }],
-      "entries": [{ "type": "minecraft:item", "name": "minecraft:dirt" }]
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "industrialcrops:fertile_soil",
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "predicates": {
+                      "minecraft:enchantments": [
+                        {
+                          "enchantments": "minecraft:silk_touch",
+                          "levels": {
+                            "min": 1
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:dirt"
+            }
+          ]
+        }
+      ]
     }
   ],
   "random_sequence": "industrialcrops:blocks/fertile_soil"

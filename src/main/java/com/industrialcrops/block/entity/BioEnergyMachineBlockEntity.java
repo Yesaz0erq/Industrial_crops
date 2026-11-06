@@ -328,8 +328,6 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
                 || stack.is(ModItems.INDUSTRIAL_CARROT_BLOCK.get())
                 || stack.is(ModItems.INDUSTRIAL_POTATO_BLOCK.get())
                 || stack.is(ModItems.INDUSTRIAL_WHEAT_BLOCK.get())
-                || stack.is(ModItems.INDUSTRIAL_MELON_BLOCK.get())
-                || stack.is(ModItems.INDUSTRIAL_PUMPKIN_BLOCK.get())
                 || stack.is(ModItems.INDUSTRIAL_MELON.get())
                 || stack.is(ModItems.INDUSTRIAL_PUMPKIN.get());
     }

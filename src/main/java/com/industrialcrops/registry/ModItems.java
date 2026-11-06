@@ -214,8 +214,6 @@ public final class ModItems {
    public static final DeferredItem<BlockItem> INDUSTRIAL_CARROT_BLOCK = registerBlockItem("industrial_carrot_block", ModBlocks.INDUSTRIAL_CARROT_BLOCK);
    public static final DeferredItem<BlockItem> INDUSTRIAL_POTATO_BLOCK = registerBlockItem("industrial_potato_block", ModBlocks.INDUSTRIAL_POTATO_BLOCK);
    public static final DeferredItem<BlockItem> INDUSTRIAL_WHEAT_BLOCK = registerBlockItem("industrial_wheat_block", ModBlocks.INDUSTRIAL_WHEAT_BLOCK);
-   public static final DeferredItem<BlockItem> INDUSTRIAL_MELON_BLOCK = registerBlockItem("industrial_melon_block", ModBlocks.INDUSTRIAL_MELON_BLOCK);
-   public static final DeferredItem<BlockItem> INDUSTRIAL_PUMPKIN_BLOCK = registerBlockItem("industrial_pumpkin_block", ModBlocks.INDUSTRIAL_PUMPKIN_BLOCK);
    public static final DeferredItem<BlockItem> FERTILE_FARMLAND = registerBlockItem("fertile_soil", ModBlocks.FERTILE_FARMLAND);
    public static final DeferredItem<BlockItem> COPPER_DEVICE_CASING = registerBlockItem("copper_device_casing", ModBlocks.COPPER_DEVICE_CASING);
    public static final DeferredItem<BlockItem> IRON_DEVICE_CASING = registerBlockItem("iron_device_casing", ModBlocks.IRON_DEVICE_CASING);

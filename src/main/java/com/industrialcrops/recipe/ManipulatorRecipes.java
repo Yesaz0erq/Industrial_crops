@@ -44,8 +44,7 @@ public final class ManipulatorRecipes {
                 List.of(
                         ManipulatorIngredient.ofItem(ModBlocks.IRON_DEVICE_CASING.asItem(), 1),
                         ManipulatorIngredient.ofItem(ModBlocks.CARROT_CONTROL_DEVICE.asItem(), 1),
-                        ManipulatorIngredient.ofItem(Items.IRON_INGOT, 5),
-                        ManipulatorIngredient.ofOptions(getCopperChestOptions(), getCopperChestDisplayStack(), 3)
+                        ManipulatorIngredient.ofItem(Items.IRON_INGOT, 5)
                 ),
                 new ItemStack(ModBlocks.REINFORCED_CONTROL_DEVICE.asItem())
         );

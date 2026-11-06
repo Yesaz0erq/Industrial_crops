@@ -5,13 +5,10 @@ import com.industrialcrops.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -21,7 +18,6 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.GameMasterBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
@@ -94,22 +90,6 @@ public final class FusionIngotPickaxeItem extends PickaxeItem {
     @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
         return canBreak(state);
-    }
-
-    @Override
-    public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miner) {
-        if (level instanceof ServerLevel serverLevel && canBreak(state)) {
-            BlockEntity blockEntity = serverLevel.getBlockEntity(pos);
-            ItemStack harvestingTool = stack.copy();
-            prepareHarvestTool(harvestingTool, serverLevel, state);
-            if (Block.getDrops(state, serverLevel, pos, blockEntity, miner, harvestingTool).isEmpty()) {
-                var blockItem = state.getBlock().asItem();
-                if (blockItem != Items.AIR) {
-                    Block.popResource(serverLevel, pos, new ItemStack(blockItem));
-                }
-            }
-        }
-        return super.mineBlock(stack, level, state, pos, miner);
     }
 
     @Override

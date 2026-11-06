@@ -1,12 +1,9 @@
 package com.industrialcrops.item;
 
 import com.industrialcrops.crop.CropGenetics;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.Level;
 
@@ -28,19 +25,4 @@ public final class BaggedCropItem extends ItemNameBlockItem {
         }
     }
 
-    @Override
-    public InteractionResult useOn(UseOnContext context) {
-        ItemStack stack = context.getItemInHand();
-        int previousCount = stack.getCount();
-        InteractionResult result = super.useOn(context);
-        Player player = context.getPlayer();
-        if (!context.getLevel().isClientSide()
-                && player != null
-                && !player.getAbilities().instabuild
-                && result.consumesAction()
-                && stack.getCount() < previousCount) {
-            BagItemHelper.giveEmptyBag(player);
-        }
-        return result;
-    }
 }
