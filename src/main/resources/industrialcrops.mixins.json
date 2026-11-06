@@ -6,6 +6,7 @@
   "mixins": [
     "AbstractContainerMenuReplicaMixin",
     "BlockFusionPickaxeLootMixin",
+    "ItemStackBagUseMixin",
     "BlockStateFusionPickaxeMixin",
     "ContainerStackLimitMixin",
     "ItemStackCodecStackLimitMixin",

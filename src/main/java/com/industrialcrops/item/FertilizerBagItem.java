@@ -63,7 +63,9 @@ public final class FertilizerBagItem extends Item {
             }
             if (changed) {
                 if (player != null) {
-                    BagItemHelper.consumeAndReturnEmptyBag(player, context.getItemInHand());
+                    if (!player.getAbilities().instabuild) {
+                        context.getItemInHand().shrink(1);
+                    }
                 }
                 level.playSound(null, pos, SoundEvents.BONE_MEAL_USE,
                         SoundSource.BLOCKS, 0.8F, mode == Mode.FAST_GROWTH ? 1.1F

@@ -16,6 +16,8 @@
     "CarroteCombatAccess",
     "CarroteLivingDamageMixin",
     "CarrotePlayerDamageMixin",
+    "CarroteArrowDamageMixin",
+    "CarroteProjectileTargetMixin",
     "CarroteBossDamageMixin",
     "CarroteDeathMixin",
     "CarroteServerPlayerAccess",
@@ -25,5 +27,8 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "refmap": "industrialcrops.refmap.json"
+  "refmap": "industrialcrops.refmap.json",
+  "client": [
+    "CarroteTargetingMixin"
+  ]
 }

@@ -10,8 +10,32 @@
       ],
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "minecraft:dirt"
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:item",
+              "name": "industrialcrops:fertile_soil",
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "enchantments": [
+                      {
+                        "enchantment": "minecraft:silk_touch",
+                        "levels": {
+                          "min": 1
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:dirt"
+            }
+          ]
         }
       ]
     }
