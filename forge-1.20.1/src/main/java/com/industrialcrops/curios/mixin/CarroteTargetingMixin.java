@@ -1,24 +1,23 @@
 package com.industrialcrops.curios.mixin;
 
-import com.industrialcrops.curios.CarroteCuriosEffects;
-import com.industrialcrops.curios.CarroteCuriosItems;
+import com.industrialcrops.curios.CarroteCombat;
 import java.util.function.Predicate;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(GameRenderer.class)
+/** Modify the ray cast's input directly instead of depending on the renderer's call site. */
+@Mixin(ProjectileUtil.class)
 public abstract class CarroteTargetingMixin {
-    @ModifyArg(method = "pick", index = 4, at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/projectile/ProjectileUtil;getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;"))
-    private Predicate<Entity> carrote$targetProtectedEntities(Predicate<Entity> original) {
-        var player = Minecraft.getInstance().player;
-        if (player == null || !CarroteCuriosEffects.has(player, CarroteCuriosItems.BREACH)) return original;
-        return target -> original.test(target) || target instanceof LivingEntity living
-                && living.isAlive() && !living.isSpectator();
+    @ModifyVariable(method = "getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;",
+            at = @At("HEAD"), argsOnly = true, ordinal = 0)
+    private static Predicate<Entity> carrote$targetProtectedEntities(Predicate<Entity> original,
+            Entity viewer, Vec3 start, Vec3 end, AABB bounds, Predicate<Entity> supplied, double rangeSquared) {
+        return CarroteCombat.targetingPredicate(viewer, Minecraft.getInstance().player, original);
     }
 }

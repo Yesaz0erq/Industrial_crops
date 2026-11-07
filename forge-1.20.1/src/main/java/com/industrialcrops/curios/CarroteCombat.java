@@ -39,6 +39,15 @@ public final class CarroteCombat {
                 && attacker != victim && CarroteCuriosEffects.has(living, CarroteCuriosItems.BREACH);
     }
 
+    /** Add Breach targets only to the local player's own ray cast; keep the original range and occlusion. */
+    public static java.util.function.Predicate<Entity> targetingPredicate(Entity viewer, Player localPlayer,
+            java.util.function.Predicate<Entity> original) {
+        if (localPlayer == null || viewer != localPlayer
+                || !CarroteCuriosEffects.has(localPlayer, CarroteCuriosItems.BREACH)) return original;
+        return target -> original.test(target) || target instanceof LivingEntity living
+                && living.isAlive() && !living.isSpectator();
+    }
+
     public static boolean forcedDeath(LivingEntity victim) {
         return FORCED_DEATH.get() == victim;
     }
