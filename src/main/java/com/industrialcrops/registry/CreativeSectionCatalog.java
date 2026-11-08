@@ -302,7 +302,8 @@ public final class CreativeSectionCatalog {
    @SafeVarargs
    private static CreativeSectionCatalog.Section section(String var0, String var1, String var2, Supplier<ItemStack>... var3) {
       return new CreativeSectionCatalog.Section(
-         Component.translatable(var0), new ResourceLocation(var1, "creative_sections/" + var2), List.of(var3)
+         // Forge 1.20.1 blits a texture file directly, rather than a GUI atlas sprite.
+         Component.translatable(var0), new ResourceLocation(var1, "textures/gui/sprites/creative_sections/" + var2 + ".png"), List.of(var3)
       );
    }
 
