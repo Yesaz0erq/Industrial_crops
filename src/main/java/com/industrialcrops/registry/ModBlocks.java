@@ -260,6 +260,15 @@ public final class ModBlocks {
    public static final DeferredBlock<Block> INDUSTRIAL_POTATO_CROP = BLOCKS.register(
       "industrial_potato_crop", () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_POTATO, ModItems.INDUSTRIAL_POTATO, 4, 2, true)
    );
+   public static final DeferredBlock<Block> BLACK_NEBULA_POTATO_CROP = BLOCKS.register(
+      "black_nebula_potato_crop", () -> new com.industrialcrops.block.CultivatedPotatoCropBlock(cropProperties(), ModItems.BLACK_NEBULA_POTATO)
+   );
+   public static final DeferredBlock<Block> PURPLE_DRAGON_POTATO_CROP = BLOCKS.register(
+      "purple_dragon_potato_crop", () -> new com.industrialcrops.block.CultivatedPotatoCropBlock(cropProperties(), ModItems.PURPLE_DRAGON_POTATO)
+   );
+   public static final DeferredBlock<Block> OMNI_POTATO_CROP = BLOCKS.register(
+      "omni_potato_crop", () -> new com.industrialcrops.block.CultivatedPotatoCropBlock(cropProperties(), ModItems.OMNI_POTATO)
+   );
    public static final DeferredBlock<Block> INDUSTRIAL_WHEAT_CROP = BLOCKS.register(
       "industrial_wheat_crop", () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_WHEAT_SEEDS, ModItems.INDUSTRIAL_WHEAT, 4, 2)
    );

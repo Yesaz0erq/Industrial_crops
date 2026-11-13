@@ -40,7 +40,9 @@ public final class IndustrialItemTooltips {
             boolean compressedPotato = id.getPath().equals("compressed_potato_10k") || id.getPath().equals("compressed_carrot_10k")
                || id.getPath().equals("compressed_wheat_10k") || id.getPath().equals("black_nebula_carrot")
                || id.getPath().equals("purple_dragon_carrot")
-               || id.getPath().equals("omni_carrot") || id.getPath().equals("omni_potion") || id.getPath().equals("omni_bucket");
+               || id.getPath().equals("omni_carrot") || id.getPath().equals("black_nebula_potato")
+               || id.getPath().equals("purple_dragon_potato") || id.getPath().equals("omni_potato")
+               || id.getPath().equals("omni_potion") || id.getPath().equals("omni_bucket");
             boolean component = UpgradeCompatibility.hasComponentInfo(event.getItemStack().getItem());
             if (functionalBlock || fusionPickaxe || compressedPotato || component) {
                String key = "tooltip." + id.getNamespace() + ".function." + id.getPath();

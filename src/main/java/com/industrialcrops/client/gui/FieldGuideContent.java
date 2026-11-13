@@ -129,7 +129,7 @@ final class FieldGuideContent {
                "guide.industrialcrops.genetics.cultivator.title",
                "guide.industrialcrops.genetics.cultivator.body",
                "industrialcrops:black_nebula_carrot",
-               List.of("industrialcrops:super_crop_cultivator", "industrialcrops:black_nebula_carrot", "industrialcrops:purple_dragon_carrot", "industrialcrops:omni_carrot", "industrialcrops:comet_essence", "industrialcrops:prism_pod", "minecraft:dragon_breath", "industrialcrops:neonbulb")
+               List.of("industrialcrops:super_crop_cultivator", "industrialcrops:black_nebula_carrot", "industrialcrops:purple_dragon_carrot", "industrialcrops:omni_carrot", "industrialcrops:black_nebula_potato", "industrialcrops:purple_dragon_potato", "industrialcrops:omni_potato", "industrialcrops:comet_essence", "industrialcrops:prism_pod", "minecraft:dragon_breath", "industrialcrops:neonbulb")
             )
          )
       ),
