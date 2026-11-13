@@ -3,6 +3,9 @@
   "values": [
     "industrialcrops:black_nebula_carrot_crop",
     "industrialcrops:purple_dragon_carrot_crop",
-    "industrialcrops:omni_carrot_crop"
+    "industrialcrops:omni_carrot_crop",
+    "industrialcrops:black_nebula_potato_crop",
+    "industrialcrops:purple_dragon_potato_crop",
+    "industrialcrops:omni_potato_crop"
   ]
 }

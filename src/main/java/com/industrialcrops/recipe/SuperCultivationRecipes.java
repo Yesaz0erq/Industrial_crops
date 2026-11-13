@@ -73,7 +73,14 @@ public final class SuperCultivationRecipes {
                     List.of(() -> net.minecraft.world.item.Items.DRAGON_BREATH, ModItems.NEONBULB),
                     ModItems.PURPLE_DRAGON_CARROT, DEFAULT_DURATION),
             new Recipe("omni_carrot", ModItems.INDUSTRIAL_CARROT, List.of(ModItems.OMNI_POTION),
-                    ModItems.OMNI_CARROT, DEFAULT_DURATION)
+                    ModItems.OMNI_CARROT, DEFAULT_DURATION),
+            new Recipe("black_nebula_potato", ModItems.INDUSTRIAL_POTATO,
+                    List.of(ModItems.COMET_FRUIT, ModItems.PRISM_POD), ModItems.BLACK_NEBULA_POTATO, DEFAULT_DURATION),
+            new Recipe("purple_dragon_potato", ModItems.INDUSTRIAL_POTATO,
+                    List.of(() -> net.minecraft.world.item.Items.DRAGON_BREATH, ModItems.NEONBULB),
+                    ModItems.PURPLE_DRAGON_POTATO, DEFAULT_DURATION),
+            new Recipe("omni_potato", ModItems.INDUSTRIAL_POTATO, List.of(ModItems.OMNI_POTION),
+                    ModItems.OMNI_POTATO, DEFAULT_DURATION)
     );
 
     private SuperCultivationRecipes() {

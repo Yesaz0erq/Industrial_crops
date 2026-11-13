@@ -306,6 +306,22 @@ public final class ModItems {
       "omni_carrot", () -> new com.industrialcrops.item.OmniCarrotItem(ModBlocks.OMNI_CARROT_CROP.get(), new Properties().rarity(Rarity.EPIC)
          .food(new Builder().nutrition(12).saturationModifier(0.5F).alwaysEdible().build()))
    );
+   /** Black Nebula Potato: Super Industrial Potato + Comet Essence + Prism Pod. Restores 16 hunger and 16 saturation. */
+   public static final DeferredItem<Item> BLACK_NEBULA_POTATO = ITEMS.register(
+      "black_nebula_potato",
+      () -> new com.industrialcrops.item.ShimmeringCarrotBlockItem(ModBlocks.BLACK_NEBULA_POTATO_CROP.get(), new Properties().rarity(Rarity.EPIC).food(new Builder().nutrition(16).saturationModifier(0.5F).build()))
+   );
+   /** Purple Dragon Potato: Super Industrial Potato + Dragon's Breath + Neon Bulb. 8 hunger, 8 saturation and 30 s of Dragon Breath. */
+   public static final DeferredItem<Item> PURPLE_DRAGON_POTATO = ITEMS.register(
+      "purple_dragon_potato",
+      () -> new com.industrialcrops.item.ShimmeringCarrotBlockItem(ModBlocks.PURPLE_DRAGON_POTATO_CROP.get(), new Properties().rarity(Rarity.EPIC).food(new Builder().nutrition(8).saturationModifier(0.5F).alwaysEdible()
+         .effect(() -> new net.minecraft.world.effect.MobEffectInstance(ModEffects.DRAGON_BREATH, 20 * 30, 0), 1.0F).build()))
+   );
+   /** Omni Potato: Super Industrial Potato + Omni Potion; 12 hunger, 12 saturation and every beneficial vanilla effect for 5 minutes. */
+   public static final DeferredItem<Item> OMNI_POTATO = ITEMS.register(
+      "omni_potato", () -> new com.industrialcrops.item.OmniCarrotItem(ModBlocks.OMNI_POTATO_CROP.get(), new Properties().rarity(Rarity.EPIC)
+         .food(new Builder().nutrition(12).saturationModifier(0.5F).alwaysEdible().build()))
+   );
    public static final DeferredItem<IncubatorBlockItem> INCUBATOR = ITEMS.register(
       "slime_conversion_device", () -> new IncubatorBlockItem((Block)ModBlocks.INCUBATOR.get(), new Properties().stacksTo(1))
    );
