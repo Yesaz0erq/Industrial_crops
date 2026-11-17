@@ -155,6 +155,8 @@ public final class ModMenus {
       "ore_vein_data_collector", () -> IForgeMenuType.create(com.industrialcrops.screen.OreVeinDataCollectorMenu::new)
    );
 
+   public static final RegistryObject<MenuType<com.industrialcrops.screen.StructureBuilderMenu>> STRUCTURE_BUILDER = MENUS.register("automatic_structure_builder", () -> IForgeMenuType.create(com.industrialcrops.screen.StructureBuilderMenu::new));
+
    private ModMenus() {
    }
 }

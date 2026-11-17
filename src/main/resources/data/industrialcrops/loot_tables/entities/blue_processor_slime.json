@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "industrialcrops:component_substrate"
+          "name": "minecraft:diamond"
         }
       ]
     }

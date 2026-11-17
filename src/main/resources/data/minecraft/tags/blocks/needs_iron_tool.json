@@ -14,6 +14,7 @@
     "industrialcrops:ap_steel_casing",
     "industrialcrops:ap_steel_frame",
     "industrialcrops:ap_agricultural_complex",
-    "industrialcrops:ap_livestock_ranch"
+    "industrialcrops:ap_livestock_ranch",
+    "industrialcrops:automatic_structure_builder"
   ]
 }

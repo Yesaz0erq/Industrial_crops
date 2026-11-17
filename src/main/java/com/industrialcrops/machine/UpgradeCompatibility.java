@@ -13,7 +13,7 @@ import net.minecraft.world.item.Items;
 /** Devices where components have a function, including crafting-only materials. */
 public final class UpgradeCompatibility {
    private static final String[] SPEED = {
-      "crop_compressor", "super_compressor", "basic_crop_conversion_device", "electric_furnace",
+      "automatic_structure_builder", "crop_compressor", "super_compressor", "basic_crop_conversion_device", "electric_furnace",
       "slime_conversion_device", "slime_cultivation_device", "component_programming_device",
       "bio_energy_generation_device", "bio_energy_reaction_device", "digital_miniature_forest", "terrain_processing_device",
       "matter_digitization_device", "data_copying_device", "matter_reconstruction_device",

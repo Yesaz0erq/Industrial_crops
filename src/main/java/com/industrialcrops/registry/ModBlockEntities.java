@@ -273,6 +273,8 @@ public final class ModBlockEntities {
       "ore_vein_data_collector", () -> Builder.of(com.industrialcrops.block.entity.OreVeinDataCollectorBlockEntity::new, new Block[]{(Block)ModBlocks.ORE_VEIN_DATA_COLLECTOR.get()}).build(null)
    );
 
+   public static final RegistryObject<BlockEntityType<com.industrialcrops.block.entity.StructureBuilderBlockEntity>> STRUCTURE_BUILDER = BLOCK_ENTITIES.register("automatic_structure_builder", () -> Builder.of(com.industrialcrops.block.entity.StructureBuilderBlockEntity::new, ModBlocks.STRUCTURE_BUILDER.get()).build(null));
+
    private ModBlockEntities() {
    }
 }

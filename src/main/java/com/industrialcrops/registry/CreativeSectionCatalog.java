@@ -227,6 +227,7 @@ public final class CreativeSectionCatalog {
             // AP-steel casings, frames and machines.
             item(ModItems.AP_STEEL_CASING),
             item(ModItems.AP_STEEL_FRAME),
+            item(ModItems.STRUCTURE_BUILDER),
             item(ModItems.AP_AGRICULTURE_CONTROLLER),
             item(ModItems.AP_LIVESTOCK_CONTROLLER),
             item(ModItems.AP_SLIME_FARM),
