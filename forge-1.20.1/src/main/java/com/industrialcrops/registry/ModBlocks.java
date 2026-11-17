@@ -496,6 +496,8 @@ public final class ModBlocks {
       "omni_potion_cauldron", () -> new com.industrialcrops.block.OmniPotionCauldronBlock(Properties.copy(net.minecraft.world.level.block.Blocks.CAULDRON).lightLevel(state -> 6))
    );
 
+   public static final RegistryObject<Block> STRUCTURE_BUILDER = BLOCKS.register("automatic_structure_builder", () -> new com.industrialcrops.block.StructureBuilderBlock(machineProperties()));
+
    private ModBlocks() {
    }
    private static RegistryObject<Block> registerCompressBlock(String var0, MapColor var1) {

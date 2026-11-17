@@ -178,11 +178,6 @@ public final class ManipulatorRecipes {
         ).stream().filter(stack -> !stack.isEmpty()).toList();
     }
 
-    private static ItemStack getCopperChestDisplayStack() {
-        List<ItemStack> options = getCopperChestOptions();
-        return options.isEmpty() ? new ItemStack(Items.CHEST) : options.getFirst().copy();
-    }
-
     private static ItemStack optionalItem(String id) {
         ResourceLocation location = ResourceLocation.parse(id);
         return BuiltInRegistries.ITEM.getOptional(location).map(ItemStack::new).orElse(ItemStack.EMPTY);

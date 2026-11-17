@@ -83,6 +83,7 @@
     "industrialcrops:ap_conduit",
     "industrialcrops:ap_input_conduit",
     "industrialcrops:ap_output_conduit",
-    "industrialcrops:ap_energy_cable"
+    "industrialcrops:ap_energy_cable",
+    "industrialcrops:automatic_structure_builder"
   ]
 }

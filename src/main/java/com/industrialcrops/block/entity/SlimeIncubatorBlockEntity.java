@@ -100,7 +100,7 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
     }
 
     public static boolean isCultivatableType(int type) {
-        return type >= IncubatorBlockEntity.SLIME_VANILLA && type <= IncubatorBlockEntity.SLIME_GOLD
+        return type >= IncubatorBlockEntity.SLIME_VANILLA && type <= IncubatorBlockEntity.SLIME_DIAMOND
                 || type == IncubatorBlockEntity.SLIME_FLUX;
     }
 
@@ -111,6 +111,7 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
             case IncubatorBlockEntity.SLIME_COPPER -> new ItemStack(ModItems.BROWN_CREATE_SLIME_SPAWN_EGG.get());
             case IncubatorBlockEntity.SLIME_IRON -> new ItemStack(ModItems.GRAY_GEAR_SLIME_SPAWN_EGG.get());
             case IncubatorBlockEntity.SLIME_GOLD -> new ItemStack(ModItems.GOLDEN_REDSTONE_LAMP_SLIME_SPAWN_EGG.get());
+            case IncubatorBlockEntity.SLIME_DIAMOND -> new ItemStack(ModItems.BLUE_COMPONENT_SUBSTRATE_SLIME_SPAWN_EGG.get());
             case IncubatorBlockEntity.SLIME_FLUX -> new ItemStack(ModItems.FLUX_SLIME_SPAWN_EGG.get());
             default -> ItemStack.EMPTY;
         };
@@ -157,6 +158,9 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
             int storedType = IncubatorBlockItem.getStoredType(stack);
             return isCultivatableType(storedType) ? storedType : IncubatorBlockEntity.SLIME_NONE;
         }
+        if (stack.is(ModItems.BLUE_COMPONENT_SUBSTRATE_SLIME_SPAWN_EGG.get())) {
+            return IncubatorBlockEntity.SLIME_DIAMOND;
+        }
         if (stack.is(ModItems.FLUX_SLIME_SPAWN_EGG.get())) {
             return IncubatorBlockEntity.SLIME_FLUX;
         }
@@ -181,6 +185,7 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
             case IncubatorBlockEntity.SLIME_COPPER -> new ItemStack(Items.COPPER_INGOT);
             case IncubatorBlockEntity.SLIME_IRON -> new ItemStack(Items.IRON_INGOT);
             case IncubatorBlockEntity.SLIME_GOLD -> new ItemStack(Items.GOLD_INGOT);
+            case IncubatorBlockEntity.SLIME_DIAMOND -> new ItemStack(Items.DIAMOND);
             default -> ItemStack.EMPTY;
         };
     }

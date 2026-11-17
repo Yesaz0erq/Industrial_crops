@@ -155,6 +155,8 @@ public final class ModMenus {
       "ore_vein_data_collector", () -> IMenuTypeExtension.create(com.industrialcrops.screen.OreVeinDataCollectorMenu::new)
    );
 
+   public static final DeferredHolder<MenuType<?>, MenuType<com.industrialcrops.screen.StructureBuilderMenu>> STRUCTURE_BUILDER = MENUS.register("automatic_structure_builder", () -> IMenuTypeExtension.create(com.industrialcrops.screen.StructureBuilderMenu::new));
+
    private ModMenus() {
    }
 

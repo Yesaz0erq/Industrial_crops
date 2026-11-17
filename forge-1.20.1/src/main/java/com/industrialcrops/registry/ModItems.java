@@ -409,6 +409,8 @@ public final class ModItems {
    public static final RegistryObject<BlockItem> AP_SLIME_FARM = registerBlockItem("ap_slime_farm", ModBlocks.AP_SLIME_FARM);
    public static final RegistryObject<BlockItem> ORE_VEIN_DATA_COLLECTOR = registerBlockItem("ore_vein_data_collector", ModBlocks.ORE_VEIN_DATA_COLLECTOR);
 
+   public static final RegistryObject<BlockItem> STRUCTURE_BUILDER = registerBlockItem("automatic_structure_builder", ModBlocks.STRUCTURE_BUILDER);
+
    private ModItems() {
    }
 

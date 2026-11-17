@@ -85,6 +85,8 @@ public final class IndustrialCropsJeiPlugin implements IModPlugin {
                 registration.addItemStackInfo(info, net.minecraft.network.chat.Component.translatable("jei.industrialcrops.info." + path));
             }
         }
+        info(registration, "diamond_slime", new ItemStack(ModItems.BLUE_COMPONENT_SUBSTRATE_SLIME_SPAWN_EGG.get()), new ItemStack(ModItems.SLIME_INCUBATOR.get()), new ItemStack(net.minecraft.world.item.Items.DIAMOND));
+        info(registration, "automatic_structure_builder", new ItemStack(ModItems.STRUCTURE_BUILDER.get()));
         registerAcquisitionInfo(registration);
         registerComponentInfo(registration);
     }

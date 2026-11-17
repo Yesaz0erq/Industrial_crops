@@ -69,6 +69,7 @@ public final class IndustrialCropsClient {
             MenuScreens.register(ModMenus.BASIC_MANIPULATOR.get(), BasicManipulatorScreen::new);
             MenuScreens.register(ModMenus.INCUBATOR.get(), IncubatorScreen::new);
             MenuScreens.register(ModMenus.SLIME_INCUBATOR.get(), SlimeIncubatorScreen::new);
+            MenuScreens.register(ModMenus.STRUCTURE_BUILDER.get(), com.industrialcrops.client.gui.StructureBuilderScreen::new);
             MenuScreens.register(ModMenus.ADVANCED_INDUSTRIAL_STORAGE_DEVICE.get(), AdvancedIndustrialStorageScreen::new);
             MenuScreens.register(ModMenus.GOLDEN_LAUNCH_SILO.get(), GoldenLaunchSiloScreen::new);
             MenuScreens.register(ModMenus.PROCESSOR_PROGRAMMER.get(), ProcessorProgrammerScreen::new);

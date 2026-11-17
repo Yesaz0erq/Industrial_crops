@@ -499,6 +499,8 @@ public final class ModBlocks {
       return Properties.of().mapColor(var0).requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.METAL);
    }
 
+   public static final DeferredBlock<Block> STRUCTURE_BUILDER = BLOCKS.register("automatic_structure_builder", () -> new com.industrialcrops.block.StructureBuilderBlock(machineProperties()));
+
    private ModBlocks() {
    }
 

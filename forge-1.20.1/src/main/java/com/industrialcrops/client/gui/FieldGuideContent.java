@@ -372,7 +372,7 @@ final class FieldGuideContent {
                "guide.industrialcrops.matter.slimes.title",
                "guide.industrialcrops.matter.slimes.body",
                "industrialcrops:slime_conversion_device",
-               List.of("industrialcrops:slime_cultivation_device", "minecraft:slime_ball", "minecraft:iron_ore", "industrialcrops:component_substrate")
+               List.of("industrialcrops:slime_cultivation_device", "minecraft:slime_ball", "minecraft:diamond_ore", "minecraft:diamond")
             )
          )
       ),
@@ -411,6 +411,7 @@ final class FieldGuideContent {
       new FieldGuideContent.Chapter(
          "ap", "guide.industrialcrops.chapter.ap", "industrialcrops:ap_agricultural_complex", -1529542,
          List.of(
+            new FieldGuideContent.Page("guide.industrialcrops.ap.builder.title", "guide.industrialcrops.ap.builder.body", "industrialcrops:automatic_structure_builder", List.of("industrialcrops:automatic_structure_builder", "industrialcrops:speed_component_1", "industrialcrops:speed_component_4")),
             new FieldGuideContent.Page("guide.industrialcrops.ap.sizes.title", "guide.industrialcrops.ap.sizes.body", "industrialcrops:ap_expansion_component_1", List.of("industrialcrops:ap_expansion_component_1", "industrialcrops:ap_expansion_component_2", "industrialcrops:ap_expansion_component_3")),
             new FieldGuideContent.Page("guide.industrialcrops.ap.farm.title", "guide.industrialcrops.ap.farm.body", "industrialcrops:ap_agricultural_complex", List.of("industrialcrops:ap_steel_casing", "industrialcrops:ap_steel_frame", "minecraft:glass", "minecraft:water_bucket", "minecraft:composter")),
             new FieldGuideContent.Page("guide.industrialcrops.ap.ranch.title", "guide.industrialcrops.ap.ranch.body", "industrialcrops:ap_livestock_ranch", List.of("minecraft:oak_fence", "minecraft:oak_planks", "minecraft:oak_slab", "minecraft:hay_block", "minecraft:water_bucket")),

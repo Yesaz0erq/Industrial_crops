@@ -227,6 +227,7 @@ public final class CreativeSectionCatalog {
             // AP-steel casings, frames and machines.
             item(ModItems.AP_STEEL_CASING),
             item(ModItems.AP_STEEL_FRAME),
+            item(ModItems.STRUCTURE_BUILDER),
             item(ModItems.AP_AGRICULTURE_CONTROLLER),
             item(ModItems.AP_LIVESTOCK_CONTROLLER),
             item(ModItems.AP_SLIME_FARM),
@@ -302,7 +303,8 @@ public final class CreativeSectionCatalog {
    @SafeVarargs
    private static CreativeSectionCatalog.Section section(String var0, String var1, String var2, Supplier<ItemStack>... var3) {
       return new CreativeSectionCatalog.Section(
-         Component.translatable(var0), new ResourceLocation(var1, "creative_sections/" + var2), List.of(var3)
+         // Forge 1.20.1 blits a texture file directly, rather than a GUI atlas sprite.
+         Component.translatable(var0), new ResourceLocation(var1, "textures/gui/sprites/creative_sections/" + var2 + ".png"), List.of(var3)
       );
    }
 
