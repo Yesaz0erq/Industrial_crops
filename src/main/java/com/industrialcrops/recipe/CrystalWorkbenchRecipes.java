@@ -32,6 +32,7 @@ public final class CrystalWorkbenchRecipes {
       mediumRocket(),
       largeRocket(),
       satelliteControl(),
+      automaticStructureBuilder(),
       superCompressor(),
       superCropCultivator(),
       omniBucket(),
@@ -124,6 +125,27 @@ public final class CrystalWorkbenchRecipes {
 
    private static CrystalWorkbenchRecipes.Recipe satelliteControl() {
       return space(" EYE IRLRIIMCMIIGPGIIIUII", (Item)ModItems.SATELLITE_CONTROL_DEVICE.get(), FluidStack.EMPTY);
+   }
+
+   private static CrystalWorkbenchRecipes.Recipe automaticStructureBuilder() {
+      String pattern = " AAA " +
+                       "APOPA" +
+                       " RCR " +
+                       "  U  " +
+                       " AAA ";
+      ArrayList<ItemStack> inputs = new ArrayList<>(25);
+      for (char key : pattern.toCharArray()) {
+         inputs.add(switch (key) {
+            case 'A' -> new ItemStack(ModItems.TYCON_PRESSURIZED_INGOT.get());
+            case 'P' -> new ItemStack(Items.PISTON);
+            case 'O' -> new ItemStack(Items.OBSERVER);
+            case 'R' -> new ItemStack(Items.REDSTONE);
+            case 'C' -> new ItemStack(ModItems.AP_STEEL_CASING.get());
+            case 'U' -> new ItemStack(ModItems.AUTOMATIC_COMPONENT.get());
+            default -> ItemStack.EMPTY;
+         });
+      }
+      return new CrystalWorkbenchRecipes.Recipe(List.copyOf(inputs), new ItemStack(ModItems.STRUCTURE_BUILDER.get()), FluidStack.EMPTY);
    }
 
    /**

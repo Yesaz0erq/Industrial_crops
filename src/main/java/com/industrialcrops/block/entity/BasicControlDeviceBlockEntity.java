@@ -12,6 +12,13 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 
 /** Stores the single remote-access upgrade installed in a basic controller. */
 public final class BasicControlDeviceBlockEntity extends BlockEntity {
+    private final ConnectedStoragePort<BasicCropStorageArrayBlockEntity> pipe = new ConnectedStoragePort<>(
+            this, BasicCropStorageArrayBlockEntity.SLOT_COUNT,
+            () -> BasicCropStorageArrayBlockEntity.findAllAttached(level, worldPosition),
+            BasicCropStorageArrayBlockEntity::getItemHandler, null, () -> 0);
+
+    public net.neoforged.neoforge.items.IItemHandler getPipeItemHandler() { return pipe; }
+
     private boolean ticketRequested;
     private final ItemStackHandler upgrade = new ItemStackHandler(1) {
         @Override public int getSlotLimit(int slot) { return 1; }

@@ -16,7 +16,11 @@ import com.industrialcrops.item.ExpandableStorageComponentItem;
 import com.industrialcrops.item.RemoteAccessDeviceItem;
 import com.industrialcrops.item.SatelliteRocketItem;
 import com.industrialcrops.item.SeedBagItem;
+import com.industrialcrops.item.ShimmeringCarrotBlockItem;
 import com.industrialcrops.item.ShimmeringItem;
+import java.util.function.Supplier;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties.Builder;
 import net.minecraft.world.item.BlockItem;
@@ -292,6 +296,22 @@ public final class ModItems {
       () -> new com.industrialcrops.item.ShimmeringCarrotBlockItem(ModBlocks.PURPLE_DRAGON_CARROT_CROP.get(), new Properties().rarity(Rarity.EPIC).food(new Builder().nutrition(8).saturationMod(0.5F).alwaysEat()
          .effect(() -> new net.minecraft.world.effect.MobEffectInstance(ModEffects.DRAGON_BREATH.get(), 20 * 30, 0), 1.0F).build()))
    );
+   public static final RegistryObject<Item> TIDEGLASS_CARROT = registerCultivatedCarrot(
+      "tideglass_carrot", ModBlocks.TIDEGLASS_CARROT_CROP,
+      () -> new MobEffectInstance(MobEffects.WATER_BREATHING, 180 * 20, 0),
+      () -> new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 60 * 20, 0));
+   public static final RegistryObject<Item> DEEPVEIN_CARROT = registerCultivatedCarrot(
+      "deepvein_carrot", ModBlocks.DEEPVEIN_CARROT_CROP,
+      () -> new MobEffectInstance(MobEffects.DIG_SPEED, 90 * 20, 1),
+      () -> new MobEffectInstance(MobEffects.NIGHT_VISION, 180 * 20, 0));
+   public static final RegistryObject<Item> CINDERHEART_CARROT = registerCultivatedCarrot(
+      "cinderheart_carrot", ModBlocks.CINDERHEART_CARROT_CROP,
+      () -> new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 180 * 20, 0),
+      () -> new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60 * 20, 0));
+   public static final RegistryObject<Item> CLOUDSTEP_CARROT = registerCultivatedCarrot(
+      "cloudstep_carrot", ModBlocks.CLOUDSTEP_CARROT_CROP,
+      () -> new MobEffectInstance(MobEffects.JUMP, 90 * 20, 1),
+      () -> new MobEffectInstance(MobEffects.SLOW_FALLING, 60 * 20, 0));
    /** Omni Bucket: crafted on the Crystal Steel Workbench; pours an endless cauldron of Omni Potion. */
    public static final RegistryObject<Item> OMNI_BUCKET = ITEMS.register(
       "omni_bucket", () -> new ShimmeringItem(new Properties().stacksTo(1).rarity(Rarity.EPIC))
@@ -424,6 +444,13 @@ public final class ModItems {
 
    private static RegistryObject<AnimalFeedBagItem> registerFeedBag(String var0, AnimalFeedBagItem.Mode var1) {
       return ITEMS.register(var0, () -> new AnimalFeedBagItem(baggedProperties(), var1));
+   }
+
+   private static RegistryObject<Item> registerCultivatedCarrot(String name, Supplier<? extends Block> crop,
+         Supplier<MobEffectInstance> firstEffect, Supplier<MobEffectInstance> secondEffect) {
+      return ITEMS.register(name, () -> new ShimmeringCarrotBlockItem(crop.get(), new Properties().rarity(Rarity.EPIC)
+         .food(new Builder().nutrition(8).saturationMod(0.5F).alwaysEat()
+            .effect(firstEffect, 1.0F).effect(secondEffect, 1.0F).build())));
    }
 
    private static Properties baggedProperties() {

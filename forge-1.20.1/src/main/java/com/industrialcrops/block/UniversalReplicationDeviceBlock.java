@@ -2,6 +2,11 @@ package com.industrialcrops.block;
 
 import com.industrialcrops.IndustrialCrops;
 import com.industrialcrops.block.entity.UniversalReplicationDeviceBlockEntity;
+import com.industrialcrops.block.entity.BasicControlDeviceBlockEntity;
+import com.industrialcrops.block.entity.ReinforcedControlDeviceBlockEntity;
+import com.industrialcrops.block.entity.ItemNetworkTerminalBlockEntity;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.Tag;
 import com.industrialcrops.network.payload.UniversalReplicaSyncPayload;
 import com.industrialcrops.replication.UniversalReplicaData;
 import net.minecraft.core.BlockPos;
@@ -240,6 +245,7 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
             BlockEntity replicaEntity = level.getBlockEntity(destination);
             if (sourceEntity != null) {
                 CompoundTag snapshot = sourceEntity.saveWithFullMetadata();
+                clearLocalInventorySnapshot(sourceEntity, snapshot);
                 snapshot.putInt("x", destination.getX());
                 snapshot.putInt("y", destination.getY());
                 snapshot.putInt("z", destination.getZ());
@@ -266,6 +272,22 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
         }
     }
 
+    /** Input-only and upgrade slots cannot be emptied through an automation capability. */
+    private static void clearLocalInventorySnapshot(BlockEntity source, CompoundTag snapshot) {
+        String namespace = BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(source.getType()).getNamespace();
+        if (!namespace.equals("industrialcrops") && !namespace.equals("carrote")) return;
+        clearSerializedItems(snapshot);
+        clearSerializedItems(snapshot.getCompound("StorageData"));
+        if (source instanceof ItemNetworkTerminalBlockEntity) snapshot.remove("Items");
+    }
+
+    private static void clearSerializedItems(CompoundTag container) {
+        // Keep handler sizes and recipe/filter configuration. Only actual owned stacks are stripped.
+        for (String key : java.util.List.of("Inventory", "Items", "Storage", "Cells", "Upgrade", "Upgrades", "DimensionUpgrade", "Buffer")) {
+            if (container.contains(key, Tag.TAG_COMPOUND)) container.getCompound(key).remove("Items");
+        }
+    }
+
     public static void restoreShellBlockEntity(ServerLevel level, BlockPos pos) {
         BlockState shellState = level.getBlockState(pos);
         if (!shellState.is(com.industrialcrops.registry.CarroteBlocks.UNIVERSAL_REPLICATION_DEVICE.get())) {
@@ -287,13 +309,16 @@ public final class UniversalReplicationDeviceBlock extends BaseEntityBlock {
             replicaEntity.setChanged();
         }
 
+        // These controllers expose neighbouring storage. Its contents belong to the original drives.
+        boolean externalItems = replicaEntity instanceof BasicControlDeviceBlockEntity
+                || replicaEntity instanceof ReinforcedControlDeviceBlockEntity;
         Set<IItemHandler> itemHandlers = Collections.newSetFromMap(new IdentityHashMap<>());
         Set<IFluidHandler> fluidHandlers = Collections.newSetFromMap(new IdentityHashMap<>());
         for (Direction side : Direction.values()) {
-            clearItemHandler(com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ITEM_HANDLER, pos, side), itemHandlers);
+            if (!externalItems) clearItemHandler(com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ITEM_HANDLER, pos, side), itemHandlers);
             clearFluidHandler(com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.FLUID_HANDLER, pos, side), fluidHandlers);
         }
-        clearItemHandler(com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ITEM_HANDLER, pos, null), itemHandlers);
+        if (!externalItems) clearItemHandler(com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.ITEM_HANDLER, pos, null), itemHandlers);
         clearFluidHandler(com.industrialcrops.util.ForgeCapabilityUtil.find(level, ForgeCapabilities.FLUID_HANDLER, pos, null), fluidHandlers);
         replicaEntity.setChanged();
     }

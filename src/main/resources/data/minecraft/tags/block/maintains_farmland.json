@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "industrialcrops:tideglass_carrot_crop",
+    "industrialcrops:deepvein_carrot_crop",
+    "industrialcrops:cinderheart_carrot_crop",
+    "industrialcrops:cloudstep_carrot_crop"
+  ]
+}

@@ -1,8 +1,12 @@
 {
-  "parent": "minecraft:block/orientable",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "front": "industrialcrops:block/structure_builder_front",
-    "side": "industrialcrops:block/structure_builder_side",
-    "top": "industrialcrops:block/structure_builder_top"
+    "particle": "industrialcrops:block/ap_steel_casing",
+    "down": "industrialcrops:block/ap_steel_casing_bottom",
+    "up": "industrialcrops:block/ap_steel_casing_top",
+    "north": "industrialcrops:block/structure_builder_front",
+    "south": "industrialcrops:block/ap_steel_casing",
+    "west": "industrialcrops:block/ap_steel_casing",
+    "east": "industrialcrops:block/ap_steel_casing"
   }
 }

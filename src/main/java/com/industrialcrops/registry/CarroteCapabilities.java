@@ -13,7 +13,7 @@ public final class CarroteCapabilities {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CarroteBlockEntities.CARROTE_STEEL_FORGE.get(),
                 (entity, side) -> entity.getAutomationHandler());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CarroteBlockEntities.MATERIAL_HARDENING_DEVICE.get(),
-                (entity, side) -> entity.getInventory());
+                (entity, side) -> entity.getAutomationHandler());
         for (BlockCapability<?, ?> capability : BlockCapability.getAllProxyable()) {
             registerReplicaProxy(event, capability);
         }

@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.machine.PoweredMachineSupport;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.screen.AutomaticPlanterMenu;
@@ -71,6 +72,10 @@ public final class AutomaticPlanterBlockEntity extends BlockEntity implements Me
     public AutomaticPlanterBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.AUTOMATIC_PLANTER.get(), pos, state);
     }
+
+    private final MachineItemPort automation = MachineItemPort.processing(inventory, SEED_SLOT_COUNT, 0);
+
+    public MachineItemPort getAutomationHandler() { return automation; }
 
     public ItemStackHandler getInventory() {
         return inventory;

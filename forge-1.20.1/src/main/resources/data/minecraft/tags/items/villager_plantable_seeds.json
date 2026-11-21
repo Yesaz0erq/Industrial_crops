@@ -14,6 +14,10 @@
     "industrialcrops:bagged_neonbulb_seeds",
     "industrialcrops:fluxstalk_seeds",
     "industrialcrops:bagged_fluxstalk_seeds",
-    "industrialcrops:plasma_fruit"
+    "industrialcrops:plasma_fruit",
+    "industrialcrops:tideglass_carrot",
+    "industrialcrops:deepvein_carrot",
+    "industrialcrops:cinderheart_carrot",
+    "industrialcrops:cloudstep_carrot"
   ]
 }

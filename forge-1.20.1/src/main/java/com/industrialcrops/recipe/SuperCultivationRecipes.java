@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 /**
- * Super Crop Cultivator recipes: one Super-quality industrial crop plus two or three specific
+ * Super Crop Cultivator recipes: one Super-quality industrial crop plus one to three specific
  * materials grow a new plant variety. Materials may sit in any material slot; slots a recipe does
  * not use must stay empty.
  */
@@ -70,10 +71,18 @@ public final class SuperCultivationRecipes {
             new Recipe("black_nebula_carrot", ModItems.INDUSTRIAL_CARROT,
                     List.of(ModItems.COMET_FRUIT, ModItems.PRISM_POD), ModItems.BLACK_NEBULA_CARROT, DEFAULT_DURATION),
             new Recipe("purple_dragon_carrot", ModItems.INDUSTRIAL_CARROT,
-                    List.of(() -> net.minecraft.world.item.Items.DRAGON_BREATH, ModItems.NEONBULB),
+                    List.of(() -> Items.DRAGON_BREATH, ModItems.NEONBULB),
                     ModItems.PURPLE_DRAGON_CARROT, DEFAULT_DURATION),
             new Recipe("omni_carrot", ModItems.INDUSTRIAL_CARROT, List.of(ModItems.OMNI_POTION),
-                    ModItems.OMNI_CARROT, DEFAULT_DURATION)
+                    ModItems.OMNI_CARROT, DEFAULT_DURATION),
+            new Recipe("tideglass_carrot", ModItems.INDUSTRIAL_CARROT,
+                    List.of(ModItems.PRISM_POD, () -> Items.PRISMARINE_CRYSTALS), ModItems.TIDEGLASS_CARROT, DEFAULT_DURATION),
+            new Recipe("deepvein_carrot", ModItems.INDUSTRIAL_CARROT,
+                    List.of(ModItems.NEONBULB, () -> Items.AMETHYST_SHARD), ModItems.DEEPVEIN_CARROT, DEFAULT_DURATION),
+            new Recipe("cinderheart_carrot", ModItems.INDUSTRIAL_CARROT,
+                    List.of(ModItems.EMBERCOIL, () -> Items.MAGMA_CREAM), ModItems.CINDERHEART_CARROT, DEFAULT_DURATION),
+            new Recipe("cloudstep_carrot", ModItems.INDUSTRIAL_CARROT,
+                    List.of(ModItems.STARBLOOM, () -> Items.PHANTOM_MEMBRANE), ModItems.CLOUDSTEP_CARROT, DEFAULT_DURATION)
     );
 
     private SuperCultivationRecipes() {
@@ -124,7 +133,7 @@ public final class SuperCultivationRecipes {
         Recipe best = null;
         int bestScore = -1;
         for (Recipe recipe : RECIPES) {
-            if (!crop.is(recipe.crop().get())) continue;
+            if (!crop.isEmpty() && !crop.is(recipe.crop().get())) continue;
             int score = 0;
             boolean conflict = false;
             for (ItemStack stack : materials) {

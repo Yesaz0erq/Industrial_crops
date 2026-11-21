@@ -1,4 +1,5 @@
 package com.industrialcrops.block.entity;
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.block.UltraHighPressureInvForgeBlock;
 import com.industrialcrops.machine.MachineInventoryHelper;
 import com.industrialcrops.machine.PoweredMachineSupport;
@@ -144,6 +145,10 @@ public final class UltraHighPressureInvForgeBlockEntity extends BlockEntity impl
          return false;
       }
    }
+   private final MachineItemPort automation = MachineItemPort.processing(inventory, INPUT_SLOTS, 1);
+
+   public MachineItemPort getAutomationHandler() { return automation; }
+
    public ItemStackHandler getInventory() {
       return this.inventory;
    }
@@ -214,7 +219,7 @@ public final class UltraHighPressureInvForgeBlockEntity extends BlockEntity impl
          return accepted;
       }
    }
-   private net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.IItemHandler> forgeCap0 = net.minecraftforge.common.util.LazyOptional.of(() -> getInventory());
+   private net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.IItemHandler> forgeCap0 = net.minecraftforge.common.util.LazyOptional.of(this::getAutomationHandler);
    private net.minecraftforge.common.util.LazyOptional<net.minecraftforge.energy.IEnergyStorage> forgeCap1 = net.minecraftforge.common.util.LazyOptional.of(() -> getEnergyStorage(null));
    @Override public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.core.Direction side) {
       if (capability == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER) return forgeCap0.cast();
@@ -226,7 +231,7 @@ public final class UltraHighPressureInvForgeBlockEntity extends BlockEntity impl
       forgeCap1.invalidate();
    }
    @Override public void reviveCaps() { super.reviveCaps();
-      forgeCap0 = net.minecraftforge.common.util.LazyOptional.of(() -> getInventory());
+      forgeCap0 = net.minecraftforge.common.util.LazyOptional.of(this::getAutomationHandler);
       forgeCap1 = net.minecraftforge.common.util.LazyOptional.of(() -> getEnergyStorage(null));
    }
 }

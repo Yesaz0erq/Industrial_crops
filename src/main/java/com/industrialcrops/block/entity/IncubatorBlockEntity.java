@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.block.IncubatorBlock;
 import com.industrialcrops.item.IncubatorBlockItem;
 import com.industrialcrops.registry.ModBlockEntities;
@@ -160,6 +161,10 @@ public final class IncubatorBlockEntity extends BlockEntity implements MenuProvi
     public int getProgress() {
         return progress;
     }
+
+    private final MachineItemPort automation = MachineItemPort.processing(inventory, UPGRADE_SLOT_START, 0);
+
+    public MachineItemPort getAutomationHandler() { return automation; }
 
     public ItemStackHandler getInventory() {
         return inventory;

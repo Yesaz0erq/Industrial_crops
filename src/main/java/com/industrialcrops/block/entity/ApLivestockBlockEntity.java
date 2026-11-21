@@ -46,7 +46,6 @@ import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.event.entity.living.BabyEntitySpawnEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.items.wrapper.RangedWrapper;
 import org.jetbrains.annotations.Nullable;
 
 public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
@@ -451,16 +450,10 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
       return this.inventory;
    }
 
-   public IItemHandler automation() {
-      return new RangedWrapper(this.inventory, 0, 18) {
-         public ItemStack extractItem(int var1, int var2, boolean var3) {
-            return var1 < 9 ? ItemStack.EMPTY : super.extractItem(var1, var2, var3);
-         }
+   private final IItemHandler itemPort = com.industrialcrops.machine.MachineItemPort.processing(inventory, 9, 9);
 
-         public ItemStack insertItem(int var1, ItemStack var2, boolean var3) {
-            return var1 < 9 ? super.insertItem(var1, var2, var3) : var2;
-         }
-      };
+   public IItemHandler automation() {
+      return itemPort;
    }
 
    public EnergyStorage getEnergyStorage(@Nullable Direction var1) {

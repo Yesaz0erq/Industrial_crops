@@ -7,6 +7,7 @@ import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.screen.ApAgricultureMenu;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,6 +31,11 @@ import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.StemBlock;
+import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.PitcherCropBlock;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import com.industrialcrops.block.IndustrialFruitBlock;
+import com.industrialcrops.block.IndustrialGourdCropBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -60,6 +66,7 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
    public static final int STATUS_ENERGY = 2;
    public static final int STATUS_NO_SEEDS = 3;
    public static final int STATUS_IDLE = 4;
+   public static final int STATUS_OUTPUT_FULL = 5;
    private final ItemStackHandler inventory = new ItemStackHandler(18) {
       public boolean isItemValid(int var1, ItemStack var2) {
          return var1 >= 9 || ApAgricultureBlockEntity.isPlantableSeed(var2);
@@ -72,11 +79,12 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
    private final IItemHandler seeds = new RangedWrapper(this.inventory, 0, 9);
    private final ApAgricultureBlockEntity.Energy energy = new ApAgricultureBlockEntity.Energy();
    private final List<BlockPos> crops = new ArrayList<>();
-   private final List<BlockPos> ripe = new ArrayList<>();
+   private final LinkedHashSet<BlockPos> ripe = new LinkedHashSet<>();
    private int boost = 2;
    private int harvested;
    private int scanIndex;
    private boolean scanNeeded = true;
+   private boolean outputBlocked;
    private int planted;
    private int status = 1;
    private long boosted;
@@ -121,7 +129,7 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
    }
 
    public static boolean isPlantableSeed(ItemStack var0) {
-      return !var0.isEmpty() && var0.getItem() instanceof BlockItem var1 && (var1.getBlock() instanceof CropBlock || var1.getBlock() instanceof StemBlock);
+      return !var0.isEmpty() && var0.getItem() instanceof BlockItem var1 && (var1.getBlock() instanceof CropBlock || var1.getBlock() instanceof StemBlock || var1.getBlock() instanceof PitcherCropBlock);
    }
 
    @Override
@@ -139,36 +147,34 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
             var3.status = 1;
          } else {
             int var8 = var3.upgrades.speedTier();
-            if (var3.scanNeeded || var5 % 40L == 0L) {
+            if (var3.scanNeeded || var5 % 20L == 0L) {
                var3.scanCrops(var4);
             }
 
+            boolean didHarvest = var3.harvest(var4, 1 + var8);
+            // Let a slow power supply accumulate the cost of a ripe harvest before planting or accelerating.
+            boolean waitingForHarvestPower = !var3.ripe.isEmpty()
+               && var3.energy.getEnergyStored() < var3.upgrades.cost(ENERGY_PER_HARVEST);
             int var9 = var8 == 0 ? (var5 % 2L == 0L ? 1 : 0) : var8;
             boolean var10 = false;
 
-            for (int var11 = 0; var11 < var9; var11++) {
+            for (int var11 = 0; !waitingForHarvestPower && var11 < var9; var11++) {
                var10 |= var3.plantOnce();
             }
 
-            boolean var15 = var3.accelerate(var4, var8);
-            boolean var12 = false;
-            if (var3.upgrades.automatic()) {
-               if (var5 % 4L == 0L) {
-                  var12 = var3.harvest(var4, 1 + var8);
-               }
-
-               if (var5 % 20L == 10L) {
-                  var3.exportToNeighbours(var3.inventory, 9, 9);
-               }
+            boolean var15 = !waitingForHarvestPower && var3.accelerate(var4, var8);
+            if (var3.upgrades.automatic() && var5 % 20L == 10L) {
+               var3.exportToNeighbours(var3.inventory, SEED_SLOTS, OUTPUT_SLOTS);
             }
-
-            var7 = var10 || var15 || var12;
+            var7 = var10 || var15 || didHarvest;
             if (var7) {
                var3.status = 0;
-            } else if (var3.energy.getEnergyStored() < 20) {
+            } else if (var3.outputBlocked) {
+               var3.status = STATUS_OUTPUT_FULL;
+            } else if (waitingForHarvestPower || var3.energy.getEnergyStored() < var3.upgrades.cost(ENERGY_PER_PLANT)) {
                var3.status = 2;
             } else if (var5 % 20L == 0L) {
-               var3.status = !var3.hasSeeds() && var3.crops.isEmpty() ? 3 : 4;
+               var3.status = !var3.hasSeeds() && var3.crops.isEmpty() && var3.ripe.isEmpty() ? STATUS_NO_SEEDS : STATUS_IDLE;
             }
          }
 
@@ -181,21 +187,33 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
 
    private void scanCrops(ServerLevel level) {
       this.crops.clear();
-      this.ripe.clear();
+      // Keep earlier candidates ahead of rescanned, storage-blocked crops.
       this.scanNeeded = false;
+      this.outputBlocked = false;
       ApStructure.Layout area = this.layout();
       for (int u = 1; u < area.width() - 1; u++) {
          for (int v = 1; v < area.depth() - 1; v++) {
             BlockPos pos = area.pos(u, 0, v);
             if (!this.workPosLoaded(pos)) continue;
             BlockState state = level.getBlockState(pos);
-            if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) this.ripe.add(pos);
+            if (isRipe(level, pos, state)) this.ripe.add(pos);
             else if (state.isRandomlyTicking() && isGrowable(level, pos, state)) this.crops.add(pos);
          }
       }
    }
 
+   private static boolean isRipe(ServerLevel level, BlockPos pos, BlockState state) {
+      if (state.getBlock() instanceof IndustrialGourdCropBlock) return false;
+      if (state.getBlock() instanceof CropBlock crop) return crop.isMaxAge(state);
+      if (state.getBlock() instanceof PitcherCropBlock) {
+         return state.getValue(PitcherCropBlock.HALF) == DoubleBlockHalf.LOWER && state.getValue(PitcherCropBlock.AGE) == 4;
+      }
+      return state.is(Blocks.MELON) || state.is(Blocks.PUMPKIN) || state.getBlock() instanceof IndustrialFruitBlock
+         || state.is(Blocks.TORCHFLOWER) && level.getBlockState(pos.below()).getBlock() instanceof FarmBlock;
+   }
+
    private static boolean isGrowable(ServerLevel var0, BlockPos var1, BlockState var2) {
+      if (var2.getBlock() instanceof IndustrialGourdCropBlock stem) return !stem.isMaxAge(var2) || !var2.getValue(IndustrialGourdCropBlock.ATTACHED);
       if (var2.getBlock() instanceof CropBlock var5) {
          return !var5.isMaxAge(var2);
       } else if (var2.getBlock() instanceof StemBlock) {
@@ -225,6 +243,7 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
             BlockState var8 = var1.getBlockState(var7);
             if (var8.isRandomlyTicking() && isGrowable(var1, var7, var8)) {
                var8.randomTick(var1, var7, var1.random);
+               if (isRipe(var1, var7, var1.getBlockState(var7))) this.ripe.add(var7);
                this.energy.consume(var4);
                this.boosted++;
                var5 = true;
@@ -246,53 +265,65 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
       }
    }
 
-   private boolean harvest(ServerLevel var1, int var2) {
-      if (!this.ripe.isEmpty() && !this.slotsFull(this.inventory, 9, 9)) {
-         int var3 = this.upgrades.cost(ENERGY_PER_HARVEST);
-         boolean var4 = false;
-
-         while (var2 > 0 && !this.ripe.isEmpty() && this.energy.getEnergyStored() >= var3) {
-            BlockPos var5 = this.ripe.remove(this.ripe.size() - 1);
-            if (!this.workPosLoaded(var5)) continue;
-            BlockState var6 = var1.getBlockState(var5);
-            if (var6.getBlock() instanceof CropBlock var7 && var7.isMaxAge(var6)) {
-               List<ItemStack> var12 = Block.getDrops(var6, var1, var5, null);
-               var1.levelEvent(2001, var5, Block.getId(var6));
-               var1.removeBlock(var5, false);
-
-               for (ItemStack var10 : var12) {
-                  ItemStack var11 = isPlantableSeed(var10) ? this.insert(var10, 0, 9) : var10;
-                  var11 = this.insert(var11, 9, 18);
-                  if (!var11.isEmpty()) {
-                     Containers.dropItemStack(var1, (double)var5.getX() + 0.5, (double)var5.getY() + 0.5, (double)var5.getZ() + 0.5, var11);
-                  }
-               }
-
-               this.energy.consume(var3);
-               this.harvested++;
-               var2--;
-               var4 = true;
+   private boolean harvest(ServerLevel level, int workLimit) {
+      int cost = this.upgrades.cost(ENERGY_PER_HARVEST);
+      boolean worked = false;
+      while (workLimit-- > 0 && !ripe.isEmpty() && energy.getEnergyStored() >= cost) {
+         var next = ripe.iterator();
+         BlockPos pos = next.next();
+         next.remove();
+         if (!workPosLoaded(pos)) continue;
+         BlockState state = level.getBlockState(pos);
+         if (!isRipe(level, pos, state)) continue;
+         List<ItemStack> drops = Block.getDrops(state, level, pos, level.getBlockEntity(pos));
+         ItemStackHandler preview = new ItemStackHandler(SLOTS);
+         for (int slot = 0; slot < SLOTS; slot++) preview.setStackInSlot(slot, inventory.getStackInSlot(slot).copy());
+         if (!storeHarvest(preview, drops, null, pos)) {
+            this.outputBlocked = true;
+            continue;
+         }
+         // The upper half of a pitcher is the same plant; remove it without another loot roll.
+         if (state.getBlock() instanceof PitcherCropBlock) {
+            BlockState upper = level.getBlockState(pos.above());
+            if (upper.is(state.getBlock()) && upper.getValue(PitcherCropBlock.HALF) == DoubleBlockHalf.UPPER) {
+               level.setBlock(pos.above(), Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
             }
          }
-
-         if (var4) {
-            this.setChanged();
-         }
-
-         return var4;
-      } else {
-         return false;
+         if (!level.removeBlock(pos, false)) continue;
+         storeHarvest(inventory, drops, level, pos);
+         level.levelEvent(2001, pos, Block.getId(state));
+         energy.consume(cost);
+         harvested++;
+         worked = true;
       }
+      if (worked) setChanged();
+      return worked;
    }
 
-   private ItemStack insert(ItemStack var1, int var2, int var3) {
-      ItemStack var4 = var1;
-
-      for (int var5 = var2; var5 < var3 && !var4.isEmpty(); var5++) {
-         var4 = this.inventory.insertItem(var5, var4, false);
+   private static boolean storeHarvest(ItemStackHandler target, List<ItemStack> drops, @Nullable ServerLevel level, BlockPos pos) {
+      boolean seedReserved = false;
+      for (ItemStack drop : drops) {
+         ItemStack rest = drop.copy();
+         if (!seedReserved && isPlantableSeed(rest)) {
+            ItemStack seed = rest.copyWithCount(1);
+            if (insert(target, seed, 0, SEED_SLOTS).isEmpty()) {
+               rest.shrink(1);
+               seedReserved = true;
+            }
+         }
+         rest = insert(target, rest, SEED_SLOTS, SLOTS);
+         if (!rest.isEmpty()) {
+            if (level == null) return false;
+            // A mod can change the real inventory from a synchronous block-removal callback.
+            Containers.dropItemStack(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, rest);
+         }
       }
+      return true;
+   }
 
-      return var4;
+   private static ItemStack insert(ItemStackHandler target, ItemStack stack, int from, int to) {
+      for (int slot = from; slot < to && !stack.isEmpty(); slot++) stack = target.insertItem(slot, stack, false);
+      return stack;
    }
 
    private boolean hasSeeds() {
@@ -354,7 +385,7 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
 
    private boolean isOpenSoil(BlockPos pos) {
       return this.workPosLoaded(pos) && this.level.getBlockState(pos).isAir()
-         && this.level.getBlockState(pos.below()).is(Blocks.FARMLAND);
+         && this.level.getBlockState(pos.below()).getBlock() instanceof FarmBlock;
    }
 
    private boolean plantFrom(IItemHandler var1, BlockPos var2) {
@@ -382,16 +413,10 @@ public final class ApAgricultureBlockEntity extends ApControllerBlockEntity {
       return this.inventory;
    }
 
-   public IItemHandler automation() {
-      return new RangedWrapper(this.inventory, 0, 18) {
-         public ItemStack extractItem(int var1, int var2, boolean var3) {
-            return var1 < 9 ? ItemStack.EMPTY : super.extractItem(var1, var2, var3);
-         }
+   private final IItemHandler itemPort = com.industrialcrops.machine.MachineItemPort.processing(inventory, 9, 9);
 
-         public ItemStack insertItem(int var1, ItemStack var2, boolean var3) {
-            return var1 < 9 ? super.insertItem(var1, var2, var3) : var2;
-         }
-      };
+   public IItemHandler automation() {
+      return itemPort;
    }
 
    public EnergyStorage getEnergyStorage(@Nullable Direction var1) {

@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.item.IncubatorBlockItem;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModItems;
@@ -197,6 +198,10 @@ public final class SlimeIncubatorBlockEntity extends BlockEntity implements Menu
     public int getActiveSlimeType() {
         return activeSlimeType;
     }
+
+    private final MachineItemPort automation = MachineItemPort.processing(inventory, OUTPUT_SLOT, 1);
+
+    public MachineItemPort getAutomationHandler() { return automation; }
 
     public ItemStackHandler getInventory() {
         return inventory;

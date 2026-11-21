@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.machine.PoweredMachineSupport;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModFluids;
@@ -98,6 +99,10 @@ public final class GoldPlasmaExtractorBlockEntity extends BlockEntity implements
         ItemStack remainder = inventory.insertItem(0, stack, simulate);
         return stack.getCount() - remainder.getCount();
     }
+    private final MachineItemPort automation = MachineItemPort.processing(inventory, 1, 0);
+
+    public MachineItemPort getAutomationHandler() { return automation; }
+
     public ItemStackHandler getInventory() { return inventory; }
     public EnergyStorage getEnergyStorage(@Nullable Direction side) { return energy; }
     public FluidTank getOutputTank() { return outputTank; }

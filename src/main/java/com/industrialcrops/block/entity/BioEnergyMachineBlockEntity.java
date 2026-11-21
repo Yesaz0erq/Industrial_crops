@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.basic_pipe.PipeTransferUtil;
 import com.industrialcrops.registry.ModItems;
 import com.industrialcrops.registry.ModBlocks;
@@ -171,6 +172,7 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
             }
             @Override protected void onContentsChanged(int slot) { setChanged(); }
         };
+        automation = MachineItemPort.processing(inventory, fuelSlots(), 0);
     }
 
     private int slotCount() {
@@ -380,6 +382,10 @@ public abstract class BioEnergyMachineBlockEntity extends BlockEntity implements
         return generator == null ? 0 : generator.residue;
     }
     public Kind getKind() { return kind; }
+    private final MachineItemPort automation;
+
+    public MachineItemPort getAutomationHandler() { return automation; }
+
     public ItemStackHandler getInventory() { return inventory; }
     /** Transfers runtime state when the gold generator is upgraded in place. */
     public void copyUpgradeStateTo(BioEnergyMachineBlockEntity target) {

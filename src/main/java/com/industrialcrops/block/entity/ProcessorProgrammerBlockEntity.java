@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.recipe.ManipulatorIngredient;
 import com.industrialcrops.recipe.ManipulatorRecipeDisplay;
 import com.industrialcrops.recipe.ProcessorProgrammingRecipes;
@@ -53,6 +54,10 @@ public final class ProcessorProgrammerBlockEntity extends BlockEntity implements
             programmer.tryProgram();
         }
     }
+
+    private final MachineItemPort automation = MachineItemPort.processing(inventory, INPUT_SLOT_COUNT, 1);
+
+    public MachineItemPort getAutomationHandler() { return automation; }
 
     public ItemStackHandler getInventory() {
         return inventory;

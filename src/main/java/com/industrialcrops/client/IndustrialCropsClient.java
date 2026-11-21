@@ -143,6 +143,10 @@ public final class IndustrialCropsClient {
       ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.BLACK_NEBULA_CARROT_CROP.get(), RenderType.cutout());
       ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.PURPLE_DRAGON_CARROT_CROP.get(), RenderType.cutout());
       ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.OMNI_CARROT_CROP.get(), RenderType.cutout());
+      ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.TIDEGLASS_CARROT_CROP.get(), RenderType.cutout());
+      ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.DEEPVEIN_CARROT_CROP.get(), RenderType.cutout());
+      ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.CINDERHEART_CARROT_CROP.get(), RenderType.cutout());
+      ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.CLOUDSTEP_CARROT_CROP.get(), RenderType.cutout());
       ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.INDUSTRIAL_POTATO_CROP.get(), RenderType.cutout());
       ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.INDUSTRIAL_WHEAT_CROP.get(), RenderType.cutout());
       ItemBlockRenderTypes.setRenderLayer((Block)ModBlocks.INDUSTRIAL_MELON_CROP.get(), RenderType.cutout());

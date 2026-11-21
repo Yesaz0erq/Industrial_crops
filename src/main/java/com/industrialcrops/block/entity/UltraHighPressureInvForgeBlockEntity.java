@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.block.UltraHighPressureInvForgeBlock;
 import com.industrialcrops.machine.MachineInventoryHelper;
 import com.industrialcrops.machine.PoweredMachineSupport;
@@ -161,6 +162,10 @@ public final class UltraHighPressureInvForgeBlockEntity extends BlockEntity impl
          return false;
       }
    }
+
+   private final MachineItemPort automation = MachineItemPort.processing(inventory, INPUT_SLOTS, 1);
+
+   public MachineItemPort getAutomationHandler() { return automation; }
 
    public ItemStackHandler getInventory() {
       return this.inventory;

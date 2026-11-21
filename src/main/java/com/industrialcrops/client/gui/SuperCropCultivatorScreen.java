@@ -160,26 +160,25 @@ public final class SuperCropCultivatorScreen extends AbstractContainerScreen<Sup
                 menu.getSlot(SuperCropCultivatorBlockEntity.MATERIAL_B_SLOT).getItem(),
                 menu.getSlot(SuperCropCultivatorBlockEntity.MATERIAL_C_SLOT).getItem());
         boolean anyMaterial = materials.stream().anyMatch(stack -> !stack.isEmpty());
-        java.util.List<SuperCultivationRecipes.Recipe> options = crop.isEmpty()
+        if (anyMaterial) return SuperCultivationRecipes.preview(crop, materials);
+        List<SuperCultivationRecipes.Recipe> options = crop.isEmpty()
                 ? SuperCultivationRecipes.all() : SuperCultivationRecipes.forCropAll(crop);
-        if (options.isEmpty()) return null;
-        if (!anyMaterial) return options.get((int) (Util.getMillis() / 2500L % options.size()));
-        SuperCultivationRecipes.Recipe preview = crop.isEmpty() ? null : SuperCultivationRecipes.preview(crop, materials);
-        if (preview != null) return preview;
-        for (SuperCultivationRecipes.Recipe option : options) {
-            for (ItemStack stack : materials) {
-                if (!stack.isEmpty() && option.usesMaterial(stack)) return option;
-            }
-        }
-        return options.get(0);
+        return options.isEmpty() ? null : options.get((int) (Util.getMillis() / 2500L % options.size()));
     }
 
-    /** Colour the plant ripens into: violet for Black Nebula, magenta for Purple Dragon. */
+    /** Tint of the ripe plant pictured in the cultivation chamber. */
     private int ripeColor(int fallback) {
         SuperCultivationRecipes.Recipe recipe = previewRecipe();
-        if (recipe != null && recipe.id().equals("purple_dragon_carrot")) return 0xFFD04DFF;
-        if (recipe != null && recipe.id().equals("omni_carrot")) return Mth.hsvToRgb((time() * 0.25F) % 1.0F, 0.6F, 1.0F) | 0xFF000000;
-        return fallback;
+        if (recipe == null) return fallback;
+        return switch (recipe.id()) {
+            case "purple_dragon_carrot" -> 0xFFD04DFF;
+            case "omni_carrot" -> Mth.hsvToRgb((time() * 0.25F) % 1.0F, 0.6F, 1.0F) | 0xFF000000;
+            case "tideglass_carrot" -> 0xFF41DCB9;
+            case "deepvein_carrot" -> 0xFF9865DF;
+            case "cinderheart_carrot" -> 0xFFF76A38;
+            case "cloudstep_carrot" -> 0xFF9CDCF5;
+            default -> fallback;
+        };
     }
 
     // ------------------------------------------------------------------ chamber
@@ -618,8 +617,10 @@ public final class SuperCropCultivatorScreen extends AbstractContainerScreen<Sup
     private List<Component> chamberTooltip() {
         List<Component> lines = new ArrayList<>();
         lines.add(statusText(menu.getStatus()).copy().withStyle(ChatFormatting.AQUA));
-        ItemStack crop = menu.getSlot(SuperCropCultivatorBlockEntity.CROP_SLOT).getItem();
-        SuperCultivationRecipes.Recipe recipe = crop.isEmpty() ? null : previewRecipe();
+        if (menu.getSlot(SuperCropCultivatorBlockEntity.CROP_SLOT).getItem().isEmpty()) {
+            lines.add(Component.translatable("gui.industrialcrops.super_crop_cultivator.hint").withStyle(ChatFormatting.GRAY));
+        }
+        SuperCultivationRecipes.Recipe recipe = previewRecipe();
         if (recipe != null) {
             lines.add(Component.translatable("gui.industrialcrops.super_crop_cultivator.result", recipe.resultStack().getHoverName())
                     .withStyle(ChatFormatting.LIGHT_PURPLE));
@@ -635,8 +636,6 @@ public final class SuperCropCultivatorScreen extends AbstractContainerScreen<Sup
                 lines.add(Component.translatable("gui.industrialcrops.super_crop_cultivator.returns", recipe.remainders().get(0).getHoverName())
                         .withStyle(ChatFormatting.DARK_GRAY));
             }
-        } else {
-            lines.add(Component.translatable("gui.industrialcrops.super_crop_cultivator.hint").withStyle(ChatFormatting.GRAY));
         }
         if (growing()) {
             int secs = menu.getSecondsLeft();

@@ -17,7 +17,7 @@ import net.minecraftforge.items.SlotItemHandler;
 public final class StructureBuilderMenu extends AbstractContainerMenu {
     public static final int MACHINE_SLOTS=StructureBuilderBlockEntity.SLOTS;
     private final StructureBuilderBlockEntity machine;
-    private final int[] data=new int[7+StructureBuilderBlockEntity.MATERIAL_ROWS*2];
+    private final int[] data=new int[9+StructureBuilderBlockEntity.MATERIAL_ROWS*2];
     public StructureBuilderMenu(int id, Inventory inventory, FriendlyByteBuf buffer) {
         this(id, inventory, (StructureBuilderBlockEntity)inventory.player.level().getBlockEntity(buffer.readBlockPos()));
     }
@@ -26,19 +26,19 @@ public final class StructureBuilderMenu extends AbstractContainerMenu {
         this.machine=machine;
         for (int slot=0; slot<StructureBuilderBlockEntity.MATERIAL_SLOTS; slot++) {
             final int slotPage=slot/27;
-            addSlot(new SlotItemHandler(machine.getInventory(),slot,12+slot%9*18,78+(slot%27)/9*18) {
+            addSlot(new SlotItemHandler(machine.getInventory(),slot,12+slot%9*18,68+(slot%27)/9*18) {
                 @Override public boolean isActive() { return page() == slotPage; }
                 @Override public boolean mayPlace(ItemStack stack) { return !running(); }
                 @Override public boolean mayPickup(Player player) { return !running(); }
             });
         }
-        for (int i=0; i<4; i++) addSlot(new SlotItemHandler(machine.getInventory(),108+i,194+i*22,178) {
+        for (int i=0; i<4; i++) addSlot(new SlotItemHandler(machine.getInventory(),108+i,190+i*30,167) {
             @Override public boolean mayPlace(ItemStack stack) { return !running() && com.industrialcrops.machine.SpeedUpgradeHelper.isSpeedUpgrade(stack); }
             @Override public boolean mayPickup(Player player) { return !running(); }
         });
         for (int row=0; row<3; row++) for (int col=0; col<9; col++)
-            addSlot(new Slot(inventory,col+row*9+9,12+col*18,151+row*18));
-        for (int col=0; col<9; col++) addSlot(new Slot(inventory,col,12+col*18,209));
+            addSlot(new Slot(inventory,col+row*9+9,12+col*18,137+row*18));
+        for (int col=0; col<9; col++) addSlot(new Slot(inventory,col,12+col*18,194));
         for (int i=0; i<data.length; i++) {
             final int index=i;
             addDataSlot(new DataSlot() {
@@ -49,6 +49,12 @@ public final class StructureBuilderMenu extends AbstractContainerMenu {
         }
     }
     private int field(int index) { return machine.getLevel() != null && !machine.getLevel().isClientSide() ? machine.value(index) : data[index]; }
+    @Override public void broadcastChanges() {
+        machine.refreshTargetIfChanged();
+        super.broadcastChanges();
+    }
+    public int demolitionCount() { return field(8+StructureBuilderBlockEntity.MATERIAL_ROWS*2); }
+    public int anchorMode() { return field(7+StructureBuilderBlockEntity.MATERIAL_ROWS*2); }
     public int speed() { return field(6+StructureBuilderBlockEntity.MATERIAL_ROWS*2); }
     public int type() { return field(0); }
     public int tier() { return field(1); }

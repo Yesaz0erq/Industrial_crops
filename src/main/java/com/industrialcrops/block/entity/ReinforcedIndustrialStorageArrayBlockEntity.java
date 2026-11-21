@@ -142,6 +142,10 @@ public final class ReinforcedIndustrialStorageArrayBlockEntity extends BlockEnti
       return attached.isEmpty() ? null : attached.getFirst();
    }
 
+   @Override public void clearRemoved() { super.clearRemoved(); ConnectedStoragePort.topologyChanged(); }
+
+   @Override public void setRemoved() { super.setRemoved(); ConnectedStoragePort.topologyChanged(); }
+
    public static List<ReinforcedIndustrialStorageArrayBlockEntity> findAllAttached(Level level, BlockPos controllerPos) {
       List<ReinforcedIndustrialStorageArrayBlockEntity> attached = new ArrayList<>();
       ArrayDeque<BlockPos> queue = new ArrayDeque<>();
@@ -149,7 +153,7 @@ public final class ReinforcedIndustrialStorageArrayBlockEntity extends BlockEnti
 
       for (Direction direction : Direction.values()) {
          BlockPos adjacentPos = controllerPos.relative(direction);
-         if (level.getBlockEntity(adjacentPos) instanceof ReinforcedIndustrialStorageArrayBlockEntity drive) {
+         if (level.hasChunkAt(adjacentPos) && level.getBlockEntity(adjacentPos) instanceof ReinforcedIndustrialStorageArrayBlockEntity drive) {
             attached.add(drive);
             queue.add(adjacentPos);
             visited.add(adjacentPos);
@@ -161,7 +165,7 @@ public final class ReinforcedIndustrialStorageArrayBlockEntity extends BlockEnti
 
          for (Direction directionx : Direction.values()) {
             BlockPos neighborPos = currentPos.relative(directionx);
-            if (!visited.contains(neighborPos) && level.getBlockEntity(neighborPos) instanceof ReinforcedIndustrialStorageArrayBlockEntity drive) {
+            if (!visited.contains(neighborPos) && level.hasChunkAt(neighborPos) && level.getBlockEntity(neighborPos) instanceof ReinforcedIndustrialStorageArrayBlockEntity drive) {
                attached.add(drive);
                queue.addLast(neighborPos);
                visited.add(neighborPos);

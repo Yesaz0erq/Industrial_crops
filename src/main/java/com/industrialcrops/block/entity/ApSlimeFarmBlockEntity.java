@@ -36,7 +36,6 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.items.wrapper.RangedWrapper;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -247,18 +246,10 @@ public final class ApSlimeFarmBlockEntity extends ApControllerBlockEntity {
       return inventory;
    }
 
-   public IItemHandler automation() {
-      return new RangedWrapper(inventory, 0, SLOTS) {
-         @Override
-         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            return slot < INPUT_SLOTS ? ItemStack.EMPTY : super.extractItem(slot, amount, simulate);
-         }
+   private final IItemHandler itemPort = com.industrialcrops.machine.MachineItemPort.processing(inventory, 9, 9);
 
-         @Override
-         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            return slot < INPUT_SLOTS ? super.insertItem(slot, stack, simulate) : stack;
-         }
-      };
+   public IItemHandler automation() {
+      return itemPort;
    }
 
    public EnergyStorage getEnergyStorage(@Nullable Direction side) {

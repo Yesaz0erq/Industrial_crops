@@ -136,7 +136,7 @@ public final class CrystalLogisticsBlockEntity extends BlockEntity implements Me
                 int itemBudget = 64, fluidBudget = 1000;
                 for (int i = 0; i < peers.size(); i++) {
                     var peer = peers.get(Math.floorMod(cursor + i, peers.size()));
-                    itemBudget -= moveItems(inventory, peer.inventory, itemBudget);
+                    itemBudget -= moveItems(inventory, worldPosition, peer.inventory, itemBudget);
                     fluidBudget -= moveFluid(tank, peer.tank, fluidBudget);
                     if (itemBudget == 0 && fluidBudget == 0) break;
                 }
@@ -152,11 +152,14 @@ public final class CrystalLogisticsBlockEntity extends BlockEntity implements Me
             if (!level.hasChunkAt(neighbor) || level.getBlockEntity(neighbor) instanceof CrystalLogisticsBlockEntity) continue;
             var itemHandler = level.getCapability(Capabilities.ItemHandler.BLOCK, neighbor, side.getOpposite());
             var fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, neighbor, side.getOpposite());
-            if (itemHandler != null && itemBudget > 0) itemBudget -= output ? moveItems(inventory, itemHandler, itemBudget) : moveItems(itemHandler, inventory, itemBudget);
+            if (itemHandler != null && itemBudget > 0) {
+                itemBudget -= output ? moveItems(inventory, worldPosition, itemHandler, itemBudget)
+                        : moveItems(itemHandler, neighbor, inventory, itemBudget);
+            }
             if (fluidHandler != null && fluidBudget > 0) fluidBudget -= output ? moveFluid(tank, fluidHandler, fluidBudget) : moveFluid(fluidHandler, tank, fluidBudget);
         }
     }
-    private static int moveItems(IItemHandler from, IItemHandler to, int limit) {
+    private int moveItems(IItemHandler from, BlockPos sourcePos, IItemHandler to, int limit) {
         int moved = 0;
         for (int slot = 0; slot < from.getSlots() && moved < limit; slot++) {
             ItemStack sample = from.extractItem(slot, limit-moved, true);
@@ -167,7 +170,7 @@ public final class CrystalLogisticsBlockEntity extends BlockEntity implements Me
             ItemStack extracted = from.extractItem(slot, accepted, false);
             ItemStack remainder = ItemHandlerHelper.insertItemStacked(to, extracted, false);
             moved += extracted.getCount() - remainder.getCount();
-            if (!remainder.isEmpty()) from.insertItem(slot, remainder, false);
+            com.industrialcrops.basic_pipe.PipeTransferUtil.returnUnaccepted(level, sourcePos, from, slot, remainder);
         }
         return moved;
     }

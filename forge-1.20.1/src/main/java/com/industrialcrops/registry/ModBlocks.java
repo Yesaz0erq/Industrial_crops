@@ -230,6 +230,18 @@ public final class ModBlocks {
    public static final RegistryObject<Block> OMNI_CARROT_CROP = BLOCKS.register(
       "omni_carrot_crop", () -> new com.industrialcrops.block.CultivatedCarrotCropBlock(cropProperties(), ModItems.OMNI_CARROT)
    );
+   public static final RegistryObject<Block> TIDEGLASS_CARROT_CROP = BLOCKS.register(
+      "tideglass_carrot_crop", () -> new com.industrialcrops.block.CultivatedCarrotCropBlock(cropProperties(), ModItems.TIDEGLASS_CARROT)
+   );
+   public static final RegistryObject<Block> DEEPVEIN_CARROT_CROP = BLOCKS.register(
+      "deepvein_carrot_crop", () -> new com.industrialcrops.block.CultivatedCarrotCropBlock(cropProperties(), ModItems.DEEPVEIN_CARROT)
+   );
+   public static final RegistryObject<Block> CINDERHEART_CARROT_CROP = BLOCKS.register(
+      "cinderheart_carrot_crop", () -> new com.industrialcrops.block.CultivatedCarrotCropBlock(cropProperties(), ModItems.CINDERHEART_CARROT)
+   );
+   public static final RegistryObject<Block> CLOUDSTEP_CARROT_CROP = BLOCKS.register(
+      "cloudstep_carrot_crop", () -> new com.industrialcrops.block.CultivatedCarrotCropBlock(cropProperties(), ModItems.CLOUDSTEP_CARROT)
+   );
    public static final RegistryObject<Block> INDUSTRIAL_POTATO_CROP = BLOCKS.register(
       "industrial_potato_crop", () -> new IndustrialCropBlock(cropProperties(), ModItems.BAGGED_INDUSTRIAL_POTATO, ModItems.INDUSTRIAL_POTATO, 4, 2, true)
    );

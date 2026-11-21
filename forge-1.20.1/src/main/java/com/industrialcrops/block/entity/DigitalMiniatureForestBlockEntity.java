@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.basic_pipe.PipeTransferUtil;
 import com.industrialcrops.machine.PoweredMachineSupport;
 import com.industrialcrops.machine.MachineInventoryHelper;
@@ -129,6 +130,10 @@ public final class DigitalMiniatureForestBlockEntity extends BlockEntity impleme
         if (stack.is(Items.MANGROVE_PROPAGULE)) return 8;
         return 0;
     }
+
+    private final MachineItemPort automation = MachineItemPort.processing(inventory, UPGRADE_COUNT, 0);
+
+    public MachineItemPort getAutomationHandler() { return automation; }
 
     public ItemStackHandler getInventory() { return inventory; }
     public EnergyStorage getEnergyStorage(@Nullable Direction side) { return energy; }

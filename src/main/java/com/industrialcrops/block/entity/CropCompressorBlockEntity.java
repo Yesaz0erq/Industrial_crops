@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModBlocks;
 import com.industrialcrops.registry.ModItems;
@@ -71,6 +72,10 @@ public final class CropCompressorBlockEntity extends BlockEntity implements Menu
         }
         return ItemStack.EMPTY;
     }
+
+    private final MachineItemPort automation = MachineItemPort.processing(inventory, OUTPUT_SLOT, 1);
+
+    public MachineItemPort getAutomationHandler() { return automation; }
 
     public ItemStackHandler getInventory() {
         return inventory;

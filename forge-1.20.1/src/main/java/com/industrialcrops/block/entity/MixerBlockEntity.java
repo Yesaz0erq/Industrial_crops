@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.block.MixerBlock;
 import com.industrialcrops.machine.MachineInventoryHelper;
 import com.industrialcrops.recipe.MixerRecipeDisplay;
@@ -132,6 +133,10 @@ public final class MixerBlockEntity extends BlockEntity {
     public int getSlots() {
         return inventory.getSlots();
     }
+
+    private final MachineItemPort automation = MachineItemPort.processing(inventory, OUTPUT_SLOT, 1);
+
+    public MachineItemPort getAutomationHandler() { return automation; }
 
     public ItemStackHandler getInventory() {
         return inventory;

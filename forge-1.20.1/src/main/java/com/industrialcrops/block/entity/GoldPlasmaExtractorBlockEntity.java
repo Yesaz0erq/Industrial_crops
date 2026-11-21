@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.machine.PoweredMachineSupport;
 import com.industrialcrops.registry.ModBlockEntities;
 import com.industrialcrops.registry.ModFluids;
@@ -57,7 +58,6 @@ public final class GoldPlasmaExtractorBlockEntity extends BlockEntity implements
         @Override public FluidStack drain(FluidStack resource, FluidAction action) { return outputTank.drain(resource, action); }
         @Override public FluidStack drain(int maxDrain, FluidAction action) { return outputTank.drain(maxDrain, action); }
     };
-    private final LazyOptional<ItemStackHandler> itemCapability = LazyOptional.of(() -> inventory);
     private final LazyOptional<EnergyStorage> energyCapability = LazyOptional.of(() -> energy);
     private final LazyOptional<IFluidHandler> fluidCapability = LazyOptional.of(() -> outputHandler);
     private final ContainerData data = new ContainerData() {
@@ -104,6 +104,10 @@ public final class GoldPlasmaExtractorBlockEntity extends BlockEntity implements
         ItemStack remainder = inventory.insertItem(0, stack, simulate);
         return stack.getCount() - remainder.getCount();
     }
+    private final MachineItemPort automation = MachineItemPort.processing(inventory, 1, 0);
+
+    public MachineItemPort getAutomationHandler() { return automation; }
+
     public ItemStackHandler getInventory() { return inventory; }
     public EnergyStorage getEnergyStorage(@Nullable Direction side) { return energy; }
     public FluidTank getOutputTank() { return outputTank; }
@@ -120,13 +124,12 @@ public final class GoldPlasmaExtractorBlockEntity extends BlockEntity implements
         if (tag.contains("Tank")) outputTank.readFromNBT(tag.getCompound("Tank")); energy.setStored(tag.getInt("Energy")); progress = Math.max(0, Math.min(PROCESS_TICKS, tag.getInt("Progress")));
     }
     @Override public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) return itemCapability.cast();
         if (cap == ForgeCapabilities.ENERGY) return energyCapability.cast();
         if (cap == ForgeCapabilities.FLUID_HANDLER) return fluidCapability.cast();
         return super.getCapability(cap, side);
     }
     @Override public void invalidateCaps() {
-        super.invalidateCaps(); itemCapability.invalidate(); energyCapability.invalidate(); fluidCapability.invalidate();
+        super.invalidateCaps(); energyCapability.invalidate(); fluidCapability.invalidate();
     }
     private final class TrackedEnergyStorage extends EnergyStorage {
         private TrackedEnergyStorage() { super(ENERGY_CAPACITY, RECEIVE_RATE, 0); }

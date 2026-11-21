@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.block.MaterialHardeningDeviceBlock;
 import com.industrialcrops.machine.MachineInventoryHelper;
 import com.industrialcrops.screen.MaterialHardeningDeviceMenu;
@@ -107,6 +108,10 @@ public final class MaterialHardeningDeviceBlockEntity extends BlockEntity implem
             inventory.setStackInSlot(OUTPUT_SLOT, output);
         }
     }
+
+    private final MachineItemPort automation = MachineItemPort.processing(inventory, OUTPUT_SLOT, 1);
+
+    public MachineItemPort getAutomationHandler() { return automation; }
 
     public ItemStackHandler getInventory() { return inventory; }
     public ContainerData getData() { return data; }
