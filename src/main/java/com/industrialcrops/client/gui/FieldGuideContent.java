@@ -130,7 +130,11 @@ final class FieldGuideContent {
                "guide.industrialcrops.genetics.cultivator.body",
                "industrialcrops:black_nebula_carrot",
                List.of("industrialcrops:super_crop_cultivator", "industrialcrops:black_nebula_carrot", "industrialcrops:purple_dragon_carrot", "industrialcrops:omni_carrot", "industrialcrops:comet_essence", "industrialcrops:prism_pod", "minecraft:dragon_breath", "industrialcrops:neonbulb")
-            )
+            ),
+            cultivatedVariety("tideglass_carrot"),
+            cultivatedVariety("deepvein_carrot"),
+            cultivatedVariety("cinderheart_carrot"),
+            cultivatedVariety("cloudstep_carrot")
          )
       ),
       new FieldGuideContent.Chapter(
@@ -453,6 +457,11 @@ final class FieldGuideContent {
    }
 
    static record Chapter(String id, String titleKey, String icon, int accent, List<FieldGuideContent.Page> pages) {
+   }
+
+   private static Page cultivatedVariety(String id) {
+      return new Page("item.industrialcrops." + id, "tooltip.industrialcrops.function." + id,
+         "industrialcrops:" + id, List.of("industrialcrops:super_crop_cultivator", "industrialcrops:" + id));
    }
 
    static record Page(String titleKey, String bodyKey, String recipe, List<String> items) {

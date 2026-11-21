@@ -35,7 +35,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RangedWrapper;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -246,18 +245,10 @@ public final class ApSlimeFarmBlockEntity extends ApControllerBlockEntity {
       return inventory;
    }
 
-   public IItemHandler automation() {
-      return new RangedWrapper(inventory, 0, SLOTS) {
-         @Override
-         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            return slot < INPUT_SLOTS ? ItemStack.EMPTY : super.extractItem(slot, amount, simulate);
-         }
+   private final IItemHandler itemPort = com.industrialcrops.machine.MachineItemPort.processing(inventory, 9, 9);
 
-         @Override
-         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            return slot < INPUT_SLOTS ? super.insertItem(slot, stack, simulate) : stack;
-         }
-      };
+   public IItemHandler automation() {
+      return itemPort;
    }
 
    public EnergyStorage getEnergyStorage(@Nullable Direction side) {
@@ -295,6 +286,22 @@ public final class ApSlimeFarmBlockEntity extends ApControllerBlockEntity {
       energy.set(tag.getInt("Energy"));
       converted = tag.getLong("Converted");
       lastProduct = tag.getInt("LastProduct");
+   }
+
+   private net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.IItemHandler> forgeCap0 = net.minecraftforge.common.util.LazyOptional.of(() -> automation());
+   private net.minecraftforge.common.util.LazyOptional<net.minecraftforge.energy.IEnergyStorage> forgeCap1 = net.minecraftforge.common.util.LazyOptional.of(() -> getEnergyStorage(null));
+   @Override public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.core.Direction side) {
+      if (capability == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER) return forgeCap0.cast();
+      if (capability == net.minecraftforge.common.capabilities.ForgeCapabilities.ENERGY) return forgeCap1.cast();
+      return super.getCapability(capability, side);
+   }
+   @Override public void invalidateCaps() { super.invalidateCaps();
+      forgeCap0.invalidate();
+      forgeCap1.invalidate();
+   }
+   @Override public void reviveCaps() { super.reviveCaps();
+      forgeCap0 = net.minecraftforge.common.util.LazyOptional.of(() -> automation());
+      forgeCap1 = net.minecraftforge.common.util.LazyOptional.of(() -> getEnergyStorage(null));
    }
 
    private final class Energy extends EnergyStorage {

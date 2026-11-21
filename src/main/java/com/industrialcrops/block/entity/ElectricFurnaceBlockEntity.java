@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.machine.PoweredMachineSupport;
 import com.industrialcrops.machine.SpeedUpgradeHelper;
 import com.industrialcrops.machine.MachineInventoryHelper;
@@ -122,6 +123,10 @@ public final class ElectricFurnaceBlockEntity extends BlockEntity implements Men
         if (output.isEmpty()) inventory.setStackInSlot(slot, result.copy());
         else { output.grow(result.getCount()); inventory.setStackInSlot(slot, output); }
     }
+
+    private final MachineItemPort automation = MachineItemPort.processing(inventory, OUTPUT_START, CHANNELS);
+
+    public MachineItemPort getAutomationHandler() { return automation; }
 
     public ItemStackHandler getInventory() { return inventory; }
     public EnergyStorage getEnergyStorage(@Nullable Direction side) { return energy; }

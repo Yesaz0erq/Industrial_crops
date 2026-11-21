@@ -4,6 +4,7 @@ import com.industrialcrops.registry.ModBlocks;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -81,7 +82,8 @@ public final class ApStructure {
             case SOURCE_WATER -> state.getFluidState().is(FluidTags.WATER) && state.getFluidState().isSource();
             case FARMLAND -> state.is(Blocks.FARMLAND);
             case PASTURE -> state.is(BlockTags.DIRT);
-            case CROP_SPACE -> clearSpace(level, state) || state.is(Blocks.MELON) || state.is(Blocks.PUMPKIN);
+            case CROP_SPACE -> clearSpace(level, state) || state.is(Blocks.MELON) || state.is(Blocks.PUMPKIN)
+               || state.getBlock() instanceof com.industrialcrops.block.IndustrialFruitBlock;
             case AIRSPACE -> clearSpace(level, state);
          };
       }
@@ -167,7 +169,9 @@ public final class ApStructure {
       }
 
       /** One source anywhere in the footprint, from natural soil level through the roof, is enough. */
-      public boolean hasSourceWater(Level level) {
+      public boolean hasSourceWater(Level level) { return hasSourceWater(level, Set.of()); }
+
+      boolean hasSourceWater(Level level, Set<BlockPos> changing) {
          BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
          int top = type == Type.FARM ? 6 : (type == Type.SLIME ? 2 : 3);
          for (int u = 0; u < width; u++) {
@@ -178,7 +182,7 @@ public final class ApStructure {
                for (int h = -1; h <= top; h++) {
                   cursor.set(column.getX(), column.getY() + h, column.getZ());
                   var fluid = level.getFluidState(cursor);
-                  if (fluid.is(FluidTags.WATER) && fluid.isSource()) return true;
+                  if (fluid.is(FluidTags.WATER) && fluid.isSource() && !changing.contains(cursor)) return true;
                }
             }
          }

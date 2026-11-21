@@ -3,6 +3,10 @@
   "values": [
     "industrialcrops:black_nebula_carrot_crop",
     "industrialcrops:purple_dragon_carrot_crop",
-    "industrialcrops:omni_carrot_crop"
+    "industrialcrops:omni_carrot_crop",
+    "industrialcrops:tideglass_carrot_crop",
+    "industrialcrops:deepvein_carrot_crop",
+    "industrialcrops:cinderheart_carrot_crop",
+    "industrialcrops:cloudstep_carrot_crop"
   ]
 }

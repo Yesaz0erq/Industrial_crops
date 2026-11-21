@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.basic_pipe.PipeTransferUtil;
 import com.industrialcrops.screen.MatterMachineMenu;
 import com.industrialcrops.registry.ModItems;
@@ -114,6 +115,11 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
             protected void onContentsChanged(int slot) {
                 setChanged();
             }
+        };
+        automation = switch (kind) {
+            case DIGITIZER -> MachineItemPort.processing(inventory, DIGITIZER_MAIN_SLOT_COUNT, 0);
+            case RECONSTRUCTOR -> MachineItemPort.processing(inventory, OUTPUT_SLOT, 1);
+            case COPIER -> MachineItemPort.processing(inventory, inventory.getSlots(), 0);
         };
     }
 
@@ -487,6 +493,10 @@ public abstract class MatterMachineBlockEntity extends BlockEntity implements Me
         }
         return null;
     }
+
+    private final MachineItemPort automation;
+
+    public MachineItemPort getAutomationHandler() { return automation; }
 
     public ItemStackHandler getInventory() { return inventory; }
     public MachineEnergyStorage getEnergyStorage() { return energy; }

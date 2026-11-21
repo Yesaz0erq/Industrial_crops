@@ -44,7 +44,6 @@ import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RangedWrapper;
 import org.jetbrains.annotations.Nullable;
 public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
    public static final int FEED_SLOTS = 9;
@@ -408,15 +407,10 @@ public final class ApLivestockBlockEntity extends ApControllerBlockEntity {
    public ItemStackHandler getInventory() {
       return this.inventory;
    }
+   private final IItemHandler itemPort = com.industrialcrops.machine.MachineItemPort.processing(inventory, 9, 9);
+
    public IItemHandler automation() {
-      return new RangedWrapper(this.inventory, 0, 18) {
-         public ItemStack extractItem(int var1, int var2, boolean var3) {
-            return var1 < 9 ? ItemStack.EMPTY : super.extractItem(var1, var2, var3);
-         }
-         public ItemStack insertItem(int var1, ItemStack var2, boolean var3) {
-            return var1 < 9 ? super.insertItem(var1, var2, var3) : var2;
-         }
-      };
+      return itemPort;
    }
    public EnergyStorage getEnergyStorage(@Nullable Direction var1) {
       return this.energy;

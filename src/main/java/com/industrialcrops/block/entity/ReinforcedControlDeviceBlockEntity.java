@@ -11,6 +11,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 public final class ReinforcedControlDeviceBlockEntity extends AdvancedIndustrialStorageBlockEntity {
+    private final ConnectedStoragePort<ReinforcedIndustrialStorageArrayBlockEntity> pipe = new ConnectedStoragePort<>(
+            this, ReinforcedIndustrialStorageArrayBlockEntity.SLOT_COUNT,
+            () -> ReinforcedIndustrialStorageArrayBlockEntity.findAllAttached(level, worldPosition),
+            ReinforcedIndustrialStorageArrayBlockEntity::getInventory, super.getPipeItemHandler(), super::getUnlockedStorageSlots);
+
+    @Override public net.minecraftforge.items.IItemHandler getPipeItemHandler() { return pipe; }
+
     public ReinforcedControlDeviceBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.REINFORCED_CONTROL_DEVICE.get(), pos, state);
     }
@@ -21,8 +28,7 @@ public final class ReinforcedControlDeviceBlockEntity extends AdvancedIndustrial
      * controllers that have no connected component blocks.
      */
     private List<ReinforcedIndustrialStorageArrayBlockEntity> connectedComponents() {
-        return level == null ? List.of()
-                : ReinforcedIndustrialStorageArrayBlockEntity.findAllAttached(level, worldPosition);
+        return pipe.components();
     }
 
     private ItemStack connectedStack(int slot) {

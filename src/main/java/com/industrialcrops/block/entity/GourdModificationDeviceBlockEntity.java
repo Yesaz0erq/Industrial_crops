@@ -1,5 +1,6 @@
 package com.industrialcrops.block.entity;
 
+import com.industrialcrops.machine.MachineItemPort;
 import com.industrialcrops.crop.CropGenetics;
 import com.industrialcrops.crop.CropQuality;
 import com.industrialcrops.registry.ModBlockEntities;
@@ -113,6 +114,10 @@ public final class GourdModificationDeviceBlockEntity extends BlockEntity implem
         return output.is(ModItems.FUSION_MELON.get())
                 && output.getCount() < output.getMaxStackSize();
     }
+
+    private final MachineItemPort automation = MachineItemPort.processing(inventory, OUTPUT_SLOT, 1);
+
+    public MachineItemPort getAutomationHandler() { return automation; }
 
     public ItemStackHandler getInventory() {
         return inventory;

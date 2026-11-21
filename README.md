@@ -23,9 +23,16 @@
 
 可选安装 **JEI** 查看配方，或安装 **Curios** 使用饰品栏：NeoForge 版对应 Curios 9.5.1+（9.x），Forge 版对应 Curios 5.14.1+（5.x）。未安装 Curios 时，罗贝仍可通过主手或副手生效；头盔罗贝装备在头盔栏。按住 Shift 查看饰品使用说明。
 
-## C2 更新
+## 1.0-C4 更新
 
-当前版本为 **1.0-C3**，同步提供 NeoForge 1.21.1 与 Forge 1.20.1 源码和成品。
+当前版本为 **1.0-C4**，提供 NeoForge 1.21.1 与 Forge 1.20.1 两个版本。
+
+- 超级作物培育机新增潮晶、深脉、烬心和云步胡萝卜，分别适合潜水、采矿、耐火和跳跃。游戏内图鉴和 JEI 可查看培育材料。
+- 自动建造装置采用 AP 钢外观与新操作界面，在水晶钢工作台使用 AP 钢制作。贴靠 AP 控制器可识别结构，建造时会清除蓝图中的可破坏障碍。[自动建造装置](docs/automatic-structure-builder.md)
+- AP 农场可自动收获作物。物品管道、AP 导管与无线物流端点可向农场供种并取出收成。[设备与物流接口](docs/automation-compatibility.md)
+- 更新模组史莱姆的果冻外壳、内核和表面纹理。
+
+## C2 更新
 
 - 超高压因弗锻造炉采用 16px 材质与四帧炉火动画，侧面与底部使用相同的网罩样式；正面使用本次提供的新贴图。
 - 注册 ID 为 `industrialcrops:ultra_high_pressure_inv_forge`，旧炉 ID 及兼容映射已移除，旧炉不会自动迁移。
@@ -98,21 +105,21 @@ AP扩建组件 I在编程设备中使用AP结构钢板×4、AP钢框架×2、元
 
 ## 从源码构建
 
-本目录 `Industrial_crops-forge-1.20.1-C3` 是可独立构建的 Forge 1.20.1 C2 工程，使用 Java 17。其他加载器应使用其对应的独立 C2 工程；本工程仅包含完整源码、实际使用的运行资源、构建配置、Gradle Wrapper、说明与许可文件。
+本目录 `Industrial_crops-forge-1.20.1-C4` 是可独立构建的 Forge 1.20.1 C4 工程，使用 Java 17。
 
 进入目标工程，使用上表对应的 Java 版本执行：
 
 ```sh
 # Linux / macOS
-./gradlew build jarJar
+./gradlew build reobfJarJar
 ```
 
 ```powershell
 # Windows
-.\gradlew.bat build jarJar
+.\gradlew.bat build reobfJarJar
 ```
 
-首次构建需要联网下载依赖。安装 `build/libs/industrial-crops-forge-1.0-C3-all.jar`，其中已内置菜单兼容修复所需的 MixinExtras；同目录不带 `-all` 的 JAR 未包含此依赖。启动开发客户端使用 `runClient`；添加 `-PwithoutCurios=true` 可在不加载 Curios 的情况下运行。
+首次构建需要联网下载依赖。安装 `build/libs/industrial-crops-forge-1.0-C4-all.jar`，其中已内置菜单兼容修复所需的 MixinExtras。启动开发客户端使用 `runClient`，添加 `-PwithoutCurios=true` 可在不加载 Curios 的情况下运行。
 
 ## 反馈与贡献
 

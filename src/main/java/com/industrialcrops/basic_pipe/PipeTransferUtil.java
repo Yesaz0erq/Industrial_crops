@@ -1,6 +1,7 @@
 package com.industrialcrops.basic_pipe;
 
 import com.industrialcrops.registry.ModBlocks;
+import com.industrialcrops.block.entity.ConnectedStoragePort;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,7 +47,7 @@ public final class PipeTransferUtil {
             List<Candidate> candidates = getExtractableCandidates(source.handler(), transferRate);
             for (Candidate candidate : candidates) {
                 for (HandlerEndpoint target : targets) {
-                    if (target.pos().equals(source.pos())) {
+                    if (sameInventory(source, target)) {
                         continue;
                     }
 
@@ -64,7 +65,9 @@ public final class PipeTransferUtil {
                         continue;
                     }
 
-                    int inserted = insert(target.handler(), extracted);
+                    ItemStack remainder = insert(target.handler(), extracted);
+                    int inserted = extracted.getCount() - remainder.getCount();
+                    returnUnaccepted(level, source.pos(), source.handler(), candidate.slot(), remainder);
                     if (inserted > 0) {
                         return;
                     }
@@ -109,14 +112,14 @@ public final class PipeTransferUtil {
                 ItemStack type = types.get(t);
                 List<HandlerEndpoint> ordered = new ArrayList<>(targets.size());
                 for (HandlerEndpoint target : targets) {
-                    if (!target.pos().equals(source.pos()) && holds(target.handler(), type)) ordered.add(target);
+                    if (!sameInventory(source, target) && holds(target.handler(), type)) ordered.add(target);
                 }
                 for (HandlerEndpoint target : targets) {
-                    if (!target.pos().equals(source.pos()) && !ordered.contains(target)) ordered.add(target);
+                    if (!sameInventory(source, target) && !ordered.contains(target)) ordered.add(target);
                 }
                 for (HandlerEndpoint target : ordered) {
                     for (int slot : typeSlots.get(t)) {
-                        budget -= drainSlot(source.handler(), slot, target.handler(), budget);
+                        budget -= drainSlot(level, source, slot, target.handler(), budget);
                         if (budget <= 0) return;
                     }
                 }
@@ -132,22 +135,25 @@ public final class PipeTransferUtil {
     }
 
     /** Moves as much of one source slot into the target as both allow; returns the number moved. */
-    private static int drainSlot(IItemHandler source, int slot, IItemHandler target, int limit) {
+    private static int drainSlot(Level level, HandlerEndpoint endpoint, int slot, IItemHandler target, int limit) {
+        IItemHandler source = endpoint.handler();
         int moved = 0;
         while (moved < limit) {
             ItemStack offered = source.extractItem(slot, limit - moved, true);
             if (offered.isEmpty()) break;
             int accepted = getInsertableAmount(target, offered);
             if (accepted <= 0) break;
+            int stockBefore = source.getStackInSlot(slot).getCount();
             ItemStack taken = source.extractItem(slot, accepted, false);
             if (taken.isEmpty()) break;
-            int inserted = insert(target, taken.copy());
-            moved += inserted;
-            if (inserted < taken.getCount()) {
-                // Should not happen after the simulation; put any remainder straight back.
-                source.insertItem(slot, taken.copyWithCount(taken.getCount() - inserted), false);
+            ItemStack remainder = insert(target, taken);
+            moved += taken.getCount() - remainder.getCount();
+            if (!remainder.isEmpty()) {
+                returnUnaccepted(level, endpoint.pos(), source, slot, remainder);
                 break;
             }
+            // Two faces of an external multiblock can wrap the same slots in different handlers.
+            if (slot >= source.getSlots() || source.getStackInSlot(slot).getCount() >= stockBefore) break;
         }
         return moved;
     }
@@ -274,17 +280,25 @@ public final class PipeTransferUtil {
         return original - remaining.getCount();
     }
 
-    private static int insert(IItemHandler handler, ItemStack stack) {
-        if (stack.isEmpty()) {
-            return 0;
-        }
-
-        int original = stack.getCount();
+    private static ItemStack insert(IItemHandler handler, ItemStack stack) {
         ItemStack remaining = stack;
         for (int slot = 0; slot < handler.getSlots() && !remaining.isEmpty(); slot++) {
             remaining = handler.insertItem(slot, remaining, false);
         }
-        return original - remaining.getCount();
+        return remaining;
+    }
+
+    private static boolean sameInventory(HandlerEndpoint source, HandlerEndpoint target) {
+        return source.pos().equals(target.pos()) || ConnectedStoragePort.sharesStorage(source.handler(), target.handler());
+    }
+
+    /** An output-only source can refuse a return if a target changes capacity after simulation. */
+    public static void returnUnaccepted(Level level, BlockPos pos, IItemHandler source, int slot, ItemStack remainder) {
+        if (remainder.isEmpty()) return;
+        ItemStack unreturned = slot < source.getSlots() ? source.insertItem(slot, remainder, false) : remainder;
+        if (!unreturned.isEmpty()) {
+            net.minecraft.world.Containers.dropItemStack(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, unreturned);
+        }
     }
 
     private static boolean isBasicPipe(BlockState state) {
